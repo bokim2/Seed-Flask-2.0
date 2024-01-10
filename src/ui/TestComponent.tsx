@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import GlobalStyles from '../styles/GlobalStyles';
+// import GlobalStyles from '../styles/GlobalStyles';
 // import Button from './Button';
 
 const StyledApp = styled.div`
@@ -38,7 +38,7 @@ export default function TestComponent() {
   
     return (
       <>
-        <GlobalStyles />
+        {/* <GlobalStyles /> */}
         <StyledApp>
           app page changing test prod
           {JSON.stringify(flask)}
