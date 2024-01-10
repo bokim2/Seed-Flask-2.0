@@ -11,10 +11,10 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const res = await axios.get('http://localhost:3000/api/flasks/1');
-        const res = await axios.get(process.env.NODE_ENV === 'production'
-        ? 'api/flasks/1' 
-        : 'http://localhost:3000/api/flasks/1');
+        // process.env.NODE_ENV === 'production'
+        // ? 'api/flasks/1' 
+        // : 'http://localhost:3000/api/flasks/1'
+        const res = await axios.get('api/flasks/1');
         console.log('Axios response:', res);
         console.log('Data in useEffect:', res.data);
         setFlask(res.data);
