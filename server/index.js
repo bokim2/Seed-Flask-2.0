@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
+console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
 import { db } from './db/db.js';
 
@@ -39,7 +40,6 @@ app.get('/api/flasks/:id', async (req, res) => {
       status: 'success',
       results: results.rows.length,
       data: results.rows[0],
-      
     });
   } catch (err) {
     console.log(err);
