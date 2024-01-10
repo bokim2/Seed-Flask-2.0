@@ -1,41 +1,27 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-// import './App.css';
+// import styled from 'styled-components';
+import GlobalStyles from './styles/GlobalStyles';
+// import Button from './ui/Button';
+import TestComponent from './ui/TestComponent';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-// Remove the import statements for useEffect, useState, and axios
+// const StyledApp = styled.div`
+//   background-color: #e4d0d0;
+// `;
 
 function App() {
-  // eslint-disable-next-line
-  const [flask, setFlask] = useState({});
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log('in fetch data', import.meta.env.PROD)
-        // import.meta.env.PROD === true
-        // ? 'api/flasks/1' 
-        // : 'http://localhost:3000/api/flasks/1'
-        const res = await axios.get(
-          import.meta.env.PROD === true
-          ? 'api/flasks/1' 
-          : 'http://localhost:3000/api/flasks/1');
-        console.log('Axios response:', res);
-        console.log('Data in useEffect:', res.data);
-        setFlask(res.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <>
-      <div>
-        app page changing test prod
-        {JSON.stringify(flask)}
-      </div>
+      <GlobalStyles />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<TestComponent />} />
+          <Route path="cellbank" element={<h1>cellbank page</h1>}/>
+        </Routes>
+            <TestComponent />
+      </BrowserRouter>
     </>
   );
 }

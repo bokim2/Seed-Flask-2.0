@@ -20,12 +20,14 @@
     "postgres": "^3.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.1",
     "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@types/node": "^20.10.8",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
+    "@types/styled-components": "^5.1.34",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react": "^4.2.1",
