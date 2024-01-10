@@ -12,7 +12,7 @@ const [flask, setFlask] = useState({});
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const res = await axios.get('https://mellow-faun-768b84.netlify.app/api/flasks/1');
+      const res = await axios.get('/api/flasks/1');
       console.log('Axios response:', res);
       console.log('Data in useEffect:', res.data);
       setFlask(res.data);
