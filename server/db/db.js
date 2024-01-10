@@ -1,4 +1,5 @@
-import { Pool, Client } from 'pg';
+import pkg from 'pg';
+const { Pool } = pkg;
 import 'dotenv/config';
 import process from 'process';
 // require('dotenv').config();
@@ -15,7 +16,8 @@ const pool = new Pool({ connectionString: process.env.PG_URI });
 // This will be required in the controllers to be the access point to the database
 // Remove the import statement for 'pool' since it is already defined in the previous code block
 
-
-export const query = (text, params, callback) => {
+export const db = {
+  query: (text, params, callback) => {
     return pool.query(text, params, callback);
+  },
 };
