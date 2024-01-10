@@ -8,12 +8,12 @@ const sizes = {
   `,
   medium: css`
     font-size: 1.4rem;
-    padding: 1.2rem 1.6rem;
+    padding: .8rem 2rem;
     font-weight: 500;
   `,
   large: css`
     font-size: 1.8rem;
-    padding: 1.6rem 2rem;
+    padding: 1rem 2rem;
     font-weight: 500;
   `,
 };
@@ -39,7 +39,7 @@ const Button = styled.button`
   text-align: center;
 
   border: none;
-  border-radius: 9999rem;
+  border-radius: 999vw;
   color: var(--color-text-1);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
