@@ -29,6 +29,7 @@ return (
     <div>
       app page
       changing
+      test prod
       {JSON.stringify(flask)}
     </div>
   </>
