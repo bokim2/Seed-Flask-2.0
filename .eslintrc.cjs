@@ -5,7 +5,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
-    
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
@@ -14,17 +13,16 @@ module.exports = {
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
-
     ],
     // rules: {
     // "@typescript-eslint/no-explicit-any": 1,
     // "@typescript-eslint/no-unused-vars" : 1,
     // // // "@typescript-eslint/no-unused-vars" : "off",
     // // 'no-unused-vars': 'off',
-    // },      
-    "@typescript-eslint/no-explicit-any": 1,
+    // },
+    '@typescript-eslint/no-explicit-any': 1,
     // "@typescript-eslint/no-unused-vars" : 1,
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": 1,
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
   },
 };
