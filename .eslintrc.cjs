@@ -23,6 +23,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 1,
     // "@typescript-eslint/no-unused-vars" : 1,
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 1,
   },
 };
