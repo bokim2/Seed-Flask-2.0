@@ -5,6 +5,7 @@ import GlobalStyles from './styles/GlobalStyles';
 // import Button from './ui/Button';
 import TestComponent from './ui/TestComponent';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import yeastImg from './images/yeast-21.png';
 
 const StyledDiv = styled.div`
   background-color: #e4d0d0;
@@ -15,7 +16,7 @@ function App() {
     <>
       <GlobalStyles />
       <StyledDiv>
-        <img src="../public/images/yeast-21.png" alt="yeast" />
+        <img src="/images/yeast-21.png" alt="yeast" />
       </StyledDiv>
       <BrowserRouter>
         <Routes>
