@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-// import GlobalStyles from '../styles/GlobalStyles';
+import GlobalStyles from '../styles/GlobalStyles';
 import Button from './Button';
 import { baseUrl } from '../../configs.js';
 
