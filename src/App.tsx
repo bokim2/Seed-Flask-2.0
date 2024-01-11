@@ -10,7 +10,7 @@ import AppLayout from './ui/AppLayout';
 import Dashboard from './ui/Dashboard';
 
 const StyledDiv = styled.div`
-  background-color: #e4d0d0;
+  /* background-color: #e4d0d0; */
 `;
 
 function App() {
@@ -18,11 +18,11 @@ function App() {
     <>
       <GlobalStyles />
       <StyledDiv>
-        <img src="/images/yeast-21.png" alt="yeast" />
+        {/* <img src="/images/yeast-21.png" alt="yeast" /> */}
       </StyledDiv>
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />} path="/">
+          <Route element={<AppLayout />} >
             <Route index element={<Dashboard/>} />
             <Route path="cellbank" element={<h1>cellbank page</h1>} />
             <Route path="flask" element={<h1>start flask page</h1>} />

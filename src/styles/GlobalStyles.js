@@ -8,6 +8,8 @@ const GlobalStyles = createGlobalStyle`
 *::before,
 *::after {
   box-sizing: border-box;
+  padding: 0;
+margin: 0;
 }
 
 /* Prevent font size inflation */
@@ -77,20 +79,18 @@ textarea:not([rows]) {
 }
 
 
+
 // from Vite starter template
  :root {
-     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-     line-height: 1.5;
-     font-weight: 400;
-  
-     color-scheme: light dark;
-     color: rgba(255, 255, 255, 0.87);
-     background-color: #242424;
-  
-     font-synthesis: none;
-     text-rendering: optimizeLegibility;
-     -webkit-font-smoothing: antialiased;
-     -moz-osx-font-smoothing: grayscale;
+
+
+
+// BK 
+${
+  '' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap'); */
+}
+--font-sans-serif: 'Inter', sans-serif;
+--font-serif: 'Playfair Display', serif;
 
        /* Colors */
   --clr-primary-0: white;
@@ -102,24 +102,21 @@ textarea:not([rows]) {
   --clr-primary-500: #64748b;
   --clr-primary-600: #475569;
   --clr-primary-700: #334155;
-  --clr-primary-800: #1e293b;
-  --clr-primary-900: #0f172a;
+  --clr-primary-800: #150F1D; // app background
+  --clr-primary-900: rgba(21,15,29,.5); //navbar
   --clr-primary-950: #020617;
 
   /* color testing area - these are overwriting colors above!! */
 
 
-  --clr-primary-100: #080f5b; /* function EVEN background */
-  --clr-primary-200: #222629; /* navbar background */
-  --clr-primary-300: rgb(205, 250, 213, 0.2); /* navbar shadow */
-  --clr-primary-800: #f8fafc;
+
 
   /*                       */
 
-  --clr-accent-0: #dafffb; /* nav bar LINKS */
-  --clr-accent-1: #faed26; /* nav bar "seed flask" */
-  --clr-accent-2: #d6cc99; /* hero bar "seed flask" */
-  --clr-accent-3: #334155; /* hero background-color */
+  --clr-accent-0: #F2D17C; /* main accent */
+  --clr-accent-1: #faed26; /*  */
+  --clr-accent-2: #d6cc99; /* */
+  --clr-accent-3: #334155; /*  */
   --clr-accent-4: #ccfad4; /* .function__title */
   --clr-accent-5: #86a789;
   --clr-accent-6: #ff7676;
@@ -128,8 +125,8 @@ textarea:not([rows]) {
   --clr-accent-9: #10e7dc;
   --clr-accent-10: #fde5d4;
 
-  --color-text-1: black;
-  --color-text-2: white;
+  --color-text-1: white;
+  --color-text-2: black;
    }
   
    a {
@@ -143,18 +140,12 @@ textarea:not([rows]) {
   
    body {
      margin: 0;
-     display: flex;
-     place-items: center;
-     ${'' /* min-width: 320px; */}
-     ${'' /* height: 100vh; */}
-     max-width: 100vw;
+     padding: 0;
+     width: 100vw;
      overflow-x: hidden;
-     background-color: #150F1D;
-     background-image: url("images/blobTop.svg"), url("images/blobBottom.svg");
-     background-size: 80vw;
-     background-repeat: no-repeat;
-     background-position-x: 25%, 0%;
-     background-position-y: 0%, 100%;
+     color: var(--color-text-1);
+     font-family: var(--font-sans-serif);
+     
    }
   
    h1 {
