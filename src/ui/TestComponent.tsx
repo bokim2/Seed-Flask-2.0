@@ -6,7 +6,7 @@ import Button from './Button';
 import { baseUrl } from '../../configs.js';
 
 const StyledApp = styled.div`
-  background-color: blue;
+  background-color: #d9d9e7;
 `;
 
 export default function TestComponent() {
