@@ -1,7 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
 
-
-
 const GlobalStyles = createGlobalStyle`
 // CSS reset by Andy Bell
 
@@ -147,9 +145,16 @@ textarea:not([rows]) {
      margin: 0;
      display: flex;
      place-items: center;
-     min-width: 320px;
-     min-height: 100vh;
+     ${'' /* min-width: 320px; */}
+     ${'' /* height: 100vh; */}
+     max-width: 100vw;
+     overflow-x: hidden;
      background-color: #150F1D;
+     background-image: url("images/blobTop.svg"), url("images/blobBottom.svg");
+     background-size: 80vw;
+     background-repeat: no-repeat;
+     background-position-x: 25%, 0%;
+     background-position-y: 0%, 100%;
    }
   
    h1 {
@@ -190,5 +195,5 @@ textarea:not([rows]) {
    }
   
   `;
-  
-  export default GlobalStyles;
+
+export default GlobalStyles;
