@@ -42,7 +42,7 @@ export default function TestComponent() {
         <StyledApp>
           app page changing test prod
           {JSON.stringify(flask)}
-          <Button variation= 'secondary' size='medium'>Test</Button>
+          <Button $variation= 'secondary' $size='medium'>Test</Button>
         </StyledApp>
       </>
     );
