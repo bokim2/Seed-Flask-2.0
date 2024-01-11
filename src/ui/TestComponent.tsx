@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 // import GlobalStyles from '../styles/GlobalStyles';
-// import Button from './Button';
+import Button from './Button';
 
 const StyledApp = styled.div`
   background-color: #e4d0d0;
@@ -42,7 +42,7 @@ export default function TestComponent() {
         <StyledApp>
           app page changing test prod
           {JSON.stringify(flask)}
-          {/* <Button variation= 'secondary' size='medium'>Test</Button> */}
+          <Button variation= 'secondary' size='medium'>Test</Button>
         </StyledApp>
       </>
     );
