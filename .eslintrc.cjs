@@ -14,15 +14,8 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    // rules: {
-    // "@typescript-eslint/no-explicit-any": 1,
-    // "@typescript-eslint/no-unused-vars" : 1,
-    // // // "@typescript-eslint/no-unused-vars" : "off",
-    // // 'no-unused-vars': 'off',
-    // },
-    '@typescript-eslint/no-explicit-any': 1,
-    // "@typescript-eslint/no-unused-vars" : 1,
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 1,
+    '@typescript-eslint/no-explicit-any': 1, // added by BK
+    'no-unused-vars': 'off', // added by BK
+    '@typescript-eslint/no-unused-vars': 1, // added by BK
   },
 };
