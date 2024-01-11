@@ -10,12 +10,12 @@ const StyledApp = styled.div`
 `;
 
 export default function TestComponent() {
-  const [flask, setFlask] = useState({});
+  const [flask, setFlask] = useState<any>({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('in fetch data', import.meta.env.PROD);
+        // console.log('in fetch data', import.meta.env.PROD);
         const res = await axios.get(`${baseUrl}/api/flasks/1`);
         console.log('Axios response:', res);
         console.log('Data in useEffect:', res.data);
