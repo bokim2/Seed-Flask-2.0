@@ -3,10 +3,18 @@ import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
 import { useState } from 'react';
 import NavList from './NavList';
 import { type } from 'os';
+import { NavLink } from 'react-router-dom';
 
 const StyledMainNav = styled.div`
   z-index: 10;
   background-color: var(--clr-primary-900);
+`;
+
+const StyledNavLink = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding-right: 2rem;
 `;
 
 const StyledNav = styled.nav`
@@ -22,6 +30,7 @@ const StyledTitle = styled.h1`
   font-weight: 800;
   color: var(--clr-accent-0);
   font-size: clamp(2rem, 3vw, 3rem);
+  letter-spacing: 0.08rem;
 `;
 
 const StyledCircle = styled.div`
@@ -52,14 +61,20 @@ export default function MainNav({ toggleNav, handleClick }: MainNavProps) {
   return (
     <StyledMainNav onClick={handleClick}>
       <StyledNav>
-        <StyledTitle>Seed Flask</StyledTitle>
+        <StyledNavLink to="/">
+          <StyledTitle>Seed Flask</StyledTitle>
+        </StyledNavLink>
 
         <NavSection>
           <StyledCircle>
             <FaUser />
           </StyledCircle>
 
-          {toggleNav ? <FaCaretUp style={style} /> : <FaCaretDown style={style} />}
+          {toggleNav ? (
+            <FaCaretUp style={style} />
+          ) : (
+            <FaCaretDown style={style} />
+          )}
         </NavSection>
       </StyledNav>
     </StyledMainNav>

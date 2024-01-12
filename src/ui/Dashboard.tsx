@@ -1,7 +1,11 @@
 import React from 'react'
+import MainMenuButton from './MainMenuButton'
 
 export default function Dashboard() {
   return (
-    <div>this is the Dashboard</div>
+    <div>
+
+      <MainMenuButton />
+    </div>
   )
 }

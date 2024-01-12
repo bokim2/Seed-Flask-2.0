@@ -5,7 +5,7 @@ import { useState } from 'react';
 import NavList from './NavList';
 
 const StyledBackgroundColor = styled.div`
-  position: absolute;
+  position: fixed;
   background-color: var(--clr-primary-800);
   width: 100vw;
   height: 100vh;
@@ -27,6 +27,12 @@ const StyledBackgroundImg = styled.div`
   z-index: -1;
 `;
 
+const MainContainer = styled.main`
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 3vh;
+`
+
 export default function AppLayout() {
   const [toggleNav, setToggleNav] = useState(false);
 
@@ -38,10 +44,10 @@ return (
         <StyledBackgroundImg />
         <MainNav toggleNav={toggleNav} handleClick={handleClick} />
         {toggleNav && <NavList />}
-        <span>testing app layout</span>
-        <main>
+        {/* <span>testing app layout</span> */}
+        <MainContainer>
             <Outlet />
-        </main>
+        </MainContainer>
         {/* </StyledAppLayout> */}
     </>
 );
