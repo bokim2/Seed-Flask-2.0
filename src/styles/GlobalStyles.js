@@ -103,15 +103,8 @@ ${
   --clr-primary-600: #475569;
   --clr-primary-700: #334155;
   --clr-primary-800: #150F1D; // app background
-  --clr-primary-900: rgba(21,15,29,.5); //navbar
-  --clr-primary-950: #020617;
-
-  /* color testing area - these are overwriting colors above!! */
-
-
-
-
-  /*                       */
+  --clr-primary-900: 21,15,29; //dark black - navbar
+  --clr-primary-950: 2,6,23;  //darker black - navbar expanded
 
   --clr-accent-0: #F2D17C; /* main accent */
   --clr-accent-1: #faed26; /*  */

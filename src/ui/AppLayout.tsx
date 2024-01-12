@@ -28,9 +28,11 @@ const StyledBackgroundImg = styled.div`
 `;
 
 const MainContainer = styled.main`
-  width: 90%;
+  width: 85%;
   margin: 0 auto;
-  padding-top: 3vh;
+  padding-top: clamp(0.5rem, 4vw, 3rem);
+
+  
 `
 
 export default function AppLayout() {
