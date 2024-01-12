@@ -25,9 +25,9 @@ app.use(express.static(path.join(__dirname, '../dist')));
 
 // Define any API routes
 
-// app.get('/api', (req, res) => {
-//   res.send('Hello from the API');
-// });
+app.get('/api', (req, res) => {
+  res.send('Hello from the API');
+});
 
 //GET one flask
 app.get('/api/flasks/:id', async (req, res) => {
