@@ -7,7 +7,7 @@ const StyledNavList = styled.ul`
   flex-direction: column;
   position: absolute;
   width: 100%;
-  background-color: var(--clr-primary-900);
+  background-color: rgba(var(--clr-primary-900),.7);
 
 `;
 
