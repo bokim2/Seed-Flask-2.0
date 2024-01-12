@@ -1,14 +1,16 @@
 import { Outlet } from 'react-router-dom';
 import MainNav from './MainNav';
 import styled from 'styled-components';
+import { useState } from 'react';
+import NavList from './NavList';
 
-const StyledAppLayout = styled.div`
+const StyledBackgroundColor = styled.div`
   position: absolute;
-background-color: var(--clr-primary-800);
+  background-color: var(--clr-primary-800);
   width: 100vw;
   height: 100vh;
-  z-index:-2;
-  
+  z-index: -2;
+
   /* opacity: 0.5; */
 `;
 
@@ -22,20 +24,26 @@ const StyledBackgroundImg = styled.div`
   background-position-x: 25%, 0%;
   background-position-y: 0%, 100%;
   height: 100vh;
-  z-index:-1;
+  z-index: -1;
 `;
 
 export default function AppLayout() {
-  return (
+  const [toggleNav, setToggleNav] = useState(false);
+
+const handleClick = (): void => setToggleNav((prev) => !prev);
+
+return (
     <>
-      <StyledAppLayout />
-      <StyledBackgroundImg />
-      <MainNav />
-      testing app layout
-      <main>
-        <Outlet />
-      </main>
-      {/* </StyledAppLayout> */}
+        <StyledBackgroundColor />
+        <StyledBackgroundImg />
+        <MainNav toggleNav={toggleNav} handleClick={handleClick} />
+        {toggleNav && <NavList />}
+        <span>testing app layout</span>
+        <main>
+            <Outlet />
+        </main>
+        {/* </StyledAppLayout> */}
     </>
-  );
+);
+
 }

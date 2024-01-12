@@ -1,7 +1,8 @@
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaCaretDown, FaUser } from 'react-icons/fa';
+import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
 import { useState } from 'react';
+import NavList from './NavList';
+import { type } from 'os';
 
 const StyledMainNav = styled.div`
   z-index: 10;
@@ -34,25 +35,23 @@ const StyledCircle = styled.div`
   justify-content: center;
 `;
 
-const NavList = styled.ul`
-  display: flex;
-  flex-direction: column;
-`;
-
 const NavSection = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
 `;
 
-const StyledNavLink = styled(NavLink)``;
 const style = { color: '#F2D17C', fontSize: '3rem' };
 
-export default function MainNav() {
-  const [toggleNav, setToggleNav] = useState(false);
+type MainNavProps = {
+  toggleNav: boolean;
+  handleClick: () => void;
+};
+
+export default function MainNav({ toggleNav, handleClick }: MainNavProps) {
   return (
-    <StyledMainNav>
-      <StyledNav onClick={() => setToggleNav((prev) => !prev)}>
+    <StyledMainNav onClick={handleClick}>
+      <StyledNav>
         <StyledTitle>Seed Flask</StyledTitle>
 
         <NavSection>
@@ -60,27 +59,7 @@ export default function MainNav() {
             <FaUser />
           </StyledCircle>
 
-          {toggleNav ? (
-            <NavList>
-              <li>
-                <StyledNavLink to="/">Main</StyledNavLink>
-              </li>
-              <li>
-                <StyledNavLink to="/cellbank">Cellbank</StyledNavLink>
-              </li>
-              <li>
-                <StyledNavLink to="/flask">Flask</StyledNavLink>
-              </li>
-              <li>
-                <StyledNavLink to="/sample">Sample</StyledNavLink>
-              </li>
-              <li>
-                <StyledNavLink to="/bioreactor">Bioreactor</StyledNavLink>
-              </li>
-            </NavList>
-          ) : (
-            <FaCaretDown style={style} />
-          )}
+          {toggleNav ? <FaCaretUp style={style} /> : <FaCaretDown style={style} />}
         </NavSection>
       </StyledNav>
     </StyledMainNav>
