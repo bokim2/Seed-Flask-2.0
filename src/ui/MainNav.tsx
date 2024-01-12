@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 const StyledMainNav = styled.div`
   z-index: 10;
-  background-color: var(--clr-primary-900);
+  background-color: rgba(var(--clr-primary-950),.7);
 `;
 
 const StyledNavLink = styled(NavLink)`

@@ -5,7 +5,7 @@ export default function Dashboard() {
   return (
     <div>
 
-      <MainMenuButton />
+      <MainMenuButton text={'register cell bank'} backgroundColor='red'/>
     </div>
   )
 }
