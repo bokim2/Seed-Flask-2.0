@@ -17,19 +17,11 @@ const StyledMainMenuButtons = styled(NavLink)`
   color: var(--color-text-2);
 `;
 
-const StyledCircle = styled.div`
-  border-radius: 99999vw;
-  background-color: blue;
-  padding: 0.5rem;
-  border: 5px solid green;
-`;
+
 
 const StyledImage = styled.img`
-  /* border-radius: 99999vw; */
   aspect-ratio: 1/1;
   height: clamp(1.5rem, 4vw, 5rem);
-  /* background-color: red; */
-  /* height: 50%; */
   object-fit: scale-down;
 `;
 
@@ -58,9 +50,11 @@ export default function MainMenuButton({
       style={{ backgroundColor, ...positionElement }}
     >
       <span>{text}</span>
-      {/* <StyledCircle> */}
+  
       <StyledImage src={imgUrl} alt={imgAlt} style={styleOverride} />
-      {/* </StyledCircle> */}
+
     </StyledMainMenuButtons>
   );
 }
+
+

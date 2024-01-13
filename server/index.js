@@ -29,6 +29,21 @@ app.get('/api', (req, res) => {
   res.send('Hello from the API');
 });
 
+//GET all flasks
+app.get('/api/flasks', async (req, res) => {
+  try {
+    const results = await db.query('select * from flasks');
+    // console.log('results of getting one flask', results.rows[0]);
+    res.status(200).json({
+      status: 'success',
+      // results: results.rows.length,
+      data: results,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 //GET one flask
 app.get('/api/flasks/:id', async (req, res) => {
   try {

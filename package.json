@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "node server/index.js"
+    "start": "nodemon server/index.js"
   },
   "dependencies": {
     "@tanstack/react-query-devtools": "^5.17.9",
@@ -17,6 +17,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "node": "^21.2.0",
+    "nodemon": "^3.0.2",
     "path": "^0.12.7",
     "pg": "^8.11.3",
     "postgres": "^3.4.3",

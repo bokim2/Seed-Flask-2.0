@@ -11,6 +11,7 @@ const StyledApp = styled.div`
 
 export default function TestComponent() {
   const [flask, setFlask] = useState<any>({});
+  const [flasks, setFlasks] = useState<any>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,6 +21,22 @@ export default function TestComponent() {
         console.log('Axios response:', res);
         console.log('Data in useEffect:', res.data);
         setFlask(res.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // console.log('in fetch data', import.meta.env.PROD);
+        const res = await axios.get(`${baseUrl}/api/flasks`);
+        // console.log('Axios response: FLASKS', res);
+        console.log('Data in useEffect: FLASKS', res.data);
+        setFlasks(res.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
