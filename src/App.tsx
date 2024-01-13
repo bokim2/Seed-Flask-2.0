@@ -10,6 +10,7 @@ import AppLayout from './ui/AppLayout';
 import Dashboard from './pages/Dashboard';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -23,8 +24,10 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 // });
 
 function App() {
+  const queryClient = new QueryClient();
   return (
     <>
+     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
       {/* <StyledDiv>
@@ -43,6 +46,7 @@ function App() {
         </Routes>
         <TestComponent />
       </BrowserRouter>
+      </QueryClientProvider>
     </>
   );
 }

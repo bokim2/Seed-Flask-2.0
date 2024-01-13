@@ -29,15 +29,59 @@ app.get('/api', (req, res) => {
   res.send('Hello from the API');
 });
 
-//GET all flasks
+//GET all flasks before trying left join
+// app.get('/api/flasks', async (req, res) => {
+//   try {
+//     const results = await db.query('select * from flasks');
+//     console.log('results of getting all flasks', results.rows);
+//     res.status(200).json({
+//       status: 'success',
+//       // results: results.rows.length,
+//       data: results.rows,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
+//GET all flasks - flasks table joined with cell_banks table
+
+// SELECT
+//   *,
+//   CONVERT_TZ(start_date, 'UTC', 'America/Los_Angeles') AS start_date_pacific
+// FROM your_table;
+
+// flasks joined with cellbank.  works
+// app.get('/api/flasks', async (req, res) => {
+//   try {
+//     const results = await db.query(
+//       'select * from flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id'
+//     );
+//     console.log('results of getting all flasks', results.rows);
+//     res.status(200).json({
+//       status: 'success',
+//       // results: results.rows.length,
+//       data: results.rows,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
 app.get('/api/flasks', async (req, res) => {
   try {
-    const results = await db.query('select * from flasks');
-    // console.log('results of getting one flask', results.rows[0]);
+    const results = await db.query(
+      `SELECT
+      *,
+      start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS start_date_pacific,
+      TO_CHAR(start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI') AS start_date_pacific_readable
+    FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
+    );
+    // console.log('trying to get timezone to work', results);
     res.status(200).json({
       status: 'success',
       // results: results.rows.length,
-      data: results,
+      data: results.rows,
     });
   } catch (err) {
     console.log(err);
@@ -50,7 +94,7 @@ app.get('/api/flasks/:id', async (req, res) => {
     const results = await db.query('select * from flasks WHERE flask_id = $1', [
       req.params.id,
     ]);
-    console.log('results of getting one flask', results.rows[0]);
+    // console.log('results of getting one flask', results.rows[0]);
     res.status(200).json({
       status: 'success',
       results: results.rows.length,
