@@ -51,6 +51,8 @@ export default function TestComponent() {
       <StyledApp>
         app page changing test prod
         {JSON.stringify(flask)}
+
+        <div style={{color: 'black'}}>{JSON.stringify(flasks)}</div>
         <Button $variation="secondary" $size="medium">
           Test
         </Button>
