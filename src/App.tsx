@@ -10,7 +10,7 @@ import AppLayout from './ui/AppLayout';
 import Dashboard from './pages/Dashboard';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -27,25 +27,27 @@ function App() {
   const queryClient = new QueryClient();
   return (
     <>
-     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <GlobalStyles />
-      {/* <StyledDiv>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <GlobalStyles />
+        {/* <StyledDiv>
 
       </StyledDiv> */}
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="cellbank" element={<h1>cellbank page</h1>} />
-            <Route path="flask" element={<h1>start flask page</h1>} />
-            <Route path="sample" element={<h1>sample page</h1>} />
-            <Route path="bioreactor" element={<h1>bioreactor page</h1>} />
-          </Route>
-          <Route path="*" element={<h1>Page not found</h1>} />
-        </Routes>
-        <TestComponent />
-      </BrowserRouter>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="cellbank" element={<h1>cellbank page</h1>} />
+              <Route path="flask" element={<h1>start flask page</h1>} />
+              <Route path="sample" element={<h1>sample page</h1>} />
+              <Route path="bioreactor" element={<h1>bioreactor page</h1>} />
+              <Route path="settings" element={<h1>settings page</h1>} />
+            </Route>
+
+            <Route path="*" element={<h1>Page not found</h1>} />
+          </Routes>
+          <TestComponent />
+        </BrowserRouter>
       </QueryClientProvider>
     </>
   );
