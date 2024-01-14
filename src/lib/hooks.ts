@@ -40,7 +40,7 @@ const {isLoading, data} = useQuery({queryKey: ['flask', id],
         refetchOnWindowFocus: true,
         retry: false,
         enabled: Boolean(id),
-        onError: ()=> console.log('error in useFlask'),
+        // onError: ()=> console.log('error in useFlask'),
 })
 // console.log('data in useFlask', data);
 const flask = data;
@@ -60,7 +60,7 @@ export function useFlasks() {
             refetchOnWindowFocus: true,
             retry: false,
             enabled: true,
-            onError: ()=> console.log('error in useFlask'),
+            // onError: ()=> console.log('error in useFlask'),
     })
     console.log('data in useFlask', data);
     const flasks = data?.data;
