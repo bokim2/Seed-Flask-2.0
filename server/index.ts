@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { Router } from 'express';
+import { Express, Request, Response } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 
@@ -9,7 +10,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const app = express();
+const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
