@@ -38,10 +38,14 @@ export default function FlasksTable({render}) {
             <TableHeaderCell>inoculum uL</TableHeaderCell>
             <TableHeaderCell>media mL</TableHeaderCell>
             <TableHeaderCell>Start date/time</TableHeaderCell>
+            <TableHeaderCell>Start date/time (pacific)</TableHeaderCell>
+            <TableHeaderCell>Start date/time (pacific -human readable)</TableHeaderCell>
           </TableRow>
         </TableHeaders>
+        <tbody>
         {flasks?.map(render)
         }
+        </tbody>
       </FlaskTable>
 
       <div style={{ color: 'white' }}>{JSON.stringify(flasks)}</div>

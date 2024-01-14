@@ -1,4 +1,5 @@
 import express from 'express';
+
 import 'dotenv/config';
 import cors from 'cors';
 
@@ -43,47 +44,46 @@ app.get('/api', (req, res) => {
 //   }
 // });
 
-//GET all flasks - flasks table joined with cell_banks table - format 2024-01-10T04:15:50.421Z returns pacific time
-// app.get('/api/flasks', async (req, res) => {
-//     try {
-//       const results = await db.query(
-//         `SELECT
-//         *,
-//         start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS start_date_pacific
-//       FROM flasks;`
-//       );
-//       console.log('trying to get timezone to work', results);
-//       res.status(200).json({
-//         status: 'success',
-//         // results: results.rows.length,
-//         data: results.rows,
-//       });
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   });
-
-// get ALL flasks - works, format is like this 2024-01-10 12:15  returns pacific time, gives you more complicated format also as "start_date_pacific"
+//GET all flasks - flasks table joined with cell_banks table
 app.get('/api/flasks', async (req, res) => {
-  try {
-    const results = await db.query(
-      `SELECT
-      *,
-      start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS start_date_pacific,
-      start_date AT TIME ZONE 'UTC' AT TIME ZONE 'US/Eastern' AS start_date_eastern,
-      TO_CHAR(start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI') AS start_date_pacific_readable
-    FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
-    );
-    // console.log('trying to get timezone to work', results);
-    res.status(200).json({
-      status: 'success',
-      // results: results.rows.length,
-      data: results.rows,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
+    try {
+      const results = await db.query(
+        `SELECT
+        *,
+        start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS start_date_pacific
+      FROM flasks;`
+      );
+      console.log('trying to get timezone to work', results);
+      res.status(200).json({
+        status: 'success',
+        // results: results.rows.length,
+        data: results.rows,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+// works, format is like this 2024-01-10 12:15
+// app.get('/api/flasks', async (req, res) => {
+//   try {
+//     const results = await db.query(
+//       `SELECT
+//       *,
+//       start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS start_date_pacific,
+//       TO_CHAR(start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI') AS start_date_pacific_readable
+//     FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
+//     );
+//     // console.log('trying to get timezone to work', results);
+//     res.status(200).json({
+//       status: 'success',
+//       // results: results.rows.length,
+//       data: results.rows,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 
 //GET one flask
