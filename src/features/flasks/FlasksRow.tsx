@@ -19,7 +19,8 @@ export default function FlasksRow({ flask }) {
         <TableCell>{flask.target_molecule}</TableCell>
         <TableCell>{flask.inoculum_ul}</TableCell>
         <TableCell>{flask.media_ml}</TableCell>
-        
+        <TableCell>{flask.start_date}</TableCell>{' '}
+        <TableCell>{flask.start_date_pacific}</TableCell>
         <TableCell>{flask.start_date_pacific_readable}</TableCell>
       </TableRow>
     </>
