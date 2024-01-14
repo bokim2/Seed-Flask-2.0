@@ -10,8 +10,6 @@ const StyledBackgroundColor = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: -2;
-
-  /* opacity: 0.5; */
 `;
 
 const StyledBackgroundImg = styled.div`
@@ -32,7 +30,7 @@ const MainContainer = styled.main`
   margin: 0 auto;
   padding-top: clamp(0.5rem, 4vw, 3rem);
 
-  
+
 `
 
 export default function AppLayout() {
