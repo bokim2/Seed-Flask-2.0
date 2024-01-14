@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 const StyledMainNav = styled.div`
   z-index: 10;
-  background-color: rgba(var(--clr-primary-950),.7);
+  background-color: rgba(var(--clr-primary-950), 0.7);
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -33,21 +33,39 @@ const StyledTitle = styled.h1`
   letter-spacing: 0.08rem;
 `;
 
-const StyledCircle = styled.div`
-  background-color: red;
-  z-index: 100;
+const StyledCircle = styled.button`
+  /* background-color: red;
+
   height: clamp(2rem, 3vw, 3rem);
   aspect-ratio: 1/1;
   border-radius: 99999vw;
   display: flex;
   align-items: center;
+  justify-content: center; */
+  /* height: 90%; */
+  aspect-ratio: 1/1;
+  border-radius: 9999vw;
+  margin: 0.5rem;
+  padding: 0.5rem;
+`;
+
+const RoundButton = styled.button`
+  border-radius: 50%; /* Use 50% for a circular shape */
+  aspect-ratio: 1/1;
+  padding: 0.5rem; /* Add padding if needed */
+  display: flex;
+  align-items: center;
   justify-content: center;
 `;
+
+const ButtonWrapper = styled.button`
+padding: 0;
+background-color: transparent;`;
 
 const NavSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 `;
 
 const style = { color: '#F2D17C', fontSize: '3rem' };
@@ -66,14 +84,18 @@ export default function MainNav({ toggleNav, handleClick }: MainNavProps) {
         </StyledNavLink>
 
         <NavSection>
-          <StyledCircle>
-            <FaUser />
-          </StyledCircle>
+          <RoundButton>
+            <FaUser style={{fontSize: '2rem'}}/>
+          </RoundButton>
 
           {toggleNav ? (
-            <FaCaretUp style={style} />
+            <ButtonWrapper>
+              <FaCaretUp style={style} />
+            </ButtonWrapper>
           ) : (
-            <FaCaretDown style={style} />
+            <ButtonWrapper>
+              <FaCaretDown style={style} />
+            </ButtonWrapper>
           )}
         </NavSection>
       </StyledNav>

@@ -21,7 +21,7 @@ const MenuButtonContainer = styled.div`
 export default function Dashboard() {
   return (
     <MenuButtonContainer>
-      <Settings/>
+    
       <FlasksTable render={(flask, i) => <FlasksRow flask={flask} key={flask.flask_id}/>} />
 
       <MainMenuButton
