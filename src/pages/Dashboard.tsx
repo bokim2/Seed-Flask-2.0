@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { MdHeight } from 'react-icons/md';
 import FlasksTable from '../features/flasks/FlasksTable';
 import FlasksRow from '../features/flasks/FlasksRow';
+import Settings from './Settings';
 
 const MenuButtonContainer = styled.div`
   display: flex;
@@ -20,7 +21,8 @@ const MenuButtonContainer = styled.div`
 export default function Dashboard() {
   return (
     <MenuButtonContainer>
-      <FlasksTable render={(flask, i) => <FlasksRow flask={flask} />} />
+      <Settings/>
+      <FlasksTable render={(flask, i) => <FlasksRow flask={flask} key={flask.flask_id}/>} />
 
       <MainMenuButton
         toPath="/cellbank"

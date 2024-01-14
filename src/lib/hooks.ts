@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { baseUrl } from '../../configs';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { useDispatch, useSelector } from 'react-redux'
+import type { TypedUseSelectorHook } from 'react-redux'
+import type { RootState, AppDispatch } from './store'
+
+// Use throughout your app instead of plain `useDispatch` and `useSelector`
+export const useAppDispatch: () => AppDispatch = useDispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 export function useFlask(id: number| null) {
 //   const [flask, setFlask] = useState<any>({});
