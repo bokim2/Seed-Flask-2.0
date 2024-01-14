@@ -6,6 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "allowJs": true, // added by BK
+    "noImplicitAny": false, // added by BK
 
     /* Bundler mode */
     "moduleResolution": "bundler",
