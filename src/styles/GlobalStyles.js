@@ -107,10 +107,10 @@ ${
   --clr-primary-950: 2,6,23;  //darker black - navbar expanded
 
   --clr-accent-0: #F2D17C; /* main accent */
-  --clr-accent-1: #faed26; /*  */
-  --clr-accent-2: #d6cc99; /* */
-  --clr-accent-3: #334155; /*  */
-  --clr-accent-4: #ccfad4; /* .function__title */
+  --clr-accent-1: #FAF7F0; /* menu button */
+  --clr-accent-2: #E1F6F2; /* */
+  --clr-accent-3: #E7F1DC; /*  */
+  --clr-accent-4: #E4F1EE; /* .function__title */
   --clr-accent-5: #86a789;
   --clr-accent-6: #ff7676;
   --clr-accent-7: #ff8080;
