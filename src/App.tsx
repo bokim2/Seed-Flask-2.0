@@ -11,6 +11,8 @@ import Dashboard from './pages/Dashboard';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Settings from './pages/Settings';
+import Cellbank from './pages/Cellbank';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -37,11 +39,11 @@ function App() {
           <Routes>
             <Route element={<AppLayout />}>
               <Route index element={<Dashboard />} />
-              <Route path="cellbank" element={<h1>cellbank page</h1>} />
+              <Route path="cellbank" element={<Cellbank/>} />
               <Route path="flask" element={<h1>start flask page</h1>} />
               <Route path="sample" element={<h1>sample page</h1>} />
               <Route path="bioreactor" element={<h1>bioreactor page</h1>} />
-              <Route path="settings" element={<h1>settings page</h1>} />
+              <Route path="settings" element={ <Settings/>} />
             </Route>
 
             <Route path="*" element={<h1>Page not found</h1>} />
