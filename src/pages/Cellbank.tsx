@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CellbanksForm from '../features/cellbanks/CellbanksForm';
 import { baseUrl } from '../../configs';
+import CellbanksTable from '../features/cellbanks/CellbanksTable';
 
 export default function Cellbank() {
   const [cellbanks, setCellbanks] = useState<any>([]);
@@ -14,14 +15,15 @@ export default function Cellbank() {
   };
 
   useEffect(() => {
-    const data = fetchCellbanks();
-    setCellbanks(data)
+fetchCellbanks();
+    // setCellbanks(data)
   }, []);
 
   return (
     <div>
-      {JSON.stringify(cellbanks)}
+      {/* {JSON.stringify(cellbanks)} */}
       <CellbanksForm />
+      <CellbanksTable cellbanks={cellbanks}/>
     </div>
   );
 }

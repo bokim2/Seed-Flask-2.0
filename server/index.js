@@ -102,37 +102,44 @@ app.get('/api/flasks/:id', async (req, res) => {
   }
 });
 
-
 // GET all cell banks
-app.get('/api/cellbanks', async(req, res)=> {
+app.get('/api/cellbanks', async (req, res) => {
   try {
-    const results = await db.query('select * from cell_banks')
+    const results = await db.query(`SELECT
+      *,
+      date_timestamptz AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
+      TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI:SS') AS readable_start_date_pacific
+    FROM cell_banks;`);
     res.status(200).json({
       status: 'success',
-      data: results.rows
-    })
-
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
   }
-  catch (err){
-    console.log(err)
-  }
-}
-)
+});
 // post one cell bank
-app.post("/api/cellbank", async(req, res)=>{
+app.post('/api/cellbank', async (req, res) => {
   try {
-    console.log(req.body, 'in post cell bank server')
-    const results = await db.query("INSERT INTO cell_banks (strain, notes, target_molecule, description) values ($1, $2, $3, $4) returning *", [req.body.strain, req.body.notes, req.body.target_molecule, req.body.description]);
-    console.log(results.rows)
+    console.log(req.body, 'in post cell bank server');
+    const results = await db.query(
+      'INSERT INTO cell_banks (strain, notes, target_molecule, description) values ($1, $2, $3, $4) returning *',
+      [
+        req.body.strain,
+        req.body.notes,
+        req.body.target_molecule,
+        req.body.description,
+      ]
+    );
+    console.log(results.rows);
     res.status(200).json({
-  status: "success",
-  data: results.rows
-})
-  } catch (err){
-console.log(err)
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
   }
-  }
-)
+});
 
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {
