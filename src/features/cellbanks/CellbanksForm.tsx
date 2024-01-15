@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
 import { baseUrl } from '../../../configs';
+import styled from 'styled-components';
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  text-transform: capitalize;
+  gap: 0.5rem;
+`;
+
+const InputContainer = styled.div`
+  background-color: red;
+  display: flex;
+  flex-direction: column;
+`;
 
 export default function CellbanksForm() {
   const initialForm = {
@@ -40,51 +54,59 @@ export default function CellbanksForm() {
   };
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="strain">strain</label>
-        <input
-          type="text"
-          id="strain"
-          name="strain"
-          placeholder="strain name"
-          onChange={handleChange}
-          required
-        />
+      <StyledForm onSubmit={handleSubmit}>
+        <InputContainer>
+          <label htmlFor="strain">strain</label>
+          <input
+            type="select"
+            id="strain"
+            name="strain"
+            placeholder="strain name (e.g. aspergillus, e.coli)"
+            onChange={handleChange}
+            required
+            autoFocus
+          />
+        </InputContainer>
 
-        <label htmlFor="notes">notes</label>
-        <input
-          type="text"
-          id="notes"
-          name="notes"
-          onChange={handleChange}
-          placeholder="notes"
-          required
-        />
+        <InputContainer>
+          <label htmlFor="notes">notes</label>
+          <input
+            type="text"
+            id="notes"
+            name="notes"
+            onChange={handleChange}
+            placeholder="notes"
+            required
+          />
+        </InputContainer>
 
-        <label htmlFor="target_molecule">target molecule</label>
-        <input
-          type="text"
-          id="target_molecule"
-          name="target_molecule"
-          onChange={handleChange}
-          placeholder="target molecule"
-          required
-        />
+        <InputContainer>
+          <label htmlFor="target_molecule">target molecule</label>
+          <input
+            type="text"
+            id="target_molecule"
+            name="target_molecule"
+            onChange={handleChange}
+            placeholder="target molecule"
+            required
+          />
+        </InputContainer>
+        <InputContainer>
+          <label htmlFor="description">description</label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            onChange={handleChange}
+            placeholder="description"
+            required
+          />
+        </InputContainer>
 
-        <label htmlFor="description">description</label>
-        <input
-          type="text"
-          id="description"
-          name="description"
-          onChange={handleChange}
-          placeholder="description"
-          required
-        />
-
-        <button type="submit" disabled={isSubmitting} >
+        <button type="submit" disabled={isSubmitting}>
           Submit
         </button>
-      </form>
+      </StyledForm>
     </>
   );
 }
