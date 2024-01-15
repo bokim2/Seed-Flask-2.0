@@ -53,7 +53,7 @@ export function useFlasks() {
        queryFn: async () => {
             const res = await fetch(`${baseUrl}/api/flasks`);
             const data = await res.json();
-            console.log('in query function')
+            // console.log('in query function')
         return data;
         },
             staleTime: 1000 * 60 * 60,
@@ -62,7 +62,7 @@ export function useFlasks() {
             enabled: true,
             // onError: ()=> console.log('error in useFlask'),
     })
-    console.log('data in useFlask', data);
+    // console.log('data in useFlask', data);
     const flasks = data?.data;
       return [flasks, isLoading] as const;
     }
