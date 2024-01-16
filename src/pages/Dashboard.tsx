@@ -22,7 +22,7 @@ export default function Dashboard() {
   return (
     <MenuButtonContainer>
     
-      <FlasksTable render={(flask, i) => <FlasksRow flask={flask} key={flask.flask_id}/>} />
+      {/* <FlasksTable render={(flask, i) => <FlasksRow flask={flask} key={flask.flask_id}/>} /> */}
 
       <MainMenuButton
         toPath="/cellbank"
