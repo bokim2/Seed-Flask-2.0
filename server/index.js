@@ -71,7 +71,7 @@ app.get('/api/flasks', async (req, res) => {
       *,
       start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS start_date_pacific,
       start_date AT TIME ZONE 'UTC' AT TIME ZONE 'US/Eastern' AS start_date_eastern,
-      TO_CHAR(start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI AM') AS start_date_pacific_readable
+      TO_CHAR(start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS start_date_pacific_readable
     FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
     );
     // console.log('trying to get timezone to work', results);
@@ -108,7 +108,7 @@ app.get('/api/cellbanks', async (req, res) => {
     const results = await db.query(`SELECT
       *,
       date_timestamptz AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
-      TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI AM') AS readable_start_date_pacific
+      TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
     FROM cell_banks;`);
     res.status(200).json({
       status: 'success',
