@@ -12,17 +12,16 @@ const MenuButtonContainer = styled.div`
   /* height: 60vh; */
   gap: clamp(1rem, 2vw, 2rem);
   justify-content: space-evenly;
+  /* max-width: 100%; */
 
   @media (min-width: 400px) {
     width: 60%;
   }
 `;
 
-export default function Dashboard() {
+export default function Home() {
   return (
     <MenuButtonContainer>
-    
-      {/* <FlasksTable render={(flask, i) => <FlasksRow flask={flask} key={flask.flask_id}/>} /> */}
 
       <MainMenuButton
         toPath="/cellbank"
