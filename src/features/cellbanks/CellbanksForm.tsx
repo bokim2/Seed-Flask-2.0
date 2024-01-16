@@ -2,18 +2,14 @@ import React, { useState } from 'react';
 import { baseUrl } from '../../../configs';
 import styled from 'styled-components';
 
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  text-transform: capitalize;
-  gap: 0.5rem;
-`;
-
-const InputContainer = styled.div`
-  background-color: red;
-  display: flex;
-  flex-direction: column;
-`;
+import {
+  FormButton,
+  FormInput,
+  FormLabel,
+  FormTextArea,
+  InputContainer,
+  StyledForm,
+} from '../../styles/UtilStyles';
 
 export default function CellbanksForm() {
   const initialForm = {
@@ -46,7 +42,11 @@ export default function CellbanksForm() {
     }
   };
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setForm((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -56,12 +56,12 @@ export default function CellbanksForm() {
     <>
       <StyledForm onSubmit={handleSubmit}>
         <InputContainer>
-          <label htmlFor="strain">strain</label>
-          <input
+          <FormLabel htmlFor="strain">strain</FormLabel>
+          <FormInput
             type="select"
             id="strain"
             name="strain"
-            placeholder="strain name (e.g. aspergillus, e.coli)"
+            placeholder="strain (e.g. aspergillus)"
             onChange={handleChange}
             required
             autoFocus
@@ -69,32 +69,22 @@ export default function CellbanksForm() {
         </InputContainer>
 
         <InputContainer>
-          <label htmlFor="notes">notes</label>
-          <input
+          <FormLabel htmlFor="target_molecule">
+            target molecule
+          </FormLabel>
+          <FormInput
             type="text"
-            id="notes"
-            name="notes"
+            id="target_molecule"
+            name="target_molecule"
             onChange={handleChange}
-            placeholder="notes"
+            placeholder="target molecule (e.g. farnesane)"
             required
           />
         </InputContainer>
 
         <InputContainer>
-          <label htmlFor="target_molecule">target molecule</label>
-          <input
-            type="text"
-            id="target_molecule"
-            name="target_molecule"
-            onChange={handleChange}
-            placeholder="target molecule"
-            required
-          />
-        </InputContainer>
-        <InputContainer>
-          <label htmlFor="description">description</label>
-          <input
-            type="text"
+          <FormLabel htmlFor="description">description</FormLabel>
+          <FormTextArea
             id="description"
             name="description"
             onChange={handleChange}
@@ -103,9 +93,20 @@ export default function CellbanksForm() {
           />
         </InputContainer>
 
-        <button type="submit" disabled={isSubmitting}>
+        <InputContainer>
+          <FormLabel htmlFor="notes">notes</FormLabel>
+          <FormTextArea
+            id="notes"
+            name="notes"
+            onChange={handleChange}
+            placeholder="notes"
+            required
+          />
+        </InputContainer>
+
+        <FormButton type="submit" disabled={isSubmitting}>
           Submit
-        </button>
+        </FormButton>
       </StyledForm>
     </>
   );

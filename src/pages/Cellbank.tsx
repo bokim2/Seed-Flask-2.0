@@ -8,14 +8,14 @@ export default function Cellbank() {
 
   const fetchCellbanks = async () => {
     const res = await fetch(`${baseUrl}/api/cellbanks`);
-    const {data} = await res.json();
-    console.log(data, 'in fetchcellbanks')
-    setCellbanks(data)
-    return data
+    const { data } = await res.json();
+    // console.log(data, 'in fetchcellbanks')
+    setCellbanks(data);
+    return data;
   };
 
   useEffect(() => {
-fetchCellbanks();
+    fetchCellbanks();
     // setCellbanks(data)
   }, []);
 
@@ -23,7 +23,7 @@ fetchCellbanks();
     <div>
       {/* {JSON.stringify(cellbanks)} */}
       <CellbanksForm />
-      <CellbanksTable cellbanks={cellbanks}/>
+      <CellbanksTable cellbanks={cellbanks} />
     </div>
   );
 }
