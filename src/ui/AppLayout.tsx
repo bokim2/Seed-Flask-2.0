@@ -3,6 +3,7 @@ import MainNav from './MainNav';
 import styled from 'styled-components';
 import { useState } from 'react';
 import NavList from './NavList';
+import LoaderBar from './LoaderBar';
 
 const StyledBackgroundColor = styled.div`
   position: fixed;
@@ -28,7 +29,7 @@ const StyledBackgroundImg = styled.div`
 const MainContainer = styled.main`
   width: 85%;
   margin: 0 auto;
-  padding-top: clamp(0.5rem, 4vw, 3rem);
+  /* padding-top: clamp(0.5rem, 4vw, 3rem); */
 
 
 `
@@ -43,6 +44,7 @@ return (
         <StyledBackgroundColor />
         <StyledBackgroundImg />
         <MainNav toggleNav={toggleNav} handleClick={handleClick} />
+        {/* <LoaderBar /> */}
         {toggleNav && <NavList />}
         {/* <span>testing app layout</span> */}
         <MainContainer>

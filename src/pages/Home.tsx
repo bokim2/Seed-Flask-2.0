@@ -5,6 +5,7 @@ import { MdHeight } from 'react-icons/md';
 import FlasksTable from '../features/flasks/FlasksTable';
 import FlasksRow from '../features/flasks/FlasksRow';
 import Settings from './Settings';
+import { Wrapper } from '../styles/UtilStyles';
 
 const MenuButtonContainer = styled.div`
   display: flex;
@@ -21,6 +22,7 @@ const MenuButtonContainer = styled.div`
 
 export default function Home() {
   return (
+    <Wrapper>
     <MenuButtonContainer>
 
       <MainMenuButton
@@ -57,5 +59,6 @@ export default function Home() {
         positionElement={{ left: '30%' }}
       />
     </MenuButtonContainer>
+    </Wrapper>
   );
 }
