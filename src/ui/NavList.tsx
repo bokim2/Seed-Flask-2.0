@@ -8,7 +8,7 @@ const StyledNavList = styled.ul`
   position: absolute;
   width: 100%;
   background-color: rgba(var(--clr-primary-900),.7);
-
+z-index: 10;
 `;
 
 const StyledNavLink = styled(NavLink)`

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import NavList from './NavList';
 import { type } from 'os';
 import { NavLink } from 'react-router-dom';
@@ -34,15 +34,7 @@ const StyledTitle = styled.h1`
 `;
 
 const StyledCircle = styled.button`
-  /* background-color: red;
 
-  height: clamp(2rem, 3vw, 3rem);
-  aspect-ratio: 1/1;
-  border-radius: 99999vw;
-  display: flex;
-  align-items: center;
-  justify-content: center; */
-  /* height: 90%; */
   aspect-ratio: 1/1;
   border-radius: 9999vw;
   margin: 0.5rem;
@@ -76,8 +68,9 @@ type MainNavProps = {
 };
 
 export default function MainNav({ toggleNav, handleClick }: MainNavProps) {
+  const mainNavRef = useRef(null)
   return (
-    <StyledMainNav onClick={handleClick}>
+    <StyledMainNav onClick={handleClick} ref={mainNavRef} >
       <StyledNav>
         <StyledNavLink to="/">
           <StyledTitle>Seed Flask</StyledTitle>
