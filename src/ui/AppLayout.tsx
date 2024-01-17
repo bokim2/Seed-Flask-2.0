@@ -14,15 +14,15 @@ const StyledBackgroundColor = styled.div`
 `;
 
 const StyledBackgroundImg = styled.div`
-  width: 100vw;
-  position: absolute;
+  min-width: 100%;
+  height: 100%;
+  position: fixed;
 
   background-image: url('images/blobTop.svg'), url('images/blobBottom.svg');
   background-size: 80vw;
   background-repeat: no-repeat;
   background-position-x: 25%, 0%;
   background-position-y: 0%, 100%;
-  height: 100vh;
   z-index: -1;
 `;
 
@@ -30,28 +30,25 @@ const MainContainer = styled.main`
   width: 85%;
   margin: 0 auto;
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
-
-
-`
+`;
 
 export default function AppLayout() {
   const [toggleNav, setToggleNav] = useState(false);
 
-const handleClick = (): void => setToggleNav((prev) => !prev);
+  const handleClick = (): void => setToggleNav((prev) => !prev);
 
-return (
+  return (
     <>
-        <StyledBackgroundColor />
-        <StyledBackgroundImg />
-        <MainNav toggleNav={toggleNav} handleClick={handleClick} />
-        {/* <LoaderBar /> */}
-        {toggleNav && <NavList />}
-        {/* <span>testing app layout</span> */}
-        <MainContainer>
-            <Outlet />
-        </MainContainer>
-        {/* </StyledAppLayout> */}
+      <StyledBackgroundColor />
+      <StyledBackgroundImg />
+      <MainNav toggleNav={toggleNav} handleClick={handleClick} />
+      {/* <LoaderBar /> */}
+      {toggleNav && <NavList />}
+      {/* <span>testing app layout</span> */}
+      <MainContainer>
+        <Outlet />
+      </MainContainer>
+      {/* </StyledAppLayout> */}
     </>
-);
-
+  );
 }
