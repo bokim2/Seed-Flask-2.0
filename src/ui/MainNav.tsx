@@ -78,7 +78,7 @@ export default function MainNav({ toggleNav, handleClick }: MainNavProps) {
 
         <NavSection>
           <RoundButton>
-            <FaUser style={{fontSize: '2rem'}}/>
+            <FaUser style={{fontSize: '2rem', fill: 'black'}}/>
           </RoundButton>
 
           {toggleNav ? (
