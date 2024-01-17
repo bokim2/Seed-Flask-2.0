@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { baseUrl } from '../../../configs';
 import styled from 'styled-components';
-
 import {
   FormButton,
   FormInput,
@@ -10,6 +9,7 @@ import {
   InputContainer,
   StyledForm,
 } from '../../styles/UtilStyles';
+import Button from '../../ui/Button';
 
 export default function CellbanksForm() {
   const initialForm = {
@@ -104,9 +104,9 @@ export default function CellbanksForm() {
           />
         </InputContainer>
 
-        <FormButton type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}>
           Submit
-        </FormButton>
+        </Button>
       </StyledForm>
     </>
   );

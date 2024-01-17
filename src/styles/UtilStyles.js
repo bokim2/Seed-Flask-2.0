@@ -1,5 +1,13 @@
 import styled from 'styled-components';
 
+
+// Nav Circular Button Styles
+
+export const CircularButtonLG = styled.button`
+`; 
+
+// FORM STYLES
+
 export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -87,6 +95,9 @@ export const FormTextArea = styled.textarea`
 `;
 
 export const FormButton = styled.button``;
+
+
+// TABLE STYLES
 
 export const Wrapper = styled.div``;
 
