@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 const StyledMainNav = styled.div`
   z-index: 10;
   background-color: rgba(var(--clr-primary-950), 0.7);
+  padding-block: 0.5rem;
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -33,13 +34,7 @@ const StyledTitle = styled.h1`
   letter-spacing: 0.08rem;
 `;
 
-const StyledCircle = styled.button`
 
-  aspect-ratio: 1/1;
-  border-radius: 9999vw;
-  margin: 0.5rem;
-  padding: 0.5rem;
-`;
 
 const RoundButton = styled.button`
   border-radius: 50%; /* Use 50% for a circular shape */
@@ -60,6 +55,12 @@ const NavSection = styled.div`
   gap: 1.5rem;
 `;
 
+const StyledFaUser = styled(FaUser)`
+font-size: 1.75rem;
+fill: var(--clr-accent-0);
+`;
+
+
 const style = { color: '#F2D17C', fontSize: '3rem' };
 
 type MainNavProps = {
@@ -78,7 +79,7 @@ export default function MainNav({ toggleNav, handleClick }: MainNavProps) {
 
         <NavSection>
           <RoundButton>
-            <FaUser style={{fontSize: '2rem', fill: 'black'}}/>
+            <StyledFaUser />
           </RoundButton>
 
           {toggleNav ? (
