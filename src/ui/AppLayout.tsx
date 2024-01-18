@@ -36,8 +36,14 @@ const StyledBackgroundImg = styled.div`
 
 const NavBar = styled.div`
   position: fixed;
+  margin: 0;
   width: 100%;
   z-index: 10;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
 `;
 
 const MainPageContainer = styled.main`
@@ -62,7 +68,7 @@ export default function AppLayout() {
     <StyledAppLayout>
       <StyledBackgroundColor />
       <StyledBackgroundImg />
-      <NavBar>
+      <NavBar id="NavBar">
         <MainNav toggleNav={toggleNav} handleToggle={handleClick} />
       </NavBar>
       {/* <LoaderBar /> */}
