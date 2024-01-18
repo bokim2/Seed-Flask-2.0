@@ -21,7 +21,7 @@ export default function Cellbank() {
   }, []);
 
   return (
-    <PageContainer>
+    <PageContainer id="CellbankPageContainer">
       <InnerPageContainer>
         {/* {JSON.stringify(cellbanks)} */}
         <CellbanksForm />

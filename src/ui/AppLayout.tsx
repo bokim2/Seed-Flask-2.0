@@ -6,12 +6,12 @@ import NavList from './NavList';
 import LoaderBar from './LoaderBar';
 
 const StyledAppLayout = styled.div`
-flex: 1;
-position: relative;
-display: flex;
-flex-direction: column;
-/* height: 100vh; */
-`
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* height: 100vh; */
+`;
 
 const StyledBackgroundColor = styled.div`
   position: fixed;
@@ -34,10 +34,16 @@ const StyledBackgroundImg = styled.div`
   z-index: -1;
 `;
 
+const NavBar = styled.div`
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+`;
+
 const MainPageContainer = styled.main`
-position: relative;
-flex-grow: 1;
-width: 100%;
+  position: relative;
+  flex-grow: 1;
+  width: 100%;
   /* width: 85%; */
   margin: 0 auto;
   /* height: 100%; */
@@ -49,17 +55,20 @@ export default function AppLayout() {
 
   const handleClick = (e: React.MouseEvent<SVGElement, MouseEvent>): void => {
     e.stopPropagation();
-    setToggleNav((prev) => !prev);}
+    setToggleNav((prev) => !prev);
+  };
 
   return (
     <StyledAppLayout>
       <StyledBackgroundColor />
       <StyledBackgroundImg />
-      <MainNav toggleNav={toggleNav} handleToggle={handleClick} />
+      <NavBar>
+        <MainNav toggleNav={toggleNav} handleToggle={handleClick} />
+      </NavBar>
       {/* <LoaderBar /> */}
-      
+
       {/* <span>testing app layout</span> */}
-      <MainPageContainer>
+      <MainPageContainer id="MainPageContainer">
         <Outlet />
       </MainPageContainer>
       {/* </StyledAppLayout> */}

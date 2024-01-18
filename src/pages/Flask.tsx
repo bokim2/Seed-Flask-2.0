@@ -12,13 +12,13 @@ export default function Flask() {
   const [flasks, isLoading] = useFlasks();
 
   return (
-    <PageContainer>
+    <PageContainer id="FlaskPageContainer">
       <LoaderBar />
-      <InnerPageContainer>
+      <InnerPageContainer id="InnerFlaskPageContainer">
         saDSadaSDSAD
         <LoaderBar />
         <LoaderBar />
-        {isLoading ? <LoaderBar /> : <FlasksTable flasks={flasks} />}
+        {isLoading ? <LoaderBar /> : <FlasksTable id="FlasksTable" flasks={flasks} />}
       </InnerPageContainer>
     </PageContainer>
   );

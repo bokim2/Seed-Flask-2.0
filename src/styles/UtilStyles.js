@@ -1,35 +1,34 @@
 import styled from 'styled-components';
 
-
 // Main page styles
 
 export const PageContainer = styled.section`
+  margin-top: clamp(4rem, min(5vw, 5vh), 10rem);
   /* min-height: 100vh; */
-  display: flex;
-  align-items: center;
+  /* display: flex; */
+  /* align-items: center; */
+
   justify-content: center;
   width: 100%;
   position: relative;
-  height: 100%;
+  /* height: 100%; */
 `;
 
-
-
 export const InnerPageContainer = styled.section`
+  /* display: flex; */
+  /* align-items: center; */
   /* min-height: 100vh; */
+  margin-inline: auto;
   width: 90%;
   /* align-self: center; */
 
   /* position: relative; */
   height: 100%;
 
-  @media (min-width: 600px) {
-
+  @media (min-width: 800px) {
     width: 70%;
   }
 `;
-
-
 
 // FORM STYLES
 
@@ -41,7 +40,7 @@ export const StyledForm = styled.form`
   justify-content: center;
   align-items: center;
 
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
   }
 `;
 
@@ -54,8 +53,8 @@ export const InputContainer = styled.div`
   gap: 0.25rem;
   margin-block: 1rem;
 
-  &:focus-within label{
-color: #10e7dc;
+  &:focus-within label {
+    color: #10e7dc;
   }
   /* &::after {
     content: '';
@@ -93,7 +92,7 @@ export const FormInput = styled.input`
     border-bottom: 2px solid #10e7dc;
   }
 
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
     width: 40vw;
   }
 `;
@@ -114,13 +113,12 @@ export const FormTextArea = styled.textarea`
     border-bottom: 2px solid #10e7dc;
   }
 
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
     width: 40vw;
   }
 `;
 
 export const FormButton = styled.button``;
-
 
 // TABLE STYLES
 

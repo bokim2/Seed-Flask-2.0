@@ -11,7 +11,6 @@ import {
   Wrapper,
 } from '../styles/UtilStyles';
 
-
 const InnerWrapper = styled.div`
   margin: auto;
   display: flex;
@@ -23,7 +22,7 @@ const InnerWrapper = styled.div`
   /* align-items: center; */
   /* height: 70%; */
 
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
     flex-direction: row;
     /* height: revert; */
   }
@@ -39,7 +38,7 @@ const MenuButtonContainer = styled.div`
   justify-content: space-around;
   /* max-width: 100%; */
 
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
     /* width: 60%; */
   }
 `;
@@ -49,7 +48,7 @@ export const CircularButtonLG = styled.button`
   aspect-ratio: 1/1;
   border-radius: 50%;
 
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
     width: clamp(10rem, 10vw, 20rem);
   }
 `;
@@ -64,7 +63,7 @@ const SecondaryMenuButton = styled.div`
   /* gap: clamp(1rem, 2vw, 2rem); */
   justify-content: space-around;
 
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
     flex-direction: column;
     padding-bottom: 0;
   }
@@ -72,52 +71,52 @@ const SecondaryMenuButton = styled.div`
 
 export default function Home() {
   return (
-    <PageContainer>
-      <InnerPageContainer>
-          <InnerWrapper>
-            <MenuButtonContainer>
-              <MainMenuButton
-                toPath="/cellbank"
-                text={'register cell bank'}
-                backgroundColor="#FAF7F0"
-                imgUrl="images/yeast-21.png"
-                imgAlt="microbe"
-                positionElement={{ left: '0%' }}
-              />
-              <MainMenuButton
-                toPath="/flask"
-                text={'start flask'}
-                backgroundColor="#E1F6F2"
-                imgUrl="images/leaf-flask.png"
-                imgAlt="flask"
-                positionElement={{ left: '10%' }}
-              />
-              <MainMenuButton
-                toPath="/sample"
-                text={'sample flask'}
-                backgroundColor="#E7F1DC"
-                imgUrl="images/clock-testtube.png"
-                imgAlt="clock and test tube"
-                styleOverride={{
-                  height: 'clamp(1.8rem, 6vw, 6.6rem)',
-                  scale: '1.1',
-                }}
-                positionElement={{ left: '20%' }}
-              />
-              <MainMenuButton
-                toPath="/bioreactor"
-                text={'start bioreactor'}
-                backgroundColor="#E4F1EE"
-                imgUrl="images/bioreactor-1.png"
-                imgAlt="bioreactor"
-                positionElement={{ left: '30%' }}
-              />
-            </MenuButtonContainer>
-            <SecondaryMenuButton>
-              <CircularButtonLG />
-              <CircularButtonLG />
-            </SecondaryMenuButton>
-          </InnerWrapper>
+    <PageContainer id="HomePageContainer">
+      <InnerPageContainer id="HomeInnerPageContainer">
+        <InnerWrapper id="HomeInnerWrapper">
+          <MenuButtonContainer>
+            <MainMenuButton
+              toPath="/cellbank"
+              text={'register cell bank'}
+              backgroundColor="#FAF7F0"
+              imgUrl="images/yeast-21.png"
+              imgAlt="microbe"
+              positionElement={{ left: '0%' }}
+            />
+            <MainMenuButton
+              toPath="/flask"
+              text={'start flask'}
+              backgroundColor="#E1F6F2"
+              imgUrl="images/leaf-flask.png"
+              imgAlt="flask"
+              positionElement={{ left: '10%' }}
+            />
+            <MainMenuButton
+              toPath="/sample"
+              text={'sample flask'}
+              backgroundColor="#E7F1DC"
+              imgUrl="images/clock-testtube.png"
+              imgAlt="clock and test tube"
+              styleOverride={{
+                height: 'clamp(1.8rem, 6vw, 6.6rem)',
+                scale: '1.1',
+              }}
+              positionElement={{ left: '20%' }}
+            />
+            <MainMenuButton
+              toPath="/bioreactor"
+              text={'start bioreactor'}
+              backgroundColor="#E4F1EE"
+              imgUrl="images/bioreactor-1.png"
+              imgAlt="bioreactor"
+              positionElement={{ left: '30%' }}
+            />
+          </MenuButtonContainer>
+          <SecondaryMenuButton>
+            <CircularButtonLG />
+            <CircularButtonLG />
+          </SecondaryMenuButton>
+        </InnerWrapper>
       </InnerPageContainer>
     </PageContainer>
   );
