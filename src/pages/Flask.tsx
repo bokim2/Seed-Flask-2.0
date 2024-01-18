@@ -18,7 +18,7 @@ export default function Flask() {
         saDSadaSDSAD
         <LoaderBar />
         <LoaderBar />
-        {isLoading ? <LoaderBar /> : <FlasksTable id="FlasksTable" flasks={flasks} />}
+        {isLoading ? <LoaderBar /> : <FlasksTable flasks={flasks} />}
       </InnerPageContainer>
     </PageContainer>
   );
