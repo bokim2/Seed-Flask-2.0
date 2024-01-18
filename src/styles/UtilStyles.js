@@ -3,8 +3,7 @@ import styled from 'styled-components';
 
 // Nav Circular Button Styles
 
-export const CircularButtonLG = styled.button`
-`; 
+
 
 // FORM STYLES
 

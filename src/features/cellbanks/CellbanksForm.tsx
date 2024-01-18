@@ -104,7 +104,7 @@ export default function CellbanksForm() {
           />
         </InputContainer>
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button $size={'sdaf'} type="submit" disabled={isSubmitting}>
           Submit
         </Button>
       </StyledForm>
