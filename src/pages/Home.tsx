@@ -5,22 +5,20 @@ import { MdHeight } from 'react-icons/md';
 import FlasksTable from '../features/flasks/FlasksTable';
 import FlasksRow from '../features/flasks/FlasksRow';
 import Settings from './Settings';
-import { Wrapper } from '../styles/UtilStyles';
+import {
+  InnerPageContainer,
+  PageContainer,
+  Wrapper,
+} from '../styles/UtilStyles';
 
-const MainWrapper = styled.div`
-/* display: flex; */
-
-
-  height: 100%;
-`;
 
 const InnerWrapper = styled.div`
- margin: auto;
+  margin: auto;
   display: flex;
   flex-direction: column;
   /* height: 70%; */
   /* margin-top: auto; */
-  
+
   /* justify-content: center; */
   /* align-items: center; */
   /* height: 70%; */
@@ -32,7 +30,7 @@ const InnerWrapper = styled.div`
 `;
 
 const MenuButtonContainer = styled.div`
-  flex: 1;
+  flex: 2;
   padding-block: 5vh;
   display: flex;
   flex-direction: column;
@@ -74,51 +72,53 @@ const SecondaryMenuButton = styled.div`
 
 export default function Home() {
   return (
-    <MainWrapper>
-      <InnerWrapper>
-        <MenuButtonContainer>
-          <MainMenuButton
-            toPath="/cellbank"
-            text={'register cell bank'}
-            backgroundColor="#FAF7F0"
-            imgUrl="images/yeast-21.png"
-            imgAlt="microbe"
-            positionElement={{ left: '0%' }}
-          />
-          <MainMenuButton
-            toPath="/flask"
-            text={'start flask'}
-            backgroundColor="#E1F6F2"
-            imgUrl="images/leaf-flask.png"
-            imgAlt="flask"
-            positionElement={{ left: '10%' }}
-          />
-          <MainMenuButton
-            toPath="/sample"
-            text={'sample flask'}
-            backgroundColor="#E7F1DC"
-            imgUrl="images/clock-testtube.png"
-            imgAlt="clock and test tube"
-            styleOverride={{
-              height: 'clamp(1.8rem, 6vw, 6.6rem)',
-              scale: '1.1',
-            }}
-            positionElement={{ left: '20%' }}
-          />
-          <MainMenuButton
-            toPath="/bioreactor"
-            text={'start bioreactor'}
-            backgroundColor="#E4F1EE"
-            imgUrl="images/bioreactor-1.png"
-            imgAlt="bioreactor"
-            positionElement={{ left: '30%' }}
-          />
-        </MenuButtonContainer>
-        <SecondaryMenuButton>
-          <CircularButtonLG />
-          <CircularButtonLG />
-        </SecondaryMenuButton>
-      </InnerWrapper>
-    </MainWrapper>
+    <PageContainer>
+      <InnerPageContainer>
+          <InnerWrapper>
+            <MenuButtonContainer>
+              <MainMenuButton
+                toPath="/cellbank"
+                text={'register cell bank'}
+                backgroundColor="#FAF7F0"
+                imgUrl="images/yeast-21.png"
+                imgAlt="microbe"
+                positionElement={{ left: '0%' }}
+              />
+              <MainMenuButton
+                toPath="/flask"
+                text={'start flask'}
+                backgroundColor="#E1F6F2"
+                imgUrl="images/leaf-flask.png"
+                imgAlt="flask"
+                positionElement={{ left: '10%' }}
+              />
+              <MainMenuButton
+                toPath="/sample"
+                text={'sample flask'}
+                backgroundColor="#E7F1DC"
+                imgUrl="images/clock-testtube.png"
+                imgAlt="clock and test tube"
+                styleOverride={{
+                  height: 'clamp(1.8rem, 6vw, 6.6rem)',
+                  scale: '1.1',
+                }}
+                positionElement={{ left: '20%' }}
+              />
+              <MainMenuButton
+                toPath="/bioreactor"
+                text={'start bioreactor'}
+                backgroundColor="#E4F1EE"
+                imgUrl="images/bioreactor-1.png"
+                imgAlt="bioreactor"
+                positionElement={{ left: '30%' }}
+              />
+            </MenuButtonContainer>
+            <SecondaryMenuButton>
+              <CircularButtonLG />
+              <CircularButtonLG />
+            </SecondaryMenuButton>
+          </InnerWrapper>
+      </InnerPageContainer>
+    </PageContainer>
   );
 }

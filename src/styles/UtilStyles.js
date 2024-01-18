@@ -1,7 +1,33 @@
 import styled from 'styled-components';
 
 
-// Nav Circular Button Styles
+// Main page styles
+
+export const PageContainer = styled.section`
+  /* min-height: 100vh; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  height: 100%;
+`;
+
+
+
+export const InnerPageContainer = styled.section`
+  /* min-height: 100vh; */
+  width: 90%;
+  /* align-self: center; */
+
+  /* position: relative; */
+  height: 100%;
+
+  @media (min-width: 600px) {
+
+    width: 70%;
+  }
+`;
 
 
 
@@ -102,7 +128,7 @@ export const Wrapper = styled.div``;
 
 export const TableContainer = styled.div`
   max-width: 100%;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   background-color: lightblue;
   margin-block: 1rem;
 `;

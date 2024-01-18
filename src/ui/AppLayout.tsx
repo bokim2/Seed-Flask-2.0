@@ -6,10 +6,11 @@ import NavList from './NavList';
 import LoaderBar from './LoaderBar';
 
 const StyledAppLayout = styled.div`
+flex: 1;
 position: relative;
 display: flex;
 flex-direction: column;
-height: 100vh;
+/* height: 100vh; */
 `
 
 const StyledBackgroundColor = styled.div`
@@ -33,10 +34,11 @@ const StyledBackgroundImg = styled.div`
   z-index: -1;
 `;
 
-const MainContainer = styled.main`
-/* position: absolute; */
+const MainPageContainer = styled.main`
+position: relative;
 flex-grow: 1;
-  width: 85%;
+width: 100%;
+  /* width: 85%; */
   margin: 0 auto;
   /* height: 100%; */
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
@@ -57,9 +59,9 @@ export default function AppLayout() {
       {/* <LoaderBar /> */}
       
       {/* <span>testing app layout</span> */}
-      <MainContainer>
+      <MainPageContainer>
         <Outlet />
-      </MainContainer>
+      </MainPageContainer>
       {/* </StyledAppLayout> */}
     </StyledAppLayout>
   );

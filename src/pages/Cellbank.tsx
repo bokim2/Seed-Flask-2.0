@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CellbanksForm from '../features/cellbanks/CellbanksForm';
 import { baseUrl } from '../../configs';
 import CellbanksTable from '../features/cellbanks/CellbanksTable';
+import { InnerPageContainer, PageContainer } from '../styles/UtilStyles';
 
 export default function Cellbank() {
   const [cellbanks, setCellbanks] = useState<any>([]);
@@ -20,10 +21,12 @@ export default function Cellbank() {
   }, []);
 
   return (
-    <div>
-      {/* {JSON.stringify(cellbanks)} */}
-      <CellbanksForm />
-      <CellbanksTable cellbanks={cellbanks} />
-    </div>
+    <PageContainer>
+      <InnerPageContainer>
+        {/* {JSON.stringify(cellbanks)} */}
+        <CellbanksForm />
+        <CellbanksTable cellbanks={cellbanks} />
+      </InnerPageContainer>
+    </PageContainer>
   );
 }

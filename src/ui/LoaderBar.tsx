@@ -15,8 +15,11 @@ const moveGradient = keyframes`
 // Apply the animation to your styled component
 const StyledLoaderBar = styled.div`
   position: absolute;
+  top: 0;
+  left: 0;
   height: 20px;
   width: 100%;
+  /* z-index: 1000; */
   background-image: linear-gradient(
     45deg,
     red,
@@ -38,6 +41,10 @@ const StyledLoaderBar = styled.div`
   animation: ${moveGradient} 15s linear infinite; /* Adjust the duration as needed */
 `;
 
+// export default function LoaderBar() {
+//   return createPortal(<StyledLoaderBar></StyledLoaderBar>, document.body);
+// }
+
 export default function LoaderBar() {
-  return createPortal(<StyledLoaderBar></StyledLoaderBar>, document.body);
-}
+    return <StyledLoaderBar></StyledLoaderBar>
+  }
