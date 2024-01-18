@@ -1,4 +1,4 @@
-import styled, { css, DefaultTheme } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const sizes = {
   small: css`
@@ -8,7 +8,7 @@ const sizes = {
   `,
   medium: css`
     font-size: 1.4rem;
-    padding: .8rem 2rem;
+    padding: 0.8rem 2rem;
     font-weight: 500;
   `,
   large: css`
@@ -41,21 +41,21 @@ type ButtonProps = {
 };
 
 const Button = styled.button<ButtonProps>`
-    text-align: center;
-    border: none;
-    border-radius: 999vw;
-    color: var(--color-text-1);
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+  text-align: center;
+  border: none;
+  border-radius: 999vw;
+  color: var(--color-text-1);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 
-    ${({ $size }) => sizes[$size as keyof typeof sizes]}; // Cast to keyof typeof sizes
-    ${({ $variation }) => variations[$variation as keyof typeof variations]}; // Cast to keyof typeof variations
+  ${({ $size }) => ($size ? sizes[$size] : Button.defaultProps.$size)};
+  ${({ $variation }) =>
+    $variation ? variations[$variation] : Button.defaultProps.$variation};
 `;
-
 
 Button.defaultProps = {
   $variation: 'primary',
-  $size: 'large',
+  $size: 'medium',
 };
 
 export default Button;

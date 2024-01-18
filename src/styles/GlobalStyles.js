@@ -86,6 +86,10 @@ textarea:not([rows]) {
 
 // BK
 
+#root {
+  min-height: 100vh;
+}
+
  :root {
 
 

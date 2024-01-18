@@ -8,6 +8,8 @@ import store from './lib/store.js';
 
 // const queryClient = new QueryClient();
 
+
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
 <Provider store={store}>

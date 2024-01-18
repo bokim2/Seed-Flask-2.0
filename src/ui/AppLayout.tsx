@@ -5,6 +5,12 @@ import { useState } from 'react';
 import NavList from './NavList';
 import LoaderBar from './LoaderBar';
 
+const StyledAppLayout = styled.div`
+display: flex;
+flex-direction: column;
+height: 100vh;
+`
+
 const StyledBackgroundColor = styled.div`
   position: fixed;
   background-color: var(--clr-primary-800);
@@ -27,8 +33,10 @@ const StyledBackgroundImg = styled.div`
 `;
 
 const MainContainer = styled.main`
+flex-grow: 10;
   width: 85%;
   margin: 0 auto;
+  /* height: 100%; */
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
 `;
 
@@ -38,7 +46,7 @@ export default function AppLayout() {
   const handleClick = (): void => setToggleNav((prev) => !prev);
 
   return (
-    <>
+    <StyledAppLayout>
       <StyledBackgroundColor />
       <StyledBackgroundImg />
       <MainNav toggleNav={toggleNav} handleClick={handleClick} />
@@ -49,6 +57,6 @@ export default function AppLayout() {
         <Outlet />
       </MainContainer>
       {/* </StyledAppLayout> */}
-    </>
+    </StyledAppLayout>
   );
 }
