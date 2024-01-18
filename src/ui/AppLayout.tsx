@@ -6,6 +6,7 @@ import NavList from './NavList';
 import LoaderBar from './LoaderBar';
 
 const StyledAppLayout = styled.div`
+position: relative;
 display: flex;
 flex-direction: column;
 height: 100vh;
@@ -33,7 +34,8 @@ const StyledBackgroundImg = styled.div`
 `;
 
 const MainContainer = styled.main`
-flex-grow: 10;
+/* position: absolute; */
+flex-grow: 1;
   width: 85%;
   margin: 0 auto;
   /* height: 100%; */
@@ -43,15 +45,17 @@ flex-grow: 10;
 export default function AppLayout() {
   const [toggleNav, setToggleNav] = useState(false);
 
-  const handleClick = (): void => setToggleNav((prev) => !prev);
+  const handleClick = (e: React.MouseEvent<SVGElement, MouseEvent>): void => {
+    e.stopPropagation();
+    setToggleNav((prev) => !prev);}
 
   return (
     <StyledAppLayout>
       <StyledBackgroundColor />
       <StyledBackgroundImg />
-      <MainNav toggleNav={toggleNav} handleClick={handleClick} />
+      <MainNav toggleNav={toggleNav} handleToggle={handleClick} />
       {/* <LoaderBar /> */}
-      {toggleNav && <NavList />}
+      
       {/* <span>testing app layout</span> */}
       <MainContainer>
         <Outlet />
