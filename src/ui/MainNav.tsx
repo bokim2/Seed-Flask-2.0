@@ -1,15 +1,21 @@
 import styled from 'styled-components';
 import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import NavList from './NavList';
 import { type } from 'os';
 import { NavLink } from 'react-router-dom';
 
-const StyledMainNav = styled.div`
+const StyledMainNav = styled.div<StyledMainNav>`
 position: relative;
   z-index: 10;
-  background-color: rgba(var(--clr-primary-950), 0.7);
+  background-color: rgba(var(--clr-primary-950), 1);
   padding-block: 0.5rem;
+  flex-grow: 1;
+  height: 100%;
+  /* height: 10vh; */
+
+  opacity: ${(props) => props.$isScrolled ? 1 : 0.7
+  }
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -22,6 +28,7 @@ const StyledNavLink = styled(NavLink)`
 const StyledNav = styled.nav`
   display: flex;
   align-items: center;
+  height: 100%;
   justify-content: space-between;
 
   padding: clamp(0.2rem, 1vw, 0.4rem) clamp(0.5rem, 4vw, 5rem);
@@ -69,10 +76,34 @@ type MainNavProps = {
   handleToggle: (e:  React.MouseEvent<SVGElement, MouseEvent>) => void;
 };
 
+
+type StyledMainNav = {
+  $isScrolled?: boolean;
+  
+};
+
 export default function MainNav({ toggleNav, handleToggle }: MainNavProps) {
   const mainNavRef = useRef(null)
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Use useEffect to add event listener for scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      // Update the state based on scroll position
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    // Attach the event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Remove the event listener on component unmount
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <StyledMainNav  ref={mainNavRef} >
+    <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef} >
       <StyledNav>
         <StyledNavLink to="/">
           <StyledTitle>Seed Flask</StyledTitle>

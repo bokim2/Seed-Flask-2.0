@@ -14,10 +14,10 @@ const moveGradient = keyframes`
 
 // Apply the animation to your styled component
 const StyledLoaderBar = styled.div`
-  position: absolute;
+  position: sticky;
   top: 0;
   left: 0;
-  height: 20px;
+  height: 10px;
   width: 100%;
   /* z-index: 1000; */
   background-image: linear-gradient(

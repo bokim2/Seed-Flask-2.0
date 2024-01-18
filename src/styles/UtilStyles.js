@@ -3,7 +3,8 @@ import styled from 'styled-components';
 // Main page styles
 
 export const PageContainer = styled.section`
-  margin-top: clamp(4rem, min(5vw, 5vh), 10rem);
+  /* margin-top: clamp(4rem, min(5vw, 5vh), 10rem); */
+  margin-top: 16vh;
   /* min-height: 100vh; */
   /* display: flex; */
   /* align-items: center; */
