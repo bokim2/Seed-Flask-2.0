@@ -6,6 +6,7 @@ import { type } from 'os';
 import { NavLink } from 'react-router-dom';
 
 const StyledMainNav = styled.div`
+position: relative;
   z-index: 10;
   background-color: rgba(var(--clr-primary-950), 0.7);
   padding-block: 0.5rem;
@@ -65,13 +66,13 @@ const style = { color: '#F2D17C', fontSize: '3rem' };
 
 type MainNavProps = {
   toggleNav: boolean;
-  handleClick: () => void;
+  handleToggle: (e:  React.MouseEvent<SVGElement, MouseEvent>) => void;
 };
 
-export default function MainNav({ toggleNav, handleClick }: MainNavProps) {
+export default function MainNav({ toggleNav, handleToggle }: MainNavProps) {
   const mainNavRef = useRef(null)
   return (
-    <StyledMainNav onClick={handleClick} ref={mainNavRef} >
+    <StyledMainNav  ref={mainNavRef} >
       <StyledNav>
         <StyledNavLink to="/">
           <StyledTitle>Seed Flask</StyledTitle>
@@ -84,15 +85,17 @@ export default function MainNav({ toggleNav, handleClick }: MainNavProps) {
 
           {toggleNav ? (
             <ButtonWrapper>
-              <FaCaretUp style={style} />
+              <FaCaretUp style={style} onClick={handleToggle}/>
             </ButtonWrapper>
           ) : (
             <ButtonWrapper>
-              <FaCaretDown style={style} />
+              <FaCaretDown style={style} onClick={handleToggle}/>
             </ButtonWrapper>
           )}
         </NavSection>
+        
       </StyledNav>
+      {toggleNav && <NavList />}
     </StyledMainNav>
   );
 }
