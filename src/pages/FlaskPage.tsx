@@ -1,6 +1,6 @@
 import React from 'react';
 import FlasksTable from '../features/flasks/FlasksTable';
-import { useFlasks } from '../lib/hooks';
+import { useFlask, useFlasks } from '../lib/hooks';
 
 import styled from 'styled-components';
 import LoaderBar from '../ui/LoaderBar';
@@ -13,18 +13,20 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-export default function Flask() {
-  const [flasks, isLoading] = useFlasks();
+export default function FlaskPage() {
+  const [flasks, isLoading, error] = useFlasks();
+  const [flask] = useFlask(1);
 
   return (
     <PageContainer id="FlaskPageContainer">
       <Wrapper>
-        <LoaderBar />
+        {/* <LoaderBar /> */}
+        {isLoading && <LoaderBar />}
+        {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
       </Wrapper>
       <InnerPageContainer id="InnerFlaskPageContainer">
-        {/* saDSadaSDSAD */}
         {/* <LoaderBar /> */}
-        {isLoading ? <LoaderBar /> : <FlasksTable flasks={flasks} />}
+        <FlasksTable flasks={flasks} />
       </InnerPageContainer>
     </PageContainer>
   );

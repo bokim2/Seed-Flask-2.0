@@ -22,6 +22,8 @@ const StyledLoaderBar = styled.div`
   /* z-index: 1000; */
   background-image: linear-gradient(
     45deg,
+    rgba(var(--clr-primary-950), 0),
+    rgba(var(--clr-primary-950), 0),
     red,
     yellow,
     blue,
@@ -38,7 +40,7 @@ const StyledLoaderBar = styled.div`
   );
   background-size: 2000%;
   background-position: left;
-  animation: ${moveGradient} 15s linear infinite; /* Adjust the duration as needed */
+  animation: ${moveGradient} 15s linear infinite;
 `;
 
 // export default function LoaderBar() {
@@ -46,5 +48,5 @@ const StyledLoaderBar = styled.div`
 // }
 
 export default function LoaderBar() {
-    return <StyledLoaderBar></StyledLoaderBar>
-  }
+  return <StyledLoaderBar></StyledLoaderBar>;
+}

@@ -8,13 +8,13 @@ import { NavLink } from 'react-router-dom';
 const StyledMainNav = styled.div<StyledMainNav>`
 position: relative;
   z-index: 10;
-  background-color: rgba(var(--clr-primary-950), 1);
+  background-color: rgba(var(--clr-primary-950), .9);
   padding-block: 0.5rem;
   flex-grow: 1;
   height: 100%;
   /* height: 10vh; */
 
-  opacity: ${(props) => props.$isScrolled ? 1 : 0.7
+  opacity: ${(props) => props.$isScrolled ? 1 : 0.8
   }
 `;
 

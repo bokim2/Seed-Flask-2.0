@@ -69,7 +69,7 @@ const SecondaryMenuButton = styled.div`
   }
 `;
 
-export default function Home() {
+export default function HomePage() {
   return (
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">

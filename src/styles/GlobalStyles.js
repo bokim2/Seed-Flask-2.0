@@ -81,8 +81,9 @@ textarea:not([rows]) {
 
 
 
-// from Vite starter template
+// import fonts
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap'); 
 
 // BK
 
@@ -96,9 +97,7 @@ textarea:not([rows]) {
  :root {
 
 
-${
-  '' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap'); */
-}
+
 --font-sans-serif: 'Inter', sans-serif;
 --font-serif: 'Playfair Display', serif;
 
