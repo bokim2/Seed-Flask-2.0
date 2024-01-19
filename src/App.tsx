@@ -7,13 +7,13 @@ import TestComponent from './ui/TestComponent';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import MainNav from './ui/MainNav';
 import AppLayout from './ui/AppLayout';
-import Dashboard from './pages/Home';
+import Dashboard from './pages/HomePage';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Settings from './pages/Settings';
-import Cellbank from './pages/Cellbank';
-import Flask from './pages/Flask';
+import Cellbank from './pages/CellbankPage';
+import Flask from './pages/FlaskPage';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */

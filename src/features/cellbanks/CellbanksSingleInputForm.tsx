@@ -11,7 +11,7 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 
-export default function CellbanksForm() {
+export default function CellbanksSingleInputForm() {
   const initialForm = {
     strain: '',
     notes: '',

@@ -5,11 +5,36 @@ import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
-import LoaderBar from '../ui/LoaderBar'
+import LoaderBar from '../ui/LoaderBar';
 
-// Use throughout your app instead of plain `useDispatch` and `useSelector`
+// ReduxToolkit - for typescript - Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+export function useCellbanks() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['cellbanks'],
+    queryFn: async () => {
+      const res = await fetch(`${baseUrl}/api/cellbanks`);
+      const data = await res.json();
+      return data;
+    },
+    staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 5,
+    refetchOnWindowFocus: true,
+    retry: false,
+    enabled: true,
+    
+  }
+  );
+  const cellbanks = data?.data;
+
+  if (error instanceof Error) {
+    console.log('error in useCellbanks react query', error.message);
+  }
+
+  return [cellbanks, isLoading, error] as const;
+}
 
 export function useFlask(id: number | null) {
   //   const [flask, setFlask] = useState<any>({});
@@ -30,7 +55,7 @@ export function useFlask(id: number | null) {
   //     fetchData();
   //   }, []);
 
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, error } = useQuery({
     queryKey: ['flask', id],
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/api/flasks/${id}`);
@@ -46,11 +71,11 @@ export function useFlask(id: number | null) {
   });
   // console.log('data in useFlask', data);
   const flask = data;
-  return [flask, isLoading] as const;
+  return [flask, isLoading, error] as const;
 }
 
 export function useFlasks() {
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, error } = useQuery({
     queryKey: ['flasks'],
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/api/flasks`);
@@ -59,6 +84,7 @@ export function useFlasks() {
       return data;
     },
     staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 5,
     refetchOnWindowFocus: true,
     retry: false,
     enabled: true,
@@ -67,8 +93,9 @@ export function useFlasks() {
   // console.log('data in useFlask', data);
   const flasks = data?.data;
 
-  
+  if (error instanceof Error) {
+    console.log('error in useFlasks react query', error.message);
+  }
 
-
-  return [flasks, isLoading] as const;
+  return [flasks, isLoading, error] as const;
 }
