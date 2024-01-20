@@ -2,8 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import type { TypedUseSelectorHook } from 'react-redux';
-import type { RootState } from '../lib/store';
 import { useAppSelector, useAppDispatch } from '../lib/hooks';
+import { changeTimezone } from '../features/settings/settingsSlice';
 
 // notes:
 // timezone
@@ -33,6 +33,11 @@ export default function Settings() {
   //   const timeZone = useSelector((state) => state.timeZone);
   const timeZoneSetting = useAppSelector((state) => state.timeZone.timeZone);
 
+  const dispatch = useAppDispatch();
+  const handleClick = (timezone) => {
+    dispatch(changeTimezone(timezone));
+  };
+
   return (
     <TimeZoneInputs>
       timeZone from useSelector: {timeZoneSetting}
@@ -45,6 +50,7 @@ export default function Settings() {
             id={timezone}
             name="timeZone"
             checked={timezone == timeZoneSetting}
+            onChange={() => handleClick(timezone)}
           />
         </TimeZoneInput>
       ))}

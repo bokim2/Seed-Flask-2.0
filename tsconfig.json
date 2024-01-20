@@ -1,4 +1,5 @@
 {
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -6,6 +7,8 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "allowJs": true, // added by BK
+    "noImplicitAny": false, // added by BK
+    // "esModuleInterop": true, // added by BK - for typescript backend
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -21,6 +24,6 @@
     "noUnusedParameters": false, //changed from true to false by BK
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/styles/GlobalStyles.js"],
+  "include": ["src", "src/styles/GlobalStyles.js", "server/*"], // "server/*" added by BK
   "references": [{ "path": "./tsconfig.node.json" }]
 }

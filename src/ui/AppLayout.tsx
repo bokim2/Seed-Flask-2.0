@@ -3,53 +3,81 @@ import MainNav from './MainNav';
 import styled from 'styled-components';
 import { useState } from 'react';
 import NavList from './NavList';
+import LoaderBar from './LoaderBar';
+
+const StyledAppLayout = styled.div`
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* height: 100vh; */
+`;
 
 const StyledBackgroundColor = styled.div`
   position: fixed;
   background-color: var(--clr-primary-800);
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   z-index: -2;
 `;
 
 const StyledBackgroundImg = styled.div`
-  width: 100vw;
-  position: absolute;
+  min-width: 100%;
+  height: 100%;
+  position: fixed;
 
   background-image: url('images/blobTop.svg'), url('images/blobBottom.svg');
   background-size: 80vw;
   background-repeat: no-repeat;
   background-position-x: 25%, 0%;
   background-position-y: 0%, 100%;
-  height: 100vh;
   z-index: -1;
 `;
 
-const MainContainer = styled.main`
-  width: 85%;
+const NavBar = styled.div`
+  position: fixed;
+  margin: 0;
+  width: 100%;
+  z-index: 10;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+`;
+
+const MainPageContainer = styled.main`
+  position: relative;
+  flex-grow: 1;
+  width: 100%;
+  /* width: 85%; */
   margin: 0 auto;
-  padding-top: clamp(0.5rem, 4vw, 3rem);
-
-
-`
+  /* height: 100%; */
+  /* padding-top: clamp(0.5rem, 4vw, 3rem); */
+`;
 
 export default function AppLayout() {
   const [toggleNav, setToggleNav] = useState(false);
 
-const handleClick = (): void => setToggleNav((prev) => !prev);
+  const handleClick = (e: React.MouseEvent<SVGElement, MouseEvent>): void => {
+    e.stopPropagation();
+    setToggleNav((prev) => !prev);
+  };
 
-return (
-    <>
-        <StyledBackgroundColor />
-        <StyledBackgroundImg />
-        <MainNav toggleNav={toggleNav} handleClick={handleClick} />
-        {toggleNav && <NavList />}
-        {/* <span>testing app layout</span> */}
-        <MainContainer>
-            <Outlet />
-        </MainContainer>
-        {/* </StyledAppLayout> */}
-    </>
-);
+  return (
+    <StyledAppLayout>
+      <StyledBackgroundColor />
+      <StyledBackgroundImg />
+      <NavBar id="NavBar">
+        <MainNav toggleNav={toggleNav} handleToggle={handleClick} />
+      </NavBar>
+      {/* <LoaderBar /> */}
 
+      {/* <span>testing app layout</span> */}
+      <MainPageContainer id="MainPageContainer">
+        <Outlet />
+      </MainPageContainer>
+      {/* </StyledAppLayout> */}
+    </StyledAppLayout>
+  );
 }

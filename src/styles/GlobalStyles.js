@@ -22,7 +22,8 @@ html {
 /* Remove default margin in favour of better control in authored CSS */
 body, h1, h2, h3, h4, p,
 figure, blockquote, dl, dd {
-  margin-block-end: 0;
+  ${'' /* margin-block-end: 0; */}
+
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
@@ -70,7 +71,7 @@ textarea, select {
 
 /* Make sure textareas without a rows attribute are not tiny */
 textarea:not([rows]) {
-  min-height: 10em;
+  min-height: 1em;
 }
 
 /* Anything that has been anchored to should have extra scroll margin */
@@ -80,15 +81,23 @@ textarea:not([rows]) {
 
 
 
-// from Vite starter template
+// import fonts
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap'); 
+
+// BK
+
+#root {
+  ${'' /* min-height: 100vh; */}
+  display:flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
  :root {
 
 
 
-// BK 
-${
-  '' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap'); */
-}
 --font-sans-serif: 'Inter', sans-serif;
 --font-serif: 'Playfair Display', serif;
 
@@ -177,6 +186,8 @@ ${
        background-color: #f9f9f9;
      }
    }
+  
+
   
   `;
 

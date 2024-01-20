@@ -57,8 +57,22 @@
 -- VALUES (2, 5.8, false, EXTRACT(EPOCH FROM (current_timestamp - (SELECT start_date FROM flasks WHERE flask_id = 2))) / 3600);
 
 
-INSERT INTO samples (flask_id, od600, completed, time_since_inoc_hr)
-VALUES (1, 5.7, true, EXTRACT(EPOCH FROM (current_timestamp - (SELECT start_date FROM flasks WHERE flask_id = 1))) / 3600);
+-- INSERT INTO samples (flask_id, od600, completed, time_since_inoc_hr)
+-- VALUES (1, 5.7, true, EXTRACT(EPOCH FROM (current_timestamp - (SELECT start_date FROM flasks WHERE flask_id = 1))) / 3600);
 
-INSERT INTO samples (flask_id, od600, completed, time_since_inoc_hr)
-VALUES (2, 6.5 , true, EXTRACT(EPOCH FROM (current_timestamp - (SELECT start_date FROM flasks WHERE flask_id = 2))) / 3600);
+-- INSERT INTO samples (flask_id, od600, completed, time_since_inoc_hr)
+-- VALUES (2, 6.5 , true, EXTRACT(EPOCH FROM (current_timestamp - (SELECT start_date FROM flasks WHERE flask_id = 2))) / 3600);
+
+
+
+
+
+-- 2024-01-15
+
+
+-- // queries to make it timestampz instead...
+-- ALTER TABLE flasks
+-- ADD COLUMN start_date_timestamptz TIMESTAMPTZ DEFAULT current_timestamp;
+
+ALTER TABLE cell_banks
+ADD COLUMN start_date_timestamptz TIMESTAMPTZ DEFAULT current_timestamp;

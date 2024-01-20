@@ -1,28 +1,25 @@
 import React from 'react';
-import styled from 'styled-components';
+import { TableDataCell, TableRow } from '../../styles/UtilStyles';
 
-const TableRow = styled.tr`
-  /* font-size: 0.5rem; */
-`;
 
-const TableCell = styled.th`
-  color: purple;
-`;
+
+
 
 export default function FlasksRow({ flask }) {
   return (
     <>
       <TableRow>
-        <TableCell>{flask.flask_id}</TableCell>
-        <TableCell>{flask.cell_bank_id}</TableCell>
-        <TableCell>{flask.strain}</TableCell>
-        <TableCell>{flask.target_molecule}</TableCell>
-        <TableCell>{flask.inoculum_ul}</TableCell>
-        <TableCell>{flask.media_ml}</TableCell>
-        <TableCell>{flask.start_date}</TableCell>{' '}
-        <TableCell>{flask.start_date_pacific}</TableCell>
-        <TableCell>{flask.start_date_pacific_readable}</TableCell>
+      <TableDataCell data-cell="flask id">{flask.flask_id}</TableDataCell>
+        <TableDataCell data-cell="cell bank id">{flask.cell_bank_id}</TableDataCell>
+        <TableDataCell data-cell="strain">{flask.strain}</TableDataCell>
+        <TableDataCell data-cell="target molecule">{flask.target_molecule}</TableDataCell>
+        <TableDataCell data-cell="inoculum uL">{flask.inoculum_ul}</TableDataCell>
+        <TableDataCell data-cell="media mL">{flask.media_ml}</TableDataCell>
+        <TableDataCell data-cell="start date">{flask.start_date}</TableDataCell>
+        <TableDataCell data-cell="start date (pacific)">{flask.start_date_pacific}</TableDataCell>
+        <TableDataCell data-cell="start date (pacific human readable">{flask.start_date_pacific_readable}</TableDataCell>
       </TableRow>
+      
     </>
   );
 }
