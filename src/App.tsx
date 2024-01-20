@@ -12,8 +12,11 @@ import Dashboard from './pages/HomePage';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Settings from './pages/Settings';
-import Cellbank from './pages/CellbankPage';
-import Flask from './pages/FlaskPage';
+
+import SamplePage from './pages/SamplePage';
+import HomePage from './pages/HomePage';
+import FlaskPage from './pages/FlaskPage';
+import CellbankPage from './pages/CellbankPage';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -39,10 +42,10 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<AppLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="cellbank" element={<Cellbank/>} />
-              <Route path="flask" element={<Flask/>} />
-              <Route path="sample" element={<h1>sample page</h1>} />
+              <Route index element={<HomePage />} />
+              <Route path="cellbank" element={<CellbankPage/>} />
+              <Route path="flask" element={<FlaskPage/>} />
+              <Route path="sample" element={<SamplePage/>} />
               <Route path="bioreactor" element={<h1>bioreactor page</h1>} />
               <Route path="settings" element={ <Settings/>} />
             </Route>
