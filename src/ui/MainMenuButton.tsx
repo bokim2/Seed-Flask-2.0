@@ -15,9 +15,11 @@ const StyledMainMenuButtons = styled(NavLink)`
   font-weight: 600;
   letter-spacing: 0.01794rem;
   color: var(--color-text-2);
+
+  @media (min-width: 800px) {
+    width: clamp(15rem, 30vw, 30rem);
+  }
 `;
-
-
 
 const StyledImage = styled.img`
   aspect-ratio: 1/1;
@@ -50,11 +52,8 @@ export default function MainMenuButton({
       style={{ backgroundColor, ...positionElement }}
     >
       <span>{text}</span>
-  
-      <StyledImage src={imgUrl} alt={imgAlt} style={styleOverride} />
 
+      <StyledImage src={imgUrl} alt={imgAlt} style={styleOverride} />
     </StyledMainMenuButtons>
   );
 }
-
-
