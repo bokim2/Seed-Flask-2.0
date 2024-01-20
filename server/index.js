@@ -141,6 +141,20 @@ app.post('/api/cellbank', async (req, res) => {
   }
 });
 
+// GET all samples
+
+app.get('/api/samples', async(req, res)=> {
+  try {
+    const results = await db.query(`SELECT * from samples;`)
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    })
+  } catch (err) {
+    console.log(err);
+  }
+})
+
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
