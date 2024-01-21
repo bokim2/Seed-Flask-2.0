@@ -1,36 +1,73 @@
--- 2024-01-15 changed sql query from old one.  apparently the timestampz query was a bit wrong.  changed to timestampz at utc.  the tables are all corrected and "should" work
+
+-- CREATE TABLE cell_banks (
+--     cell_bank_id BIGSERIAL NOT NULL PRIMARY KEY,
+--     strain VARCHAR(50),
+--     notes TEXT,
+--     target_molecule TEXT,
+--     description TEXT,
+--     date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+-- );
 
 
 
-CREATE TABLE cell_banks (
-    cell_bank_id BIGSERIAL NOT NULL PRIMARY KEY,
-    strain VARCHAR(50),
-    notes TEXT,
-    target_molecule TEXT,
-    description TEXT,
-    date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+-- INSERT INTO cell_banks (strain, notes, target_molecule, description) values ( 'Aspergillus', 'cell bank: 32C cultivation in test tube.  Final OD600 2.4.', 'alpha amylase', 'secrete alpha amylase for dish detergent applications.  for project Cloudberry. no inducer, constitutive expression.');
+
+
+
+CREATE TYPE INSERT INTO flasks (
+    flask_id,
+    vessel_type,
+    inoculum_ul,
+    media_ml,
+    start_date,
+    cell_bank_id
+  )
+VALUES (
+    'flask_id:bigint',
+    'vessel_type:USER-DEFINED',
+    inoculum_ul:real,
+    media_ml:real,
+    'start_date:timestamp with time zone',
+    cell_bank_id:integer
+  );vessel_type AS ENUM('flask', 'test tube', '96_well plate', '24 well plate');
+
+CREATE TABLE flasks (
+flask_id BIGSERIAL NOT NULL,
+vessel_type vessel_type NOT NULL,
+inoculum_uL REAL, 
+media_mL REAL, 
+start_date TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+PRIMARY KEY(flask_id),
+cell_bank_id INT NOT NULL,
+FOREIGN KEY (cell_bank_id) REFERENCES cell_banks(cell_bank_id)
 );
 
+-- trigger function to update all time intervals on samples when flask start_date is updated.
 
+CREATE OR REPLACE FUNCTION flasks_update_time_since_inoc_hr()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Check if the start_date of the associated flask is updated
+  IF NEW.start_date IS DISTINCT FROM OLD.start_date THEN
+    -- Update time_since_inoc_hr for all samples associated with the flask_id
+    UPDATE samples s
+    SET time_since_inoc_hr = EXTRACT(EPOCH FROM (s.end_date - NEW.start_date)) / 3600.0 -- Convert to hours
+    FROM flasks f
+    WHERE s.flask_id = NEW.flask_id AND f.flask_id = NEW.flask_id;
+  END IF;
 
-INSERT INTO cell_banks (strain, notes, target_molecule, description) values ( 'Aspergillus', 'cell bank: 32C cultivation in test tube.  Final OD600 2.4.', 'alpha amylase', 'secrete alpha amylase for dish detergent applications.  for project Cloudberry. no inducer, constitutive expression.');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE TRIGGER flasks_after_insert_update_time_since_inoc_hr
+AFTER UPDATE ON flasks
+FOR EACH ROW
+EXECUTE FUNCTION flasks_update_time_since_inoc_hr();
 
-
-
-
--- CREATE TYPE vessel_type AS ENUM('flask', 'test tube', '96_well plate', '24 well plate');
-
--- CREATE TABLE flasks (
--- flask_id BIGSERIAL NOT NULL,
--- vessel_type vessel_type NOT NULL,
--- inoculum_uL REAL, 
--- media_mL REAL, 
--- start_date TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
--- PRIMARY KEY(flask_id),
--- cell_bank_id INT NOT NULL,
--- FOREIGN KEY (cell_bank_id) REFERENCES cell_banks(cell_bank_id)
--- );
+UPDATE flasks
+SET start_date = '2024-01-20 06:00 AM PST'::timestamptz
+WHERE flask_id = 1;
 
 
 
@@ -76,15 +113,16 @@ AFTER INSERT ON samples
 FOR EACH ROW
 EXECUTE FUNCTION update_time_since_inoc_hr();
 
+INSERT INTO samples (flask_id, od600) VALUES (4, 0.2);
+
 -- Insert a sample to test the trigger
-INSERT INTO samples (flask_id, od600) VALUES (1, 7.8);
-
-
-
-INSERT INTO samples (flask_id, od600) VALUES (2, 9.4);
+INSERT INTO samples (flask_id, od600) VALUES (1, 4.2);
+INSERT INTO samples (flask_id, od600) VALUES (2, 3.1);
 
 INSERT INTO samples (flask_id, od600) VALUES (1, 7.8);
-
-
-
 INSERT INTO samples (flask_id, od600) VALUES (2, 9.4);
+
+INSERT INTO samples (flask_id, od600) VALUES (1, 9.1);
+INSERT INTO samples (flask_id, od600) VALUES (2, 10.1);
+
+
