@@ -16,8 +16,8 @@ export default function FlasksRow({ flask }) {
         <TableDataCell data-cell="inoculum uL">{flask.inoculum_ul}</TableDataCell>
         <TableDataCell data-cell="media mL">{flask.media_ml}</TableDataCell>
         <TableDataCell data-cell="start date">{flask.start_date}</TableDataCell>
-        <TableDataCell data-cell="start date (pacific)">{flask.start_date_pacific}</TableDataCell>
-        <TableDataCell data-cell="start date (pacific human readable">{flask.start_date_pacific_readable}</TableDataCell>
+        <TableDataCell data-cell="start date (pacific)">{flask.adjusted_start_date_pacific}</TableDataCell>
+        <TableDataCell data-cell="start date (pacific human readable">{flask.readable_start_date_pacific}</TableDataCell>
       </TableRow>
       
     </>

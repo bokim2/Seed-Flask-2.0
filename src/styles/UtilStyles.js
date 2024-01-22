@@ -13,13 +13,14 @@ export const PageContainer = styled.section`
   width: 100%;
   position: relative;
   /* height: 100%; */
+  display: flex;
 `;
 
 export const InnerPageContainer = styled.section`
   /* display: flex; */
   /* align-items: center; */
   /* min-height: 100vh; */
-  margin-inline: auto;
+  /* margin-inline: auto; */
   width: 90%;
   /* align-self: center; */
 
@@ -82,6 +83,7 @@ export const FormInput = styled.input`
   background-color: transparent;
   color: inherit;
   border-bottom: 2px solid #f2d17c;
+  /* width: 100%; */
 
   &::placeholder {
     color: #faf7f0;
@@ -126,10 +128,13 @@ export const FormButton = styled.button``;
 export const Wrapper = styled.div``;
 
 export const TableContainer = styled.div`
+position: relative;
   max-width: 100%;
   /* overflow-x: scroll; */
   background-color: lightblue;
   margin-block: 1rem;
+  max-height: 80vh;
+  overflow-y: scroll;
 `;
 
 export const StyledTable = styled.table`
@@ -144,6 +149,8 @@ export const Caption = styled.caption`
 `;
 
 export const TableHeader = styled.thead`
+position: sticky;
+top: 0;
   background-color: orange;
 `;
 
