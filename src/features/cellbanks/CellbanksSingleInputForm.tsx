@@ -31,7 +31,7 @@ export default function CellbanksSingleInputForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 const queryClient = useQueryClient();
 
-  const {mutate, isLoading, reset} = useMutation({
+  const {mutate, reset} = useMutation({
     mutationFn: async (form: TForm) => {
       const res = await fetch(`${baseUrl}/api/cellbank`, {
         method: 'POST',
