@@ -69,9 +69,8 @@ app.get('/api/flasks', async (req, res) => {
     const results = await db.query(
       `SELECT
       *,
-      start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS start_date_pacific,
-      start_date AT TIME ZONE 'UTC' AT TIME ZONE 'US/Eastern' AS start_date_eastern,
-      TO_CHAR(start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS start_date_pacific_readable
+      start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
+      TO_CHAR(start_date AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
     FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
     );
     // console.log('trying to get timezone to work', results);
@@ -143,17 +142,24 @@ app.post('/api/cellbank', async (req, res) => {
 
 // GET all samples
 
-app.get('/api/samples', async(req, res)=> {
+app.get('/api/samples', async (req, res) => {
   try {
-    const results = await db.query(`SELECT * from samples;`)
+    const results = await db.query(`SELECT
+    *
+    ,
+    end_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_end_date_pacific,
+    TO_CHAR(end_date AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_end_date_pacific
+  FROM samples;`);
     res.status(200).json({
       status: 'success',
       data: results.rows,
-    })
+    });
   } catch (err) {
     console.log(err);
   }
-})
+});
+
+
 
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {

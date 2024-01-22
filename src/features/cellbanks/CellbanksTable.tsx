@@ -12,8 +12,8 @@ import {
 export default function CellbanksTable({ cellbanks }) {
   // console.log(cellbanks, 'in cellbankstable');
   return (
-    <Wrapper>
-      <TableContainer>
+    // <Wrapper>
+      <TableContainer id="TableContainer">
         <StyledTable>
           <Caption>Cell Banks Table</Caption>
           <TableHeader>
@@ -24,6 +24,8 @@ export default function CellbanksTable({ cellbanks }) {
               <TableHeaderCell>details</TableHeaderCell>
               <TableHeaderCell>notes</TableHeaderCell>
               <TableHeaderCell>date</TableHeaderCell>
+              <TableHeaderCell>edit</TableHeaderCell>
+              <TableHeaderCell>delete</TableHeaderCell>
             </TableRow>
           </TableHeader>
           <tbody>
@@ -34,6 +36,6 @@ export default function CellbanksTable({ cellbanks }) {
           </tbody>
         </StyledTable>
       </TableContainer>
-    </Wrapper>
+    // </Wrapper>
   );
 }
