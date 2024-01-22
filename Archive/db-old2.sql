@@ -1,3 +1,6 @@
+
+-- 20240121
+
 CREATE TABLE users (
   user_id BIGSERIAL NOT NULL PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
@@ -23,6 +26,22 @@ CREATE TABLE users (
 
 
 
+CREATE TYPE INSERT INTO flasks (
+    flask_id,
+    vessel_type,
+    inoculum_ul,
+    media_ml,
+    start_date,
+    cell_bank_id
+  )
+VALUES (
+    'flask_id:bigint',
+    'vessel_type:USER-DEFINED',
+    inoculum_ul:real,
+    media_ml:real,
+    'start_date:timestamp with time zone',
+    cell_bank_id:integer
+  );vessel_type AS ENUM('flask', 'test tube', '96_well plate', '24 well plate');
 
 CREATE TABLE flasks (
 flask_id BIGSERIAL NOT NULL,

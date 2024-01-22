@@ -10,6 +10,7 @@ import {
   StyledForm,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
+import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function CellbanksSingleInputForm() {
   const initialForm = {
@@ -19,29 +20,50 @@ export default function CellbanksSingleInputForm() {
     description: '',
   };
 
-  const [form, setForm] = useState(initialForm);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault();
-      console.log('submitting', form);
-      setIsSubmitting(true);
-      await fetch(`${baseUrl}/api/cellbank`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-
-        body: JSON.stringify(form),
-      });
-      setForm((prev) => initialForm);
-      setIsSubmitting(true);
-    } catch (error) {
-      console.log(error);
-    }
+  type TForm = {
+    strain: string,
+    notes: string,
+    target_molecule: string,
+    description: string,
   };
 
+  const [form, setForm] = useState(initialForm);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+const queryClient = useQueryClient();
+
+  const {mutate, isLoading, reset} = useMutation({
+    mutationFn: async (form: TForm) => {
+      const res = await fetch(`${baseUrl}/api/cellbank`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      return data;
+    },
+    
+      onSuccess: () => {
+        console.log('success');
+        queryClient.invalidateQueries({ queryKey: ["cellbanks"] });
+        reset();
+
+      },
+    }
+  );
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    mutate(form); // Trigger the mutation with the form <data>  </data>
+    console.log('initialForm', initialForm)
+    console.log('form', form)
+    setForm(initialForm);
+    console.log('setForm is reset to initial')
+    setIsSubmitting(false);
+  };
+  
   const handleChange = async (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -55,7 +77,7 @@ export default function CellbanksSingleInputForm() {
   return (
     <>
       <StyledForm onSubmit={handleSubmit}>
-        <InputContainer>
+        <InputContainer id="InputContainer">
           <FormLabel htmlFor="strain">strain</FormLabel>
           <FormInput
             type="select"
@@ -63,6 +85,7 @@ export default function CellbanksSingleInputForm() {
             name="strain"
             placeholder="strain (e.g. aspergillus)"
             onChange={handleChange}
+            value={form.strain}
             required
             autoFocus
           />
@@ -78,6 +101,7 @@ export default function CellbanksSingleInputForm() {
             name="target_molecule"
             onChange={handleChange}
             placeholder="target molecule (e.g. farnesane)"
+            value={form.target_molecule}
             required
           />
         </InputContainer>
@@ -89,6 +113,7 @@ export default function CellbanksSingleInputForm() {
             name="description"
             onChange={handleChange}
             placeholder="description"
+            value={form.description}
             required
           />
         </InputContainer>
@@ -100,6 +125,7 @@ export default function CellbanksSingleInputForm() {
             name="notes"
             onChange={handleChange}
             placeholder="notes"
+            value={form.notes}
             required
           />
         </InputContainer>

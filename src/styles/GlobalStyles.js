@@ -14,9 +14,15 @@ margin: 0;
 
 /* Prevent font size inflation */
 html {
+
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 /* Remove default margin in favour of better control in authored CSS */
@@ -79,6 +85,21 @@ textarea:not([rows]) {
   scroll-margin-block: 5ex;
 }
 
+/* Removes all animations, transitions and smooth scrolling */
+@media (prefers-reduced-motion: reduce){
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 
 // import fonts
@@ -88,10 +109,10 @@ ${'' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200
 // BK
 
 #root {
-  ${'' /* min-height: 100vh; */}
-  display:flex;
-  flex-direction: column;
-  height: 100vh;
+
+  ${'' /* display:flex;
+  flex-direction: column; */}
+  min-height: 100vh;
 }
 
  :root {

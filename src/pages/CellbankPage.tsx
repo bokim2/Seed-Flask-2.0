@@ -5,6 +5,28 @@ import CellbanksTable from '../features/cellbanks/CellbanksTable';
 import { InnerPageContainer, PageContainer } from '../styles/UtilStyles';
 import { useCellbanks } from '../lib/hooks';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
+import styled from 'styled-components';
+
+export const CellbankPageContainer = styled.section`
+  margin-top: 16vh;
+
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+align-items: center;
+`;
+
+export const CellbankInnerPageContainer = styled.section`
+
+width: 90%;
+/* display: flex;
+flex-direction: column;  */
+
+`;
+
+
 
 export default function CellbankPage() {
   const [cellbanks, isLoading, error] = useCellbanks();
@@ -25,13 +47,13 @@ export default function CellbankPage() {
   // }, []);
 
   return (
-    <PageContainer id="CellbankPageContainer">
-      <InnerPageContainer>
+    <CellbankPageContainer id="CellbankPageContainer">
+      <CellbankInnerPageContainer id="CellbankInnerPageContainer">
         {/* {JSON.stringify(cellbanks)} */}
         <CellbanksMultiInputForm />
         <CellbanksSingleInputForm />
         <CellbanksTable cellbanks={cellbanks} />
-      </InnerPageContainer>
-    </PageContainer>
+      </CellbankInnerPageContainer>
+    </CellbankPageContainer>
   );
 }
