@@ -22,7 +22,7 @@ html {
 
 html,
 body {
-  height: 100%;
+  ${'' /* height: 100%; */}
 }
 
 /* Remove default margin in favour of better control in authored CSS */
@@ -112,7 +112,7 @@ ${'' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200
 
   ${'' /* display:flex;
   flex-direction: column; */}
-  min-height: 100vh;
+  ${'' /* min-height: 100vh; */}
 }
 
  :root {
@@ -164,7 +164,7 @@ ${'' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200
    body {
      margin: 0;
      padding: 0;
-     width: 100vw;
+     ${'' /* width: 100vw; */}
      overflow-x: hidden;
      color: var(--color-text-1);
      font-family: var(--font-sans-serif);
