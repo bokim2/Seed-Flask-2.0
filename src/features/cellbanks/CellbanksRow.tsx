@@ -1,6 +1,7 @@
 import React from 'react';
 // import styled from 'styled-components';
 import { TableRow, TableDataCell } from '../../styles/UtilStyles';
+import Button from '../../ui/Button';
 
 export default function CellbanksRow({ cellbank }) {
   return (
@@ -20,6 +21,12 @@ export default function CellbanksRow({ cellbank }) {
         <TableDataCell data-cell="notes">{cellbank.notes}</TableDataCell>
         <TableDataCell data-cell="date">
           {cellbank.readable_start_date_pacific}
+        </TableDataCell>
+        <TableDataCell data-cell="edit">
+          <Button $size={"small"}>Edit</Button>
+        </TableDataCell>
+        <TableDataCell data-cell="delete">
+          <Button $size={"small"}>delete</Button>
         </TableDataCell>
       </TableRow>
     </>
