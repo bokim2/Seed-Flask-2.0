@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom';
-import MainNav from './MainNav';
+import MainNav from './ui/MainNav';
 import styled from 'styled-components';
 import { useState } from 'react';
-import NavList from './NavList';
-import LoaderBar from './LoaderBar';
+import NavList from './ui/NavList';
+import LoaderBar from './ui/LoaderBar';
 
 const StyledAppLayout = styled.div`
   flex: 1;
@@ -43,7 +43,6 @@ const NavBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  
 `;
 
 const MainPageContainer = styled.main`
