@@ -1,34 +1,43 @@
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Main page styles
 
 export const PageContainer = styled.section`
-  /* margin-top: clamp(4rem, min(5vw, 5vh), 10rem); */
   margin-top: 16vh;
-  /* min-height: 100vh; */
-  /* display: flex; */
-  /* align-items: center; */
 
-  justify-content: center;
-  width: 100%;
-  position: relative;
-  /* height: 100%; */
-  display: flex;
+justify-content: center;
+width: 100%;
+position: relative;
+display: flex;
+flex-direction: column;
+align-items: center;
 `;
 
 export const InnerPageContainer = styled.section`
-  /* display: flex; */
-  /* align-items: center; */
-  /* min-height: 100vh; */
-  /* margin-inline: auto; */
-  width: 90%;
-  /* align-self: center; */
 
-  /* position: relative; */
-  height: 100%;
+  width: 90%;
+ 
+`;
+
+// MAIN MENU STYLES
+
+export const StyledMainMenuButtons = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  width: clamp(7rem, 60vw, 30rem);
+  aspect-ratio: 4.5/1;
+  border-radius: clamp(1rem, 2vw, 2rem);
+  border: 0.341px solid #000;
+  font-size: clamp(1rem, 2vw, 2rem);
+  font-weight: 600;
+  letter-spacing: 0.01794rem;
+  color: var(--color-text-2);
 
   @media (min-width: 800px) {
-    width: 70%;
+    width: clamp(15rem, 30vw, 30rem);
   }
 `;
 

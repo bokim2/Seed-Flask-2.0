@@ -159,6 +159,36 @@ app.get('/api/samples', async (req, res) => {
   }
 });
 
+// GET aggregate samples by flask_id for graphing
+
+app.get('/api/graphs', async (req, res) => {
+  try {
+    const results = await db.query(`SELECT
+    f.flask_id,
+    ARRAY_AGG(s.od600 ORDER BY s.end_date) AS od600_values,
+    ARRAY_AGG(EXTRACT(EPOCH FROM (s.end_date - f.start_date)) / 3600 ORDER BY s.end_date) AS time_since_inoc_hr_values
+  FROM samples s
+  JOIN flasks f ON s.flask_id = f.flask_id
+  GROUP BY f.flask_id;`);
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// This query also worked for organizing the data for graphing but it split it up in objects 
+// SELECT
+//     f.flask_id,
+//     ARRAY_AGG(jsonb_build_object(
+//       'time_since_inoc_hr', EXTRACT(EPOCH FROM (s.end_date - f.start_date)) / 3600,
+//       'od600', s.od600
+//     ) ORDER BY s.end_date) AS data
+//   FROM samples s
+//   JOIN flasks f ON s.flask_id = f.flask_id
+//   GROUP BY f.flask_id;
 
 
 // For any other route, serve the index.html file
