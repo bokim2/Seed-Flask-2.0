@@ -23,6 +23,9 @@ ChartJS.register(
 
 export const options: any = {
   responsive: true,
+//   plugins: {
+//     tooltip: callbacks: 
+//   },
   scales: {
     x: {
       type: 'linear',
@@ -85,7 +88,7 @@ export default function LineGraph({ chartData }) {
       }
       console.log('dataArray', dataArray);
       return {
-        label: "flask"+data.flask_id,
+        label: ["flask"+data.flask_id, 2,3],
         data: dataArray,
         backgroundColor: 'red',
         borderColor: 'rgb(75, 192, 192)',

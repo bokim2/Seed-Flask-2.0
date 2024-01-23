@@ -12,10 +12,15 @@ import {
   Wrapper,
 } from '../styles/UtilStyles';
 
+const HomePageContainer = styled(PageContainer)`
+  width: 80%;
+`;
+
 const InnerWrapper = styled.div`
   margin: auto;
   display: flex;
   flex-direction: column;
+  width: 80%;
   /* height: 70%; */
   /* margin-top: auto; */
 

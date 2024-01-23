@@ -164,12 +164,24 @@ app.get('/api/samples', async (req, res) => {
 app.get('/api/graphs', async (req, res) => {
   try {
     const results = await db.query(`SELECT
-    f.flask_id,
-    ARRAY_AGG(s.od600 ORDER BY s.end_date) AS od600_values,
-    ARRAY_AGG(EXTRACT(EPOCH FROM (s.end_date - f.start_date)) / 3600 ORDER BY s.end_date) AS time_since_inoc_hr_values
-  FROM samples s
-  JOIN flasks f ON s.flask_id = f.flask_id
-  GROUP BY f.flask_id;`);
+  f.flask_id,
+  f.vessel_type,
+  f.inoculum_uL,
+  f.media_mL,
+  f.start_date,
+  cb.cell_bank_id,
+  cb.strain,
+  cb.notes,
+  cb.target_molecule,
+  cb.description,
+  cb.date_timestamptz,
+  ARRAY_AGG(s.od600 ORDER BY s.end_date) AS od600_values,
+  ARRAY_AGG(EXTRACT(EPOCH FROM (s.end_date - f.start_date)) / 3600 ORDER BY s.end_date) AS time_since_inoc_hr_values
+FROM samples s
+JOIN flasks f ON s.flask_id = f.flask_id
+JOIN cell_banks cb ON f.cell_bank_id = cb.cell_bank_id
+GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.cell_bank_id, cb.strain, cb.notes, cb.target_molecule, cb.description, cb.date_timestamptz;`);
+  console.log(results)
     res.status(200).json({
       status: 'success',
       data: results.rows,
@@ -178,6 +190,26 @@ app.get('/api/graphs', async (req, res) => {
     console.log(err);
   }
 });
+
+// simpler version of graphs query just od600 and interval
+// app.get('/api/graphs', async (req, res) => {
+//   try {
+//     const results = await db.query(`SELECT
+//     f.flask_id,
+//     ARRAY_AGG(s.od600 ORDER BY s.end_date) AS od600_values,
+//     ARRAY_AGG(EXTRACT(EPOCH FROM (s.end_date - f.start_date)) / 3600 ORDER BY s.end_date) AS time_since_inoc_hr_values
+//   FROM samples s
+//   JOIN flasks f ON s.flask_id = f.flask_id
+//   GROUP BY f.flask_id;`);
+//   console.log(results)
+//     res.status(200).json({
+//       status: 'success',
+//       data: results.rows,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 // This query also worked for organizing the data for graphing but it split it up in objects 
 // SELECT
