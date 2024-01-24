@@ -37,9 +37,20 @@ const StyledNav = styled.nav`
 const StyledTitle = styled.h1`
   font-family: var(--font-serif);
   font-weight: 800;
-  color: var(--clr-accent-0);
+  color: rgba(var(--clr-accent-0));
   font-size: clamp(2rem, 3vw, 3rem);
   letter-spacing: 0.08rem;
+
+  &:hover {
+color: #FFE390;
+  }
+
+  /* &:active {
+    color:#b6c7f1;
+  }
+  &:focus {
+    color:#b6c7f1;
+  } */
 `;
 
 

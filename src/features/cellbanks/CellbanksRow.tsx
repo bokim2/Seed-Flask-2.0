@@ -10,19 +10,23 @@ import Button from '../../ui/Button';
 import { CellbankMultiInput } from './CellbanksMultiInputForm';
 import styled, { css } from 'styled-components';
 import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
+import { TTableRow } from '../../lib/types';
 
 const EditCellbankTextArea = styled(FormTextArea)`
   width: 100%;
   height: auto;
 `;
 
-const PreviousDataRow = styled.tr<{ $editing?: boolean; }>`
-background: ${props => props.$editing ? 'red' : 'transparent'};
+const PreviousDataRow = styled(TableRow)<TTableRow>`
+  background: ${(props) => (props.$editing ? 'red' : 'transparent')};
+  &:nth-of-type(2n) {
+    background: ${(props) => (props.$editing ? 'red' : 'transparent')};
+  }
 `;
 
 const EditRow = styled.tr`
   background-color: yellow;
-  color:turquoise;
+  color: turquoise;
 `;
 
 export default function CellbanksRow({ cellbank, cellbankRow }) {

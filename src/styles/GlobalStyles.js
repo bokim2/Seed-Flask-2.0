@@ -136,12 +136,12 @@ ${'' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200
   --clr-primary-900: 21,15,29; //dark black - navbar
   --clr-primary-950: 2,6,23;  //darker black - navbar expanded
 
-  --clr-accent-0: #F2D17C; /* main accent */
+  --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
   --clr-accent-1: #FAF7F0; /* menu button */
   --clr-accent-2: #E1F6F2; /* */
   --clr-accent-3: #E7F1DC; /*  */
   --clr-accent-4: #E4F1EE; /* .function__title */
-  --clr-accent-5: #86a789;
+  --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
   --clr-accent-6: #ff7676;
   --clr-accent-7: #ff8080;
   --clr-accent-8: #445d48;
