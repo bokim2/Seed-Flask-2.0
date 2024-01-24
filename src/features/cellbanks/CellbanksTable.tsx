@@ -7,12 +7,16 @@ import {
   TableRow,
   TableHeaderCell,
   Wrapper,
+  StyledForm,
 } from '../../styles/UtilStyles';
 
 export default function CellbanksTable({ cellbanks }) {
   // console.log(cellbanks, 'in cellbankstable');
+
+
   return (
     // <Wrapper>
+    <StyledForm onSubmit={()=> console.log('submit edited')}> 
       <TableContainer id="TableContainer">
         <StyledTable>
           <Caption>Cell Banks Table</Caption>
@@ -30,12 +34,15 @@ export default function CellbanksTable({ cellbanks }) {
           </TableHeader>
           <tbody>
             {cellbanks &&
-              cellbanks?.map((cellbank) => (
-                <CellbanksRow key={cellbank.cell_bank_id} cellbank={cellbank} />
+              cellbanks?.map((cellbank,i) => (
+                <CellbanksRow key={cellbank.cell_bank_id} cellbank={cellbank} 
+                cellbankRow={{...cellbanks[i]}}
+                />
               ))}
           </tbody>
         </StyledTable>
       </TableContainer>
+    </StyledForm>
     // </Wrapper>
   );
 }
