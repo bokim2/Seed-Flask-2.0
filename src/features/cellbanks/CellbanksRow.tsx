@@ -11,6 +11,7 @@ import { CellbankMultiInput } from './CellbanksMultiInputForm';
 import styled, { css } from 'styled-components';
 import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
 import { TTableRow } from '../../lib/types';
+import { baseUrl } from '../../../configs';
 
 const EditCellbankTextArea = styled(FormTextArea)`
   width: 100%;
@@ -29,13 +30,19 @@ const EditRow = styled.tr`
   color: turquoise;
 `;
 
-export default function CellbanksRow({ cellbank, cellbankRow }) {
-  const [editing, setEditing] = useState<boolean>(false);
+export default function CellbanksRow({
+  cellbank,
+  cellbankRow,
+  rowNumber,
+  editingRowNumber,
+  seteditingRowNumber,
+}) {
+  const editing = rowNumber === editingRowNumber;
 
   const handleClickEdit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setEditing(!editing);
+    seteditingRowNumber(rowNumber);
   };
   return (
     <>
@@ -63,7 +70,9 @@ export default function CellbanksRow({ cellbank, cellbankRow }) {
         </TableDataCell>
       </PreviousDataRow>
 
-      {editing && <CellbanksEditForm cellbankRow={cellbankRow} />}
+      {editing && (
+        <CellbanksEditForm cellbankRow={cellbankRow} rowNumber={rowNumber} />
+      )}
       {/* </StyledForm> */}
     </>
 
@@ -71,7 +80,7 @@ export default function CellbanksRow({ cellbank, cellbankRow }) {
   );
 }
 
-function CellbanksEditForm({ cellbankRow }) {
+function CellbanksEditForm({ cellbankRow, rowNumber }) {
   const [editedForm, setEditedForm] = useState(InitialEditCellbankForm);
   // const [cellbanks, setCellbanks] = useState<any>([]);
 
@@ -94,23 +103,34 @@ function CellbanksEditForm({ cellbankRow }) {
         <TableDataCell data-cell="cell bank id">
           {editedForm.cell_bank_id}
         </TableDataCell>
-        <TableDataCell data-cell="strain">{editedForm.strain}</TableDataCell>
-        <TableDataCell data-cell="target_molecule">
-          {editedForm.target_molecule}
+        <TableDataCell data-cell="strain">
+        <EditCellbankTextArea
+          data-cell="strain"
+          id="strain"
+          name="strain"
+          onChange={handleChange}
+          placeholder="strain"
+          required
+          value={editedForm.strain}
+        >
+          {editedForm.strain}
+        </EditCellbankTextArea>
         </TableDataCell>
-        {/* <TableDataCell>
-          <CellbankMultiInput
-            type="text"
-            id="strain"
-            name="strain"
-            placeholder="strain (e.g. aspergillus)"
-            value={editedForm.target_molecule}
-            // onChange={(e) => handleChange(e, i)}
-            required
-            autoFocus
-            // value={bulkForm[i].strain}
-          />
-        </TableDataCell> */}
+        <TableDataCell data-cell="target_molecule">
+          
+        <EditCellbankTextArea
+          data-cell="target_molecule"
+          id="target_molecule"
+          name="target_molecule"
+          onChange={handleChange}
+          placeholder="target_molecule"
+          required
+          value={editedForm.target_molecule}
+        >
+          {editedForm.target_molecule}
+        </EditCellbankTextArea>
+        </TableDataCell>
+        
         <TableDataCell>
           <EditCellbankTextArea
             id="description"
@@ -147,10 +167,12 @@ function CellbanksEditForm({ cellbankRow }) {
             $size={'small'}
             type="submit"
             // disabled={'isSubmitting EDIT THIS'}
-            // onSubmit={(e) => {
-            //   e.preventDefault();
-            //   console.log('in button submit - submit edited');
-            // }}
+            onClick={async (e) => {
+              e.preventDefault();
+              console.log('editForm', editedForm);
+              await updateEditSumit(editedForm.cell_bank_id, editedForm);
+              console.log('in button submit - submit edited');
+            }}
           >
             Update
           </Button>
@@ -158,4 +180,22 @@ function CellbanksEditForm({ cellbankRow }) {
       </EditRow>
     </>
   );
+}
+
+async function updateEditSumit(cell_bank_id, editedForm) {
+  console.log('cell_bank_id', cell_bank_id);
+  const { strain, target_molecule, description, notes, date } = editedForm;
+  const res = await fetch(`${baseUrl}/api/cellbank/${cell_bank_id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      strain,
+      target_molecule,
+      description,
+      notes,
+      date: '2024-01-20T22:08:00.039Z',
+    }),
+  });
 }

@@ -140,6 +140,18 @@ app.post('/api/cellbank', async (req, res) => {
   }
 });
 
+// UPDATE one cell bank
+
+app.put('/api/cellbank/:id', async (req, res) => {
+  try {
+    console.log(req.body, 'in put cell bank server put request');
+    const {strain, target_molecule, description, notes, date} = req.body
+    const results = await db.query(`UPDATE cell_banks SET strain = $1, notes = $2, target_molecule = $3, description = $4 WHERE cell_bank_id = $5 returning *;`, [strain, notes, target_molecule, description, req.params.id])
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // GET all samples
 
 app.get('/api/samples', async (req, res) => {
@@ -181,7 +193,7 @@ FROM samples s
 JOIN flasks f ON s.flask_id = f.flask_id
 JOIN cell_banks cb ON f.cell_bank_id = cb.cell_bank_id
 GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.cell_bank_id, cb.strain, cb.notes, cb.target_molecule, cb.description, cb.date_timestamptz;`);
-  console.log(results)
+    console.log(results);
     res.status(200).json({
       status: 'success',
       data: results.rows,
@@ -211,7 +223,7 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
 //   }
 // });
 
-// This query also worked for organizing the data for graphing but it split it up in objects 
+// This query also worked for organizing the data for graphing but it split it up in objects
 // SELECT
 //     f.flask_id,
 //     ARRAY_AGG(jsonb_build_object(
@@ -221,7 +233,6 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
 //   FROM samples s
 //   JOIN flasks f ON s.flask_id = f.flask_id
 //   GROUP BY f.flask_id;
-
 
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {
