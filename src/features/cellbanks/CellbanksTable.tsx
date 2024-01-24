@@ -13,10 +13,14 @@ import {
 export default function CellbanksTable({ cellbanks }) {
   // console.log(cellbanks, 'in cellbankstable');
 
-
   return (
     // <Wrapper>
-    <StyledForm onSubmit={()=> console.log('submit edited')}> 
+    <StyledForm
+      onSubmit={(e) => {
+        e.preventDefault();
+        console.log('submit in FORM submit', e.target);
+      }}
+    >
       <TableContainer id="TableContainer">
         <StyledTable>
           <Caption>Cell Banks Table</Caption>
@@ -34,9 +38,11 @@ export default function CellbanksTable({ cellbanks }) {
           </TableHeader>
           <tbody>
             {cellbanks &&
-              cellbanks?.map((cellbank,i) => (
-                <CellbanksRow key={cellbank.cell_bank_id} cellbank={cellbank} 
-                cellbankRow={{...cellbanks[i]}}
+              cellbanks?.map((cellbank, i) => (
+                <CellbanksRow
+                  key={cellbank.cell_bank_id}
+                  cellbank={cellbank}
+                  cellbankRow={{ ...cellbanks[i] }}
                 />
               ))}
           </tbody>
