@@ -23,9 +23,12 @@ export default function SamplePage() {
   
   }, []);
 
+
+
   return (
     <PageContainer id="SamplePageContainer">
       <Wrapper></Wrapper>
+      
       <InnerPageContainer id="SampleInnerPageContainer">
         <SamplesTable samples={samples} />
       </InnerPageContainer>
