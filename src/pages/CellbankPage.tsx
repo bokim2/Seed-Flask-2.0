@@ -7,13 +7,9 @@ import { useCellbanks } from '../lib/hooks';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 import styled from 'styled-components';
 
-
-
-
 export default function CellbankPage() {
   const [cellbanks, isLoading, error] = useCellbanks();
   
-  // const [cellbanks, setCellbanks] = useState<any>([]);
 
   // const fetchCellbanks = async () => {
   //   const res = await fetch(`${baseUrl}/api/cellbanks`);
@@ -27,6 +23,7 @@ export default function CellbankPage() {
   //   fetchCellbanks();
   //   // setCellbanks(data)
   // }, []);
+  // const handleEditForm = (e) => {}
 
   return (
     <PageContainer id="CellbankPageContainer">
@@ -34,7 +31,7 @@ export default function CellbankPage() {
         {/* {JSON.stringify(cellbanks)} */}
         <CellbanksMultiInputForm />
         <CellbanksSingleInputForm />
-        <CellbanksTable cellbanks={cellbanks} />
+        <CellbanksTable cellbanks={cellbanks}  />
       </InnerPageContainer>
     </PageContainer>
   );

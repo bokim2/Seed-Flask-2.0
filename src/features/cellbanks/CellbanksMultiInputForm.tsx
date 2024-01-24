@@ -222,7 +222,7 @@ export default function CellbanksMultiInputForm() {
               ))}
           </CellbankFormBody>
         </StyledTable>
-        <Button $size={'sdaf'} type="submit" disabled={isSubmitting}>
+        <Button $size={'small'} type="submit" disabled={isSubmitting}>
           Submit
         </Button>
       </StyledForm>
