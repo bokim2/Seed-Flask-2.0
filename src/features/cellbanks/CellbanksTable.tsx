@@ -9,15 +9,18 @@ import {
   Wrapper,
   StyledForm,
 } from '../../styles/UtilStyles';
+import { useState } from 'react';
 
 export default function CellbanksTable({ cellbanks }) {
   // console.log(cellbanks, 'in cellbankstable');
+  const [editingRowNumber, seteditingRowNumber] = useState<number | null>(null);
 
   return (
     // <Wrapper>
     <StyledForm
       onSubmit={(e) => {
         e.preventDefault();
+      //   // console.log(editedForm)
         console.log('submit in FORM submit', e.target);
       }}
     >
@@ -43,6 +46,9 @@ export default function CellbanksTable({ cellbanks }) {
                   key={cellbank.cell_bank_id}
                   cellbank={cellbank}
                   cellbankRow={{ ...cellbanks[i] }}
+                  rowNumber={i}
+                  editingRowNumber={editingRowNumber}
+                  seteditingRowNumber={seteditingRowNumber}
                 />
               ))}
           </tbody>
