@@ -8,26 +8,35 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { CellbankMultiInput } from './CellbanksMultiInputForm';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
 
 const EditCellbankTextArea = styled(FormTextArea)`
-  width: auto;
+  width: 100%;
   height: auto;
 `;
 
+const PreviousDataRow = styled.tr<{ $editing?: boolean; }>`
+background: ${props => props.$editing ? 'red' : 'transparent'};
+`;
+
+const EditRow = styled.tr`
+  background-color: yellow;
+  color:turquoise;
+`;
+
 export default function CellbanksRow({ cellbank, cellbankRow }) {
-  const [edit, setEdit] = useState(false);
+  const [editing, setEditing] = useState<boolean>(false);
 
   const handleClickEdit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setEdit(!edit);
+    setEditing(!editing);
   };
   return (
     <>
       {/* <StyledForm onSubmit={()=> console.log('submit edited')}> */}
-      <TableRow>
+      <PreviousDataRow $editing={editing}>
         <TableDataCell data-cell="cell bank id">
           {cellbank.cell_bank_id}
         </TableDataCell>
@@ -48,9 +57,9 @@ export default function CellbanksRow({ cellbank, cellbankRow }) {
         <TableDataCell data-cell="delete">
           <Button $size={'small'}>delete</Button>
         </TableDataCell>
-      </TableRow>
+      </PreviousDataRow>
 
-      {edit && <CellbanksEditForm cellbankRow={cellbankRow} />}
+      {editing && <CellbanksEditForm cellbankRow={cellbankRow} />}
       {/* </StyledForm> */}
     </>
 
@@ -77,7 +86,7 @@ function CellbanksEditForm({ cellbankRow }) {
 
   return (
     <>
-      <TableRow>
+      <EditRow>
         <TableDataCell data-cell="cell bank id">
           {editedForm.cell_bank_id}
         </TableDataCell>
@@ -119,8 +128,7 @@ function CellbanksEditForm({ cellbankRow }) {
           />
         </TableDataCell>
         <TableDataCell>
-          <CellbankMultiInput
-            type="text"
+          <EditCellbankTextArea
             id="date"
             name="date"
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
@@ -134,12 +142,16 @@ function CellbanksEditForm({ cellbankRow }) {
           <Button
             $size={'small'}
             type="submit"
-            disabled={'isSubmitting EDIT THIS'}
+            // disabled={'isSubmitting EDIT THIS'}
+            // onSubmit={(e) => {
+            //   e.preventDefault();
+            //   console.log('in button submit - submit edited');
+            // }}
           >
             Update
           </Button>
         </TableDataCell>
-      </TableRow>
+      </EditRow>
     </>
   );
 }
