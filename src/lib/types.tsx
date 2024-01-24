@@ -5,6 +5,10 @@ export type TForm = {
     description: string,
   };
 
+  export type TTableRow = {
+    $editing: boolean;
+}
+
   export type TEditCellbankForm = TForm & {
     cell_bank_id: string
     

@@ -170,6 +170,8 @@ export const TableHeaderCell = styled.th`
   }
 `;
 
+
+
 export const TableRow = styled.tr`
   background: hsl(0, 0%, 0%, 0.5);
   &:nth-of-type(2n) {
