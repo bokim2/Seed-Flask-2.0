@@ -1,20 +1,26 @@
 import React from 'react';
-import MainMenuButton from '../ui/MainMenuButton';
+import MainMenuButton, { StyledImage } from '../ui/MainMenuButton';
 import styled from 'styled-components';
 import { MdHeight } from 'react-icons/md';
 import FlasksTable from '../features/flasks/FlasksTable';
 import FlasksRow from '../features/flasks/FlasksRow';
-import Settings from './Settings';
+import Settings from './SettingsPage';
 import {
   InnerPageContainer,
   PageContainer,
+  StyledMainMenuButtons,
   Wrapper,
 } from '../styles/UtilStyles';
+
+const HomePageContainer = styled(PageContainer)`
+  width: 80%;
+`;
 
 const InnerWrapper = styled.div`
   margin: auto;
   display: flex;
   flex-direction: column;
+  width: 80%;
   /* height: 70%; */
   /* margin-top: auto; */
 
@@ -43,17 +49,21 @@ const MenuButtonContainer = styled.div`
   }
 `;
 
-export const CircularButtonLG = styled.button`
+export const CircularButton = styled(MainMenuButton)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: clamp(8rem, 10vw, 15rem);
+  height: auto;
   aspect-ratio: 1/1;
   border-radius: 50%;
 
-  @media (min-width: 800px) {
+  /* @media (min-width: 800px) {
     width: clamp(10rem, 10vw, 20rem);
-  }
+  } */
 `;
 
-const SecondaryMenuButton = styled.div`
+const SecondaryMenuButtonContainer = styled.div`
   /* width: 100%; */
   /* padding-bottom: 15vh; */
   /* flex: 1; */
@@ -61,7 +71,7 @@ const SecondaryMenuButton = styled.div`
   display: flex;
   align-items: flex-end;
   /* gap: clamp(1rem, 2vw, 2rem); */
-  justify-content: space-around;
+  justify-content: space-evenly;
 
   @media (min-width: 800px) {
     flex-direction: column;
@@ -97,7 +107,7 @@ export default function HomePage() {
               backgroundColor="#E7F1DC"
               imgUrl="images/clock-testtube.png"
               imgAlt="clock and test tube"
-              styleOverride={{
+              imgStyleOverride={{
                 height: 'clamp(1.8rem, 6vw, 6.6rem)',
                 scale: '1.1',
               }}
@@ -112,10 +122,26 @@ export default function HomePage() {
               positionElement={{ left: '30%' }}
             />
           </MenuButtonContainer>
-          <SecondaryMenuButton>
-            <CircularButtonLG />
-            <CircularButtonLG />
-          </SecondaryMenuButton>
+          <SecondaryMenuButtonContainer>
+            <CircularButton
+              toPath="/charts"
+              // text={''}
+              backgroundColor="#EAE0DA"
+              imgUrl="images/wave-graph-1.png"
+              imgAlt="wave graph"
+              // positionElement={{ left: '30%' }}
+              imgStyleOverride={{ borderRadius: '0', width: '60%' }}
+            />
+            <CircularButton
+              toPath="/graphs"
+              // text={''}
+              backgroundColor="#F2D17C"
+              imgUrl="images/document-1.png"
+              imgAlt="wave graph"
+              // positionElement={{ left: '30%' }}
+              imgStyleOverride={{ borderRadius: '0', width: '60%' }}
+            />
+          </SecondaryMenuButtonContainer>
         </InnerWrapper>
       </InnerPageContainer>
     </PageContainer>

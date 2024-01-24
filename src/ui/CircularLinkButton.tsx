@@ -16,18 +16,18 @@ type MainMenuButtonProps = {
   backgroundColor: string;
   imgUrl: string;
   imgAlt?: string;
-  imgStyleOverride?: any;
+  styleOverride?: any;
   positionElement?: any;
   className?: string;
 };
 
-export default function MainMenuButton({
+export default function CircularLinkButton({
   toPath,
   text,
   backgroundColor,
   imgUrl,
   imgAlt,
-  imgStyleOverride,
+  styleOverride,
   positionElement,
   className
 }: MainMenuButtonProps) {
@@ -38,7 +38,7 @@ export default function MainMenuButton({
     >
       <span>{text}</span>
 
-      <StyledImage className={className} src={imgUrl} alt={imgAlt} style={imgStyleOverride} />
+      <StyledImage className={className} src={imgUrl} alt={imgAlt} style={styleOverride} />
     </StyledMainMenuButtons>
   );
 }

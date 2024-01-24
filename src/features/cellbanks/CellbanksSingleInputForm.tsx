@@ -11,21 +11,10 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { TForm } from '../../lib/types';
+import { initialForm } from '../../lib/constants';
 
 export default function CellbanksSingleInputForm() {
-  const initialForm = {
-    strain: '',
-    notes: '',
-    target_molecule: '',
-    description: '',
-  };
-
-  type TForm = {
-    strain: string,
-    notes: string,
-    target_molecule: string,
-    description: string,
-  };
 
   const [form, setForm] = useState(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,7 +69,7 @@ const queryClient = useQueryClient();
         <InputContainer id="InputContainer">
           <FormLabel htmlFor="strain">strain</FormLabel>
           <FormInput
-            type="select"
+            type="text"
             id="strain"
             name="strain"
             placeholder="strain (e.g. aspergillus)"
@@ -130,7 +119,7 @@ const queryClient = useQueryClient();
           />
         </InputContainer>
 
-        <Button $size={'sdaf'} type="submit" disabled={isSubmitting}>
+        <Button $size={'small'} type="submit" disabled={isSubmitting}>
           Submit
         </Button>
       </StyledForm>
