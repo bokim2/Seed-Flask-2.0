@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 export default function CellbanksTable({ cellbanks }) {
   // console.log(cellbanks, 'in cellbankstable');
-  const [editingRowNumber, seteditingRowNumber] = useState<number | null>(null);
+  const [editingRowNumber, setEditingRowNumber] = useState<number | null>(null);
 
   return (
     // <Wrapper>
@@ -21,6 +21,7 @@ export default function CellbanksTable({ cellbanks }) {
       onSubmit={(e) => {
         e.preventDefault();
       //   // console.log(editedForm)
+      setEditingRowNumber(null);
         console.log('submit in FORM submit', e.target);
       }}
     >
@@ -48,7 +49,7 @@ export default function CellbanksTable({ cellbanks }) {
                   cellbankRow={{ ...cellbanks[i] }}
                   rowNumber={i}
                   editingRowNumber={editingRowNumber}
-                  seteditingRowNumber={seteditingRowNumber}
+                  setEditingRowNumber={setEditingRowNumber}
                 />
               ))}
           </tbody>

@@ -13,3 +13,12 @@ export type TForm = {
     cell_bank_id: string
     
   }
+
+  export type TCellbank = {
+    cell_bank_id: number;
+    strain: string;
+    target_molecule: string;
+    description: string;
+    notes: string;
+    readable_start_date_pacific: string;
+  }
