@@ -56,11 +56,14 @@ const MainPageContainer = styled.main`
 `;
 
 export default function AppLayout() {
-  const [toggleNav, setToggleNav] = useState(false);
+  const [openNav, setOpenNav] = useState(false);
+  const [openUser, setOpenUser] = useState(false);
 
-  const handleClick = (e: React.MouseEvent<SVGElement, MouseEvent>): void => {
+  const handleNavToggle = (e: React.MouseEvent<Element, MouseEvent>, navOrUser: string): void => {
+    console.log('e.target, e.currentTarget', e.target, e.currentTarget)
     e.stopPropagation();
-    setToggleNav((prev) => !prev);
+   if (navOrUser === 'nav') setOpenNav((prev) => !prev);
+    if (navOrUser === 'user') setOpenUser((prev) => !prev);
   };
 
   return (
@@ -68,7 +71,7 @@ export default function AppLayout() {
       <StyledBackgroundColor />
       <StyledBackgroundImg />
       <NavBar id="NavBar">
-        <MainNav toggleNav={toggleNav} handleToggle={handleClick} />
+        <MainNav openNav={openNav} handleToggle={handleNavToggle} openUser={openUser} />
       </NavBar>
       {/* <LoaderBar /> */}
 

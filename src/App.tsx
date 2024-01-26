@@ -18,6 +18,7 @@ import HomePage from './pages/HomePage';
 import FlaskPage from './pages/FlaskPage';
 import CellbankPage from './pages/CellbankPage';
 import ChartsPage from './pages/ChartsPage';
+import SignInPage from './pages/SignInPage';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -56,6 +57,7 @@ function App() {
               <Route path="bioreactor" element={<h1>bioreactor page</h1>} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="charts" element={<ChartsPage />} />
+              <Route path="signin" element={<SignInPage />} />
             </Route>
 
             <Route path="*" element={<h1>Page not found</h1>} />
