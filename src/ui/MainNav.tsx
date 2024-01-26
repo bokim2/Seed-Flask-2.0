@@ -4,18 +4,18 @@ import { useEffect, useRef, useState } from 'react';
 import NavList from './NavList';
 import { type } from 'os';
 import { NavLink } from 'react-router-dom';
+import UserNavList from './UserNavList';
 
 const StyledMainNav = styled.div<StyledMainNav>`
-position: relative;
+  position: relative;
   z-index: 10;
-  background-color: rgba(var(--clr-primary-950), .9);
+  background-color: rgba(var(--clr-primary-950), 0.9);
   padding-block: 0.5rem;
   flex-grow: 1;
   height: 100%;
   /* height: 10vh; */
 
-  opacity: ${(props) => props.$isScrolled ? 1 : 0.8
-  }
+  opacity: ${(props) => (props.$isScrolled ? 1 : 0.8)};
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -42,7 +42,7 @@ const StyledTitle = styled.h1`
   letter-spacing: 0.08rem;
 
   &:hover {
-color: #FFE390;
+    color: #ffe390;
   }
 
   /* &:active {
@@ -52,8 +52,6 @@ color: #FFE390;
     color:#b6c7f1;
   } */
 `;
-
-
 
 const RoundButton = styled.button`
   border-radius: 50%; /* Use 50% for a circular shape */
@@ -65,8 +63,9 @@ const RoundButton = styled.button`
 `;
 
 const ButtonWrapper = styled.button`
-padding: 0;
-background-color: transparent;`;
+  padding: 0;
+  background-color: transparent;
+`;
 
 const NavSection = styled.div`
   display: flex;
@@ -75,26 +74,24 @@ const NavSection = styled.div`
 `;
 
 const StyledFaUser = styled(FaUser)`
-font-size: 1.75rem;
-fill: var(--clr-accent-0);
+  font-size: 1.75rem;
+  fill: var(--clr-accent-0);
 `;
-
 
 const style = { color: '#F2D17C', fontSize: '3rem' };
 
 type MainNavProps = {
-  toggleNav: boolean;
-  handleToggle: (e:  React.MouseEvent<SVGElement, MouseEvent>) => void;
+  openNav: boolean;
+  openUser: boolean;
+  handleToggle: (e: React.MouseEvent<Element, MouseEvent>, navOrUser: string) => void;
 };
-
 
 type StyledMainNav = {
   $isScrolled?: boolean;
-  
 };
 
-export default function MainNav({ toggleNav, handleToggle }: MainNavProps) {
-  const mainNavRef = useRef(null)
+export default function MainNav({ openNav,openUser, handleToggle }: MainNavProps) {
+  const mainNavRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Use useEffect to add event listener for scroll
@@ -114,30 +111,32 @@ export default function MainNav({ toggleNav, handleToggle }: MainNavProps) {
   }, []);
 
   return (
-    <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef} >
+    <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
       <StyledNav>
         <StyledNavLink to="/">
           <StyledTitle>Seed Flask</StyledTitle>
         </StyledNavLink>
 
         <NavSection>
-          <RoundButton>
-            <StyledFaUser />
+          <RoundButton onClick={(e)=>handleToggle(e,'user')}>
+            <StyledFaUser>
+              <NavLink to="/signin"></NavLink>
+            </StyledFaUser>
           </RoundButton>
 
-          {toggleNav ? (
+          {openNav ? (
             <ButtonWrapper>
-              <FaCaretUp style={style} onClick={handleToggle}/>
+              <FaCaretUp style={style} onClick={(e)=>handleToggle(e,'nav')} />
             </ButtonWrapper>
           ) : (
             <ButtonWrapper>
-              <FaCaretDown style={style} onClick={handleToggle}/>
+              <FaCaretDown style={style} onClick={(e)=>handleToggle(e,'nav')} />
             </ButtonWrapper>
           )}
         </NavSection>
-        
       </StyledNav>
-      {toggleNav && <NavList />}
+      {openNav && <NavList />}
+      {openUser && <UserNavList />}
     </StyledMainNav>
   );
 }

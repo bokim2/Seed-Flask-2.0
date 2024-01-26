@@ -12,6 +12,7 @@ import styled, { css } from 'styled-components';
 import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
 import { TTableRow } from '../../lib/types';
 import { baseUrl } from '../../../configs';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const EditCellbankTextArea = styled(FormTextArea)`
   width: 100%;
@@ -19,9 +20,9 @@ const EditCellbankTextArea = styled(FormTextArea)`
 `;
 
 const PreviousDataRow = styled(TableRow)<TTableRow>`
-  background: ${(props) => (props.$editing ? 'red' : 'transparent')};
+  background: ${(props) => (props.$editing && 'red' )};
   &:nth-of-type(2n) {
-    background: ${(props) => (props.$editing ? 'red' : 'transparent')};
+    background: ${(props) => (props.$editing && 'red')};
   }
 `;
 
@@ -35,14 +36,14 @@ export default function CellbanksRow({
   cellbankRow,
   rowNumber,
   editingRowNumber,
-  seteditingRowNumber,
+  setEditingRowNumber,
 }) {
   const editing = rowNumber === editingRowNumber;
-
-  const handleClickEdit = (e) => {
+  // console.log('editingRowNumber in CellbanksRow:', editingRowNumber, 'rowNumber', rowNumber,' rowNumber === editingRowNumber', rowNumber === editingRowNumber); 
+  const handleClickEdit = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    seteditingRowNumber(rowNumber);
+    setEditingRowNumber(rowNumber);
   };
   return (
     <>
@@ -71,7 +72,12 @@ export default function CellbanksRow({
       </PreviousDataRow>
 
       {editing && (
-        <CellbanksEditForm cellbankRow={cellbankRow} rowNumber={rowNumber} />
+        <CellbanksEditForm
+          cellbankRow={cellbankRow}
+          rowNumber={rowNumber}
+          setEditingRowNumber={setEditingRowNumber}
+          editingRowNumber={editingRowNumber}
+        />
       )}
       {/* </StyledForm> */}
     </>
@@ -80,7 +86,12 @@ export default function CellbanksRow({
   );
 }
 
-function CellbanksEditForm({ cellbankRow, rowNumber }) {
+function CellbanksEditForm({
+  cellbankRow,
+  rowNumber,
+  editingRowNumber,
+  setEditingRowNumber,
+}) {
   const [editedForm, setEditedForm] = useState(InitialEditCellbankForm);
   // const [cellbanks, setCellbanks] = useState<any>([]);
 
@@ -97,6 +108,20 @@ function CellbanksEditForm({ cellbankRow, rowNumber }) {
     console.log('edit cellbank', e.target.value);
   };
 
+// const queryClient = useQueryClient();
+// const {isLoading: isUpdating, mutate} = useMutation({
+//   mutationFn: updateCellbank,
+//   onSuccess: ()=> {
+//     queryClient.invalidateQueries({
+//       queryKey: [
+//         'cellbanks',
+//       ]
+//     })
+//   }
+// })
+
+
+
   return (
     <>
       <EditRow>
@@ -104,33 +129,32 @@ function CellbanksEditForm({ cellbankRow, rowNumber }) {
           {editedForm.cell_bank_id}
         </TableDataCell>
         <TableDataCell data-cell="strain">
-        <EditCellbankTextArea
-          data-cell="strain"
-          id="strain"
-          name="strain"
-          onChange={handleChange}
-          placeholder="strain"
-          required
-          value={editedForm.strain}
-        >
-          {editedForm.strain}
-        </EditCellbankTextArea>
+          <EditCellbankTextArea
+            data-cell="strain"
+            id="strain"
+            name="strain"
+            onChange={handleChange}
+            placeholder="strain"
+            required
+            value={editedForm.strain}
+          >
+            {editedForm.strain}
+          </EditCellbankTextArea>
         </TableDataCell>
         <TableDataCell data-cell="target_molecule">
-          
-        <EditCellbankTextArea
-          data-cell="target_molecule"
-          id="target_molecule"
-          name="target_molecule"
-          onChange={handleChange}
-          placeholder="target_molecule"
-          required
-          value={editedForm.target_molecule}
-        >
-          {editedForm.target_molecule}
-        </EditCellbankTextArea>
+          <EditCellbankTextArea
+            data-cell="target_molecule"
+            id="target_molecule"
+            name="target_molecule"
+            onChange={handleChange}
+            placeholder="target_molecule"
+            required
+            value={editedForm.target_molecule}
+          >
+            {editedForm.target_molecule}
+          </EditCellbankTextArea>
         </TableDataCell>
-        
+
         <TableDataCell>
           <EditCellbankTextArea
             id="description"
@@ -168,10 +192,18 @@ function CellbanksEditForm({ cellbankRow, rowNumber }) {
             type="submit"
             // disabled={'isSubmitting EDIT THIS'}
             onClick={async (e) => {
-              e.preventDefault();
-              console.log('editForm', editedForm);
-              await updateEditSumit(editedForm.cell_bank_id, editedForm);
+              // e.preventDefault();
+              e.stopPropagation();
+
+              console.log(
+                'editForm',
+                editedForm,
+                'editingRowNumber',
+                editingRowNumber
+              );
+              await updateEditSubmit(editedForm.cell_bank_id, editedForm);
               console.log('in button submit - submit edited');
+              setEditingRowNumber(null);
             }}
           >
             Update
@@ -182,20 +214,28 @@ function CellbanksEditForm({ cellbankRow, rowNumber }) {
   );
 }
 
-async function updateEditSumit(cell_bank_id, editedForm) {
-  console.log('cell_bank_id', cell_bank_id);
-  const { strain, target_molecule, description, notes, date } = editedForm;
-  const res = await fetch(`${baseUrl}/api/cellbank/${cell_bank_id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      strain,
-      target_molecule,
-      description,
-      notes,
-      date: '2024-01-20T22:08:00.039Z',
-    }),
-  });
+async function updateEditSubmit(cell_bank_id, editedForm) {
+  try {
+    console.log('cell_bank_id', cell_bank_id);
+    const { strain, target_molecule, description, notes, date } = editedForm;
+    const res = await fetch(`${baseUrl}/api/cellbank/${cell_bank_id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        strain,
+        target_molecule,
+        description,
+        notes,
+        date_timestamptz: '2024-01-20T22:08:00.039Z',
+      }),
+    });
+  } catch (error) {
+    console.log(error, 'error in updateEditSubmit');
+  }
+}
+
+function updateCellbank (){
+  
 }
