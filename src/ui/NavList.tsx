@@ -9,6 +9,7 @@ const StyledNavList = styled.ul`
   width: 100%;
   background-color: rgba(var(--clr-primary-900),.7);
 z-index: 10;
+list-style-type: none;
 `;
 
 const StyledNavLink = styled(NavLink)`

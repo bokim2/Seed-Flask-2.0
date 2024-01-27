@@ -9,6 +9,7 @@ const StyledNavList = styled.ul`
   width: 100%;
   background-color: rgba(var(--clr-primary-900),.7);
 z-index: 10;
+list-style-type: none;
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -25,7 +26,7 @@ export default function UserNavList() {
         <StyledNavLink to="/signin">Sign-In</StyledNavLink>
       </li>
       <li>
-        <StyledNavLink to="/cellbank">Cellbank</StyledNavLink>
+        <StyledNavLink to="/settings">Settings</StyledNavLink>
       </li>
       <li>
         <StyledNavLink to="/flask">Flask</StyledNavLink>

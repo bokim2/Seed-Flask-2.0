@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import NavList from './ui/NavList';
 import LoaderBar from './ui/LoaderBar';
+import { THandleNavToggle, TNavOrUser } from './lib/types';
 
 const StyledAppLayout = styled.div`
   flex: 1;
@@ -59,11 +60,16 @@ export default function AppLayout() {
   const [openNav, setOpenNav] = useState(false);
   const [openUser, setOpenUser] = useState(false);
 
-  const handleNavToggle = (e: React.MouseEvent<Element, MouseEvent>, navOrUser: string): void => {
-    console.log('e.target, e.currentTarget', e.target, e.currentTarget)
+
+
+  const handleNavToggle: THandleNavToggle = (e, navOrUser)=> {
+    // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
     e.stopPropagation();
    if (navOrUser === 'nav') setOpenNav((prev) => !prev);
-    if (navOrUser === 'user') setOpenUser((prev) => !prev);
+    if (navOrUser === 'user') {
+      setOpenNav(false);
+      setOpenUser((prev) => !prev);
+    }
   };
 
   return (

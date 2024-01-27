@@ -5,6 +5,7 @@ import NavList from './NavList';
 import { type } from 'os';
 import { NavLink } from 'react-router-dom';
 import UserNavList from './UserNavList';
+import { THandleNavToggle, TNavOrUser } from '../lib/types';
 
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
@@ -53,7 +54,7 @@ const StyledTitle = styled.h1`
   } */
 `;
 
-const RoundButton = styled.button`
+const UserButton = styled.button`
   border-radius: 50%; /* Use 50% for a circular shape */
   aspect-ratio: 1/1;
   padding: 0.5rem; /* Add padding if needed */
@@ -62,7 +63,7 @@ const RoundButton = styled.button`
   justify-content: center;
 `;
 
-const ButtonWrapper = styled.button`
+const NavMenuButton = styled.button`
   padding: 0;
   background-color: transparent;
 `;
@@ -83,7 +84,7 @@ const style = { color: '#F2D17C', fontSize: '3rem' };
 type MainNavProps = {
   openNav: boolean;
   openUser: boolean;
-  handleToggle: (e: React.MouseEvent<Element, MouseEvent>, navOrUser: string) => void;
+  handleToggle: THandleNavToggle;
 };
 
 type StyledMainNav = {
@@ -118,20 +119,21 @@ export default function MainNav({ openNav,openUser, handleToggle }: MainNavProps
         </StyledNavLink>
 
         <NavSection>
-          <RoundButton onClick={(e)=>handleToggle(e,'user')}>
-            <StyledFaUser>
+          <UserButton onClick={(e)=>handleToggle(e,'user')}
+          aria-label="user menu">
+            <StyledFaUser >
               <NavLink to="/signin"></NavLink>
             </StyledFaUser>
-          </RoundButton>
+          </UserButton>
 
           {openNav ? (
-            <ButtonWrapper>
+            <NavMenuButton aria-label="navigation menu">
               <FaCaretUp style={style} onClick={(e)=>handleToggle(e,'nav')} />
-            </ButtonWrapper>
+            </NavMenuButton>
           ) : (
-            <ButtonWrapper>
+            <NavMenuButton aria-label="navigation menu">
               <FaCaretDown style={style} onClick={(e)=>handleToggle(e,'nav')} />
-            </ButtonWrapper>
+            </NavMenuButton>
           )}
         </NavSection>
       </StyledNav>
