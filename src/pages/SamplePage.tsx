@@ -6,31 +6,35 @@ import {
 } from '../styles/UtilStyles';
 import { baseUrl } from '../../configs';
 import SamplesTable from '../features/samples/SamplesTable';
+import { useSamples } from '../lib/hooks';
+import ErrorMessage from '../ui/ErrorMessage';
+import LoaderBar from '../ui/LoaderBar';
 
 export default function SamplePage() {
-  const [samples, setSamples] = useState<any>([]);
+  // const [samples, setSamples] = useState<any>([]);
 
-  const getSamples = async () => {
-    const res = await fetch(`${baseUrl}/api/samples`);
-    const { data } = await res.json();
-    console.log('data in sample page', data);
-    setSamples(data);
-    return data;
-  };
+  // const getSamples = async () => {
+  //   const res = await fetch(`${baseUrl}/api/samples`);
+  //   const { data } = await res.json();
+  //   console.log('data in sample page', data);
+  //   setSamples(data);
+  //   return data;
+  // };
 
-  useEffect(() => {
-    getSamples();
-  
-  }, []);
+  // useEffect(() => {
+  //   getSamples();
 
-
+  // }, []);
+  const [samples, isLoading, error] = useSamples();
 
   return (
     <PageContainer id="SamplePageContainer">
-      <Wrapper></Wrapper>
-      
+      <Wrapper>{isLoading && <LoaderBar />}</Wrapper>
+
       <InnerPageContainer id="SampleInnerPageContainer">
-        <SamplesTable samples={samples} />
+        {error && <ErrorMessage error={error} />}
+
+        {!isLoading && <SamplesTable samples={samples} />}
       </InnerPageContainer>
     </PageContainer>
   );
