@@ -5,6 +5,7 @@ import { useFlask, useFlasks } from '../lib/hooks';
 import styled from 'styled-components';
 import LoaderBar from '../ui/LoaderBar';
 import { InnerPageContainer, PageContainer } from '../styles/UtilStyles';
+import ErrorMessage from '../ui/ErrorMessage';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -15,6 +16,7 @@ const Wrapper = styled.div`
 
 export default function FlaskPage() {
   const [flasks, isLoading, error] = useFlasks();
+  console.log('errror in flasks', error)
   const [flask] = useFlask(1);
 
   return (
@@ -26,7 +28,8 @@ export default function FlaskPage() {
       </Wrapper>
       <InnerPageContainer id="InnerFlaskPageContainer">
         {/* <LoaderBar /> */}
-        <FlasksTable flasks={flasks} />
+        {!isLoading && <FlasksTable flasks={flasks} />}
+        {error && <ErrorMessage error={error} />}
       </InnerPageContainer>
     </PageContainer>
   );

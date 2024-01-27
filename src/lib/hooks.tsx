@@ -16,52 +16,43 @@ export function useCellbanks() {
     queryKey: ['cellbanks'],
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/api/cellbanks`);
+      if (!res.ok)
+        throw new Error('Network response was not ok fetching cellbanks');
       const data = await res.json();
       return data;
+    },
+    meta: {
+      errorMessage: 'Failed to fetch cellbanks data (meta option useQuery)',
     },
     staleTime: 1000 * 60 * 60,
     // staleTime: 1000 * 5,
     refetchOnWindowFocus: true,
     retry: false,
     enabled: true,
-    
-  }
-  );
+  });
   const cellbanks = data?.data;
 
-  if (error instanceof Error) {
-    console.log('error in useCellbanks react query', error.message);
-  }
+  // if (error instanceof Error) {
+  //   console.log('error in useCellbanks react query', error.message);
+  // }
 
   return [cellbanks, isLoading, error] as const;
 }
 
 export function useFlask(id: number | null) {
-  //   const [flask, setFlask] = useState<any>({});
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         // console.log('in fetch data', import.meta.env.PROD);
-  //         const res = await fetch(`${baseUrl}/api/flasks/${id}`);
-  //         const data = await res.json();
-  //         // console.log('Axios response:', res);
-  //         // console.log('Data in useEffect:', res.data);
-  //         setFlask(data.data);
-  //       } catch (error) {
-  //         console.error('Error fetching data:', error);
-  //       }
-  //     };
-
-  //     fetchData();
-  //   }, []);
 
   const { isLoading, data, error } = useQuery({
     queryKey: ['flask', id],
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/api/flasks/${id}`);
+      if (!res.ok)
+        throw new Error(`Network response ${res.status}, was not ok fetching flask ${id}`);
       const data = await res.json();
       // console.log('in query function')
       return data;
+    },
+    meta: {
+      errorMessage: 'Failed to fetch flask data (meta option useQuery)',
     },
     staleTime: 1000 * 60 * 60,
     refetchOnWindowFocus: true,
@@ -79,23 +70,41 @@ export function useFlasks() {
     queryKey: ['flasks'],
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/api/flasks`);
+      if (!res.ok)
+        throw new Error('Network response ${res.status}, was not ok fetching flasks');
       const data = await res.json();
       // console.log('in query function')
       return data;
+    },
+    meta: {
+      errorMessage: 'Failed to fetch flasks data (meta option useQuery)',
     },
     staleTime: 1000 * 60 * 60,
     // staleTime: 1000 * 5,
     refetchOnWindowFocus: true,
     retry: false,
     enabled: true,
-    // onError: ()=> console.log('error in useFlask'),
   });
   // console.log('data in useFlask', data);
   const flasks = data?.data;
 
-  if (error instanceof Error) {
-    console.log('error in useFlasks react query', error.message);
-  }
-
   return [flasks, isLoading, error] as const;
+}
+
+export function useSamples() { 
+const {data, isLoading, error }= useQuery({
+  queryKey: ['samples'],
+  queryFn: async () => {
+    const res = await fetch(`${baseUrl}/api/samples`)
+    if (!res.ok) throw new Error ('Network response ${res.status}, was not ok fetching samples')
+    const data = await res.json()
+  return data
+  },
+  meta: {
+    errorMessage: 'Failed to fetch samples data (meta option useQuery)',
+  },
+  staleTime: 1000 * 60 * 60,
+})
+const samples = data?.data
+return [samples, isLoading, error] as const
 }

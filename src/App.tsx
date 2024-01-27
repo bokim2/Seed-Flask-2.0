@@ -10,7 +10,7 @@ import AppLayout from './AppLayout';
 import Dashboard from './pages/HomePage';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SettingsPage from './pages/SettingsPage';
 
 import SamplePage from './pages/SamplePage';
@@ -34,6 +34,13 @@ import BioreactorPage from './pages/BioreactorPage';
 
 function App() {
   const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error, query)=> {
+        if (query?.meta?.errorMessage) {
+          console.log(query.meta.errorMessage);
+        }
+      }
+    }),
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
