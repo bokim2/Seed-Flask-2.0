@@ -24,6 +24,6 @@
     "noUnusedParameters": false, //changed from true to false by BK
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/styles/GlobalStyles.js", "server/*"], // "server/*" added by BK
+  "include": ["src", "src/styles/GlobalStyles.js", "server/*", "custom.d.ts"], // "server/*" and "custom.d.ts" added by BK
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -6,6 +6,7 @@ import { type } from 'os';
 import { NavLink } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../lib/types';
+import { useOnClickOutside } from '../lib/hooks';
 
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
@@ -82,16 +83,16 @@ const StyledFaUser = styled(FaUser)`
 const style = { color: '#F2D17C', fontSize: '3rem' };
 
 type MainNavProps = {
-  openNav: boolean;
-  openUser: boolean;
-  handleToggle: THandleNavToggle;
+  // openNav: boolean;
+  // openUser: boolean;
+  // handleToggle: THandleNavToggle;
 };
 
 type StyledMainNav = {
   $isScrolled?: boolean;
 };
 
-export default function MainNav({ openNav,openUser, handleToggle }: MainNavProps) {
+export default function MainNav() {
   const mainNavRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -111,6 +112,32 @@ export default function MainNav({ openNav,openUser, handleToggle }: MainNavProps
     };
   }, []);
 
+  // handle toggle of user and nav menu
+  const [openNav, setOpenNav] = useState(false);
+  const [openUser, setOpenUser] = useState(false);
+const userListRef = useRef<HTMLUListElement>(null);
+const navListRef = useRef<HTMLUListElement>(null);
+
+const handleToggle: THandleNavToggle = (e, navOrUser) => {
+  // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
+  e.stopPropagation();
+  if (navOrUser === 'nav') {
+    setOpenUser(false);
+    setOpenNav((prev) => !prev);
+  }
+  if (navOrUser === 'user') {
+    setOpenNav(false);
+    setOpenUser((prev) => !prev);
+  }
+};
+
+
+
+useOnClickOutside([userListRef, navListRef], () => {
+  setOpenNav(false);
+  setOpenUser(false);
+})
+
   return (
     <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
       <StyledNav>
@@ -122,23 +149,23 @@ export default function MainNav({ openNav,openUser, handleToggle }: MainNavProps
           <UserButton onClick={(e)=>handleToggle(e,'user')}
           aria-label="user menu">
             <StyledFaUser >
-              <NavLink to="/signin"></NavLink>
+              {/* <NavLink to="/signin"></NavLink> */}
             </StyledFaUser>
           </UserButton>
 
           {openNav ? (
-            <NavMenuButton aria-label="navigation menu">
+            <NavMenuButton aria-label="navigation menu" >
               <FaCaretUp style={style} onClick={(e)=>handleToggle(e,'nav')} />
             </NavMenuButton>
           ) : (
-            <NavMenuButton aria-label="navigation menu">
+            <NavMenuButton aria-label="navigation menu" >
               <FaCaretDown style={style} onClick={(e)=>handleToggle(e,'nav')} />
             </NavMenuButton>
           )}
         </NavSection>
       </StyledNav>
-      {openNav && <NavList />}
-      {openUser && <UserNavList />}
+      {openNav && <NavList ref={navListRef}/>}
+      {openUser && <UserNavList ref={userListRef}/>}
     </StyledMainNav>
   );
 }

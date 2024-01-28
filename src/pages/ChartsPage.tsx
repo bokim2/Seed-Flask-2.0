@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   InnerPageContainer,
+  LoaderWrapper,
   PageContainer,
   Wrapper,
 } from '../styles/UtilStyles';
@@ -33,11 +34,11 @@ export default function ChartsPage() {
 
   return (
     <PageContainer id="ChartsPage">
-      <Wrapper>
+      <LoaderWrapper>
         {/* <LoaderBar /> */}
         {/* {isLoading && <LoaderBar />} */}
         {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
-      </Wrapper>
+      </LoaderWrapper>
       {JSON.stringify(setChartData)}
       <InnerPageContainer id="ChartsPage">
         {/* <LoaderBar /> */}
