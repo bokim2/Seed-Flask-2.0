@@ -29,6 +29,16 @@ app.use(
   })
 );
 
+// set cache control headers for images
+app.use(
+  '/images',
+  express.static('images', {
+    setHeaders: function (res, path) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    },
+  })
+);
+
 // Define any API routes
 
 app.get('/api', (req, res) => {
@@ -152,7 +162,8 @@ app.post('/api/cellbank', async (req, res) => {
 app.put('/api/cellbank/:id', async (req, res) => {
   try {
     // Extracting data from the request body
-    const { strain, target_molecule, description, notes, date_timestamptz } = req.body;
+    const { strain, target_molecule, description, notes, date_timestamptz } =
+      req.body;
     const cellBankId = req.params.id;
 
     // Optional: Add validation for input data here
@@ -164,7 +175,14 @@ app.put('/api/cellbank/:id', async (req, res) => {
       WHERE cell_bank_id = $6 
       RETURNING *;
     `;
-    const values = [strain, notes, target_molecule, description, date_timestamptz, cellBankId];
+    const values = [
+      strain,
+      notes,
+      target_molecule,
+      description,
+      date_timestamptz,
+      cellBankId,
+    ];
     const results = await db.query(query, values);
 
     // Check if any rows were updated
@@ -179,7 +197,6 @@ app.put('/api/cellbank/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
 
 // GET all samples
 
