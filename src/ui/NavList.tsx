@@ -7,9 +7,9 @@ const StyledNavList = styled.ul`
   flex-direction: column;
   position: absolute;
   width: 100%;
-  background-color: rgba(var(--clr-primary-900),.7);
-z-index: 10;
-list-style-type: none;
+  background-color: rgba(var(--clr-primary-900), 0.7);
+  z-index: 10;
+  list-style-type: none;
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -17,14 +17,16 @@ const StyledNavLink = styled(NavLink)`
   align-items: center;
   justify-content: end;
   padding-right: 2rem;
+
+  &:active {
+    color: red;
+  }
 `;
-
-
 
 const NavList = forwardRef((props, ref: ForwardedRef<HTMLUListElement>) => {
   return (
     <StyledNavList ref={ref}>
-      <li>
+      <li tabIndex={0}>
         <StyledNavLink to="/">Main</StyledNavLink>
       </li>
       <li>

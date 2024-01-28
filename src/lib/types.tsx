@@ -1,8 +1,7 @@
 
-
 export type TNavOrUser = 'user' | 'nav'; //  main navlist and user navlist toggles
 
-export type THandleNavToggle = (e: React.MouseEvent<Element, MouseEvent>, navOrUser: TNavOrUser) => void;
+export type THandleNavToggle = (e: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<HTMLElement | SVGElement>, navOrUser: TNavOrUser) => void;
 
 export type TForm = {
     strain: string,
