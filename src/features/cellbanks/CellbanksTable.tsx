@@ -25,7 +25,7 @@ export default function CellbanksTable({ cellbanks }) {
         console.log('submit in FORM submit', e.target);
       }}
     >
-      <TableContainer id="TableContainer">
+      {/* <TableContainer id="TableContainer"> */}
         <StyledTable>
           <Caption>Cell Banks Table</Caption>
           <TableHeader>
@@ -54,7 +54,7 @@ export default function CellbanksTable({ cellbanks }) {
               ))}
           </tbody>
         </StyledTable>
-      </TableContainer>
+      {/* </TableContainer> */}
     </StyledForm>
     // </Wrapper>
   );

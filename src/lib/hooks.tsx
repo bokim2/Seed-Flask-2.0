@@ -108,3 +108,24 @@ const {data, isLoading, error }= useQuery({
 const samples = data?.data
 return [samples, isLoading, error] as const
 }
+
+// toggle menus off when clicking outside of them
+export function useOnClickOutside(refs, handlerFn){
+  useEffect(()=> {
+    const handleClick=(e: MouseEvent) => {
+      if(e.target instanceof HTMLElement && 
+        refs.every(ref => !ref.current?.contains(e.target))
+        ){
+          handlerFn()
+        }
+    }
+  
+    document.addEventListener('click', handleClick);
+
+
+  return () => {
+    document.removeEventListener('click', handleClick)
+  };
+
+}, [refs,handlerFn]);
+}

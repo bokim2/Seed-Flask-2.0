@@ -1,7 +1,10 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { StyledMainMenuButtons } from '../styles/UtilStyles';
+
+
 
 
 export const StyledImage = styled.img`
@@ -19,6 +22,7 @@ type MainMenuButtonProps = {
   imgStyleOverride?: any;
   positionElement?: any;
   className?: string;
+  fetchpriority?: string;
 };
 
 export default function MainMenuButton({
@@ -29,8 +33,14 @@ export default function MainMenuButton({
   imgAlt,
   imgStyleOverride,
   positionElement,
-  className
+  className,
+ 
 }: MainMenuButtonProps) {
+
+
+
+
+
   return (
     <StyledMainMenuButtons className={className}
       to={toPath}
@@ -38,7 +48,8 @@ export default function MainMenuButton({
     >
       <span>{text}</span>
 
-      <StyledImage className={className} src={imgUrl} alt={imgAlt} style={imgStyleOverride} />
+      <StyledImage className={className} src={imgUrl} alt={imgAlt} style={imgStyleOverride} fetchpriority="high" />
     </StyledMainMenuButtons>
   );
 }
+ 

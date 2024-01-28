@@ -142,9 +142,9 @@ ${'' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200
   --clr-accent-3: #E7F1DC; /*  */
   --clr-accent-4: #E4F1EE; /* .function__title */
   --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
-  --clr-accent-6: #ff7676;
-  --clr-accent-7: #ff8080;
-  --clr-accent-8: #445d48;
+  --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
+  --clr-accent-7: #FBC7CA;
+  --clr-accent-8: #F68086; 
   --clr-accent-9: #10e7dc;
   --clr-accent-10: #fde5d4;
 

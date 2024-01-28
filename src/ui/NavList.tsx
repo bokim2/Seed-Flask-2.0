@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, ForwardedRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -19,9 +19,11 @@ const StyledNavLink = styled(NavLink)`
   padding-right: 2rem;
 `;
 
-export default function NavList() {
+
+
+const NavList = forwardRef((props, ref: ForwardedRef<HTMLUListElement>) => {
   return (
-    <StyledNavList>
+    <StyledNavList ref={ref}>
       <li>
         <StyledNavLink to="/">Main</StyledNavLink>
       </li>
@@ -39,4 +41,6 @@ export default function NavList() {
       </li>
     </StyledNavList>
   );
-}
+});
+
+export default NavList;

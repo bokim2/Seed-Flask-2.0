@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import MainNav from './ui/MainNav';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavList from './ui/NavList';
 import LoaderBar from './ui/LoaderBar';
 import { THandleNavToggle, TNavOrUser } from './lib/types';
@@ -57,27 +57,33 @@ const MainPageContainer = styled.main`
 `;
 
 export default function AppLayout() {
-  const [openNav, setOpenNav] = useState(false);
-  const [openUser, setOpenUser] = useState(false);
 
 
+  // const handleNavToggle: THandleNavToggle = (e, navOrUser) => {
+  //   // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
+  //   e.stopPropagation();
+  //   if (navOrUser === 'nav') {
+  //     setOpenUser(false);
+  //     setOpenNav((prev) => !prev);
+  //   }
+  //   if (navOrUser === 'user') {
+  //     setOpenNav(false);
+  //     setOpenUser((prev) => !prev);
+  //   }
+  // };
 
-  const handleNavToggle: THandleNavToggle = (e, navOrUser)=> {
-    // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
-    e.stopPropagation();
-   if (navOrUser === 'nav') setOpenNav((prev) => !prev);
-    if (navOrUser === 'user') {
-      setOpenNav(false);
-      setOpenUser((prev) => !prev);
-    }
-  };
+
 
   return (
     <StyledAppLayout>
       <StyledBackgroundColor />
       <StyledBackgroundImg />
       <NavBar id="NavBar">
-        <MainNav openNav={openNav} handleToggle={handleNavToggle} openUser={openUser} />
+        <MainNav
+          // openNav={openNav}
+          // handleToggle={handleNavToggle}
+          // openUser={openUser}
+        />
       </NavBar>
       {/* <LoaderBar /> */}
 

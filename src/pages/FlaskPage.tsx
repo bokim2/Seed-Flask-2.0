@@ -4,28 +4,27 @@ import { useFlask, useFlasks } from '../lib/hooks';
 
 import styled from 'styled-components';
 import LoaderBar from '../ui/LoaderBar';
-import { InnerPageContainer, PageContainer } from '../styles/UtilStyles';
+import {
+  InnerPageContainer,
+  LoaderWrapper,
+  PageContainer,
+} from '../styles/UtilStyles';
 import ErrorMessage from '../ui/ErrorMessage';
-
-const Wrapper = styled.div`
-  position: fixed;
-  top: 0;
-  margin-top: 10vh;
-  width: 100%;
-`;
 
 export default function FlaskPage() {
   const [flasks, isLoading, error] = useFlasks();
-  console.log('errror in flasks', error)
+  console.log('errror in flasks', error);
   const [flask] = useFlask(1);
 
   return (
     <PageContainer id="FlaskPageContainer">
-      <Wrapper>
+      <LoaderWrapper>
         {/* <LoaderBar /> */}
-        {isLoading && <LoaderBar />}
+        {
+        isLoading && 
+        <LoaderBar />}
         {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
-      </Wrapper>
+      </LoaderWrapper>
       <InnerPageContainer id="InnerFlaskPageContainer">
         {/* <LoaderBar /> */}
         {!isLoading && <FlasksTable flasks={flasks} />}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   InnerPageContainer,
+  LoaderWrapper,
   PageContainer,
   Wrapper,
 } from '../styles/UtilStyles';
@@ -29,7 +30,11 @@ export default function SamplePage() {
 
   return (
     <PageContainer id="SamplePageContainer">
-      <Wrapper>{isLoading && <LoaderBar />}</Wrapper>
+      <LoaderWrapper>
+        { 
+        isLoading && 
+      <LoaderBar />}
+      </LoaderWrapper>
 
       <InnerPageContainer id="SampleInnerPageContainer">
         {error && <ErrorMessage error={error} />}
