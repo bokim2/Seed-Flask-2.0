@@ -7,10 +7,11 @@ import { StyledMainMenuButtons } from '../styles/UtilStyles';
 
 
 
-export const StyledImage = styled.img`
+export const StyledImage = styled.img<{ $fetchpriority?: string }>`
   aspect-ratio: 1/1;
   height: clamp(1.5rem, 4vw, 5rem);
   object-fit: scale-down;
+  fetchpriority: ${(props) => props.$fetchpriority};
 `;
 
 type MainMenuButtonProps = {
@@ -22,7 +23,7 @@ type MainMenuButtonProps = {
   imgStyleOverride?: any;
   positionElement?: any;
   className?: string;
-  fetchpriority?: string;
+  $fetchpriority?: string;
 };
 
 export default function MainMenuButton({
@@ -34,7 +35,7 @@ export default function MainMenuButton({
   imgStyleOverride,
   positionElement,
   className,
- 
+  $fetchpriority = 'high'
 }: MainMenuButtonProps) {
 
 
@@ -48,7 +49,7 @@ export default function MainMenuButton({
     >
       <span>{text}</span>
 
-      <StyledImage className={className} src={imgUrl} alt={imgAlt} style={imgStyleOverride} fetchpriority="high" />
+      <StyledImage className={className} src={imgUrl} alt={imgAlt} style={imgStyleOverride} $fetchpriority={$fetchpriority} />
     </StyledMainMenuButtons>
   );
 }

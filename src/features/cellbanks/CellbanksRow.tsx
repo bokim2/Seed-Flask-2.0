@@ -10,7 +10,7 @@ import Button from '../../ui/Button';
 import { CellbankMultiInput } from './CellbanksMultiInputForm';
 import styled, { css } from 'styled-components';
 import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
-import { TTableRow } from '../../lib/types';
+import { TEditCellbankForm, TTableRow } from '../../lib/types';
 import { baseUrl } from '../../../configs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -37,8 +37,11 @@ export default function CellbanksRow({
   rowNumber,
   editingRowNumber,
   setEditingRowNumber,
+  editedForm, 
+  setEditedForm
 }) {
   const editing = rowNumber === editingRowNumber;
+
   // console.log('editingRowNumber in CellbanksRow:', editingRowNumber, 'rowNumber', rowNumber,' rowNumber === editingRowNumber', rowNumber === editingRowNumber); 
   const handleClickEdit = (e: any) => {
     e.preventDefault();
@@ -77,6 +80,8 @@ export default function CellbanksRow({
           rowNumber={rowNumber}
           setEditingRowNumber={setEditingRowNumber}
           editingRowNumber={editingRowNumber}
+          editedForm={editedForm} 
+          setEditedForm={setEditedForm}
         />
       )}
       {/* </StyledForm> */}
@@ -91,15 +96,18 @@ function CellbanksEditForm({
   rowNumber,
   editingRowNumber,
   setEditingRowNumber,
+  setEditedForm,
+  editedForm
 }) {
-  const [editedForm, setEditedForm] = useState(InitialEditCellbankForm);
+  // const [editedForm, setEditedForm] = useState(InitialEditCellbankForm);
   // const [cellbanks, setCellbanks] = useState<any>([]);
 
   useEffect(() => {
-    if (cellbankRow) {
+    // Update form state only if cellbankRow is different from the current form state
+    if (cellbankRow && cellbankRow !== editedForm) {
       setEditedForm(cellbankRow);
     }
-  }, [cellbankRow]);
+  }, []);
 
   const handleChange = (e: any) => {
     e.preventDefault();
@@ -191,20 +199,20 @@ function CellbanksEditForm({
             $size={'small'}
             type="submit"
             // disabled={'isSubmitting EDIT THIS'}
-            onClick={async (e) => {
-              // e.preventDefault();
-              e.stopPropagation();
+            // onClick={async (e) => {
+            //   // e.preventDefault();
+            //   e.stopPropagation();
 
-              console.log(
-                'editForm',
-                editedForm,
-                'editingRowNumber',
-                editingRowNumber
-              );
-              await updateEditSubmit(editedForm.cell_bank_id, editedForm);
-              console.log('in button submit - submit edited');
-              setEditingRowNumber(null);
-            }}
+            //   // console.log(
+            //   //   'editForm',
+            //   //   editedForm,
+            //   //   'editingRowNumber',
+            //   //   editingRowNumber
+            //   // );
+            //   // await updateEditSubmit(editedForm.cell_bank_id, editedForm);
+            //   // console.log('in button submit - submit edited');
+            //   setEditingRowNumber(null);
+            // }}
           >
             Update
           </Button>
@@ -214,28 +222,5 @@ function CellbanksEditForm({
   );
 }
 
-async function updateEditSubmit(cell_bank_id, editedForm) {
-  try {
-    console.log('cell_bank_id', cell_bank_id);
-    const { strain, target_molecule, description, notes, date } = editedForm;
-    const res = await fetch(`${baseUrl}/api/cellbank/${cell_bank_id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        strain,
-        target_molecule,
-        description,
-        notes,
-        date_timestamptz: '2024-01-20T22:08:00.039Z',
-      }),
-    });
-  } catch (error) {
-    console.log(error, 'error in updateEditSubmit');
-  }
-}
 
-function updateCellbank (){
-  
-}
+
