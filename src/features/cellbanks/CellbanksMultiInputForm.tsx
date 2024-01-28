@@ -14,7 +14,11 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 
-const BulkInputTextArea = styled.textarea``;
+const BulkInputTextArea = styled.textarea`
+background-color: transparent;
+padding: .5rem;
+text-align: center;
+`;
 
 const CellbankFormTable = styled.table`
   /* display: flex; */
@@ -157,6 +161,7 @@ export default function CellbanksMultiInputForm() {
   return (
     <>
       <BulkInputTextArea
+      placeholder='copy/paste from excel'
         onChange={(e) => setbulkTextAreaInput(e.target.value)}
       ></BulkInputTextArea>
 

@@ -22,6 +22,13 @@ import { db } from './db/db.js';
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, '../dist')));
 
+// enable cors for development
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+  })
+);
+
 // Define any API routes
 
 app.get('/api', (req, res) => {
@@ -144,13 +151,35 @@ app.post('/api/cellbank', async (req, res) => {
 
 app.put('/api/cellbank/:id', async (req, res) => {
   try {
-    console.log(req.body, 'in put cell bank server put request');
-    const {strain, target_molecule, description, notes, date_timestamptz} = req.body
-    const results = await db.query(`UPDATE cell_banks SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 WHERE cell_bank_id = $6 returning *;`, [strain, notes, target_molecule, description, date_timestamptz, req.params.id])
+    // Extracting data from the request body
+    const { strain, target_molecule, description, notes, date_timestamptz } = req.body;
+    const cellBankId = req.params.id;
+
+    // Optional: Add validation for input data here
+
+    // Update query
+    const query = `
+      UPDATE cell_banks 
+      SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 
+      WHERE cell_bank_id = $6 
+      RETURNING *;
+    `;
+    const values = [strain, notes, target_molecule, description, date_timestamptz, cellBankId];
+    const results = await db.query(query, values);
+
+    // Check if any rows were updated
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Cell bank not found' });
+    }
+
+    // Sending back the updated data
+    res.json({ message: 'Update successful', updatedData: results.rows });
   } catch (err) {
-    console.log(err);
+    console.error('Error in server PUT request:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 // GET all samples
 

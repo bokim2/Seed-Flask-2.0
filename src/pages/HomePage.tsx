@@ -88,7 +88,7 @@ export default function HomePage() {
             <MainMenuButton
               toPath="/cellbank"
               text={'register cell bank'}
-              backgroundColor="#FAF7F0"
+              backgroundColor={"rgba(var(--clr-accent-1), .8)"}
               imgUrl="images/yeast-21.png"
               imgAlt="microbe"
               positionElement={{ left: '0%' }}
@@ -96,7 +96,7 @@ export default function HomePage() {
             <MainMenuButton
               toPath="/flask"
               text={'start flask'}
-              backgroundColor="#E1F6F2"
+              backgroundColor="rgba(var(--clr-accent-2), .8)"
               imgUrl="images/leaf-flask.png"
               imgAlt="flask"
               positionElement={{ left: '10%' }}
@@ -104,7 +104,7 @@ export default function HomePage() {
             <MainMenuButton
               toPath="/sample"
               text={'sample flask'}
-              backgroundColor="#E7F1DC"
+              backgroundColor="rgba(var(--clr-accent-3), .8)"
               imgUrl="images/clock-testtube.png"
               imgAlt="clock and test tube"
               imgStyleOverride={{
@@ -116,7 +116,7 @@ export default function HomePage() {
             <MainMenuButton
               toPath="/bioreactor"
               text={'start bioreactor'}
-              backgroundColor="#E4F1EE"
+              backgroundColor="rgba(var(--clr-accent-4), .8)"
               imgUrl="images/bioreactor-1.png"
               imgAlt="bioreactor"
               positionElement={{ left: '30%' }}

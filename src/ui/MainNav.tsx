@@ -142,7 +142,7 @@ useOnClickOutside([userListRef, navListRef], () => {
     <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
       <StyledNav>
         <StyledNavLink to="/">
-          <StyledTitle>Seed Flask</StyledTitle>
+          <StyledTitle tabIndex={1}>Seed Flask</StyledTitle>
         </StyledNavLink>
 
         <NavSection>

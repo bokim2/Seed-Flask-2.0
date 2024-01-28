@@ -20,13 +20,21 @@ const sizes = {
 
 const variations = {
   primary: css`
-    background-color: var(--clr-accent-1);
+    background-color: rgba(var(--clr-accent-5));
+    color: var(--clr-text-2);
 
     &:hover {
       background-color: var(--clr-accent-2);
     }
   `,
   secondary: css`
+    background-color: var(--clr-accent-3);
+
+    &:hover {
+      background-color: var(--clr-accent-4);
+    }
+  `,
+    warning: css`
     background-color: var(--clr-accent-3);
 
     &:hover {
@@ -43,8 +51,8 @@ type ButtonProps = {
 const Button = styled.button<ButtonProps>`
   text-align: center;
   border: none;
-  border-radius: 999vw;
-  color: var(--color-text-1);
+  border-radius: .5em;
+  /* color: var(--clr-text-1); */
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 
