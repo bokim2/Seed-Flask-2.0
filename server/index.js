@@ -34,7 +34,7 @@ app.use(
   '/images',
   express.static(path.join(__dirname, 'public'), {
     setHeaders: function (res, path) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000');
+      res.setHeader('Cache-Control', 'public, max-age=3600');
     },
   })
 );
