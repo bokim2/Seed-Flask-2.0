@@ -42,9 +42,18 @@ const StyledTitle = styled.h1`
   color: rgba(var(--clr-accent-0));
   font-size: clamp(2rem, 3vw, 3rem);
   letter-spacing: 0.08rem;
+  transition: transform .2s ease-in-out,
+  color .2s ease-in-out,
+  filter .2s ease-in-out;
 
   &:hover {
     color: #ffe390;
+    transform: scale(1.015);
+  }
+
+  &:active {
+    transform: scale(0.99);
+    filter: brightness(90%);
   }
 
   /* &:active {
