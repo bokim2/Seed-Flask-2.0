@@ -32,9 +32,9 @@ app.use(
 // set cache control headers for images
 app.use(
   '/images',
-  express.static('images', {
+  express.static(path.join(__dirname, 'public'), {
     setHeaders: function (res, path) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
     },
   })
 );
