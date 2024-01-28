@@ -1,4 +1,4 @@
-import React, { ForwardedRef, forwardRef } from 'react';
+import React, { ForwardedRef, forwardRef, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -17,13 +17,18 @@ const StyledNavLink = styled(NavLink)`
   align-items: center;
   justify-content: end;
   padding-right: 2rem;
+
+  &:focus{
+    color: red;
+  }
 `;
 
 const UserNavList = forwardRef((props, ref: ForwardedRef<HTMLUListElement>) => {
+
   return (
-    <StyledNavList ref={ref}>
-      <li>
-        <StyledNavLink to="/signin">Sign-In</StyledNavLink>
+    <StyledNavList ref={ref} >
+      <li  tabIndex={0}>
+        <StyledNavLink to="/signin" >Sign-In</StyledNavLink>
       </li>
       <li>
         <StyledNavLink to="/settings">Settings</StyledNavLink>

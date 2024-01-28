@@ -115,57 +115,113 @@ export default function MainNav() {
   // handle toggle of user and nav menu
   const [openNav, setOpenNav] = useState(false);
   const [openUser, setOpenUser] = useState(false);
-const userListRef = useRef<HTMLUListElement>(null);
-const navListRef = useRef<HTMLUListElement>(null);
+  const userListRef = useRef<HTMLUListElement | null>(null);
+  const navListRef = useRef<HTMLUListElement | null>(null);
+  const navButtonRef = useRef<HTMLButtonElement | null>(null);
 
-const handleToggle: THandleNavToggle = (e, navOrUser) => {
-  // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
-  e.stopPropagation();
-  if (navOrUser === 'nav') {
-    setOpenUser(false);
-    setOpenNav((prev) => !prev);
-  }
-  if (navOrUser === 'user') {
+  const handleToggle: THandleNavToggle = (e, navOrUser) => {
+    // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
+    e.stopPropagation();
+    if (navOrUser === 'nav') {
+      setOpenUser(false);
+      setOpenNav((prev) => !prev);
+    }
+    if (navOrUser === 'user') {
+      setOpenNav(false);
+      setOpenUser((prev) => !prev);
+    }
+  };
+
+  useOnClickOutside([userListRef, navListRef], () => {
     setOpenNav(false);
-    setOpenUser((prev) => !prev);
-  }
-};
+    setOpenUser(false);
+  });
 
+  useEffect(() => {
+    if (userListRef.current || navListRef.current) {
+      const firstListItem =
+        userListRef.current?.querySelector('li:first-child') ||
+        navListRef.current?.querySelector('li:first-child');
 
+      if (firstListItem) {
+        (firstListItem as HTMLElement).focus();
+      }
+    }
+  }, [openNav, openUser]);
 
-useOnClickOutside([userListRef, navListRef], () => {
-  setOpenNav(false);
-  setOpenUser(false);
-})
+  useEffect(() => {
+    const handleEscapeMenus = (e) => {
+      if (e.key === 'Escape') {
+        setOpenUser((prev) => {
+          if (prev) {
+            console.log('openuser was open');
+            navButtonRef.current?.focus();
+          }
+          return false;
+        });
+
+        setOpenNav(false);
+      }
+    };
+
+    if (openNav || openUser) {
+      document.addEventListener('keydown', handleEscapeMenus);
+    }
+
+    return () => document.removeEventListener('keydown', handleEscapeMenus);
+  }, [openNav, openUser]);
+
+  // useEffect(() => {
+  //   if (openUser === false) {
+  //     navButtonRef.current?.focus();
+  //   }
+  // }, [openUser]);
 
   return (
     <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
       <StyledNav>
         <StyledNavLink to="/">
-          <StyledTitle tabIndex={1}>Seed Flask</StyledTitle>
+          <StyledTitle >Seed Flask</StyledTitle>
         </StyledNavLink>
 
         <NavSection>
-          <UserButton onClick={(e)=>handleToggle(e,'user')}
-          aria-label="user menu">
-            <StyledFaUser >
+          <UserButton
+            onClick={(e) => handleToggle(e, 'user')}
+            aria-label="user menu"
+          >
+            <StyledFaUser>
               {/* <NavLink to="/signin"></NavLink> */}
             </StyledFaUser>
           </UserButton>
 
           {openNav ? (
-            <NavMenuButton aria-label="navigation menu" >
-              <FaCaretUp style={style} onClick={(e)=>handleToggle(e,'nav')} />
+            <NavMenuButton aria-label="navigation menu">
+              <FaCaretUp
+                style={style}
+                onClick={(e) => handleToggle(e, 'nav')}
+                // onKeyPress={e=> handleToggle(e,'nav')}
+              />
             </NavMenuButton>
           ) : (
-            <NavMenuButton aria-label="navigation menu" >
-              <FaCaretDown style={style} onClick={(e)=>handleToggle(e,'nav')} />
+            <NavMenuButton aria-label="navigation menu" 
+            ref={navButtonRef}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleToggle(e, 'nav');
+              }
+            }}
+            >
+              <FaCaretDown
+                style={style}
+                onClick={(e) => handleToggle(e, 'nav')}
+
+              />
             </NavMenuButton>
           )}
         </NavSection>
       </StyledNav>
-      {openNav && <NavList ref={navListRef}/>}
-      {openUser && <UserNavList ref={userListRef}/>}
+      {openNav && <NavList ref={navListRef} />}
+      {openUser && <UserNavList ref={userListRef} />}
     </StyledMainNav>
   );
 }
