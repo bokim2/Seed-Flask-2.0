@@ -41,7 +41,9 @@ export const StyledMainMenuButtons = styled(NavLink)`
   font-weight: 600;
   letter-spacing: 0.01794rem;
   color: var(--clr-text-2);
-  transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out;
+  transition: filter 0.2s ease-in-out, 
+  transform 0.2s ease-in-out,
+  box-shadow 0.2s ease-in-out;
 
   &:hover {
     transform: scale(1.02);
@@ -51,7 +53,7 @@ export const StyledMainMenuButtons = styled(NavLink)`
   &:active {
     transform: scale(0.98);
     filter: brightness(114%);
-    box-shadow: 0 0px 12px rgba(255, 255, 255, 0.75);
+    box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1);
   }
 
   @media (min-width: 800px) {
