@@ -30,7 +30,9 @@ export default function CellbankPage() {
   return (
     <PageContainer id="CellbankPageContainer">
       <LoaderWrapper>
-        {isLoading && <LoaderBar />}
+        {
+        isLoading && 
+        <LoaderBar />}
       </LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
         {/* {JSON.stringify(cellbanks)} */}

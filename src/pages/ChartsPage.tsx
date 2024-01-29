@@ -35,8 +35,10 @@ export default function ChartsPage() {
   return (
     <PageContainer id="ChartsPage">
       <LoaderWrapper>
-        {/* <LoaderBar /> */}
-        {/* {isLoading && <LoaderBar />} */}
+        {
+        isLoading && 
+        <LoaderBar />
+        }
         {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
       </LoaderWrapper>
       {JSON.stringify(setChartData)}

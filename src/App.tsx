@@ -10,7 +10,7 @@ import AppLayout from './AppLayout';
 import Dashboard from './pages/HomePage';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SettingsPage from './pages/SettingsPage';
 
 import SamplePage from './pages/SamplePage';
@@ -39,6 +39,11 @@ function App() {
         if (query?.meta?.errorMessage) {
           console.log(query.meta.errorMessage);
         }
+      }
+    }),
+    mutationCache: new MutationCache({
+      onError: (error)=> {
+        console.log(error);
       }
     }),
     defaultOptions: {
