@@ -13,6 +13,7 @@ import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
 import { TEditCellbankForm, TTableRow } from '../../lib/types';
 import { baseUrl } from '../../../configs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { displayLocalTime } from '../../lib/hooks';
 
 const EditCellbankTextArea = styled(FormTextArea)`
   width: 100%;
@@ -45,6 +46,7 @@ export default function CellbanksRow({
   deleteCellbank,
 }) {
   const editing = rowNumber === editingRowNumber;
+  console.log('editedForm in cellbanksrow', editedForm)
 
   // console.log('editingRowNumber in CellbanksRow:', editingRowNumber, 'rowNumber', rowNumber,' rowNumber === editingRowNumber', rowNumber === editingRowNumber);
   const handleClickEdit = (e: any) => {
@@ -71,7 +73,7 @@ export default function CellbanksRow({
         </TableDataCell>
         <TableDataCell data-cell="notes">{cellbank.notes}</TableDataCell>
         <TableDataCell data-cell="date">
-          {cellbank.readable_start_date_pacific}
+          {displayLocalTime(cellbank?.date_timestamptz)}
         </TableDataCell>
         <TableDataCell data-cell="edit" onClick={handleClickEdit}>
           <Button $size={'small'}>Edit</Button>
@@ -212,7 +214,7 @@ function CellbanksEditForm({
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
             onChange={handleChange}
             required
-            value={editedForm?.readable_start_date_pacific}
+            value={editedForm?.date_timestamptz && displayLocalTime(editedForm?.date_timestamptz)}
           />
         </TableDataCell>
 
