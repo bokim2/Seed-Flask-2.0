@@ -85,10 +85,8 @@ app.get('/api/flasks', async (req, res) => {
   try {
     const results = await db.query(
       `SELECT
-      *,
-      start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
-      TO_CHAR(start_date AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
-    FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
+      *
+      FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
     );
     // console.log('trying to get timezone to work', results);
     res.status(200).json({
@@ -100,6 +98,11 @@ app.get('/api/flasks', async (req, res) => {
     console.log(err);
   }
 });
+// `SELECT
+// *,
+// start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
+// TO_CHAR(start_date AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
+// FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
 
 //GET one flask
 app.get('/api/flasks/:id', async (req, res) => {
@@ -121,11 +124,7 @@ app.get('/api/flasks/:id', async (req, res) => {
 // GET all cell banks
 app.get('/api/cellbanks', async (req, res) => {
   try {
-    const results = await db.query(`SELECT
-      *,
-      date_timestamptz AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
-      TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
-    FROM cell_banks;`);
+    const results = await db.query(`SELECT * FROM cell_banks;`);
     res.status(200).json({
       status: 'success',
       data: results.rows,
@@ -135,18 +134,29 @@ app.get('/api/cellbanks', async (req, res) => {
   }
 });
 
-// DELETE on cell bank 
-app.delete('/api/cellbank/:id', async (req, res)=>{
+// `SELECT
+//       *,
+//       date_timestamptz AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
+//       TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
+//     FROM cell_banks;`
+
+
+
+// DELETE on cell bank
+app.delete('/api/cellbank/:id', async (req, res) => {
   try {
-    const results = await db.query('DELETE FROM cell_banks WHERE cell_bank_id = $1', [req.params.id])
+    const results = await db.query(
+      'DELETE FROM cell_banks WHERE cell_bank_id = $1',
+      [req.params.id]
+    );
     res.status(200).json({
       status: 'success',
-      message: `cellbank ${req.params.id} deleted`
-    })
+      message: `cellbank ${req.params.id} deleted`,
+    });
   } catch (err) {
     console.log(err);
   }
-})
+});
 
 // post one cell bank
 app.post('/api/cellbank', async (req, res) => {

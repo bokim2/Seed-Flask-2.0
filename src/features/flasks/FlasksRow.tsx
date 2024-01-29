@@ -1,11 +1,13 @@
 import React from 'react';
 import { TableDataCell, TableRow } from '../../styles/UtilStyles';
+import {displayLocalTime} from '../../lib/hooks';
 
 
 
 
 
 export default function FlasksRow({ flask }) {
+
   return (
     <>
       <TableRow>
@@ -16,7 +18,7 @@ export default function FlasksRow({ flask }) {
         <TableDataCell data-cell="inoculum uL">{flask.inoculum_ul}</TableDataCell>
         <TableDataCell data-cell="media mL">{flask.media_ml}</TableDataCell>
         <TableDataCell data-cell="start date">{flask.start_date}</TableDataCell>
-        <TableDataCell data-cell="start date (pacific)">{flask.adjusted_start_date_pacific}</TableDataCell>
+        <TableDataCell data-cell="start date (user's timezone)">{displayLocalTime(flask.start_date)}</TableDataCell>
         <TableDataCell data-cell="start date (pacific human readable">{flask.readable_start_date_pacific}</TableDataCell>
       </TableRow>
       
