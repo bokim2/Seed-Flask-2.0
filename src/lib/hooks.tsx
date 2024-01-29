@@ -31,6 +31,7 @@ export function useCellbanks() {
     enabled: true,
   });
   const cellbanks = data?.data;
+  console.log('cellbanks data.data', cellbanks)
 
   // if (error instanceof Error) {
   //   console.log('error in useCellbanks react query', error.message);
@@ -128,4 +129,16 @@ export function useOnClickOutside(refs, handlerFn){
   };
 
 }, [refs,handlerFn]);
+}
+
+
+// TIMEZONE CONVERSION FUNCTION
+
+import { format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
+
+export function displayLocalTime(utcTimestamp) {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const zonedTime = utcToZonedTime(utcTimestamp, timeZone);
+  return format(zonedTime, 'yyyy-MM-dd hh:mm a');
 }
