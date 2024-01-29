@@ -20,9 +20,12 @@ const EditCellbankTextArea = styled(FormTextArea)`
 `;
 
 const PreviousDataRow = styled(TableRow)<TTableRow>`
-  background: ${(props) => (props.$editing && 'red' )};
+  background-color: ${(props) => props.$editing && 'red'};
   &:nth-of-type(2n) {
-    background: ${(props) => (props.$editing && 'red')};
+    background-color: ${(props) => props.$editing && 'red'};
+  }
+  &:hover {
+    background-color:${(props) => props.$editing && 'red'};
   }
 `;
 
@@ -37,16 +40,20 @@ export default function CellbanksRow({
   rowNumber,
   editingRowNumber,
   setEditingRowNumber,
-  editedForm, 
-  setEditedForm
+  editedForm,
+  setEditedForm,
+  deleteCellbank,
 }) {
   const editing = rowNumber === editingRowNumber;
 
-  // console.log('editingRowNumber in CellbanksRow:', editingRowNumber, 'rowNumber', rowNumber,' rowNumber === editingRowNumber', rowNumber === editingRowNumber); 
+  // console.log('editingRowNumber in CellbanksRow:', editingRowNumber, 'rowNumber', rowNumber,' rowNumber === editingRowNumber', rowNumber === editingRowNumber);
   const handleClickEdit = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    setEditingRowNumber(rowNumber);
+
+    setEditingRowNumber(prev => {
+      if (prev === rowNumber) return null;
+      return rowNumber;});
   };
   return (
     <>
@@ -70,7 +77,24 @@ export default function CellbanksRow({
           <Button $size={'small'}>Edit</Button>
         </TableDataCell>
         <TableDataCell data-cell="delete">
-          <Button $size={'small'}>delete</Button>
+          <Button
+            $size={'small'}
+            type="button"
+            onClick={() => {
+              const isConfirmed = window.confirm(
+                'Are you sure you want to delete this item?'
+              );
+              if (isConfirmed) {
+                console.log(
+                  'cellbank delete button clicked',
+                  cellbank.cell_bank_id
+                );
+                deleteCellbank.mutate(cellbank.cell_bank_id);
+              }
+            }}
+          >
+            delete
+          </Button>
         </TableDataCell>
       </PreviousDataRow>
 
@@ -80,7 +104,7 @@ export default function CellbanksRow({
           rowNumber={rowNumber}
           setEditingRowNumber={setEditingRowNumber}
           editingRowNumber={editingRowNumber}
-          editedForm={editedForm} 
+          editedForm={editedForm}
           setEditedForm={setEditedForm}
         />
       )}
@@ -97,7 +121,7 @@ function CellbanksEditForm({
   editingRowNumber,
   setEditingRowNumber,
   setEditedForm,
-  editedForm
+  editedForm,
 }) {
   // const [editedForm, setEditedForm] = useState(InitialEditCellbankForm);
   // const [cellbanks, setCellbanks] = useState<any>([]);
@@ -116,19 +140,17 @@ function CellbanksEditForm({
     console.log('edit cellbank', e.target.value);
   };
 
-// const queryClient = useQueryClient();
-// const {isLoading: isUpdating, mutate} = useMutation({
-//   mutationFn: updateCellbank,
-//   onSuccess: ()=> {
-//     queryClient.invalidateQueries({
-//       queryKey: [
-//         'cellbanks',
-//       ]
-//     })
-//   }
-// })
-
-
+  // const queryClient = useQueryClient();
+  // const {isLoading: isUpdating, mutate} = useMutation({
+  //   mutationFn: updateCellbank,
+  //   onSuccess: ()=> {
+  //     queryClient.invalidateQueries({
+  //       queryKey: [
+  //         'cellbanks',
+  //       ]
+  //     })
+  //   }
+  // })
 
   return (
     <>
@@ -221,6 +243,3 @@ function CellbanksEditForm({
     </>
   );
 }
-
-
-

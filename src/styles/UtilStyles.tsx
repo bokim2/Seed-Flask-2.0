@@ -1,5 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { TTableHeaderCell } from '../lib/types';
+// import { TTableHeaderCell } from '../lib/types';
 
 // Main page styles
 
@@ -164,6 +166,10 @@ export const TableContainer = styled.div`
   margin-block: 1rem;
   max-height: 80vh;
   overflow-y: scroll;
+
+  @media(max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 export const StyledTable = styled.table`
@@ -193,26 +199,37 @@ export const TableHeader = styled.thead`
   background-color: black;
 `;
 
-export const TableHeaderCell = styled.th`
+// type TTableHeaderCell = {
+//   width?: string;
+// };
+
+export const TableHeaderCell = styled.th<TTableHeaderCell>`
   /* font-family: var(--font-serif); */
   font-weight: 600;
   font-size: 1.1rem;
-  padding-block: 1rem;
+  padding: 1rem 2rem;
   color: rgba(var(--clr-accent-6), .8);
+  width: ${(props)=> props.width || 'auto'};
   @media (max-width: 600px) {
     display: none;
   }
 `;
 
 export const TableRow = styled.tr`
-  background: hsl(0, 0%, 0%, 0.5);
+  background-color: hsl(0, 0%, 0%, 0.5);
   &:nth-of-type(2n) {
-    background: hsl(0, 0%, 0%, 0.1);
+    background-color: hsl(0, 0%, 0%, 0.2);
+  }
+
+  &:hover {
+    background-color: hsl(0, 0%, 0%, 0.0);
+    /* font-size: 120%; */
+    /* transform: scale(1.01); */
   }
 `;
 
 export const TableDataCell = styled.td`
-  padding: 1rem;
+  padding: .5rem;
 
   @media (max-width: 600px) {
     display: grid;

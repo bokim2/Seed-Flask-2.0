@@ -134,6 +134,20 @@ app.get('/api/cellbanks', async (req, res) => {
     console.log(err);
   }
 });
+
+// DELETE on cell bank 
+app.delete('/api/cellbank/:id', async (req, res)=>{
+  try {
+    const results = await db.query('DELETE FROM cell_banks WHERE cell_bank_id = $1', [req.params.id])
+    res.status(200).json({
+      status: 'success',
+      message: `cellbank ${req.params.id} deleted`
+    })
+  } catch (err) {
+    console.log(err);
+  }
+})
+
 // post one cell bank
 app.post('/api/cellbank', async (req, res) => {
   try {

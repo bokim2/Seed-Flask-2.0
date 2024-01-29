@@ -5,6 +5,7 @@ const sizes = {
     font-size: 1rem;
     padding: 0.4rem 0.8rem;
     font-weight: 600;
+    min-width: 8rem;
   `,
   medium: css`
     font-size: 1.4rem;
@@ -20,25 +21,23 @@ const sizes = {
 
 const variations = {
   primary: css`
-    background-color: rgba(var(--clr-accent-5));
-    color: var(--clr-text-2);
+    background-color: rgba(var(--clr-accent-5), .5);
+    color: rgba(var(--clr-text-2));
 
-    &:hover {
-      background-color: var(--clr-accent-2);
-    }
+
   `,
   secondary: css`
-    background-color: var(--clr-accent-3);
+    background-color: rgba(var(--clr-accent-3));
 
     &:hover {
-      background-color: var(--clr-accent-4);
+      background-color: rgba(var(--clr-accent-4));
     }
   `,
     warning: css`
-    background-color: var(--clr-accent-3);
+    background-color: rgba(var(--clr-accent-3));
 
     &:hover {
-      background-color: var(--clr-accent-4);
+      background-color: rgba(var(--clr-accent-4));
     }
   `,
 };
@@ -55,6 +54,9 @@ const Button = styled.button<ButtonProps>`
   /* color: var(--clr-text-1); */
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
+  &:hover {
+      background-color: rgba(var(--clr-accent-5),.8);
+    }
 
   ${({ $size }) => ($size ? sizes[$size] : Button.defaultProps.$size)};
   ${({ $variation }) =>

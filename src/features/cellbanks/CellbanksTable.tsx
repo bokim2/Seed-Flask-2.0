@@ -13,42 +13,63 @@ import { useState } from 'react';
 import { baseUrl } from '../../../configs';
 import { TEditCellbankForm } from '../../lib/types';
 import { InitialEditCellbankForm } from '../../lib/constants';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function CellbanksTable({ cellbanks }) {
   // console.log(cellbanks, 'in cellbankstable');
   const [editingRowNumber, setEditingRowNumber] = useState<number | null>(null);
   const [updateEditSubmitArgs, setUpdateEditSubmitArgs] = useState<any>(null);
-  const [editedForm, setEditedForm] = useState<TEditCellbankForm>(InitialEditCellbankForm);
+  const [editedForm, setEditedForm] = useState<TEditCellbankForm>(
+    InitialEditCellbankForm
+  );
 
   async function updateEditSubmit(editedForm) {
     try {
       console.log('cell_bank_id', editedForm.cell_bank_id);
       const { strain, target_molecule, description, notes, date } = editedForm;
-      const res = await fetch(`${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          strain,
-          target_molecule,
-          description,
-          notes,
-          date_timestamptz: '2024-01-20T22:08:00.039Z',
-        }),
-      });
+      const res = await fetch(
+        `${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            strain,
+            target_molecule,
+            description,
+            notes,
+            date_timestamptz: '2024-01-20T22:08:00.039Z',
+          }),
+        }
+      );
 
-      
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-      console.log('put request sent')
+      console.log('put request sent');
       window.location.reload();
     } catch (error) {
-      console.log( 'error in updateEditSubmit');
+      console.log('error in updateEditSubmit');
       console.log('error in updateEditSubmit', error);
     }
   }
+  // delete a cellbank
+  const queryClient = useQueryClient();
+  const deleteCellbank = useMutation({
+    mutationFn: (cell_bank_id: number) => deleteCellbankHandler(cell_bank_id),
+    onSuccess: ()=> {
+      console.log('success');
+      queryClient.invalidateQueries({queryKey: ["cellbanks"]})
+      deleteCellbank.reset();
+    }
+  });
+
+  const deleteCellbankHandler = async (cell_bank_id: number) => {
+    return fetch(`${baseUrl}/api/cellbank/${cell_bank_id}`, {
+      method: 'DELETE',
+    });
+  };
 
   return (
     // <Wrapper>
@@ -56,8 +77,8 @@ export default function CellbanksTable({ cellbanks }) {
       onSubmit={(e) => {
         e.preventDefault();
         console.log('editedForm in FORM submit', editedForm);
-      updateEditSubmit(editedForm)
-      setEditingRowNumber(null);
+        updateEditSubmit(editedForm);
+        setEditingRowNumber(null);
         console.log('submit in FORM submit', e.target);
       }}
     >
@@ -69,8 +90,8 @@ export default function CellbanksTable({ cellbanks }) {
               <TableHeaderCell>cell bank id</TableHeaderCell>
               <TableHeaderCell>strain</TableHeaderCell>
               <TableHeaderCell>target molecule</TableHeaderCell>
-              <TableHeaderCell>details</TableHeaderCell>
-              <TableHeaderCell>notes</TableHeaderCell>
+              <TableHeaderCell width="15vw">details</TableHeaderCell>
+              <TableHeaderCell width="15vw">notes</TableHeaderCell>
               <TableHeaderCell>date</TableHeaderCell>
               <TableHeaderCell>edit</TableHeaderCell>
               <TableHeaderCell>delete</TableHeaderCell>
@@ -87,8 +108,8 @@ export default function CellbanksTable({ cellbanks }) {
                   editingRowNumber={editingRowNumber}
                   setEditingRowNumber={setEditingRowNumber}
                   editedForm={editedForm}
-                  setEditedForm={setEditedForm}
-                  
+                  setEditedForm={setEditedForm} 
+                  deleteCellbank={deleteCellbank}
                 />
               ))}
           </tbody>
