@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-// import morgan from 'morgan';
+import morgan from 'morgan';
 
 import path from 'path';
 import process from 'process';
@@ -18,9 +18,9 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
-// if (process.env.NODE_ENV === 'development') {
-//   app.use(morgan('dev'));
-// }
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 import { db } from './db/db.js';
 
