@@ -230,13 +230,13 @@ export const TableRow = styled.tr`
 
 export const TableDataCell = styled.td`
   padding: .5rem;
+  text-transform: lowercase;
 
   @media (max-width: 600px) {
     display: grid;
     &::before {
       content: attr(data-cell) ': ';
       font-weight: 700;
-      text-transform: capitalize;
       color: yellow;
     }
 

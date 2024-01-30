@@ -14,6 +14,7 @@ import { baseUrl } from '../../../configs';
 import { TEditCellbankForm } from '../../lib/types';
 import { InitialEditCellbankForm } from '../../lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
 
 export default function CellbanksTable({ cellbanks }) {
   // console.log(cellbanks, 'in cellbankstable');
@@ -23,10 +24,12 @@ export default function CellbanksTable({ cellbanks }) {
     InitialEditCellbankForm
   );
 
+  console.log('cellbanks in cellbankstable', cellbanks, 'editedForm', editedForm);
+
   async function updateEditSubmit(editedForm) {
     try {
-      console.log('cell_bank_id', editedForm.cell_bank_id);
-      const { strain, target_molecule, description, notes, date } = editedForm;
+      // console.log('cell_bank_id', editedForm.cell_bank_id);
+      const { strain, target_molecule, description, notes, date_timestamptz, human_readable_date } = editedForm;
       const res = await fetch(
         `${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`,
         {
@@ -39,7 +42,7 @@ export default function CellbanksTable({ cellbanks }) {
             target_molecule,
             description,
             notes,
-            date_timestamptz: '2024-01-20T22:08:00.039Z',
+            date_timestamptz: getUtcTimestampFromLocalTime(human_readable_date),
           }),
         }
       );

@@ -46,7 +46,17 @@ export default function CellbanksRow({
   deleteCellbank,
 }) {
   const editing = rowNumber === editingRowNumber;
-  console.log('editedForm in cellbanksrow', editedForm)
+  
+  // editedForm = {...editedForm, human_readable_date: (editedForm?.date_timestamptz ?displayLocalTime(editedForm?.date_timestamptz) : null)};
+
+  if(editing) {console.log('editedForm in cellbanksrow', editedForm, 'cellbankRow', cellbankRow);
+
+}
+
+useEffect(()=> {
+  if (editing) {
+    setEditedForm(prev => ({...prev, human_readable_date: displayLocalTime(prev.date_timestamptz) }));
+}},[editing, setEditedForm, editedForm.date_timestamptz])
 
   // console.log('editingRowNumber in CellbanksRow:', editingRowNumber, 'rowNumber', rowNumber,' rowNumber === editingRowNumber', rowNumber === editingRowNumber);
   const handleClickEdit = (e: any) => {
@@ -142,17 +152,6 @@ function CellbanksEditForm({
     console.log('edit cellbank', e.target.value);
   };
 
-  // const queryClient = useQueryClient();
-  // const {isLoading: isUpdating, mutate} = useMutation({
-  //   mutationFn: updateCellbank,
-  //   onSuccess: ()=> {
-  //     queryClient.invalidateQueries({
-  //       queryKey: [
-  //         'cellbanks',
-  //       ]
-  //     })
-  //   }
-  // })
 
   return (
     <>
@@ -209,12 +208,12 @@ function CellbanksEditForm({
         </TableDataCell>
         <TableDataCell>
           <EditCellbankTextArea
-            id="date"
-            name="date"
+            id="human_readable_date"
+            name="human_readable_date"
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
             onChange={handleChange}
             required
-            value={editedForm?.date_timestamptz && displayLocalTime(editedForm?.date_timestamptz)}
+            value={editedForm.human_readable_date }
           />
         </TableDataCell>
 
