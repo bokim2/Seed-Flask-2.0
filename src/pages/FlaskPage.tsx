@@ -13,7 +13,6 @@ import ErrorMessage from '../ui/ErrorMessage';
 
 export default function FlaskPage() {
   const [flasks, isLoading, error] = useFlasks();
-  console.log('errror in flasks', error);
   const [flask] = useFlask(1);
 
   return (
