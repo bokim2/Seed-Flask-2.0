@@ -134,11 +134,33 @@ export function useOnClickOutside(refs, handlerFn){
 
 // TIMEZONE CONVERSION FUNCTION
 
-import { format } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz';
+import { format, parse } from 'date-fns';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+
+  // convert UTC timestamp to local time
 
 export function displayLocalTime(utcTimestamp) {
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // console.log('timeZone', timeZone);
   const zonedTime = utcToZonedTime(utcTimestamp, timeZone);
   return format(zonedTime, 'yyyy-MM-dd hh:mm a');
 }
+
+  // convert human readable local time to UTC timestampz for postgres
+
+  export function getUtcTimestampFromLocalTime(localTime, timeFormat = 'yyyy-MM-dd hh:mm a'){
+    const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const [date, time, amOrPm] = localTime.split(' ');
+    // console.log('date', date, 'time', time, 'amOrPm', amOrPm);
+    let [hours, mins] = time.split(':');
+    hours = parseInt(hours);
+    mins = parseInt(mins);
+    
+    if (amOrPm === 'PM' && hours < 12) hours += 12;
+
+    const DateObject = parse(`${date} ${hours}:${mins}`, 'yyyy-MM-dd HH:mm', new Date())
+
+    const utcDate = zonedTimeToUtc(DateObject, localTimeZone);
+
+    return utcDate.toISOString();
+  }
