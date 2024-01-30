@@ -11,6 +11,9 @@
     "devstart": "NODE_ENV=development nodemon server/index.js",
     "start": "node server/index.js"
   },
+  "engins": {
+    "node": "^21.2.0"
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
     "@tanstack/react-query": "^5.17.19",
