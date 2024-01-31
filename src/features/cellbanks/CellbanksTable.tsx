@@ -105,6 +105,7 @@ export default function CellbanksTable({ cellbanks }) {
               cellbanks?.map((cellbank, i) => (
                 <CellbanksRow
                   key={cellbank.cell_bank_id}
+                  // cellbank_id={cellbank.cell_bank_id}
                   cellbank={cellbank}
                   cellbankRow={{ ...cellbanks[i] }}
                   rowNumber={i}

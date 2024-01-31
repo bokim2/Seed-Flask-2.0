@@ -59,7 +59,7 @@ useEffect(()=> {
 }},[editing, setEditedForm, editedForm.date_timestamptz])
 
   // console.log('editingRowNumber in CellbanksRow:', editingRowNumber, 'rowNumber', rowNumber,' rowNumber === editingRowNumber', rowNumber === editingRowNumber);
-  const handleClickEdit = (e: any) => {
+  const handleClickEdit = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -140,12 +140,13 @@ function CellbanksEditForm({
 
   useEffect(() => {
     // Update form state only if cellbankRow is different from the current form state
+    console.log('in useeffect cellbankseditform', cellbankRow, 'cellbankRow', editedForm, 'editedForm')
     if (cellbankRow && cellbankRow !== editedForm) {
       setEditedForm(cellbankRow);
     }
   }, []);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setEditedForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
