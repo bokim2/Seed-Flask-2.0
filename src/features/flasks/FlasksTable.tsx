@@ -17,7 +17,7 @@ export default function FlasksTable({ flasks }) {
 
   return (
     <>
-      <Wrapper>
+      {/* <Wrapper> */}
         <TableContainer>
           <StyledTable>
             <Caption>Flasks Table</Caption>
@@ -44,7 +44,7 @@ export default function FlasksTable({ flasks }) {
             </tbody>
           </StyledTable>
         </TableContainer>
-      </Wrapper>
+      {/* </Wrapper> */}
     </>
   );
 }

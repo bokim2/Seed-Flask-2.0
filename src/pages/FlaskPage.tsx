@@ -4,14 +4,12 @@ import { useFlask, useFlasks } from '../lib/hooks';
 
 import styled from 'styled-components';
 import LoaderBar from '../ui/LoaderBar';
-import { InnerPageContainer, PageContainer } from '../styles/UtilStyles';
-
-const Wrapper = styled.div`
-  position: fixed;
-  top: 0;
-  margin-top: 10vh;
-  width: 100%;
-`;
+import {
+  InnerPageContainer,
+  LoaderWrapper,
+  PageContainer,
+} from '../styles/UtilStyles';
+import ErrorMessage from '../ui/ErrorMessage';
 
 export default function FlaskPage() {
   const [flasks, isLoading, error] = useFlasks();
@@ -19,14 +17,17 @@ export default function FlaskPage() {
 
   return (
     <PageContainer id="FlaskPageContainer">
-      <Wrapper>
+      <LoaderWrapper>
         {/* <LoaderBar /> */}
-        {isLoading && <LoaderBar />}
+        {
+        isLoading && 
+        <LoaderBar />}
         {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
-      </Wrapper>
+      </LoaderWrapper>
       <InnerPageContainer id="InnerFlaskPageContainer">
         {/* <LoaderBar /> */}
-        <FlasksTable flasks={flasks} />
+        {!isLoading && <FlasksTable flasks={flasks} />}
+        {error && <ErrorMessage error={error} />}
       </InnerPageContainer>
     </PageContainer>
   );

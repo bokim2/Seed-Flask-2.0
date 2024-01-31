@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import CellbanksSingleInputForm from '../features/cellbanks/CellbanksSingleInputForm';
 import { baseUrl } from '../../configs';
 import CellbanksTable from '../features/cellbanks/CellbanksTable';
-import { InnerPageContainer, PageContainer } from '../styles/UtilStyles';
+import { InnerPageContainer, LoaderWrapper, PageContainer, Wrapper } from '../styles/UtilStyles';
 import { useCellbanks } from '../lib/hooks';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 import styled from 'styled-components';
+import ErrorMessage from '../ui/ErrorMessage';
+import LoaderBar from '../ui/LoaderBar';
 
 export default function CellbankPage() {
   const [cellbanks, isLoading, error] = useCellbanks();
   
-
   // const fetchCellbanks = async () => {
   //   const res = await fetch(`${baseUrl}/api/cellbanks`);
   //   const { data } = await res.json();
@@ -27,11 +28,17 @@ export default function CellbankPage() {
 
   return (
     <PageContainer id="CellbankPageContainer">
+      <LoaderWrapper>
+        {
+        isLoading && 
+        <LoaderBar />}
+      </LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
         {/* {JSON.stringify(cellbanks)} */}
         <CellbanksMultiInputForm />
         <CellbanksSingleInputForm />
-        <CellbanksTable cellbanks={cellbanks}  />
+        {error && <ErrorMessage error={error} />}
+        {!isLoading && <CellbanksTable cellbanks={cellbanks}  />}
       </InnerPageContainer>
     </PageContainer>
   );

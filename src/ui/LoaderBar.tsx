@@ -17,7 +17,7 @@ const StyledLoaderBar = styled.div`
   position: sticky;
   top: 0;
   left: 0;
-  height: 10px;
+  height: 7px;
   width: 100%;
   /* z-index: 1000; */
   background-image: linear-gradient(
@@ -28,19 +28,22 @@ const StyledLoaderBar = styled.div`
     yellow,
     blue,
     red,
+    #ffff,
     yellow,
     blue,
+    #ffff,
     red,
     yellow,
     blue,
     red,
+    #ffff,
     yellow,
     blue,
     red
   );
   background-size: 2000%;
   background-position: left;
-  animation: ${moveGradient} 15s linear infinite;
+  animation: ${moveGradient} 12s linear infinite;
 `;
 
 // export default function LoaderBar() {

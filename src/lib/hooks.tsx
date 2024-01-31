@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../../configs';
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
@@ -11,57 +11,101 @@ import LoaderBar from '../ui/LoaderBar';
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+
+// Cellbanks hooks
 export function useCellbanks() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['cellbanks'],
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/api/cellbanks`);
+      if (!res.ok)
+        throw new Error('Network response was not ok fetching cellbanks');
       const data = await res.json();
       return data;
+    },
+    meta: {
+      errorMessage: 'Failed to fetch cellbanks data (meta option useQuery)',
     },
     staleTime: 1000 * 60 * 60,
     // staleTime: 1000 * 5,
     refetchOnWindowFocus: true,
     retry: false,
     enabled: true,
-    
-  }
-  );
+  });
   const cellbanks = data?.data;
+  console.log('cellbanks data.data', cellbanks);
 
-  if (error instanceof Error) {
-    console.log('error in useCellbanks react query', error.message);
-  }
+  // if (error instanceof Error) {
+  //   console.log('error in useCellbanks react query', error.message);
+  // }
 
   return [cellbanks, isLoading, error] as const;
 }
 
+// submit a single cellbank edit to the server
+async function updateEditSubmit(editedForm) {
+  try {
+    // console.log('cell_bank_id', editedForm.cell_bank_id);
+    const {
+      strain,
+      target_molecule,
+      description,
+      notes,
+      human_readable_date,
+    } = editedForm;
+    const res = await fetch(
+      `${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          strain,
+          target_molecule,
+          description,
+          notes,
+          date_timestamptz: getUtcTimestampFromLocalTime(human_readable_date),
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    console.log('put request sent');
+    window.location.reload();
+  } catch (error) {
+    console.log('error in updateEditSubmit');
+    console.log('error in updateEditSubmit', error);
+  }
+}
+
+export function useEditCellbank() {
+  const { mutate } = useMutation({
+    mutationFn: (editedForm) => updateEditSubmit(editedForm),
+    onSuccess: () => console.log('success in useEditCellbank'),
+  });
+  return mutate;
+}
+
+
+// Flask hooks
 export function useFlask(id: number | null) {
-  //   const [flask, setFlask] = useState<any>({});
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         // console.log('in fetch data', import.meta.env.PROD);
-  //         const res = await fetch(`${baseUrl}/api/flasks/${id}`);
-  //         const data = await res.json();
-  //         // console.log('Axios response:', res);
-  //         // console.log('Data in useEffect:', res.data);
-  //         setFlask(data.data);
-  //       } catch (error) {
-  //         console.error('Error fetching data:', error);
-  //       }
-  //     };
-
-  //     fetchData();
-  //   }, []);
-
   const { isLoading, data, error } = useQuery({
     queryKey: ['flask', id],
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/api/flasks/${id}`);
+      if (!res.ok)
+        throw new Error(
+          `Network response ${res.status}, was not ok fetching flask ${id}`
+        );
       const data = await res.json();
       // console.log('in query function')
       return data;
+    },
+    meta: {
+      errorMessage: 'Failed to fetch flask data (meta option useQuery)',
     },
     staleTime: 1000 * 60 * 60,
     refetchOnWindowFocus: true,
@@ -79,23 +123,106 @@ export function useFlasks() {
     queryKey: ['flasks'],
     queryFn: async () => {
       const res = await fetch(`${baseUrl}/api/flasks`);
+      if (!res.ok)
+        throw new Error(
+          'Network response ${res.status}, was not ok fetching flasks'
+        );
       const data = await res.json();
       // console.log('in query function')
       return data;
+    },
+    meta: {
+      errorMessage: 'Failed to fetch flasks data (meta option useQuery)',
     },
     staleTime: 1000 * 60 * 60,
     // staleTime: 1000 * 5,
     refetchOnWindowFocus: true,
     retry: false,
     enabled: true,
-    // onError: ()=> console.log('error in useFlask'),
   });
   // console.log('data in useFlask', data);
   const flasks = data?.data;
 
-  if (error instanceof Error) {
-    console.log('error in useFlasks react query', error.message);
-  }
-
   return [flasks, isLoading, error] as const;
+}
+
+export function useSamples() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['samples'],
+    queryFn: async () => {
+      const res = await fetch(`${baseUrl}/api/samples`);
+      if (!res.ok)
+        throw new Error(
+          'Network response ${res.status}, was not ok fetching samples'
+        );
+      const data = await res.json();
+      return data;
+    },
+    meta: {
+      errorMessage: 'Failed to fetch samples data (meta option useQuery)',
+    },
+    staleTime: 1000 * 60 * 60,
+  });
+  const samples = data?.data;
+  return [samples, isLoading, error] as const;
+}
+
+// toggle menus off when clicking outside of them
+export function useOnClickOutside(refs, handlerFn) {
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        e.target instanceof HTMLElement &&
+        refs.every((ref) => !ref.current?.contains(e.target))
+      ) {
+        handlerFn();
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, [refs, handlerFn]);
+}
+
+// TIMEZONE CONVERSION FUNCTION
+
+import { format, parse } from 'date-fns';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+
+// convert UTC timestamp to local time
+
+export function displayLocalTime(utcTimestamp) {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // console.log('timeZone', timeZone);
+  const zonedTime = utcToZonedTime(utcTimestamp, timeZone);
+  return format(zonedTime, 'yyyy-MM-dd hh:mm a');
+}
+
+// convert human readable local time to UTC timestampz for postgres
+
+export function getUtcTimestampFromLocalTime(
+  localTime,
+  timeFormat = 'yyyy-MM-dd hh:mm a'
+) {
+  const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [date, time, amOrPm] = localTime.split(' ');
+  // console.log('date', date, 'time', time, 'amOrPm', amOrPm);
+  let [hours, mins] = time.split(':');
+  hours = parseInt(hours);
+  mins = parseInt(mins);
+
+  if (amOrPm === 'PM' && hours < 12) hours += 12;
+
+  const DateObject = parse(
+    `${date} ${hours}:${mins}`,
+    'yyyy-MM-dd HH:mm',
+    new Date()
+  );
+
+  const utcDate = zonedTimeToUtc(DateObject, localTimeZone);
+
+  return utcDate.toISOString();
 }
