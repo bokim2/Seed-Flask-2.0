@@ -26,7 +26,7 @@ const PreviousDataRow = styled(TableRow)<TTableRow>`
     background-color: ${(props) => props.$editing && 'red'};
   }
   &:hover {
-    background-color:${(props) => props.$editing && 'red'};
+    background-color: ${(props) => props.$editing && 'red'};
   }
 `;
 
@@ -37,39 +37,15 @@ const EditRow = styled.tr`
 
 export default function CellbanksRow({
   cellbank,
-  cellbankRow,
-  rowNumber,
-  editingRowNumber,
-  setEditingRowNumber,
   editedForm,
   setEditedForm,
   deleteCellbank,
+  handleClickEdit,
 }) {
-  const editing = rowNumber === editingRowNumber;
-  
-  // editedForm = {...editedForm, human_readable_date: (editedForm?.date_timestamptz ?displayLocalTime(editedForm?.date_timestamptz) : null)};
+  const editing = cellbank.cell_bank_id === editedForm.cell_bank_id;
 
-  if(editing) {console.log('editedForm in cellbanksrow', editedForm, 'cellbankRow', cellbankRow);
-
-}
-
-useEffect(()=> {
-  if (editing) {
-    setEditedForm(prev => ({...prev, human_readable_date: displayLocalTime(prev.date_timestamptz) }));
-}},[editing, setEditedForm, editedForm.date_timestamptz])
-
-  // console.log('editingRowNumber in CellbanksRow:', editingRowNumber, 'rowNumber', rowNumber,' rowNumber === editingRowNumber', rowNumber === editingRowNumber);
-  const handleClickEdit = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    setEditingRowNumber(prev => {
-      if (prev === rowNumber) return null;
-      return rowNumber;});
-  };
   return (
     <>
-      {/* <StyledForm onSubmit={()=> console.log('submit edited')}> */}
       <PreviousDataRow $editing={editing}>
         <TableDataCell data-cell="cell bank id">
           {cellbank.cell_bank_id}
@@ -85,7 +61,10 @@ useEffect(()=> {
         <TableDataCell data-cell="date">
           {displayLocalTime(cellbank?.date_timestamptz)}
         </TableDataCell>
-        <TableDataCell data-cell="edit" onClick={handleClickEdit}>
+        <TableDataCell
+          data-cell="edit"
+          onClick={(e) => handleClickEdit(e, cellbank.cell_bank_id)}
+        >
           <Button $size={'small'}>Edit</Button>
         </TableDataCell>
         <TableDataCell data-cell="delete">
@@ -112,47 +91,24 @@ useEffect(()=> {
 
       {editing && (
         <CellbanksEditForm
-          cellbankRow={cellbankRow}
-          rowNumber={rowNumber}
-          setEditingRowNumber={setEditingRowNumber}
-          editingRowNumber={editingRowNumber}
+          key={cellbank.cell_bank_id}
           editedForm={editedForm}
           setEditedForm={setEditedForm}
         />
       )}
-      {/* </StyledForm> */}
     </>
 
     // <div>{JSON.stringify(cellbank)}</div>
   );
 }
 
-function CellbanksEditForm({
-  cellbankRow,
-  rowNumber,
-  editingRowNumber,
-  setEditingRowNumber,
-  setEditedForm,
-  editedForm,
-}) {
-  // const [editedForm, setEditedForm] = useState(InitialEditCellbankForm);
-  // const [cellbanks, setCellbanks] = useState<any>([]);
-
-  useEffect(() => {
-    // Update form state only if cellbankRow is different from the current form state
-    console.log('in useeffect cellbankseditform', cellbankRow, 'cellbankRow', editedForm, 'editedForm')
-    if (cellbankRow && cellbankRow !== editedForm) {
-      setEditedForm(cellbankRow);
-    }
-  }, []);
-
+function CellbanksEditForm({ setEditedForm, editedForm }) {
   const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setEditedForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     console.log('edit cellbank', e.target.value);
   };
-
 
   return (
     <>
@@ -214,7 +170,7 @@ function CellbanksEditForm({
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
             onChange={handleChange}
             required
-            value={editedForm.human_readable_date }
+            value={editedForm.human_readable_date}
           />
         </TableDataCell>
 
@@ -223,20 +179,6 @@ function CellbanksEditForm({
             $size={'small'}
             type="submit"
             // disabled={'isSubmitting EDIT THIS'}
-            // onClick={async (e) => {
-            //   // e.preventDefault();
-            //   e.stopPropagation();
-
-            //   // console.log(
-            //   //   'editForm',
-            //   //   editedForm,
-            //   //   'editingRowNumber',
-            //   //   editingRowNumber
-            //   // );
-            //   // await updateEditSubmit(editedForm.cell_bank_id, editedForm);
-            //   // console.log('in button submit - submit edited');
-            //   setEditingRowNumber(null);
-            // }}
           >
             Update
           </Button>

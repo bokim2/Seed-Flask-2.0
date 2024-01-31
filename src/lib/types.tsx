@@ -20,6 +20,7 @@ export type TTableRow = {
 
 export type TEditCellbankForm = TForm & {
   cell_bank_id: string;
+  human_readable_date: string;
 };
 
 export type TCellbank = {
