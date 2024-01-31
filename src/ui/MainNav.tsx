@@ -4,18 +4,20 @@ import { useEffect, useRef, useState } from 'react';
 import NavList from './NavList';
 import { type } from 'os';
 import { NavLink } from 'react-router-dom';
+import UserNavList from './UserNavList';
+import { THandleNavToggle, TNavOrUser } from '../lib/types';
+import { useOnClickOutside } from '../lib/hooks';
 
 const StyledMainNav = styled.div<StyledMainNav>`
-position: relative;
+  position: relative;
   z-index: 10;
-  background-color: rgba(var(--clr-primary-950), .9);
+  background-color: rgba(var(--clr-primary-950), 0.9);
   padding-block: 0.5rem;
   flex-grow: 1;
   height: 100%;
   /* height: 10vh; */
 
-  opacity: ${(props) => props.$isScrolled ? 1 : 0.8
-  }
+  opacity: ${(props) => (props.$isScrolled ? 1 : 0.8)};
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -37,14 +39,32 @@ const StyledNav = styled.nav`
 const StyledTitle = styled.h1`
   font-family: var(--font-serif);
   font-weight: 800;
-  color: var(--clr-accent-0);
+  color: rgba(var(--clr-accent-0));
   font-size: clamp(2rem, 3vw, 3rem);
   letter-spacing: 0.08rem;
+  transition: transform .2s ease-in-out,
+  color .2s ease-in-out,
+  filter .2s ease-in-out;
+
+  &:hover {
+    color: #ffe390;
+    transform: scale(1.015);
+  }
+
+  &:active {
+    transform: scale(0.99);
+    filter: brightness(90%);
+  }
+
+  /* &:active {
+    color:#b6c7f1;
+  }
+  &:focus {
+    color:#b6c7f1;
+  } */
 `;
 
-
-
-const RoundButton = styled.button`
+const UserButton = styled.button`
   border-radius: 50%; /* Use 50% for a circular shape */
   aspect-ratio: 1/1;
   padding: 0.5rem; /* Add padding if needed */
@@ -53,9 +73,10 @@ const RoundButton = styled.button`
   justify-content: center;
 `;
 
-const ButtonWrapper = styled.button`
-padding: 0;
-background-color: transparent;`;
+const NavMenuButton = styled.button`
+  padding: 0;
+  background-color: transparent;
+`;
 
 const NavSection = styled.div`
   display: flex;
@@ -64,26 +85,24 @@ const NavSection = styled.div`
 `;
 
 const StyledFaUser = styled(FaUser)`
-font-size: 1.75rem;
-fill: var(--clr-accent-0);
+  font-size: 1.75rem;
+  fill: var(--clr-accent-0);
 `;
-
 
 const style = { color: '#F2D17C', fontSize: '3rem' };
 
 type MainNavProps = {
-  toggleNav: boolean;
-  handleToggle: (e:  React.MouseEvent<SVGElement, MouseEvent>) => void;
+  // openNav: boolean;
+  // openUser: boolean;
+  // handleToggle: THandleNavToggle;
 };
-
 
 type StyledMainNav = {
   $isScrolled?: boolean;
-  
 };
 
-export default function MainNav({ toggleNav, handleToggle }: MainNavProps) {
-  const mainNavRef = useRef(null)
+export default function MainNav() {
+  const mainNavRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Use useEffect to add event listener for scroll
@@ -102,31 +121,116 @@ export default function MainNav({ toggleNav, handleToggle }: MainNavProps) {
     };
   }, []);
 
+  // handle toggle of user and nav menu
+  const [openNav, setOpenNav] = useState(false);
+  const [openUser, setOpenUser] = useState(false);
+  const userListRef = useRef<HTMLUListElement | null>(null);
+  const navListRef = useRef<HTMLUListElement | null>(null);
+  const navButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleToggle: THandleNavToggle = (e, navOrUser) => {
+    // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
+    e.stopPropagation();
+    if (navOrUser === 'nav') {
+      setOpenUser(false);
+      setOpenNav((prev) => !prev);
+    }
+    if (navOrUser === 'user') {
+      setOpenNav(false);
+      setOpenUser((prev) => !prev);
+    }
+  };
+
+  useOnClickOutside([userListRef, navListRef], () => {
+    setOpenNav(false);
+    setOpenUser(false);
+  });
+
+  useEffect(() => {
+    if (userListRef.current || navListRef.current) {
+      const firstListItem =
+        userListRef.current?.querySelector('li:first-child') ||
+        navListRef.current?.querySelector('li:first-child');
+
+      if (firstListItem) {
+        (firstListItem as HTMLElement).focus();
+      }
+    }
+  }, [openNav, openUser]);
+
+  useEffect(() => {
+    const handleEscapeMenus = (e) => {
+      if (e.key === 'Escape') {
+        setOpenUser((prev) => {
+          if (prev) {
+            console.log('openuser was open');
+            navButtonRef.current?.focus();
+          }
+          return false;
+        });
+
+        setOpenNav(false);
+      }
+    };
+
+    if (openNav || openUser) {
+      document.addEventListener('keydown', handleEscapeMenus);
+    }
+
+    return () => document.removeEventListener('keydown', handleEscapeMenus);
+  }, [openNav, openUser]);
+
+  // useEffect(() => {
+  //   if (openUser === false) {
+  //     navButtonRef.current?.focus();
+  //   }
+  // }, [openUser]);
+
   return (
-    <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef} >
+    <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
       <StyledNav>
         <StyledNavLink to="/">
-          <StyledTitle>Seed Flask</StyledTitle>
+          <StyledTitle >Seed Flask</StyledTitle>
         </StyledNavLink>
 
         <NavSection>
-          <RoundButton>
-            <StyledFaUser />
-          </RoundButton>
+          <UserButton
+            onClick={(e) => handleToggle(e, 'user')}
+            aria-label="user menu"
+          >
+            <StyledFaUser>
+              {/* <NavLink to="/signin"></NavLink> */}
+            </StyledFaUser>
+          </UserButton>
 
-          {toggleNav ? (
-            <ButtonWrapper>
-              <FaCaretUp style={style} onClick={handleToggle}/>
-            </ButtonWrapper>
+          {openNav ? (
+            <NavMenuButton aria-label="navigation menu">
+              <FaCaretUp
+                style={style}
+                onClick={(e) => handleToggle(e, 'nav')}
+                // onKeyPress={e=> handleToggle(e,'nav')}
+              />
+            </NavMenuButton>
           ) : (
-            <ButtonWrapper>
-              <FaCaretDown style={style} onClick={handleToggle}/>
-            </ButtonWrapper>
+            <NavMenuButton aria-label="navigation menu" 
+            ref={navButtonRef}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleToggle(e, 'nav');
+              }
+            }}
+            >
+              <FaCaretDown
+                style={style}
+                onClick={(e) => handleToggle(e, 'nav')}
+
+              />
+            </NavMenuButton>
           )}
         </NavSection>
-        
       </StyledNav>
-      {toggleNav && <NavList />}
+      {openNav && <NavList ref={navListRef} />}
+      {openUser && <UserNavList ref={userListRef} />}
     </StyledMainNav>
   );
 }

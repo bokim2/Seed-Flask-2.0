@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import morgan from 'morgan';
 
 import path from 'path';
 import process from 'process';
@@ -17,10 +18,31 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 import { db } from './db/db.js';
 
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, '../dist')));
+
+// enable cors for development
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+  })
+);
+
+// set cache control headers for images
+app.use(
+  '/images',
+  express.static(path.join(__dirname, 'public'), {
+    setHeaders: function (res, path) {
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+    },
+  })
+);
 
 // Define any API routes
 
@@ -68,10 +90,8 @@ app.get('/api/flasks', async (req, res) => {
   try {
     const results = await db.query(
       `SELECT
-      *,
-      start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
-      TO_CHAR(start_date AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
-    FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
+      *
+      FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
     );
     // console.log('trying to get timezone to work', results);
     res.status(200).json({
@@ -83,6 +103,11 @@ app.get('/api/flasks', async (req, res) => {
     console.log(err);
   }
 });
+// `SELECT
+// *,
+// start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
+// TO_CHAR(start_date AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
+// FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
 
 //GET one flask
 app.get('/api/flasks/:id', async (req, res) => {
@@ -104,11 +129,7 @@ app.get('/api/flasks/:id', async (req, res) => {
 // GET all cell banks
 app.get('/api/cellbanks', async (req, res) => {
   try {
-    const results = await db.query(`SELECT
-      *,
-      date_timestamptz AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
-      TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
-    FROM cell_banks;`);
+    const results = await db.query(`SELECT * FROM cell_banks;`);
     res.status(200).json({
       status: 'success',
       data: results.rows,
@@ -117,6 +138,31 @@ app.get('/api/cellbanks', async (req, res) => {
     console.log(err);
   }
 });
+
+// `SELECT
+//       *,
+//       date_timestamptz AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
+//       TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
+//     FROM cell_banks;`
+
+
+
+// DELETE on cell bank
+app.delete('/api/cellbank/:id', async (req, res) => {
+  try {
+    const results = await db.query(
+      'DELETE FROM cell_banks WHERE cell_bank_id = $1',
+      [req.params.id]
+    );
+    res.status(200).json({
+      status: 'success',
+      message: `cellbank ${req.params.id} deleted`,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // post one cell bank
 app.post('/api/cellbank', async (req, res) => {
   try {
@@ -137,6 +183,47 @@ app.post('/api/cellbank', async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+  }
+});
+
+// UPDATE one cell bank
+
+app.put('/api/cellbank/:id', async (req, res) => {
+  try {
+    // Extracting data from the request body
+    const { strain, target_molecule, description, notes, date_timestamptz } =
+      req.body;
+    const cellBankId = req.params.id;
+
+    // Optional: Add validation for input data here
+
+    // Update query
+    const query = `
+      UPDATE cell_banks 
+      SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 
+      WHERE cell_bank_id = $6 
+      RETURNING *;
+    `;
+    const values = [
+      strain,
+      notes,
+      target_molecule,
+      description,
+      date_timestamptz,
+      cellBankId,
+    ];
+    const results = await db.query(query, values);
+
+    // Check if any rows were updated
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Cell bank not found' });
+    }
+
+    // Sending back the updated data
+    res.json({ message: 'Update successful', updatedData: results.rows });
+  } catch (err) {
+    console.error('Error in server PUT request:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -181,7 +268,7 @@ FROM samples s
 JOIN flasks f ON s.flask_id = f.flask_id
 JOIN cell_banks cb ON f.cell_bank_id = cb.cell_bank_id
 GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.cell_bank_id, cb.strain, cb.notes, cb.target_molecule, cb.description, cb.date_timestamptz;`);
-  console.log(results)
+    console.log(results);
     res.status(200).json({
       status: 'success',
       data: results.rows,
@@ -211,7 +298,7 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
 //   }
 // });
 
-// This query also worked for organizing the data for graphing but it split it up in objects 
+// This query also worked for organizing the data for graphing but it split it up in objects
 // SELECT
 //     f.flask_id,
 //     ARRAY_AGG(jsonb_build_object(
@@ -221,7 +308,6 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
 //   FROM samples s
 //   JOIN flasks f ON s.flask_id = f.flask_id
 //   GROUP BY f.flask_id;
-
 
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {

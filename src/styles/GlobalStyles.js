@@ -104,14 +104,18 @@ textarea:not([rows]) {
 
 // import fonts
 
-${'' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');  */}
+${
+  '' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');  */
+}
 
 // BK
 
 #root {
 
-  ${'' /* display:flex;
-  flex-direction: column; */}
+  ${
+    '' /* display:flex;
+  flex-direction: column; */
+  }
   ${'' /* min-height: 100vh; */}
 }
 
@@ -136,20 +140,24 @@ ${'' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200
   --clr-primary-900: 21,15,29; //dark black - navbar
   --clr-primary-950: 2,6,23;  //darker black - navbar expanded
 
-  --clr-accent-0: #F2D17C; /* main accent */
-  --clr-accent-1: #FAF7F0; /* menu button */
-  --clr-accent-2: #E1F6F2; /* */
-  --clr-accent-3: #E7F1DC; /*  */
-  --clr-accent-4: #E4F1EE; /* .function__title */
-  --clr-accent-5: #86a789;
-  --clr-accent-6: #ff7676;
-  --clr-accent-7: #ff8080;
-  --clr-accent-8: #445d48;
+  --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
+  --clr-accent-1: 250, 247, 240; /* menu button #FAF7F0 */ 
+  --clr-accent-2: 225, 246, 242; /* #E1F6F2*/
+  --clr-accent-3: 231, 241, 220; /* #E7F1DC */
+  --clr-accent-4: 228, 241, 238;/* #E4F1EE menu button */
+  --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
+  --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
+  --clr-accent-7: #FBC7CA;
+  --clr-accent-8: #F68086; 
   --clr-accent-9: #10e7dc;
   --clr-accent-10: #fde5d4;
 
-  --color-text-1: white;
-  --color-text-2: black;
+  --clr-text-1: #D3D3D3;
+  --clr-text-2: black;
+  --clr-text-3: #CCCCCC;
+  --clr-text-4: black;
+  --clr-text-5: #708090;
+  --clr-text-6: black;
    }
   
    a {
@@ -166,7 +174,7 @@ ${'' /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200
      padding: 0;
      ${'' /* width: 100vw; */}
      overflow-x: hidden;
-     color: var(--color-text-1);
+     color: var(--clr-text-3);
      font-family: var(--font-sans-serif);
      
    }
