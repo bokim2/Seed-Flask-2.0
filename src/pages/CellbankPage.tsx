@@ -12,7 +12,6 @@ import LoaderBar from '../ui/LoaderBar';
 export default function CellbankPage() {
   const [cellbanks, isLoading, error] = useCellbanks();
   
-
   // const fetchCellbanks = async () => {
   //   const res = await fetch(`${baseUrl}/api/cellbanks`);
   //   const { data } = await res.json();

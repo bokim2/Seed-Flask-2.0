@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
   TableHeaderCell,
-  Wrapper,
   StyledForm,
 } from '../../styles/UtilStyles';
 import { useState } from 'react';
@@ -14,58 +13,47 @@ import { baseUrl } from '../../../configs';
 import { TEditCellbankForm } from '../../lib/types';
 import { InitialEditCellbankForm } from '../../lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
+import { displayLocalTime, useEditCellbank } from '../../lib/hooks';
 
 export default function CellbanksTable({ cellbanks }) {
-  // console.log(cellbanks, 'in cellbankstable');
-  const [editingRowNumber, setEditingRowNumber] = useState<number | null>(null);
-  const [updateEditSubmitArgs, setUpdateEditSubmitArgs] = useState<any>(null);
   const [editedForm, setEditedForm] = useState<TEditCellbankForm>(
     InitialEditCellbankForm
   );
 
-  console.log('cellbanks in cellbankstable', cellbanks, 'editedForm', editedForm);
+  // console.log(
+  //   'cellbanks in cellbankstable',
+  //   cellbanks,
+  //   'editedForm',
+  //   editedForm
+  // );
 
-  async function updateEditSubmit(editedForm) {
-    try {
-      // console.log('cell_bank_id', editedForm.cell_bank_id);
-      const { strain, target_molecule, description, notes, date_timestamptz, human_readable_date } = editedForm;
-      const res = await fetch(
-        `${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            strain,
-            target_molecule,
-            description,
-            notes,
-            date_timestamptz: getUtcTimestampFromLocalTime(human_readable_date),
-          }),
-        }
+  // edit a cellbank
+  const handleClickEdit = (e, cell_bank_id) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setEditedForm(() => {
+      const editedCellbankData = cellbanks.find(
+        (e) => e.cell_bank_id === cell_bank_id
       );
+      return {
+        ...editedCellbankData,
+        human_readable_date: displayLocalTime(
+          editedCellbankData.date_timestamptz
+        ),
+      };
+    });
+  };
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      console.log('put request sent');
-      window.location.reload();
-    } catch (error) {
-      console.log('error in updateEditSubmit');
-      console.log('error in updateEditSubmit', error);
-    }
-  }
   // delete a cellbank
   const queryClient = useQueryClient();
   const deleteCellbank = useMutation({
     mutationFn: (cell_bank_id: number) => deleteCellbankHandler(cell_bank_id),
-    onSuccess: ()=> {
+    onSuccess: () => {
       console.log('success');
-      queryClient.invalidateQueries({queryKey: ["cellbanks"]})
+      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
       deleteCellbank.reset();
-    }
+    },
   });
 
   const deleteCellbankHandler = async (cell_bank_id: number) => {
@@ -74,14 +62,17 @@ export default function CellbanksTable({ cellbanks }) {
     });
   };
 
+  const submitEditedCellbankForm = useEditCellbank();
+  const handleSubmit = (editedForm) => {
+    submitEditedCellbankForm(editedForm);
+  };
+
   return (
-    // <Wrapper>
     <StyledForm
       onSubmit={(e) => {
         e.preventDefault();
         console.log('editedForm in FORM submit', editedForm);
-        updateEditSubmit(editedForm);
-        setEditingRowNumber(null);
+        handleSubmit(editedForm);
         console.log('submit in FORM submit', e.target);
       }}
     >
@@ -102,18 +93,14 @@ export default function CellbanksTable({ cellbanks }) {
           </TableHeader>
           <tbody>
             {cellbanks &&
-              cellbanks?.map((cellbank, i) => (
+              cellbanks?.map((cellbank) => (
                 <CellbanksRow
                   key={cellbank.cell_bank_id}
-                  // cellbank_id={cellbank.cell_bank_id}
                   cellbank={cellbank}
-                  cellbankRow={{ ...cellbanks[i] }}
-                  rowNumber={i}
-                  editingRowNumber={editingRowNumber}
-                  setEditingRowNumber={setEditingRowNumber}
                   editedForm={editedForm}
-                  setEditedForm={setEditedForm} 
+                  setEditedForm={setEditedForm}
                   deleteCellbank={deleteCellbank}
+                  handleClickEdit={handleClickEdit}
                 />
               ))}
           </tbody>
