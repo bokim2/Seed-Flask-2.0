@@ -133,16 +133,26 @@ app.put('/api/cellbank/:id', async (req, res) => {
 // DELETE on cell bank
 app.delete('/api/cellbank/:id', async (req, res) => {
   try {
-    const results = await db.query(
+    const result = await db.query(
       'DELETE FROM cell_banks WHERE cell_bank_id = $1',
       [req.params.id]
     );
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Cell bank not found',
+      });
+    }
     res.status(200).json({
       status: 'success',
-      message: `cellbank ${req.params.id} deleted`,
+      message: `cellbank ${req.params.id} deleted successfully`,
     });
   } catch (err) {
-    console.log(err);
+    console.error(`Error deleting cellbank ${req.params.id}`, err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 });
 
@@ -242,7 +252,7 @@ app.get('/api/samples', async (req, res) => {
 });
 
 // GET aggregate samples by flask_id for graphing
-
+// for LineGraph component.  NOT being used.  this is a draft
 app.get('/api/graphs', async (req, res) => {
   try {
     const results = await db.query(`SELECT
@@ -273,14 +283,56 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
   }
 });
 
-// get all flask and sample associated with one cellbank
-app.get('/api/cellbank/data/:id', async (req, res) => {
+// get all flask and sample associated with all cellbanks
+app.get('/api/chart/cellbanks', async (req, res) => {
   try {
     const results = await db.query(
-      `SELECT * FROM flasks
-    LEFT JOIN cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id
-    LEFT JOIN samples ON flasks.flask_id = samples.flask_id
-    WHERE cell_banks.cell_bank_id = $1;`,
+      `SELECT 
+      flasks.*,
+      cell_banks.*,
+      ARRAY_AGG(samples.od600 ORDER BY samples.time_since_inoc_hr) AS od600_values,
+      ARRAY_AGG(samples.time_since_inoc_hr ORDER BY samples.time_since_inoc_hr) AS time_since_inoc_hr_values
+    FROM 
+      flasks
+    JOIN 
+      cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id
+    LEFT JOIN 
+      samples ON flasks.flask_id = samples.flask_id
+    GROUP BY 
+      flasks.flask_id, cell_banks.cell_bank_id;
+  `
+    );
+    res.status(200).json({
+      status: 'success',
+      test: 'test',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// get all flask and sample associated with one cellbank
+app.get('/api/chart/cellbank/:id', async (req, res) => {
+  try {
+    const results = await db.query(
+      `SELECT 
+      flasks.*,
+      cell_banks.*,
+      ARRAY_AGG(samples.od600 ORDER BY samples.time_since_inoc_hr) AS od600_values,
+      ARRAY_AGG(samples.time_since_inoc_hr ORDER BY samples.time_since_inoc_hr) AS time_since_inoc_hr_values
+  FROM 
+      flasks
+  JOIN 
+      cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id
+  LEFT JOIN 
+      samples ON flasks.flask_id = samples.flask_id
+  WHERE 
+      cell_banks.cell_bank_id = $1
+  GROUP BY 
+      flasks.flask_id, cell_banks.cell_bank_id;
+  
+  `,
       [req.params.id]
     );
     res.status(200).json({
