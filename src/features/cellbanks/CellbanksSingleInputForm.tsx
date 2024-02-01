@@ -13,39 +13,41 @@ import Button from '../../ui/Button';
 import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TForm } from '../../lib/types';
 import { initialForm } from '../../lib/constants';
+import { useCreateCellbank } from '../../lib/hooks';
 
 export default function CellbanksSingleInputForm() {
 
   const [form, setForm] = useState(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
-const queryClient = useQueryClient();
+// const queryClient = useQueryClient();
 
-  const {mutate, reset} = useMutation({
-    mutationFn: async (form: TForm) => {
-      const res = await fetch(`${baseUrl}/api/cellbank`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      return data;
-    },
+//   const {mutate, reset} = useMutation({
+//     mutationFn: async (form: TForm) => {
+//       const res = await fetch(`${baseUrl}/api/cellbank`, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(form),
+//       });
+//       const data = await res.json();
+//       return data;
+//     },
     
-      onSuccess: () => {
-        console.log('success');
-        queryClient.invalidateQueries({ queryKey: ["cellbanks"] });
-        reset();
+//       onSuccess: () => {
+//         console.log('success');
+//         queryClient.invalidateQueries({ queryKey: ["cellbanks"] });
+//         reset();
 
-      },
-    }
-  );
+//       },
+//     }
+//   );
+const [createCellbankMutation, isPending] = useCreateCellbank();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    mutate(form); // Trigger the mutation with the form <data>  </data>
+    createCellbankMutation(form); // Trigger the mutation with the form <data>  </data>
     console.log('initialForm', initialForm)
     console.log('form', form)
     setForm(initialForm);

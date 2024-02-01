@@ -13,11 +13,12 @@ import {
   TableRow,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
+import { useCreateCellbank } from '../../lib/hooks';
 
 const BulkInputTextArea = styled.textarea`
-background-color: transparent;
-padding: .5rem;
-text-align: center;
+  background-color: transparent;
+  padding: 0.5rem;
+  text-align: center;
 `;
 
 const CellbankFormTable = styled.table`
@@ -32,21 +33,21 @@ const CellbankFormRow = styled.tr`
 `;
 
 const CellbankFormCell = styled.td`
-   /* padding: 1rem; */
+  /* padding: 1rem; */
 
-@media (max-width: 600px) {
-  display: grid;
-  &::before {
-    content: attr(data-cell) ': ';
-    font-weight: 700;
-    text-transform: capitalize;
-    color: yellow;
-  };
-}
+  @media (max-width: 600px) {
+    display: grid;
+    &::before {
+      content: attr(data-cell) ': ';
+      font-weight: 700;
+      text-transform: capitalize;
+      color: yellow;
+    }
+  }
 `;
 
 export const CellbankMultiInput = styled.input`
-width: 90%;
+  width: 90%;
   border: 0;
   font-family: inherit;
   font-weight: 400;
@@ -88,9 +89,11 @@ export default function CellbanksMultiInputForm() {
   const initialMultiInputData = [
     { row: 0, strain: '', target_molecule: '', description: '', notes: '' },
   ];
+  // const initialBulkTextAreaInput = '			';
+  const [bulkTextAreaInput, setBulkTextAreaInput] = useState(
+    ''
+  );
 
-  const [bulkTextAreaInput, setbulkTextAreaInput] = useState('			');
-  // const [multiInputData, setMultiInputData] = useState<TForm[] | []>(initialMultiInputData);
   const [bulkForm, setBulkForm] = useState<TForm[] | []>(initialMultiInputData);
 
   useEffect(() => {
@@ -118,25 +121,42 @@ export default function CellbanksMultiInputForm() {
 
   const [form, setForm] = useState(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createCellbankMutation, isPending] = useCreateCellbank();
   // const [formRowsCount, setFormRowsCount] = useState(3);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault();
-      console.log('submitting', form);
-      setIsSubmitting(true);
-      await fetch(`${baseUrl}/api/cellbank`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   try {
+  //     e.preventDefault();
+  //     console.log('submitting', 'form', form, 'bulkform', bulkForm);
+  //     setIsSubmitting(true);
+  //     await fetch(`${baseUrl}/api/cellbank`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'content-type': 'application/json',
+  //       },
 
-        body: JSON.stringify(form),
-      });
-      setForm((prev) => initialForm);
-      setIsSubmitting(true);
-    } catch (error) {
-      console.log(error);
+  //       body: JSON.stringify(form),
+  //     });
+  //     setForm((prev) => initialForm);
+  //     setIsSubmitting(true);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleSubmit = async (e, bulkForm) => {
+    console.log('form in submit', form, e);
+    e.preventDefault();
+    setIsSubmitting(true);
+    const mutationPromises = bulkForm.map((row) => createCellbankMutation(row));
+
+    try {
+      await Promise.all(mutationPromises);
+      setBulkForm(initialMultiInputData);
+      setBulkTextAreaInput('');
+      setIsSubmitting(false);
+    } catch (err) {
+      console.log(err, 'error in bulkForm mutation submit');
     }
   };
 
@@ -161,11 +181,19 @@ export default function CellbanksMultiInputForm() {
   return (
     <>
       <BulkInputTextArea
-      placeholder='copy/paste from excel'
-        onChange={(e) => setbulkTextAreaInput(e.target.value)}
+        placeholder="copy/paste from excel"
+        value={bulkTextAreaInput}
+        onChange={(e) => setBulkTextAreaInput(e.target.value)}
       ></BulkInputTextArea>
 
-      <StyledForm onSubmit={handleSubmit}>
+      {isPending && <h1>loading...</h1>}
+      <StyledForm
+        onSubmit={(e) => {
+          handleSubmit(e, bulkForm);
+
+          console.log('bulkForm in submit', bulkForm);
+        }}
+      >
         <StyledTable>
           <CellbankFormBody>
             {bulkForm.length !== 0 &&
