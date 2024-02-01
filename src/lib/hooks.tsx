@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../../configs';
 import axios from 'axios';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
-import LoaderBar from '../ui/LoaderBar';
 
 // ReduxToolkit - for typescript - Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-
 
 // Cellbanks hooks
 export function useCellbanks() {
@@ -29,11 +27,11 @@ export function useCellbanks() {
     staleTime: 1000 * 60 * 60,
     // staleTime: 1000 * 5,
     refetchOnWindowFocus: true,
-    retry: false,
+    retry: true,
     enabled: true,
   });
   const cellbanks = data?.data;
-  console.log('cellbanks data.data', cellbanks);
+  // console.log('cellbanks data.data', cellbanks);
 
   // if (error instanceof Error) {
   //   console.log('error in useCellbanks react query', error.message);
@@ -42,17 +40,55 @@ export function useCellbanks() {
   return [cellbanks, isLoading, error] as const;
 }
 
+// add a single cellbank
+async function createCellbank(form) {
+  const { strain, target_molecule, description, notes } = form;
+  try {
+    console.log('form in postCellbank', form);
+    const res = await fetch(`${baseUrl}/api/cellbank`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+        body: JSON.stringify({
+          strain,
+          target_molecule,
+          description,
+          notes,
+        }),
+      },
+    );
+    const {data} = await res.json();
+    console.log('data in postCellbank', data);
+    return data;
+  } catch (err) {
+    console.log('error in postCellbank', err);
+  }
+}
+
+export function useCreateCellbank() {
+  const queryClient = useQueryClient();
+  const { mutate, reset, isPending } = useMutation({
+    mutationFn: (form: TForm) => {
+      console.log('form in useCreateCellbank', form);
+      return createCellbank(form)},
+    onSuccess: () => {
+      console.log('success in useCreateCellbank');
+      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
+      reset();
+    },
+    onError: () => console.log('error in useCreateCellbank mutation fn'),
+  });
+
+  return [mutate, isPending] as const;
+}
+
 // submit a single cellbank edit to the server
 async function updateEditSubmit(editedForm) {
   try {
     // console.log('cell_bank_id', editedForm.cell_bank_id);
-    const {
-      strain,
-      target_molecule,
-      description,
-      notes,
-      human_readable_date,
-    } = editedForm;
+    const { strain, target_molecule, description, notes, human_readable_date } =
+      editedForm;
     const res = await fetch(
       `${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`,
       {
@@ -76,7 +112,7 @@ async function updateEditSubmit(editedForm) {
     console.log('put request sent');
     window.location.reload();
   } catch (error) {
-    console.log('error in updateEditSubmit');
+    // console.log('error in updateEditSubmit');
     console.log('error in updateEditSubmit', error);
   }
 }
@@ -88,7 +124,6 @@ export function useEditCellbank() {
   });
   return mutate;
 }
-
 
 // Flask hooks
 export function useFlask(id: number | null) {
@@ -191,6 +226,7 @@ export function useOnClickOutside(refs, handlerFn) {
 
 import { format, parse } from 'date-fns';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+import { TForm } from './types';
 
 // convert UTC timestamp to local time
 
