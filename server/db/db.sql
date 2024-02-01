@@ -27,6 +27,7 @@ CREATE TABLE users (
 CREATE TABLE flasks (
 flask_id BIGSERIAL NOT NULL,
 vessel_type vessel_type NOT NULL,
+media VARCHAR(255) NOT NULL,
 inoculum_uL REAL, 
 media_mL REAL, 
 temp_c REAL NOT NULL,

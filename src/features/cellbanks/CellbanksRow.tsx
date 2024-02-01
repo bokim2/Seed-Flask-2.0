@@ -41,8 +41,9 @@ export default function CellbanksRow({
   setEditedForm,
   deleteCellbank,
   handleClickEdit,
+  editing
 }) {
-  const editing = cellbank.cell_bank_id === editedForm.cell_bank_id;
+ 
 
   return (
     <>

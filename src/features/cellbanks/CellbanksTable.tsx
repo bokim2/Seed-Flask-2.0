@@ -20,29 +20,36 @@ export default function CellbanksTable({ cellbanks }) {
     InitialEditCellbankForm
   );
 
-  // console.log(
-  //   'cellbanks in cellbankstable',
-  //   cellbanks,
-  //   'editedForm',
-  //   editedForm
-  // );
+  // submit edited cellbank form
+  const submitEditedCellbankForm = useEditCellbank();
 
-  // edit a cellbank
+  const handleSubmit = async (e, editedForm) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await submitEditedCellbankForm(editedForm);
+    setEditedForm(InitialEditCellbankForm);
+  };
+
+  // update in-progress cellbank edit
   const handleClickEdit = (e, cell_bank_id) => {
     e.preventDefault();
     e.stopPropagation();
-
-    setEditedForm(() => {
-      const editedCellbankData = cellbanks.find(
-        (e) => e.cell_bank_id === cell_bank_id
-      );
-      return {
-        ...editedCellbankData,
-        human_readable_date: displayLocalTime(
-          editedCellbankData.date_timestamptz
-        ),
-      };
-    });
+    console.log('e in handleClickEdit', e);
+    if (editedForm.cell_bank_id === cell_bank_id) {
+      setEditedForm(InitialEditCellbankForm);
+    } else {
+      setEditedForm(() => {
+        const editedCellbankData = cellbanks.find(
+          (e) => e.cell_bank_id === cell_bank_id
+        );
+        return {
+          ...editedCellbankData,
+          human_readable_date: displayLocalTime(
+            editedCellbankData.date_timestamptz
+          ),
+        };
+      });
+    }
   };
 
   // delete a cellbank
@@ -62,18 +69,13 @@ export default function CellbanksTable({ cellbanks }) {
     });
   };
 
-  const submitEditedCellbankForm = useEditCellbank();
-  const handleSubmit = (editedForm) => {
-    submitEditedCellbankForm(editedForm);
-  };
-
   return (
     <StyledForm
       onSubmit={(e) => {
         e.preventDefault();
-        console.log('editedForm in FORM submit', editedForm);
-        handleSubmit(editedForm);
-        console.log('submit in FORM submit', e.target);
+        // console.log('editedForm in FORM submit', editedForm);
+        handleSubmit(e, editedForm);
+        // console.log('submit in FORM submit', e.target);
       }}
     >
       <TableContainer id="TableContainer">
@@ -101,6 +103,7 @@ export default function CellbanksTable({ cellbanks }) {
                   setEditedForm={setEditedForm}
                   deleteCellbank={deleteCellbank}
                   handleClickEdit={handleClickEdit}
+                  editing={cellbank.cell_bank_id === editedForm.cell_bank_id}
                 />
               ))}
           </tbody>

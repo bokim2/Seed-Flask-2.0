@@ -48,17 +48,16 @@ async function createCellbank(form) {
     const res = await fetch(`${baseUrl}/api/cellbank`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-        body: JSON.stringify({
-          strain,
-          target_molecule,
-          description,
-          notes,
-        }),
-      },
-    );
-    const {data} = await res.json();
+      body: JSON.stringify({
+        strain,
+        target_molecule,
+        description,
+        notes,
+      }),
+    });
+    const { data } = await res.json();
     console.log('data in postCellbank', data);
     return data;
   } catch (err) {
@@ -71,7 +70,8 @@ export function useCreateCellbank() {
   const { mutate, reset, isPending } = useMutation({
     mutationFn: (form: TForm) => {
       console.log('form in useCreateCellbank', form);
-      return createCellbank(form)},
+      return createCellbank(form);
+    },
     onSuccess: () => {
       console.log('success in useCreateCellbank');
       queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
@@ -105,22 +105,26 @@ async function updateEditSubmit(editedForm) {
         }),
       }
     );
-
+    const result = await res.json();
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    console.log('put request sent');
-    window.location.reload();
+    console.log('result in updateEditSubmit', result, result.data);
+    return result.data;
   } catch (error) {
-    // console.log('error in updateEditSubmit');
     console.log('error in updateEditSubmit', error);
   }
 }
 
 export function useEditCellbank() {
+  const queryClient = useQueryClient();
+
   const { mutate } = useMutation({
     mutationFn: (editedForm) => updateEditSubmit(editedForm),
-    onSuccess: () => console.log('success in useEditCellbank'),
+    onSuccess: () => {
+      // console.log('success in useEditCellbank');
+      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
+    },
   });
   return mutate;
 }
