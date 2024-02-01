@@ -173,7 +173,7 @@ ${
      margin: 0;
      padding: 0;
      ${'' /* width: 100vw; */}
-     overflow-x: hidden;
+     ${'' /* overflow-x: hidden; */}
      color: var(--clr-text-3);
      font-family: var(--font-sans-serif);
      

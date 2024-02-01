@@ -70,11 +70,10 @@ app.get('/api/cellbanks', async (req, res) => {
 //       TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
 //     FROM cell_banks;`
 
-
 // post one cell bank
 app.post('/api/cellbank', async (req, res) => {
   try {
-    console.log(req.body, 'in post cell bank server');
+    // console.log(req.body, 'in post cell bank server');
     const results = await db.query(
       'INSERT INTO cell_banks (strain, notes, target_molecule, description) values ($1, $2, $3, $4) returning *',
       [
@@ -98,21 +97,17 @@ app.post('/api/cellbank', async (req, res) => {
 
 app.put('/api/cellbank/:id', async (req, res) => {
   try {
-    // Extracting data from the request body
     const { strain, target_molecule, description, notes, date_timestamptz } =
       req.body;
     const cellBankId = req.params.id;
 
-    // Optional: Add validation for input data here
-
-    // Update query
     const query = `
       UPDATE cell_banks 
       SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 
       WHERE cell_bank_id = $6 
       RETURNING *;
     `;
-    const values = [
+    const updateValues = [
       strain,
       notes,
       target_molecule,
@@ -120,7 +115,7 @@ app.put('/api/cellbank/:id', async (req, res) => {
       date_timestamptz,
       cellBankId,
     ];
-    const results = await db.query(query, values);
+    const results = await db.query(query, updateValues);
 
     // Check if any rows were updated
     if (results.rowCount === 0) {
@@ -128,13 +123,12 @@ app.put('/api/cellbank/:id', async (req, res) => {
     }
 
     // Sending back the updated data
-    res.json({ message: 'Update successful', updatedData: results.rows });
+    res.json({ message: 'Update successful', data: results.rows });
   } catch (err) {
     console.error('Error in server PUT request:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
 
 // DELETE on cell bank
 app.delete('/api/cellbank/:id', async (req, res) => {
@@ -151,7 +145,6 @@ app.delete('/api/cellbank/:id', async (req, res) => {
     console.log(err);
   }
 });
-
 
 //GET all flasks before trying left join
 // app.get('/api/flasks', async (req, res) => {
@@ -229,7 +222,6 @@ app.get('/api/flasks/:id', async (req, res) => {
   }
 });
 
-
 // GET all samples
 
 app.get('/api/samples', async (req, res) => {
@@ -282,21 +274,24 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
 });
 
 // get all flask and sample associated with one cellbank
-app.get('/api/cellbank/data/:id', async (req, res)=> {
+app.get('/api/cellbank/data/:id', async (req, res) => {
   try {
-    const results = await db.query(`SELECT * FROM flasks
+    const results = await db.query(
+      `SELECT * FROM flasks
     LEFT JOIN cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id
     LEFT JOIN samples ON flasks.flask_id = samples.flask_id
-    WHERE cell_banks.cell_bank_id = $1;`, [req.params.id])
+    WHERE cell_banks.cell_bank_id = $1;`,
+      [req.params.id]
+    );
     res.status(200).json({
       status: 'success',
-      test:'test',
-      data: results.rows
-    })
+      test: 'test',
+      data: results.rows,
+    });
   } catch (err) {
     console.log(err);
   }
-})
+});
 
 // simpler version of graphs query just od600 and interval
 // app.get('/api/graphs', async (req, res) => {
@@ -328,8 +323,6 @@ app.get('/api/cellbank/data/:id', async (req, res)=> {
 //   FROM samples s
 //   JOIN flasks f ON s.flask_id = f.flask_id
 //   GROUP BY f.flask_id;
-
-
 
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {

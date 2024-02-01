@@ -79,73 +79,37 @@ export default function CellbanksMultiInputForm() {
   };
 
   type TForm = {
-    row?: number;
     strain: string;
     notes: string;
     target_molecule: string;
     description: string;
   };
 
-  const initialMultiInputData = [
-    { row: 0, strain: '', target_molecule: '', description: '', notes: '' },
-  ];
-  // const initialBulkTextAreaInput = '			';
-  const [bulkTextAreaInput, setBulkTextAreaInput] = useState(
-    ''
-  );
+  const initialMultiInputData = [initialForm];
+
+  const [bulkTextAreaInput, setBulkTextAreaInput] = useState('');
 
   const [bulkForm, setBulkForm] = useState<TForm[] | []>(initialMultiInputData);
 
   useEffect(() => {
     if (bulkTextAreaInput === '') return;
-    // const test: TForm[] | [] = []
-    // setMultiInputData((prevData) => []);
-    const pastedInputsArray = bulkTextAreaInput
-      .split('\n')
-      .map((row, rowNumber) => {
-        const singleRow = row.split('\t');
-        const rowData = {
-          row: rowNumber,
-          strain: singleRow[0],
-          target_molecule: singleRow[1],
-          description: singleRow[2],
-          notes: singleRow[3],
-        };
-        // test.push(rowData)
-        // setMultiInputData((prevData) => [...prevData, rowData]);
-        return rowData;
-      });
+    const pastedInputsArray = bulkTextAreaInput.split('\n').map((row) => {
+      const singleRow = row.split('\t');
+      const rowData = {
+        strain: singleRow[0],
+        target_molecule: singleRow[1],
+        description: singleRow[2],
+        notes: singleRow[3],
+      };
+      return rowData;
+    });
     setBulkForm(pastedInputsArray);
-    // setBulkForm(test)
   }, [bulkTextAreaInput]);
 
-  const [form, setForm] = useState(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createCellbankMutation, isPending] = useCreateCellbank();
-  // const [formRowsCount, setFormRowsCount] = useState(3);
-
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   try {
-  //     e.preventDefault();
-  //     console.log('submitting', 'form', form, 'bulkform', bulkForm);
-  //     setIsSubmitting(true);
-  //     await fetch(`${baseUrl}/api/cellbank`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'content-type': 'application/json',
-  //       },
-
-  //       body: JSON.stringify(form),
-  //     });
-  //     setForm((prev) => initialForm);
-  //     setIsSubmitting(true);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const handleSubmit = async (e, bulkForm) => {
-    console.log('form in submit', form, e);
     e.preventDefault();
     setIsSubmitting(true);
     const mutationPromises = bulkForm.map((row) => createCellbankMutation(row));
@@ -262,3 +226,23 @@ export default function CellbanksMultiInputForm() {
     </>
   );
 }
+
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   try {
+  //     e.preventDefault();
+  //     console.log('submitting', 'form', form, 'bulkform', bulkForm);
+  //     setIsSubmitting(true);
+  //     await fetch(`${baseUrl}/api/cellbank`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'content-type': 'application/json',
+  //       },
+
+  //       body: JSON.stringify(form),
+  //     });
+  //     setForm((prev) => initialForm);
+  //     setIsSubmitting(true);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
