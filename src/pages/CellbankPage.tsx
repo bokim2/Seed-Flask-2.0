@@ -36,7 +36,7 @@ export default function CellbankPage() {
       <InnerPageContainer id="CellbankInnerPageContainer">
         {/* {JSON.stringify(cellbanks)} */}
         <CellbanksMultiInputForm />
-        <CellbanksSingleInputForm />
+        {/* <CellbanksSingleInputForm /> */}
         {error && <ErrorMessage error={error} />}
         {!isLoading && <CellbanksTable cellbanks={cellbanks}  />}
       </InnerPageContainer>

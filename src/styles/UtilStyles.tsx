@@ -43,11 +43,11 @@ export const StyledMainMenuButtons = styled(NavLink)`
   font-weight: 600;
   letter-spacing: 0.01794rem;
   color: var(--clr-text-2);
-  transition: filter 0.2s ease-in-out, 
-  transform 0.2s ease-in-out,
-  box-shadow 0.2s ease-in-out;
+  transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 
   &:hover {
+    cursor: pointer;
     transform: scale(1.02);
     filter: brightness(105%);
   }
@@ -87,7 +87,7 @@ export const InputContainer = styled.div`
   margin-block: 1rem;
 
   &:focus-within label {
-    color: rgba(var(--clr-accent-6),.8);
+    color: rgba(var(--clr-accent-6), 0.8);
   }
   /* &::after {
     content: '';
@@ -98,16 +98,55 @@ export const InputContainer = styled.div`
   } */
 `;
 
+export const FormTableCell = styled.td`
+
+  @media (max-width: 600px) {
+    display: grid;
+    &::before {
+      content: attr(data-cell) ': ';
+      font-weight: 700;
+      text-transform: capitalize;
+      color: yellow;
+    }
+  }
+`;
+
 export const FormLabel = styled.label`
   font-weight: 600;
-  margin-block: 1rem;
+  /* margin-block: 2rem; */
   /* font-family: var(--font-serif); */
   color: #f2d17c;
   /* letter-spacing: .1rem; */
   font-size: 1.75rem;
 `;
 
-export const FormInput = styled.input`
+export const MultiFormInput = styled.input`
+  width: 90%;
+  border: 0;
+  font-family: inherit;
+  font-weight: 400;
+  background-color: transparent;
+  color: inherit;
+  border-bottom: 2px solid #f2d17c;
+  padding-top: 1.5rem;
+
+  &::placeholder {
+    color: #faf7f0;
+    opacity: 0.5;
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid #10e7dc;
+  }
+
+  @media (min-width: 800px) {
+    /* width: 40vw; */
+  }
+`;
+
+// CellbanksSingleInput form.  NOT used currently
+export const SingleFormInput = styled.input`
   border: 0;
   font-family: inherit;
   font-weight: 400;
@@ -123,7 +162,7 @@ export const FormInput = styled.input`
 
   &:focus {
     outline: none;
-    border-bottom: 2px solid rgba(var(--clr-accent-6), .9);
+    border-bottom: 2px solid rgba(var(--clr-accent-6), 0.9);
   }
 
   @media (min-width: 800px) {
@@ -152,6 +191,8 @@ export const FormTextArea = styled.textarea`
   }
 `;
 
+
+
 export const FormButton = styled.button``;
 
 // TABLE STYLES
@@ -167,21 +208,22 @@ export const TableContainer = styled.div`
   max-height: 80vh;
   overflow-y: scroll;
 
-  @media(max-width: 600px) {
+  @media (max-width: 600px) {
     width: 100%;
   }
 `;
 
+
+
 export const StyledTable = styled.table`
-/* padding-inline: 2rem; */
+  /* padding-inline: 2rem; */
+  /* border-radius: 50px; */
   background-color: #262231;
   border-collapse: collapse;
   width: 100%;
   text-align: center;
+  
 `;
-
-
-
 
 export const Caption = styled.caption`
   font-family: var(--font-serif);
@@ -208,8 +250,8 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
   font-weight: 600;
   font-size: 1.1rem;
   padding: 1rem 2rem;
-  color: rgba(var(--clr-accent-6), .8);
-  width: ${(props)=> props.width || 'auto'};
+  color: rgba(var(--clr-accent-6), 0.8);
+  width: ${(props) => props.width || 'auto'};
   @media (max-width: 600px) {
     display: none;
   }
@@ -222,15 +264,15 @@ export const TableRow = styled.tr`
   }
 
   &:hover {
-    background-color: hsl(0, 0%, 0%, 0.0);
+    background-color: hsl(0, 0%, 0%, 0);
     /* font-size: 120%; */
     /* transform: scale(1.01); */
   }
 `;
 
 export const TableDataCell = styled.td`
-  padding: .5rem;
-  text-transform: lowercase;
+  padding: 0.5rem;
+  text-transform: none;
 
   @media (max-width: 600px) {
     display: grid;

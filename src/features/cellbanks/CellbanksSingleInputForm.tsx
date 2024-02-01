@@ -3,58 +3,62 @@ import { baseUrl } from '../../../configs';
 import styled from 'styled-components';
 import {
   FormButton,
-  FormInput,
+  SingleFormInput,
   FormLabel,
   FormTextArea,
   InputContainer,
   StyledForm,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
-import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { TForm } from '../../lib/types';
 import { initialForm } from '../../lib/constants';
 import { useCreateCellbank } from '../../lib/hooks';
 
 export default function CellbanksSingleInputForm() {
-
   const [form, setForm] = useState(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
-// const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-//   const {mutate, reset} = useMutation({
-//     mutationFn: async (form: TForm) => {
-//       const res = await fetch(`${baseUrl}/api/cellbank`, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(form),
-//       });
-//       const data = await res.json();
-//       return data;
-//     },
-    
-//       onSuccess: () => {
-//         console.log('success');
-//         queryClient.invalidateQueries({ queryKey: ["cellbanks"] });
-//         reset();
+  //   const {mutate, reset} = useMutation({
+  //     mutationFn: async (form: TForm) => {
+  //       const res = await fetch(`${baseUrl}/api/cellbank`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify(form),
+  //       });
+  //       const data = await res.json();
+  //       return data;
+  //     },
 
-//       },
-//     }
-//   );
-const [createCellbankMutation, isPending] = useCreateCellbank();
-  
+  //       onSuccess: () => {
+  //         console.log('success');
+  //         queryClient.invalidateQueries({ queryKey: ["cellbanks"] });
+  //         reset();
+
+  //       },
+  //     }
+  //   );
+  const [createCellbankMutation, isPending] = useCreateCellbank();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     createCellbankMutation(form); // Trigger the mutation with the form <data>  </data>
-    console.log('initialForm', initialForm)
-    console.log('form', form)
+    console.log('initialForm', initialForm);
+    console.log('form', form);
     setForm(initialForm);
-    console.log('setForm is reset to initial')
+    console.log('setForm is reset to initial');
     setIsSubmitting(false);
   };
-  
+
   const handleChange = async (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -70,7 +74,7 @@ const [createCellbankMutation, isPending] = useCreateCellbank();
       <StyledForm onSubmit={handleSubmit}>
         <InputContainer id="InputContainer">
           <FormLabel htmlFor="strain">strain</FormLabel>
-          <FormInput
+          <SingleFormInput
             type="text"
             id="strain"
             name="strain"
@@ -83,10 +87,8 @@ const [createCellbankMutation, isPending] = useCreateCellbank();
         </InputContainer>
 
         <InputContainer>
-          <FormLabel htmlFor="target_molecule">
-            target molecule
-          </FormLabel>
-          <FormInput
+          <FormLabel htmlFor="target_molecule">target molecule</FormLabel>
+          <SingleFormInput
             type="text"
             id="target_molecule"
             name="target_molecule"
