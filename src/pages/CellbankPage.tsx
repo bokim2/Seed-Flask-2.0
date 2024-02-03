@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CellbanksSingleInputForm from '../features/cellbanks/CellbanksSingleInputForm';
 import { baseUrl } from '../../configs';
 import CellbanksTable from '../features/cellbanks/CellbanksTable';
-import { InnerPageContainer, LoaderWrapper, PageContainer, Wrapper } from '../styles/UtilStyles';
+import { InnerPageContainer, LoaderWrapper, PageContainer } from '../styles/UtilStyles';
 import { useCellbanks } from '../lib/hooks';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 import styled from 'styled-components';

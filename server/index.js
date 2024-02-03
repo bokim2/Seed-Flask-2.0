@@ -345,6 +345,45 @@ app.get('/api/chart/cellbank/:id', async (req, res) => {
   }
 });
 
+// search cell banks
+app.get('/api/cellbank/search', async (req, res) => {
+  try {
+    const { searchField, searchText } = req.query;
+    console.log('searchField', searchField, 'searchText', searchText);
+
+    const validFields = [
+      'cell_bank_id',
+      'strain',
+      'target_molecule',
+      'details',
+      'notes',
+    ];
+    if (!validFields.includes(searchField)) {
+      return res.status(400).send('Invalid search field.');
+    }
+
+    // Determine if the search field is 'cell_bank_id' and needs casting to text
+    const isNumericSearchField = searchField === 'cell_bank_id';
+    const fieldForQuery = isNumericSearchField
+      ? `${searchField}::text`
+      : searchField;
+
+    const query = {
+      text: `SELECT *, ts_rank(to_tsvector(${fieldForQuery}), plainto_tsquery($1)) AS relevance
+             FROM cell_banks
+             WHERE to_tsvector(${fieldForQuery}) @@ plainto_tsquery($1)
+             ORDER BY relevance DESC;`,
+      values: [searchText],
+    };
+
+    const result = await db.query(query);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
 // simpler version of graphs query just od600 and interval
 // app.get('/api/graphs', async (req, res) => {
 //   try {
