@@ -103,16 +103,16 @@ export default function ChartsPage() {
         {/* <LoaderBar /> */}
         <ChartsTable />
 
-        {bookmarkedCellbankGraphData && (
+        {bookmarkedCellbankGraphData?.length > 0 && (
           <BookmarkedCellbankGraph
             bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
           />
         )}
 
-        {allCellbankGraphData && (
+        {allCellbankGraphData?.length &&(
           <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} />
         )}
-        {singleCellbankGraphData && (
+        {singleCellbankGraphData?.length && (
           <SingleCellbankGraph
             singleCellbankGraphData={singleCellbankGraphData}
           />
