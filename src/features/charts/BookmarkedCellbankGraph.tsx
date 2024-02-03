@@ -47,7 +47,11 @@ export const options: any = {
   },
 };
 
-const BookmarkedCellbankGraph = memo(({ bookmarkedCellbankGraphData }) => {
+type TBookmarkedCellbankGraph = {
+  bookmarkedCellbankGraphData: any[][];
+}; 
+
+const BookmarkedCellbankGraph = memo(({ bookmarkedCellbankGraphData }: TBookmarkedCellbankGraph) => {
   // console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData')
 
   const datasets = useMemo(()=> { return bookmarkedCellbankGraphData.map(
