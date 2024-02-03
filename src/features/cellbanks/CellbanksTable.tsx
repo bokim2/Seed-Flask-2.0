@@ -14,20 +14,38 @@ import { TEditCellbankForm } from '../../lib/types';
 import { InitialEditCellbankForm } from '../../lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { displayLocalTime, useEditCellbank } from '../../lib/hooks';
+import { useSearchParams } from 'react-router-dom';
+import Button from '../../ui/Button';
+import styled from 'styled-components';
+
+const TextSearchContainer = styled.div``;
+
+const TextSearchInput = styled.input`
+  margin: 0.5rem;
+  border-radius: 5px;
+  padding: .5rem;
+  width: 400px;
+
+`;
 
 export default function CellbanksTable({ cellbanks }) {
+  // search functionality
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchText, setSearchText] = useState(
+    searchParams.get('searchText') || ''
+  );
+
   const [editedForm, setEditedForm] = useState<TEditCellbankForm>(
     InitialEditCellbankForm
   );
 
-  // submit edited cellbank form
-  const submitEditedCellbankForm = useEditCellbank();
+  // submit edited cellbank form and then reset form to initial
+  const submitEditedCellbankForm = useEditCellbank(InitialEditCellbankForm);
 
-  const handleSubmit = async (e, editedForm) => {
+  const handleSubmit = (e, editedForm) => {
     e.preventDefault();
     e.stopPropagation();
-    await submitEditedCellbankForm(editedForm);
-    setEditedForm(InitialEditCellbankForm);
+    submitEditedCellbankForm(editedForm);
   };
 
   // update in-progress cellbank edit
@@ -69,47 +87,98 @@ export default function CellbanksTable({ cellbanks }) {
     });
   };
 
+  // set search params for selected column for text search
+  const handleSelectSearchColumn = (e) => {
+    // console.log('e in selectSearchColumn', e);
+    e.stopPropagation();
+    const columnName = e.target.getAttribute('data-column-name');
+    // console.log('columnName', columnName);
+    searchParams.set('searchField', columnName);
+    setSearchParams(searchParams);
+  };
+
+  const handleSetSearchText = async () => {
+    if (!searchParams.get('searchField')) {
+      searchParams.set('searchField', 'cell_bank_id');
+    }
+    searchParams.set('searchText', searchText);
+    setSearchParams(searchParams);
+
+    const fetchSearchParams = new URLSearchParams(searchParams).toString();
+    // console.log('fetchSearchParams', fetchSearchParams);
+
+    const res = await fetch(
+      `${baseUrl}/api/cellbank/search?${fetchSearchParams}`
+    );
+    const data = await res.json();
+    console.log('data in handleSetSearchText', data);
+  };
+
   return (
-    <StyledForm
-      onSubmit={(e) => {
-        e.preventDefault();
-        // console.log('editedForm in FORM submit', editedForm);
-        handleSubmit(e, editedForm);
-        // console.log('submit in FORM submit', e.target);
-      }}
-    >
-      <TableContainer id="TableContainer">
-        <StyledTable>
-          <Caption>Cell Banks Table</Caption>
-          <TableHeader>
-            <TableRow>
-              <TableHeaderCell>cell bank id</TableHeaderCell>
-              <TableHeaderCell>strain</TableHeaderCell>
-              <TableHeaderCell>target molecule</TableHeaderCell>
-              <TableHeaderCell width="15vw">details</TableHeaderCell>
-              <TableHeaderCell width="15vw">notes</TableHeaderCell>
-              <TableHeaderCell>date</TableHeaderCell>
-              <TableHeaderCell>edit</TableHeaderCell>
-              <TableHeaderCell>delete</TableHeaderCell>
-            </TableRow>
-          </TableHeader>
-          <tbody>
-            {cellbanks &&
-              cellbanks?.map((cellbank) => (
-                <CellbanksRow
-                  key={cellbank.cell_bank_id}
-                  cellbank={cellbank}
-                  editedForm={editedForm}
-                  setEditedForm={setEditedForm}
-                  deleteCellbank={deleteCellbank}
-                  handleClickEdit={handleClickEdit}
-                  editing={cellbank.cell_bank_id === editedForm.cell_bank_id}
-                />
-              ))}
-          </tbody>
-        </StyledTable>
-      </TableContainer>
-    </StyledForm>
-    // </Wrapper>
+    <>
+      <TextSearchContainer>
+        <TextSearchInput
+          type="text"
+          id="search"
+          placeholder="Text Search"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <Button type="button" $size={"small"} id="searchButton" onClick={handleSetSearchText}>
+          Search
+        </Button>
+      </TextSearchContainer>
+
+      <StyledForm
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(e, editedForm);
+        }}
+      >
+        <TableContainer id="TableContainer">
+          <StyledTable>
+            <Caption>Cell Banks Table</Caption>
+            <TableHeader>
+              <TableRow onClick={handleSelectSearchColumn}>
+                <TableHeaderCell data-column-name="cell_bank_id">
+                  cell bank id
+                </TableHeaderCell>
+                <TableHeaderCell data-column-name="strain">
+                  strain
+                </TableHeaderCell>
+                <TableHeaderCell data-column-name="target_molecule">
+                  target molecule
+                </TableHeaderCell>
+                <TableHeaderCell data-column-name="details" width="15vw">
+                  details
+                </TableHeaderCell>
+                <TableHeaderCell data-column-name="notes" width="15vw">
+                  notes
+                </TableHeaderCell>
+                <TableHeaderCell data-column-name="date_timestampz">
+                  date
+                </TableHeaderCell>
+                <TableHeaderCell>edit</TableHeaderCell>
+                <TableHeaderCell>delete</TableHeaderCell>
+              </TableRow>
+            </TableHeader>
+            <tbody>
+              {cellbanks &&
+                cellbanks?.map((cellbank) => (
+                  <CellbanksRow
+                    key={cellbank.cell_bank_id}
+                    cellbank={cellbank}
+                    editedForm={editedForm}
+                    setEditedForm={setEditedForm}
+                    deleteCellbank={deleteCellbank}
+                    handleClickEdit={handleClickEdit}
+                    editing={cellbank.cell_bank_id === editedForm.cell_bank_id}
+                  />
+                ))}
+            </tbody>
+          </StyledTable>
+        </TableContainer>
+      </StyledForm>
+    </>
   );
 }
