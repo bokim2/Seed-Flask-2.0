@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { LineGraphColors } from '../../lib/constants';
 
 ChartJS.register(
   CategoryScale,
@@ -23,6 +24,7 @@ ChartJS.register(
 
 export const options: any = {
   responsive: true,
+  animation: false,
 //   plugins: {
 //     tooltip: callbacks: 
 //   },
@@ -54,8 +56,8 @@ export default function BookmarkedCellbankGraph({ bookmarkedCellbankGraphData })
       x: time,
       y: flaskData.od600_values[index],
     })),
-    borderColor: ['red', 'blue', 'green', 'white', 'lime'][bookmarkedCellbankId], // Change as needed
-    backgroundColor: 'rgb(85, 75, 192)', // Adjust for visibility
+    borderColor: LineGraphColors[bookmarkedCellbankId], 
+    backgroundColor: LineGraphColors[bookmarkedCellbankId], 
     tension: 0.1,
   }))));
 

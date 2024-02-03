@@ -5,7 +5,11 @@ import process from 'process';
 // require('dotenv').config();
 
 // create a new pool here using the connection string above
-const pool = new Pool({ connectionString: process.env.PG_URI });
+const pool = new Pool({ connectionString: process.env.PG_URI, 
+  max: 3, // added by BK
+  min: 0, // added by BK
+  idle: 10000,  // added by BK
+});
 
 // Adding some notes about the database here will be helpful for future you or other developers.
 // Schema for the database can be found below:
