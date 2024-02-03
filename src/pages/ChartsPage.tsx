@@ -24,12 +24,12 @@ export default function ChartsPage() {
   ]);
 
   const [chartData, setChartData] = useState<any>([]);
-  const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any>(
+  const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
     []
   );
-  const [allCellbankGraphData, setAllCellbankGraphData] = useState<any>([]);
+  const [allCellbankGraphData, setAllCellbankGraphData] = useState<any[]>([]);
   const [bookmarkedCellbankGraphData, setBookmarkedCellbankGraphData] =
-    useState<any>([]);
+    useState<any[][]>([]);
 
   const getGraphData = async () => {
     // console.log('data in graphs page, before fetch');
