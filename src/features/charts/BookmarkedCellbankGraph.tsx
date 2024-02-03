@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -25,9 +25,9 @@ ChartJS.register(
 export const options: any = {
   responsive: true,
   animation: false,
-//   plugins: {
-//     tooltip: callbacks: 
-//   },
+  //   plugins: {
+  //     tooltip: callbacks:
+  //   },
   scales: {
     x: {
       type: 'linear',
@@ -47,27 +47,32 @@ export const options: any = {
   },
 };
 
-export default function BookmarkedCellbankGraph({ bookmarkedCellbankGraphData }) {
-    // console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData')
+const BookmarkedCellbankGraph = memo(({ bookmarkedCellbankGraphData }) => {
+  // console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData')
 
-  const datasets = bookmarkedCellbankGraphData.map((bookmarkedCellbank, bookmarkedCellbankId) => (bookmarkedCellbank.map((flaskData) => ({
-    label: `Flask ${flaskData.flask_id}`,
-    data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
-      x: time,
-      y: flaskData.od600_values[index],
-    })),
-    borderColor: LineGraphColors[bookmarkedCellbankId], 
-    backgroundColor: LineGraphColors[bookmarkedCellbankId], 
-    tension: 0.1,
-  }))));
+  const datasets = useMemo(()=> { return bookmarkedCellbankGraphData.map(
+    (bookmarkedCellbank, bookmarkedCellbankId) =>
+      bookmarkedCellbank.map((flaskData) => ({
+        label: `Flask ${flaskData.flask_id}`,
+        data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
+          x: time,
+          y: flaskData.od600_values[index],
+        })),
+        borderColor: LineGraphColors[bookmarkedCellbankId],
+        backgroundColor: LineGraphColors[bookmarkedCellbankId],
+        tension: 0.1,
+      }))
+  );
+    }, [bookmarkedCellbankGraphData]);
 
   const data = { datasets: datasets.flat() };
-  console.log(data, 'data in bookmarked cellbank graph')
+  console.log(data, 'CHANGED data in bookmarked cellbank graph');
 
   return (
     <>
-
       <Line options={options} data={data} />
     </>
   );
-}
+});
+
+export default BookmarkedCellbankGraph;
