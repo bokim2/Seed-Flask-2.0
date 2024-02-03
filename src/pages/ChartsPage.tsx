@@ -86,7 +86,7 @@ export default function ChartsPage() {
   };
 
   useEffect(() => {
-    getGraphData();
+    // getGraphData();
     getSingleCellbankGraphData(1);
     getAllCellbankGraphData();
     getBookmarkedCellbankGraphData(bookmarkedCellbanks);
@@ -103,13 +103,21 @@ export default function ChartsPage() {
         {/* <LoaderBar /> */}
         <ChartsTable />
 
-        <BookmarkedCellbankGraph bookmarkedCellbankGraphData={bookmarkedCellbankGraphData} />
+        {bookmarkedCellbankGraphData && (
+          <BookmarkedCellbankGraph
+            bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
+          />
+        )}
 
-        <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} />
-        <SingleCellbankGraph
-          singleCellbankGraphData={singleCellbankGraphData}
-        />
-        <LineGraph chartData={chartData} />
+        {allCellbankGraphData && (
+          <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} />
+        )}
+        {singleCellbankGraphData && (
+          <SingleCellbankGraph
+            singleCellbankGraphData={singleCellbankGraphData}
+          />
+        )}
+        {/* <LineGraph chartData={chartData} /> */}
         <TimeLineGraph />
 
         {/* <FlasksTable flasks={flasks} /> */}
