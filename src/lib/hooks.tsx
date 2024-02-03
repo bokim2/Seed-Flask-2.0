@@ -116,7 +116,7 @@ async function updateEditSubmit(editedForm) {
   }
 }
 
-export function useEditCellbank() {
+export function useEditCellbank(setEditedForm) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
@@ -124,6 +124,7 @@ export function useEditCellbank() {
     onSuccess: () => {
       // console.log('success in useEditCellbank');
       queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
+      setEditedForm(InitialEditCellbankForm);
     },
   });
   return mutate;
@@ -231,6 +232,7 @@ export function useOnClickOutside(refs, handlerFn) {
 import { format, parse } from 'date-fns';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { TForm } from './types';
+import { InitialEditCellbankForm } from './constants';
 
 // convert UTC timestamp to local time
 

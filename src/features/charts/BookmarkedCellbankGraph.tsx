@@ -40,26 +40,27 @@ export const options: any = {
     },
     title: {
       display: true,
-      text: 'Single Cellbank Graph',
+      text: 'Bookmarked Cellbank Graph',
     },
   },
 };
 
-export default function SingleCellbankGraph({ singleCellbankGraphData }) {
-    // console.log(singleCellbankGraphData, 'singleCellbankGraphData')
+export default function BookmarkedCellbankGraph({ bookmarkedCellbankGraphData }) {
+    // console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData')
 
-  const datasets = singleCellbankGraphData.map(flaskData => ({
+  const datasets = bookmarkedCellbankGraphData.map((bookmarkedCellbank, bookmarkedCellbankId) => (bookmarkedCellbank.map((flaskData) => ({
     label: `Flask ${flaskData.flask_id}`,
     data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
       x: time,
       y: flaskData.od600_values[index],
     })),
-    borderColor: 'rgb(85, 75, 192)', // Change as needed
+    borderColor: ['red', 'blue', 'green', 'white', 'lime'][bookmarkedCellbankId], // Change as needed
     backgroundColor: 'rgb(85, 75, 192)', // Adjust for visibility
     tension: 0.1,
-  }));
+  }))));
 
-  const data = { datasets };
+  const data = { datasets: datasets.flat() };
+  console.log(data, 'data in bookmarked cellbank graph')
 
   return (
     <>

@@ -46,7 +46,7 @@ export const options: any = {
 };
 
 export default function AllCellbanksGraph({ allCellbankGraphData }) {
-console.log(allCellbankGraphData, 'allCellbankGraphData')
+// console.log(allCellbankGraphData, 'allCellbankGraphData')
   const datasets = allCellbankGraphData.map(flaskData => ({
     label: `Flask ${flaskData.flask_id}`,
     data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
