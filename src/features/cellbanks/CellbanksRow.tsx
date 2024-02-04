@@ -42,12 +42,15 @@ export default function CellbanksRow({
   deleteCellbank,
   handleClickEdit,
   editing,
-  handleAddBookmark
+  handleAddBookmark,
+  toggleTextTruncation
 }) {
  
 
+
   return (
     <>
+
       <PreviousDataRow $editing={editing}>
         <TableDataCell data-cell="cell bank id" onClick={()=>handleAddBookmark(cellbank.cell_bank_id)}>
           {cellbank.cell_bank_id}
@@ -56,10 +59,10 @@ export default function CellbanksRow({
         <TableDataCell data-cell="target_molecule">
           {cellbank.target_molecule}
         </TableDataCell>
-        <TableDataCell data-cell="description">
+        <TableDataCell data-cell="description" className={toggleTextTruncation ? "" : "ellipsis"}>
           {cellbank.description}
         </TableDataCell>
-        <TableDataCell data-cell="notes">{cellbank.notes}</TableDataCell>
+        <TableDataCell data-cell="notes" className={toggleTextTruncation ? "" : "ellipsis"}>{cellbank.notes}</TableDataCell>
         <TableDataCell data-cell="date">
           {displayLocalTime(cellbank?.date_timestamptz)}
         </TableDataCell>
