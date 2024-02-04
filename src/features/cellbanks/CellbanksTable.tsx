@@ -23,12 +23,11 @@ const TextSearchContainer = styled.div``;
 const TextSearchInput = styled.input`
   margin: 0.5rem;
   border-radius: 5px;
-  padding: .5rem;
+  padding: 0.5rem;
   width: 400px;
-
 `;
 
-export default function CellbanksTable({ cellbanks }) {
+export default function CellbanksTable({ cellbanks, handleAddBookmark }) {
   // search functionality
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState(
@@ -40,12 +39,14 @@ export default function CellbanksTable({ cellbanks }) {
   );
 
   // submit edited cellbank form and then reset form to initial
-  const submitEditedCellbankForm = useEditCellbank(InitialEditCellbankForm);
+  const {mutate: submitEditedCellbankForm, isPending} = useEditCellbank(setEditedForm);
 
   const handleSubmit = (e, editedForm) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log('isPending in handleSubmit', isPending);
     submitEditedCellbankForm(editedForm);
+    console.log('isPending in handleSubmit AFTER', isPending);
   };
 
   // update in-progress cellbank edit
@@ -116,6 +117,7 @@ export default function CellbanksTable({ cellbanks }) {
 
   return (
     <>
+      {/* Text Search Section */}
       <TextSearchContainer>
         <TextSearchInput
           type="text"
@@ -124,11 +126,18 @@ export default function CellbanksTable({ cellbanks }) {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <Button type="button" $size={"small"} id="searchButton" onClick={handleSetSearchText}>
+        <Button
+          type="button"
+          $size={'small'}
+          id="searchButton"
+          onClick={handleSetSearchText}
+        >
           Search
         </Button>
       </TextSearchContainer>
 
+      {/* Table Section */}
+      {isPending && <h1>edit is pending...</h1>}
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
@@ -173,6 +182,7 @@ export default function CellbanksTable({ cellbanks }) {
                     deleteCellbank={deleteCellbank}
                     handleClickEdit={handleClickEdit}
                     editing={cellbank.cell_bank_id === editedForm.cell_bank_id}
+                    handleAddBookmark={handleAddBookmark}
                   />
                 ))}
             </tbody>

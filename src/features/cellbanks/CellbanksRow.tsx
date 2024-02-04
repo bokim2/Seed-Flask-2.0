@@ -41,14 +41,15 @@ export default function CellbanksRow({
   setEditedForm,
   deleteCellbank,
   handleClickEdit,
-  editing
+  editing,
+  handleAddBookmark
 }) {
  
 
   return (
     <>
       <PreviousDataRow $editing={editing}>
-        <TableDataCell data-cell="cell bank id">
+        <TableDataCell data-cell="cell bank id" onClick={()=>handleAddBookmark(cellbank.cell_bank_id)}>
           {cellbank.cell_bank_id}
         </TableDataCell>
         <TableDataCell data-cell="strain">{cellbank.strain}</TableDataCell>

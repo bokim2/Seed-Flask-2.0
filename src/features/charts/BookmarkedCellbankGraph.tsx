@@ -11,6 +11,7 @@ import {
   Legend,
 } from 'chart.js';
 import { LineGraphColors } from '../../lib/constants';
+import { TBookmarkedCellbankGraph } from '../../lib/types';
 
 ChartJS.register(
   CategoryScale,
@@ -47,9 +48,6 @@ export const options: any = {
   },
 };
 
-type TBookmarkedCellbankGraph = {
-  bookmarkedCellbankGraphData: any[][];
-}; 
 
 const BookmarkedCellbankGraph = memo(({ bookmarkedCellbankGraphData }: TBookmarkedCellbankGraph) => {
   // console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData')
@@ -62,8 +60,8 @@ const BookmarkedCellbankGraph = memo(({ bookmarkedCellbankGraphData }: TBookmark
           x: time,
           y: flaskData.od600_values[index],
         })),
-        borderColor: LineGraphColors[bookmarkedCellbankId],
-        backgroundColor: LineGraphColors[bookmarkedCellbankId],
+        borderColor: LineGraphColors[bookmarkedCellbankId % LineGraphColors.length],
+        backgroundColor: LineGraphColors[bookmarkedCellbankId % LineGraphColors.length],
         tension: 0.1,
       }))
   );

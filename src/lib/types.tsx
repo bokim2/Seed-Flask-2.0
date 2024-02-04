@@ -32,8 +32,13 @@ export type TCellbank = {
   readable_start_date_pacific: string;
 };
 
+export type TBookmarkedCellbankGraph = {
+  bookmarkedCellbankGraphData: any[][];
+}; 
+
 // styles
 
 export type TTableHeaderCell = {
   width?: string;
 };
+
