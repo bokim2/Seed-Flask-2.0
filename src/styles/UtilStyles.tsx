@@ -99,7 +99,6 @@ export const InputContainer = styled.div`
 `;
 
 export const FormTableCell = styled.td`
-
   @media (max-width: 600px) {
     display: grid;
     &::before {
@@ -191,8 +190,6 @@ export const FormTextArea = styled.textarea`
   }
 `;
 
-
-
 export const FormButton = styled.button``;
 
 // TABLE STYLES
@@ -213,8 +210,6 @@ export const TableContainer = styled.div`
   }
 `;
 
-
-
 export const StyledTable = styled.table`
   /* padding-inline: 2rem; */
   /* border-radius: 50px; */
@@ -222,7 +217,6 @@ export const StyledTable = styled.table`
   border-collapse: collapse;
   width: 100%;
   text-align: center;
-  
 `;
 
 export const Caption = styled.caption`
@@ -247,9 +241,10 @@ export const TableHeader = styled.thead`
 
 export const TableHeaderCell = styled.th<TTableHeaderCell>`
   /* font-family: var(--font-serif); */
+  padding: 0.5rem;
   font-weight: 600;
   font-size: 1.1rem;
-  padding: 1rem 2rem;
+  /* padding: 1rem 2rem; */
   color: rgba(var(--clr-accent-6), 0.8);
   width: ${(props) => props.width || 'auto'};
   @media (max-width: 600px) {
@@ -273,6 +268,14 @@ export const TableRow = styled.tr`
 export const TableDataCell = styled.td`
   padding: 0.5rem;
   text-transform: none;
+  /* max-width: 20vw; */
+
+  &.ellipsis {
+    max-width: 20vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   @media (max-width: 600px) {
     display: grid;

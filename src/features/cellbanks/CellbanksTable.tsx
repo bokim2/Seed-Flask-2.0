@@ -27,7 +27,11 @@ const TextSearchInput = styled.input`
   width: 400px;
 `;
 
-export default function CellbanksTable({ cellbanks, handleAddBookmark }) {
+export default function CellbanksTable({
+  cellbanks,
+  handleAddBookmark,
+  toggleTextTruncation,
+}) {
   // search functionality
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState(
@@ -39,7 +43,8 @@ export default function CellbanksTable({ cellbanks, handleAddBookmark }) {
   );
 
   // submit edited cellbank form and then reset form to initial
-  const {mutate: submitEditedCellbankForm, isPending} = useEditCellbank(setEditedForm);
+  const { mutate: submitEditedCellbankForm, isPending } =
+    useEditCellbank(setEditedForm);
 
   const handleSubmit = (e, editedForm) => {
     e.preventDefault();
@@ -158,10 +163,10 @@ export default function CellbanksTable({ cellbanks, handleAddBookmark }) {
                 <TableHeaderCell data-column-name="target_molecule">
                   target molecule
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="details" width="15vw">
+                <TableHeaderCell data-column-name="details">
                   details
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="notes" width="15vw">
+                <TableHeaderCell data-column-name="notes">
                   notes
                 </TableHeaderCell>
                 <TableHeaderCell data-column-name="date_timestampz">
@@ -183,6 +188,7 @@ export default function CellbanksTable({ cellbanks, handleAddBookmark }) {
                     handleClickEdit={handleClickEdit}
                     editing={cellbank.cell_bank_id === editedForm.cell_bank_id}
                     handleAddBookmark={handleAddBookmark}
+                    toggleTextTruncation={toggleTextTruncation}
                   />
                 ))}
             </tbody>
