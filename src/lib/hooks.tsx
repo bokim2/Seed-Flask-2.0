@@ -109,7 +109,7 @@ async function updateEditSubmit(editedForm) {
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    console.log('result in updateEditSubmit', result, result.data);
+    // console.log('result in updateEditSubmit', result, result.data);
     return result.data;
   } catch (error) {
     console.log('error in updateEditSubmit', error);
@@ -119,15 +119,17 @@ async function updateEditSubmit(editedForm) {
 export function useEditCellbank(setEditedForm) {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (editedForm) => updateEditSubmit(editedForm),
     onSuccess: () => {
       // console.log('success in useEditCellbank');
       queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
       setEditedForm(InitialEditCellbankForm);
+      // console.log('isPending in onSuccess', isPending);
     },
+    onError: () => console.log('error in useEditCellbank mutation fn')
   });
-  return mutate;
+  return {mutate, isPending};
 }
 
 // Flask hooks
@@ -174,11 +176,11 @@ export function useFlasks() {
     meta: {
       errorMessage: 'Failed to fetch flasks data (meta option useQuery)',
     },
-    staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 60 * 60,
     // staleTime: 1000 * 5,
-    refetchOnWindowFocus: true,
-    retry: false,
-    enabled: true,
+    // refetchOnWindowFocus: true,
+    // retry: false,
+    // enabled: true,
   });
   // console.log('data in useFlask', data);
   const flasks = data?.data;
@@ -233,6 +235,7 @@ import { format, parse } from 'date-fns';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { TForm } from './types';
 import { InitialEditCellbankForm } from './constants';
+import { isPending } from '@reduxjs/toolkit';
 
 // convert UTC timestamp to local time
 
