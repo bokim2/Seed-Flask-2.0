@@ -21,16 +21,6 @@ import ChartsPage from './pages/ChartsPage';
 import SignInPage from './pages/SignInPage';
 import BioreactorPage from './pages/BioreactorPage';
 
-// const StyledDiv = styled.div`
-//   /* background-color: #e4d0d0; */
-// `;
-// const queryClient = new QueryClient({
-//   defaultOptions: {
-//     queries: {
-//       staleTime: 60 * 1000,
-//     },
-//   },
-// });
 
 function App() {
   const queryClient = new QueryClient({

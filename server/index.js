@@ -9,6 +9,8 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+import { db } from './db/db.js';
+import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
 
 const app = express();
 app.use(express.json());
@@ -21,8 +23,6 @@ console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
-import { db } from './db/db.js';
 
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -48,6 +48,112 @@ app.use(
 
 app.get('/api', (req, res) => {
   res.send('Hello from the API');
+});
+
+// GET all cell banks
+app.get('/api/cellbanks', async (req, res) => {
+  try {
+    const results = await db.query(`SELECT * FROM cell_banks
+    ORDER BY cell_bank_id DESC;`);
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// `SELECT
+//       *,
+//       date_timestamptz AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
+//       TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
+//     FROM cell_banks;`
+
+// post one cell bank
+app.post('/api/cellbank', badWordsMiddleware, async (req, res) => {
+  try {
+    // console.log(req.body, 'in post cell bank server');
+    const results = await db.query(
+      'INSERT INTO cell_banks (strain, notes, target_molecule, description) values ($1, $2, $3, $4) returning *',
+      [
+        req.body.strain,
+        req.body.notes,
+        req.body.target_molecule,
+        req.body.description,
+      ]
+    );
+    console.log(results.rows);
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// UPDATE one cell bank
+
+app.put('/api/cellbank/:id', async (req, res) => {
+  try {
+    const { strain, target_molecule, description, notes, date_timestamptz } =
+      req.body;
+    const cellBankId = req.params.id;
+
+    const query = `
+      UPDATE cell_banks 
+      SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 
+      WHERE cell_bank_id = $6 
+      RETURNING *;
+    `;
+    const updateValues = [
+      strain,
+      notes,
+      target_molecule,
+      description,
+      date_timestamptz,
+      cellBankId,
+    ];
+    const results = await db.query(query, updateValues);
+
+    // Check if any rows were updated
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Cell bank not found' });
+    }
+
+    // Sending back the updated data
+    res.json({ message: 'Update successful', data: results.rows });
+  } catch (err) {
+    console.error('Error in server PUT request:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// DELETE on cell bank
+app.delete('/api/cellbank/:id', async (req, res) => {
+  try {
+    const result = await db.query(
+      'DELETE FROM cell_banks WHERE cell_bank_id = $1',
+      [req.params.id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Cell bank not found',
+      });
+    }
+    res.status(200).json({
+      status: 'success',
+      message: `cellbank ${req.params.id} deleted successfully`,
+    });
+  } catch (err) {
+    console.error(`Error deleting cellbank ${req.params.id}`, err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
 });
 
 //GET all flasks before trying left join
@@ -126,107 +232,6 @@ app.get('/api/flasks/:id', async (req, res) => {
   }
 });
 
-// GET all cell banks
-app.get('/api/cellbanks', async (req, res) => {
-  try {
-    const results = await db.query(`SELECT * FROM cell_banks;`);
-    res.status(200).json({
-      status: 'success',
-      data: results.rows,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
-
-// `SELECT
-//       *,
-//       date_timestamptz AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
-//       TO_CHAR(date_timestamptz AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
-//     FROM cell_banks;`
-
-
-
-// DELETE on cell bank
-app.delete('/api/cellbank/:id', async (req, res) => {
-  try {
-    const results = await db.query(
-      'DELETE FROM cell_banks WHERE cell_bank_id = $1',
-      [req.params.id]
-    );
-    res.status(200).json({
-      status: 'success',
-      message: `cellbank ${req.params.id} deleted`,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
-
-// post one cell bank
-app.post('/api/cellbank', async (req, res) => {
-  try {
-    console.log(req.body, 'in post cell bank server');
-    const results = await db.query(
-      'INSERT INTO cell_banks (strain, notes, target_molecule, description) values ($1, $2, $3, $4) returning *',
-      [
-        req.body.strain,
-        req.body.notes,
-        req.body.target_molecule,
-        req.body.description,
-      ]
-    );
-    console.log(results.rows);
-    res.status(200).json({
-      status: 'success',
-      data: results.rows,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
-
-// UPDATE one cell bank
-
-app.put('/api/cellbank/:id', async (req, res) => {
-  try {
-    // Extracting data from the request body
-    const { strain, target_molecule, description, notes, date_timestamptz } =
-      req.body;
-    const cellBankId = req.params.id;
-
-    // Optional: Add validation for input data here
-
-    // Update query
-    const query = `
-      UPDATE cell_banks 
-      SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 
-      WHERE cell_bank_id = $6 
-      RETURNING *;
-    `;
-    const values = [
-      strain,
-      notes,
-      target_molecule,
-      description,
-      date_timestamptz,
-      cellBankId,
-    ];
-    const results = await db.query(query, values);
-
-    // Check if any rows were updated
-    if (results.rowCount === 0) {
-      return res.status(404).json({ message: 'Cell bank not found' });
-    }
-
-    // Sending back the updated data
-    res.json({ message: 'Update successful', updatedData: results.rows });
-  } catch (err) {
-    console.error('Error in server PUT request:', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
 // GET all samples
 
 app.get('/api/samples', async (req, res) => {
@@ -247,7 +252,7 @@ app.get('/api/samples', async (req, res) => {
 });
 
 // GET aggregate samples by flask_id for graphing
-
+// for LineGraph component.  NOT being used.  this is a draft
 app.get('/api/graphs', async (req, res) => {
   try {
     const results = await db.query(`SELECT
@@ -275,6 +280,107 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
     });
   } catch (err) {
     console.log(err);
+  }
+});
+
+// get all flask and sample associated with all cellbanks
+app.get('/api/chart/cellbanks', async (req, res) => {
+  try {
+    const results = await db.query(
+      `SELECT 
+      flasks.*,
+      cell_banks.*,
+      ARRAY_AGG(samples.od600 ORDER BY samples.time_since_inoc_hr) AS od600_values,
+      ARRAY_AGG(samples.time_since_inoc_hr ORDER BY samples.time_since_inoc_hr) AS time_since_inoc_hr_values
+    FROM 
+      flasks
+    JOIN 
+      cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id
+    LEFT JOIN 
+      samples ON flasks.flask_id = samples.flask_id
+    GROUP BY 
+      flasks.flask_id, cell_banks.cell_bank_id;
+  `
+    );
+    res.status(200).json({
+      status: 'success',
+      test: 'test',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// get all flask and sample associated with one cellbank
+app.get('/api/chart/cellbank/:id', async (req, res) => {
+  try {
+    const results = await db.query(
+      `SELECT 
+      flasks.*,
+      cell_banks.*,
+      ARRAY_AGG(samples.od600 ORDER BY samples.time_since_inoc_hr) AS od600_values,
+      ARRAY_AGG(samples.time_since_inoc_hr ORDER BY samples.time_since_inoc_hr) AS time_since_inoc_hr_values
+  FROM 
+      flasks
+  JOIN 
+      cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id
+  LEFT JOIN 
+      samples ON flasks.flask_id = samples.flask_id
+  WHERE 
+      cell_banks.cell_bank_id = $1
+  GROUP BY 
+      flasks.flask_id, cell_banks.cell_bank_id;
+  
+  `,
+      [req.params.id]
+    );
+    res.status(200).json({
+      status: 'success',
+      test: 'test',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// search cell banks
+app.get('/api/cellbank/search', async (req, res) => {
+  try {
+    const { searchField, searchText } = req.query;
+    console.log('searchField', searchField, 'searchText', searchText);
+
+    const validFields = [
+      'cell_bank_id',
+      'strain',
+      'target_molecule',
+      'details',
+      'notes',
+    ];
+    if (!validFields.includes(searchField)) {
+      return res.status(400).send('Invalid search field.');
+    }
+
+    // Determine if the search field is 'cell_bank_id' and needs casting to text
+    const isNumericSearchField = searchField === 'cell_bank_id';
+    const fieldForQuery = isNumericSearchField
+      ? `${searchField}::text`
+      : searchField;
+
+    const query = {
+      text: `SELECT *, ts_rank(to_tsvector(${fieldForQuery}), plainto_tsquery($1)) AS relevance
+        FROM cell_banks
+        WHERE to_tsvector(${fieldForQuery}) @@ plainto_tsquery($1)
+        ORDER BY relevance DESC;`,
+      values: [searchText],
+    };
+
+    const result = await db.query(query);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
   }
 });
 
@@ -312,6 +418,22 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+// Global Error handling middleware
+
+app.use((err, req, res, next) => {
+  const statusCode = err.status || 500;
+  const message = err.message || 'Internal server error';
+
+  console.error(err);
+
+  res.status(statusCode).json({
+    error: {
+      message,
+      status: statusCode,
+    },
+  });
 });
 
 app.listen(PORT, () => {

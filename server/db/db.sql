@@ -1,11 +1,11 @@
-CREATE TABLE users (
-  user_id BIGSERIAL NOT NULL PRIMARY KEY,
-  username VARCHAR(50) NOT NULL UNIQUE,
-  password VARCHAR(100) NOT NULL,
-  email VARCHAR(50) NOT NULL UNIQUE,
-  first_name VARCHAR(50) NOT NULL,
-  last_name VARCHAR(50) NOT NULL,
-  date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+-- CREATE TABLE users (
+--   user_id BIGSERIAL NOT NULL PRIMARY KEY,
+--   username VARCHAR(50) NOT NULL UNIQUE,
+--   password VARCHAR(100) NOT NULL,
+--   email VARCHAR(50) NOT NULL UNIQUE,
+--   first_name VARCHAR(50) NOT NULL,
+--   last_name VARCHAR(50) NOT NULL,
+--   date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
 
 -- CREATE TABLE cell_banks (
@@ -27,8 +27,11 @@ CREATE TABLE users (
 CREATE TABLE flasks (
 flask_id BIGSERIAL NOT NULL,
 vessel_type vessel_type NOT NULL,
+media VARCHAR(255) NOT NULL,
 inoculum_uL REAL, 
 media_mL REAL, 
+temp_c REAL NOT NULL,
+rpm REAL NOT NULL,
 start_date TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
 PRIMARY KEY(flask_id),
 cell_bank_id INT NOT NULL,

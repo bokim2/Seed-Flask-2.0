@@ -1,93 +1,15 @@
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../../configs';
 import axios from 'axios';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
-import LoaderBar from '../ui/LoaderBar';
 
 // ReduxToolkit - for typescript - Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-
-// Cellbanks hooks
-export function useCellbanks() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['cellbanks'],
-    queryFn: async () => {
-      const res = await fetch(`${baseUrl}/api/cellbanks`);
-      if (!res.ok)
-        throw new Error('Network response was not ok fetching cellbanks');
-      const data = await res.json();
-      return data;
-    },
-    meta: {
-      errorMessage: 'Failed to fetch cellbanks data (meta option useQuery)',
-    },
-    staleTime: 1000 * 60 * 60,
-    // staleTime: 1000 * 5,
-    refetchOnWindowFocus: true,
-    retry: false,
-    enabled: true,
-  });
-  const cellbanks = data?.data;
-  console.log('cellbanks data.data', cellbanks);
-
-  // if (error instanceof Error) {
-  //   console.log('error in useCellbanks react query', error.message);
-  // }
-
-  return [cellbanks, isLoading, error] as const;
-}
-
-// submit a single cellbank edit to the server
-async function updateEditSubmit(editedForm) {
-  try {
-    // console.log('cell_bank_id', editedForm.cell_bank_id);
-    const {
-      strain,
-      target_molecule,
-      description,
-      notes,
-      human_readable_date,
-    } = editedForm;
-    const res = await fetch(
-      `${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          strain,
-          target_molecule,
-          description,
-          notes,
-          date_timestamptz: getUtcTimestampFromLocalTime(human_readable_date),
-        }),
-      }
-    );
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    console.log('put request sent');
-    window.location.reload();
-  } catch (error) {
-    console.log('error in updateEditSubmit');
-    console.log('error in updateEditSubmit', error);
-  }
-}
-
-export function useEditCellbank() {
-  const { mutate } = useMutation({
-    mutationFn: (editedForm) => updateEditSubmit(editedForm),
-    onSuccess: () => console.log('success in useEditCellbank'),
-  });
-  return mutate;
-}
 
 
 // Flask hooks
@@ -134,11 +56,11 @@ export function useFlasks() {
     meta: {
       errorMessage: 'Failed to fetch flasks data (meta option useQuery)',
     },
-    staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 60 * 60,
     // staleTime: 1000 * 5,
-    refetchOnWindowFocus: true,
-    retry: false,
-    enabled: true,
+    // refetchOnWindowFocus: true,
+    // retry: false,
+    // enabled: true,
   });
   // console.log('data in useFlask', data);
   const flasks = data?.data;
@@ -191,6 +113,10 @@ export function useOnClickOutside(refs, handlerFn) {
 
 import { format, parse } from 'date-fns';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+import { InitialEditCellbankForm } from './constants';
+import { isPending } from '@reduxjs/toolkit';
+import { type } from 'os';
+import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 
 // convert UTC timestamp to local time
 
