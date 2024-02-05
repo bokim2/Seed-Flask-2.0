@@ -10,13 +10,17 @@ import {
 } from '../../styles/UtilStyles';
 import { useState } from 'react';
 import { baseUrl } from '../../../configs';
-import { TEditCellbankForm } from '../../lib/types';
 import { InitialEditCellbankForm } from '../../lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { displayLocalTime, useEditCellbank } from '../../lib/hooks';
+import { displayLocalTime } from '../../lib/hooks';
+import { useUpdateCellbankMutation } from './cellbanks-hooks';
 import { useSearchParams } from 'react-router-dom';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
+import {
+  CellbankSearchParamsSchema,
+  TEditCellbankForm,
+} from './cellbanks-types';
 
 const TextSearchContainer = styled.div``;
 
@@ -32,7 +36,8 @@ export default function CellbanksTable({
   handleAddBookmark,
   toggleTextTruncation,
 }) {
-  // search functionality
+  // search functionality with search params
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState(
     searchParams.get('searchText') || ''
@@ -44,21 +49,21 @@ export default function CellbanksTable({
 
   // submit edited cellbank form and then reset form to initial
   const { mutate: submitEditedCellbankForm, isPending } =
-    useEditCellbank(setEditedForm);
+    useUpdateCellbankMutation(setEditedForm);
 
-  const handleSubmit = (e, editedForm) => {
+  const handleEditFormSubmit = (e, editedForm) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('isPending in handleSubmit', isPending);
+    // console.log('isPending in handleSubmit', isPending);
     submitEditedCellbankForm(editedForm);
-    console.log('isPending in handleSubmit AFTER', isPending);
+    // console.log('isPending in handleSubmit AFTER', isPending);
   };
 
   // update in-progress cellbank edit
   const handleClickEdit = (e, cell_bank_id) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('e in handleClickEdit', e);
+    // console.log('e in handleClickEdit', e);
     if (editedForm.cell_bank_id === cell_bank_id) {
       setEditedForm(InitialEditCellbankForm);
     } else {
@@ -98,7 +103,7 @@ export default function CellbanksTable({
     // console.log('e in selectSearchColumn', e);
     e.stopPropagation();
     const columnName = e.target.getAttribute('data-column-name');
-    // console.log('columnName', columnName);
+
     searchParams.set('searchField', columnName);
     setSearchParams(searchParams);
   };
@@ -110,7 +115,17 @@ export default function CellbanksTable({
     searchParams.set('searchText', searchText);
     setSearchParams(searchParams);
 
-    const fetchSearchParams = new URLSearchParams(searchParams).toString();
+    const validatedSearchParams = CellbankSearchParamsSchema.safeParse(
+      Object.fromEntries(searchParams)
+    );
+    if (!validatedSearchParams.success) {
+      console.log('error', validatedSearchParams.error);
+      return;
+    }
+
+    const fetchSearchParams = new URLSearchParams(
+      validatedSearchParams.data
+    ).toString();
     // console.log('fetchSearchParams', fetchSearchParams);
 
     const res = await fetch(
@@ -146,7 +161,7 @@ export default function CellbanksTable({
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit(e, editedForm);
+          handleEditFormSubmit(e, editedForm);
         }}
       >
         <TableContainer id="TableContainer">

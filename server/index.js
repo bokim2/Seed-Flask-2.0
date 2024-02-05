@@ -9,6 +9,8 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+import { db } from './db/db.js';
+import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
 
 const app = express();
 app.use(express.json());
@@ -21,8 +23,6 @@ console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
-import { db } from './db/db.js';
 
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -71,7 +71,7 @@ app.get('/api/cellbanks', async (req, res) => {
 //     FROM cell_banks;`
 
 // post one cell bank
-app.post('/api/cellbank', async (req, res) => {
+app.post('/api/cellbank', badWordsMiddleware, async (req, res) => {
   try {
     // console.log(req.body, 'in post cell bank server');
     const results = await db.query(
@@ -370,9 +370,9 @@ app.get('/api/cellbank/search', async (req, res) => {
 
     const query = {
       text: `SELECT *, ts_rank(to_tsvector(${fieldForQuery}), plainto_tsquery($1)) AS relevance
-             FROM cell_banks
-             WHERE to_tsvector(${fieldForQuery}) @@ plainto_tsquery($1)
-             ORDER BY relevance DESC;`,
+        FROM cell_banks
+        WHERE to_tsvector(${fieldForQuery}) @@ plainto_tsquery($1)
+        ORDER BY relevance DESC;`,
       values: [searchText],
     };
 
@@ -418,6 +418,22 @@ app.get('/api/cellbank/search', async (req, res) => {
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+// Global Error handling middleware
+
+app.use((err, req, res, next) => {
+  const statusCode = err.status || 500;
+  const message = err.message || 'Internal server error';
+
+  console.error(err);
+
+  res.status(statusCode).json({
+    error: {
+      message,
+      status: statusCode,
+    },
+  });
 });
 
 app.listen(PORT, () => {
