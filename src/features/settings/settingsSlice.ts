@@ -5,7 +5,7 @@ import type { RootState } from '../../lib/store'
 type TTimeZone = 'pacific' | 'eastern' | 'central' | 'mountain';
 
 const initialState = {
-    timeZone: 'pacific' 
+    timeZone: 'pacific' as TTimeZone,
 } 
 
 

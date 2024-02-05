@@ -10,7 +10,7 @@ import Button from '../../ui/Button';
 import { CellbankMultiInput } from './CellbanksMultiInputForm';
 import styled, { css } from 'styled-components';
 import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
-import { TEditCellbankForm, TTableRow } from '../../lib/types';
+import {  TTableRow } from '../../lib/types';
 import { baseUrl } from '../../../configs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { displayLocalTime } from '../../lib/hooks';
@@ -41,23 +41,28 @@ export default function CellbanksRow({
   setEditedForm,
   deleteCellbank,
   handleClickEdit,
+  editing,
+  handleAddBookmark,
+  toggleTextTruncation
 }) {
-  const editing = cellbank.cell_bank_id === editedForm.cell_bank_id;
+ 
+
 
   return (
     <>
+
       <PreviousDataRow $editing={editing}>
-        <TableDataCell data-cell="cell bank id">
+        <TableDataCell data-cell="cell bank id" onClick={()=>handleAddBookmark(cellbank.cell_bank_id)}>
           {cellbank.cell_bank_id}
         </TableDataCell>
         <TableDataCell data-cell="strain">{cellbank.strain}</TableDataCell>
         <TableDataCell data-cell="target_molecule">
           {cellbank.target_molecule}
         </TableDataCell>
-        <TableDataCell data-cell="description">
+        <TableDataCell data-cell="description" className={toggleTextTruncation ? "" : "ellipsis"}>
           {cellbank.description}
         </TableDataCell>
-        <TableDataCell data-cell="notes">{cellbank.notes}</TableDataCell>
+        <TableDataCell data-cell="notes" className={toggleTextTruncation ? "" : "ellipsis"}>{cellbank.notes}</TableDataCell>
         <TableDataCell data-cell="date">
           {displayLocalTime(cellbank?.date_timestamptz)}
         </TableDataCell>

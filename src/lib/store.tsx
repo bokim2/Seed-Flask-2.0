@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import timeZoneReducer from "../features/settings/settingsSlice";
+import bookmarksReducer from "../features/settings/bookmarksSlice";
 
 const store = configureStore({
     reducer: {
         
             // animation: animationReducer,
             timeZone: timeZoneReducer,
-        
+            bookmarks: bookmarksReducer,
     }
 })
 

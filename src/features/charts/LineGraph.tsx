@@ -46,39 +46,13 @@ export const options: any = {
 };
 
 export default function LineGraph({ chartData }) {
-  //   const [lineChartData, setLineChartData] = useState<any>(chartData || []);
-  //   lineChartData.map((flask) => {});
-  const firstChartData = chartData[0];
-  // console.log('firstChartData', firstChartData, firstChartData?.time_since_inoc_hr_values, firstChartData?.od600_values);
 
-  //   const data = {
-  //     labels: firstChartData?.time_since_inoc_hr_values,
-  //     datasets: [
-  //       {
-  //         label: 'od600',
-  //         data: firstChartData?.od600_values,
-  //         backgroundColor: 'red',
-  //       },
-  //     ],
-  //   };
-
-//   const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  //   const labels = [[...chartData].map((data) => data.time_since_inoc_hr_values)];
-
-  // const datasets = [[...chartData].map(data => {
-
-  // return {
-  //     label: data.flask_id,
-  //     data: data.od600_values,
-  //     backgroundColor: 'red',
-  // }
-  // })]
 
   const datasets = 
     [...chartData].map((data) => {
-      console.log('data in map', data);
-      const xy = data.time_since_inoc_hr_values;
-      console.log('xy', xy);
+      // console.log('data in map', data);
+      // const xy = data.time_since_inoc_hr_values;
+      // console.log('xy', xy);
       const dataArray: any = [];
       for (let i = 0; i < data.time_since_inoc_hr_values.length; i++) {
         dataArray.push({
@@ -86,18 +60,18 @@ export default function LineGraph({ chartData }) {
           y: data.od600_values[i],
         });
       }
-      console.log('dataArray', dataArray);
+      // console.log('dataArray', dataArray);
       return {
         label: ["flask"+data.flask_id, 2,3],
         data: dataArray,
-        backgroundColor: 'red',
-        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgb(131, 170, 40)',
+        borderColor: 'rgb(131, 170, 40)',
       tension: 0.1
       };
     })
   ;
 
-  console.log( 'datasets', datasets);
+  // console.log( 'datasets', datasets);
 
   const data: any = {
     // labels,

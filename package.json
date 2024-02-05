@@ -11,8 +11,9 @@
     "devstart": "NODE_ENV=development nodemon server/index.js",
     "start": "node server/index.js"
   },
-  "engins": {
-    "node": "^21.2.0"
+  "engines": {
+    "node": "^21.2.0",
+    "npm": "^10.1.0"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
@@ -21,6 +22,7 @@
     "@types/chart.js": "^2.9.41",
     "@types/express": "^4.17.21",
     "axios": "^1.6.5",
+    "bad-words": "^3.0.4",
     "chart.js": "^4.4.1",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
@@ -40,7 +42,8 @@
     "react-query": "^3.39.3",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.21.1",
-    "styled-components": "^6.1.8"
+    "styled-components": "^6.1.8",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.8",

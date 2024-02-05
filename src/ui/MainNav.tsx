@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
 import NavList from './NavList';
-import { type } from 'os';
 import { NavLink } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../lib/types';
@@ -42,9 +41,8 @@ const StyledTitle = styled.h1`
   color: rgba(var(--clr-accent-0));
   font-size: clamp(2rem, 3vw, 3rem);
   letter-spacing: 0.08rem;
-  transition: transform .2s ease-in-out,
-  color .2s ease-in-out,
-  filter .2s ease-in-out;
+  transition: transform 100ms ease-in-out, color 100ms ease-in-out,
+    filter 100ms ease-in-out;
 
   &:hover {
     color: #ffe390;
@@ -71,11 +69,21 @@ const UserButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 100ms ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const NavMenuButton = styled.button`
   padding: 0;
   background-color: transparent;
+  transition: transform 100ms ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const NavSection = styled.div`
@@ -190,13 +198,13 @@ export default function MainNav() {
     <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
       <StyledNav>
         <StyledNavLink to="/">
-          <StyledTitle >Seed Flask</StyledTitle>
+          <StyledTitle>Seed Flask</StyledTitle>
         </StyledNavLink>
 
         <NavSection>
           <UserButton
             onClick={(e) => handleToggle(e, 'user')}
-            aria-label="user menu"
+            aria-label="user and settings menu"
           >
             <StyledFaUser>
               {/* <NavLink to="/signin"></NavLink> */}
@@ -212,18 +220,18 @@ export default function MainNav() {
               />
             </NavMenuButton>
           ) : (
-            <NavMenuButton aria-label="navigation menu" 
-            ref={navButtonRef}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleToggle(e, 'nav');
-              }
-            }}
+            <NavMenuButton
+              aria-label="navigation menu"
+              ref={navButtonRef}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleToggle(e, 'nav');
+                }
+              }}
             >
               <FaCaretDown
                 style={style}
                 onClick={(e) => handleToggle(e, 'nav')}
-
               />
             </NavMenuButton>
           )}
