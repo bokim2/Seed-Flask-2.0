@@ -16,9 +16,8 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { TForm } from '../../lib/types';
 import { initialForm } from '../../lib/constants';
-import { useCreateCellbank } from '../../lib/hooks';
+import { useCreateCellbankMutation } from './cellbanks-hooks';
 
 export default function CellbanksSingleInputForm() {
   const [form, setForm] = useState(initialForm);
@@ -46,7 +45,7 @@ export default function CellbanksSingleInputForm() {
   //       },
   //     }
   //   );
-  const [createCellbankMutation, isPending] = useCreateCellbank();
+  const [createCellbankMutation, isPending] = useCreateCellbankMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

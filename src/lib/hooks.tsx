@@ -10,127 +10,7 @@ import type { RootState, AppDispatch } from './store';
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-// Cellbanks hooks
-export function useCellbanks() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['cellbanks'],
-    queryFn: async () => {
-      const res = await fetch(`${baseUrl}/api/cellbanks`);
-      if (!res.ok)
-        throw new Error('Network response was not ok fetching cellbanks');
-      const data = await res.json();
-      return data;
-    },
-    meta: {
-      errorMessage: 'Failed to fetch cellbanks data (meta option useQuery)',
-    },
-    staleTime: 1000 * 60 * 60,
-    // staleTime: 1000 * 5,
-    refetchOnWindowFocus: true,
-    retry: true,
-    enabled: true,
-  });
-  const cellbanks = data?.data;
-  // console.log('cellbanks data.data', cellbanks);
 
-  // if (error instanceof Error) {
-  //   console.log('error in useCellbanks react query', error.message);
-  // }
-
-  return [cellbanks, isLoading, error] as const;
-}
-
-// add a single cellbank
-async function createCellbank(form) {
-  const { strain, target_molecule, description, notes } = form;
-  try {
-    console.log('form in postCellbank', form);
-    const res = await fetch(`${baseUrl}/api/cellbank`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        strain,
-        target_molecule,
-        description,
-        notes,
-      }),
-    });
-    const { data } = await res.json();
-    console.log('data in postCellbank', data);
-    return data;
-  } catch (err) {
-    console.log('error in postCellbank', err);
-  }
-}
-
-export function useCreateCellbank() {
-  const queryClient = useQueryClient();
-  const { mutate, reset, isPending } = useMutation({
-    mutationFn: (form: TForm) => {
-      console.log('form in useCreateCellbank', form);
-      return createCellbank(form);
-    },
-    onSuccess: () => {
-      console.log('success in useCreateCellbank');
-      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
-      reset();
-    },
-    onError: () => console.log('error in useCreateCellbank mutation fn'),
-  });
-
-  return [mutate, isPending] as const;
-}
-
-// submit a single cellbank edit to the server
-async function updateEditSubmit(editedForm) {
-  try {
-    // console.log('cell_bank_id', editedForm.cell_bank_id);
-    const { strain, target_molecule, description, notes, human_readable_date } =
-      editedForm;
-    const res = await fetch(
-      `${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          strain,
-          target_molecule,
-          description,
-          notes,
-          date_timestamptz: getUtcTimestampFromLocalTime(human_readable_date),
-        }),
-      }
-    );
-    const result = await res.json();
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    // console.log('result in updateEditSubmit', result, result.data);
-    return result.data;
-  } catch (error) {
-    console.log('error in updateEditSubmit', error);
-  }
-}
-
-export function useEditCellbank(setEditedForm) {
-  const queryClient = useQueryClient();
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: (editedForm) => updateEditSubmit(editedForm),
-    onSuccess: () => {
-      // console.log('success in useEditCellbank');
-      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
-      setEditedForm(InitialEditCellbankForm);
-      // console.log('isPending in onSuccess', isPending);
-    },
-    onError: () => console.log('error in useEditCellbank mutation fn')
-  });
-  return {mutate, isPending};
-}
 
 // Flask hooks
 export function useFlask(id: number | null) {
@@ -233,9 +113,10 @@ export function useOnClickOutside(refs, handlerFn) {
 
 import { format, parse } from 'date-fns';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
-import { TForm } from './types';
 import { InitialEditCellbankForm } from './constants';
 import { isPending } from '@reduxjs/toolkit';
+import { type } from 'os';
+import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 
 // convert UTC timestamp to local time
 

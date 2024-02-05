@@ -14,9 +14,9 @@ import {
   FormTableCell,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
-import { useCreateCellbank } from '../../lib/hooks';
+import { useCreateCellbankMutation } from './cellbanks-hooks';
 import { initialForm } from '../../lib/constants';
-import { TForm } from '../../lib/types';
+import { TCreateCellbankSchema } from './cellbanks-types';
 
 const BulkInputTextArea = styled.textarea`
   background-color: transparent;
@@ -26,18 +26,11 @@ const BulkInputTextArea = styled.textarea`
   margin: 1rem;
 `;
 
-
 const CellbankFormBody = styled.tbody``;
 
+const CellbankFormCell = styled(FormTableCell)``;
 
-
-const CellbankFormCell = styled(FormTableCell)`
-
-`;
-
-export const CellbankMultiInput = styled(MultiFormInput)`
-  
-`;
+export const CellbankMultiInput = styled(MultiFormInput)``;
 
 export const ButtonsContainer = styled.div`
   display: flex;
@@ -47,9 +40,11 @@ export const ButtonsContainer = styled.div`
 
 export default function CellbanksMultiInputForm() {
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState('');
-  const [bulkForm, setBulkForm] = useState<TForm[] | []>([initialForm]);
+  const [bulkForm, setBulkForm] = useState<TCreateCellbankSchema[] | []>([
+    initialForm,
+  ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [createCellbankMutation, isPending] = useCreateCellbank();
+  const [createCellbankMutation, isPending] = useCreateCellbankMutation();
 
   useEffect(() => {
     if (bulkTextAreaInput === '') return;

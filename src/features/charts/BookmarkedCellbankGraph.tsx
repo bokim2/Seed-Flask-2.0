@@ -11,7 +11,6 @@ import {
   Legend,
 } from 'chart.js';
 import { LineGraphColors } from '../../lib/constants';
-import { TBookmarkedCellbankGraph } from '../../lib/types';
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +22,9 @@ ChartJS.register(
   Legend
 );
 
-
+export type TBookmarkedCellbankGraph = {
+  bookmarkedCellbankGraphData: any[][];
+}; 
 
 const BookmarkedCellbankGraph = memo(
   ({ bookmarkedCellbankGraphData }: TBookmarkedCellbankGraph) => {
