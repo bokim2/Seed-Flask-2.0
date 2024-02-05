@@ -10,7 +10,7 @@ import Button from '../../ui/Button';
 import { CellbankMultiInput } from './CellbanksMultiInputForm';
 import styled, { css } from 'styled-components';
 import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
-import { TEditCellbankForm, TTableRow } from '../../lib/types';
+import {  TTableRow } from '../../lib/types';
 import { baseUrl } from '../../../configs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { displayLocalTime } from '../../lib/hooks';
