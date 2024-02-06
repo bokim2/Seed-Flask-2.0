@@ -11,7 +11,7 @@ export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 // fetch all rows in table
-useFetchQuery ()
+// useFetchQuery ()
 
 
 // Flask hooks
