@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import CellbanksSingleInputForm from '../features/cellbanks/CellbanksSingleInputForm';
 import { baseUrl } from '../../configs';
 import CellbanksTable from '../features/cellbanks/CellbanksTable';
 import {
@@ -7,7 +6,6 @@ import {
   LoaderWrapper,
   PageContainer,
 } from '../styles/UtilStyles';
-import { useFetchCellbanksQuery } from '../features/cellbanks/cellbanks-hooks';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
@@ -15,9 +13,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addCellbankBookmark } from '../features/settings/bookmarksSlice';
 import { RootState } from '../lib/store';
 import Button from '../ui/Button';
+import { useFetchValidatedTableQuery } from '../lib/hooks';
+import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 
 export default function CellbankPage() {
-  const [cellbanks, isLoading, error] = useFetchCellbanksQuery();
+  // const [cellbanks, isLoading, error] = useFetchCellbanksQuery();
+  const [cellbanks, isLoading, error] = useFetchValidatedTableQuery({
+    tableName: 'cellbanks',
+    zodSchema: cellbanksArraySchema,
+  });
+
   // console.log('cellbanks in cellbanks page', cellbanks);
   const [toggleTextTruncation, settToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
 
