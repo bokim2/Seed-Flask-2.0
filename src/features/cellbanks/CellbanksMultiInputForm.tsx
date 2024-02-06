@@ -15,7 +15,7 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { useCreateCellbankMutation } from './cellbanks-hooks';
-import { initialForm } from '../../lib/constants';
+import { initialEditCellbankForm } from './cellbanks-types';
 import { TCreateCellbankSchema } from './cellbanks-types';
 
 const BulkInputTextArea = styled.textarea`
@@ -39,13 +39,13 @@ export const ButtonsContainer = styled.div`
 `;
 
 export default function CellbanksMultiInputForm() {
-  const [bulkTextAreaInput, setBulkTextAreaInput] = useState('');
+  const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<TCreateCellbankSchema[] | []>([
-    initialForm,
-  ]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [createCellbankMutation, isPending] = useCreateCellbankMutation();
+    initialEditCellbankForm,
+  ]); // data for submitting cellbank(s)
+  const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
 
+  // update bulkForm when bulkTextAreaInput changes
   useEffect(() => {
     if (bulkTextAreaInput === '') return;
     const pastedInputsArray = bulkTextAreaInput.split('\n').map((row) => {
@@ -63,13 +63,11 @@ export default function CellbanksMultiInputForm() {
 
   const handleSubmit = async (e, bulkForm) => {
     e.preventDefault();
-    setIsSubmitting(true);
     const mutationPromises = bulkForm.map((row) => createCellbankMutation(row));
     try {
       await Promise.all(mutationPromises);
-      setBulkForm([initialForm]);
+      setBulkForm([initialEditCellbankForm]);
       setBulkTextAreaInput('');
-      setIsSubmitting(false);
     } catch (err) {
       console.log(err, 'error in bulkForm mutation submit');
     }
@@ -86,8 +84,8 @@ export default function CellbanksMultiInputForm() {
     });
   };
 
-  const handleClear = () => {
-    setBulkForm([initialForm]);
+  const handleClearForm = () => {
+    setBulkForm([initialEditCellbankForm]);
     setBulkTextAreaInput('');
   };
 
@@ -99,7 +97,7 @@ export default function CellbanksMultiInputForm() {
         onChange={(e) => setBulkTextAreaInput(e.target.value)}
       ></BulkInputTextArea>
 
-      {isPending && <h1>loading...</h1>}
+      {isPending && <h1>Submitting cellbank(s) in progress...</h1>}
       <StyledForm
         onSubmit={(e) => {
           handleSubmit(e, bulkForm);
@@ -173,10 +171,10 @@ export default function CellbanksMultiInputForm() {
           </CellbankFormBody>
         </StyledTable>
         <ButtonsContainer>
-          <Button $size={'small'} type="submit" disabled={isSubmitting}>
+          <Button $size={'small'} type="submit" disabled={isPending}>
             Submit
           </Button>
-          <Button $size={'small'} type="reset" onClick={handleClear}>
+          <Button $size={'small'} type="reset" onClick={handleClearForm}>
             Clear
           </Button>
         </ButtonsContainer>
@@ -189,7 +187,6 @@ export default function CellbanksMultiInputForm() {
 //   try {
 //     e.preventDefault();
 //     console.log('submitting', 'form', form, 'bulkform', bulkForm);
-//     setIsSubmitting(true);
 //     await fetch(`${baseUrl}/api/cellbank`, {
 //       method: 'POST',
 //       headers: {
@@ -198,8 +195,7 @@ export default function CellbanksMultiInputForm() {
 
 //       body: JSON.stringify(form),
 //     });
-//     setForm((prev) => initialForm);
-//     setIsSubmitting(true);
+//     setForm((prev) => initialUpdateCellbankForm);
 //   } catch (error) {
 //     console.log(error);
 //   }

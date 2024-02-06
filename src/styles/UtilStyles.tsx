@@ -285,6 +285,10 @@ export const TableDataCell = styled.td`
       color: yellow;
     }
 
+    &.ellipsis {
+      display: none;
+    }
+
     /* don't desplay notes or description on mobile */
     /* &[data-cell='notes'], &[data-cell='description'] {
           display: none;
