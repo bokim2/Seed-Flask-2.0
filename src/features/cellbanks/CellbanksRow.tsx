@@ -1,18 +1,8 @@
 import React, { useEffect, useState } from 'react';
-// import styled from 'styled-components';
-import {
-  TableRow,
-  TableDataCell,
-  StyledForm,
-  FormTextArea,
-} from '../../styles/UtilStyles';
+import { TableRow, TableDataCell, FormTextArea } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
-import { CellbankMultiInput } from './CellbanksMultiInputForm';
 import styled, { css } from 'styled-components';
-import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
-import {  TTableRow } from '../../lib/types';
-import { baseUrl } from '../../../configs';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TTableRow } from '../../lib/types';
 import { displayLocalTime } from '../../lib/hooks';
 
 const EditCellbankTextArea = styled(FormTextArea)`
@@ -40,35 +30,43 @@ export default function CellbanksRow({
   editedForm,
   setEditedForm,
   deleteCellbank,
-  handleClickEdit,
+  initializeCellbankEdit,
   editing,
   handleAddBookmark,
-  toggleTextTruncation
+  toggleTextTruncation,
+  isPendingUpdate,
 }) {
- 
-
-
   return (
     <>
-
       <PreviousDataRow $editing={editing}>
-        <TableDataCell data-cell="cell bank id" onClick={()=>handleAddBookmark(cellbank.cell_bank_id)}>
+        <TableDataCell
+          data-cell="cell bank id"
+          onClick={() => handleAddBookmark(cellbank.cell_bank_id)}
+        >
           {cellbank.cell_bank_id}
         </TableDataCell>
         <TableDataCell data-cell="strain">{cellbank.strain}</TableDataCell>
         <TableDataCell data-cell="target_molecule">
           {cellbank.target_molecule}
         </TableDataCell>
-        <TableDataCell data-cell="description" className={toggleTextTruncation ? "" : "ellipsis"}>
+        <TableDataCell
+          data-cell="description"
+          className={toggleTextTruncation ? '' : 'ellipsis'}
+        >
           {cellbank.description}
         </TableDataCell>
-        <TableDataCell data-cell="notes" className={toggleTextTruncation ? "" : "ellipsis"}>{cellbank.notes}</TableDataCell>
+        <TableDataCell
+          data-cell="notes"
+          className={toggleTextTruncation ? '' : 'ellipsis'}
+        >
+          {cellbank.notes}
+        </TableDataCell>
         <TableDataCell data-cell="date">
           {displayLocalTime(cellbank?.date_timestamptz)}
         </TableDataCell>
         <TableDataCell
           data-cell="edit"
-          onClick={(e) => handleClickEdit(e, cellbank.cell_bank_id)}
+          onClick={(e) => initializeCellbankEdit(e, cellbank.cell_bank_id)}
         >
           <Button $size={'small'}>Edit</Button>
         </TableDataCell>
@@ -85,7 +83,7 @@ export default function CellbanksRow({
                   'cellbank delete button clicked',
                   cellbank.cell_bank_id
                 );
-                deleteCellbank.mutate(cellbank.cell_bank_id);
+                deleteCellbank(cellbank.cell_bank_id);
               }
             }}
           >
@@ -99,6 +97,7 @@ export default function CellbanksRow({
           key={cellbank.cell_bank_id}
           editedForm={editedForm}
           setEditedForm={setEditedForm}
+          isPendingUpdate={isPendingUpdate}
         />
       )}
     </>
@@ -107,7 +106,7 @@ export default function CellbanksRow({
   );
 }
 
-function CellbanksEditForm({ setEditedForm, editedForm }) {
+function CellbanksEditForm({ setEditedForm, editedForm, isPendingUpdate }) {
   const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -180,11 +179,7 @@ function CellbanksEditForm({ setEditedForm, editedForm }) {
         </TableDataCell>
 
         <TableDataCell>
-          <Button
-            $size={'small'}
-            type="submit"
-            // disabled={'isSubmitting EDIT THIS'}
-          >
+          <Button $size={'small'} type="submit" disabled={isPendingUpdate}>
             Update
           </Button>
         </TableDataCell>

@@ -4,49 +4,61 @@ import { z } from 'zod';
 
 // cellbanks GET request
 export const cellbankSchema = z.object({
-    cell_bank_id: z.coerce.number(), // force a number type
-    strain: z.string(),
-    target_molecule: z.string(),
-    description: z.string(),
-    notes: z.string(),
-    date_timestamptz: z.string(),
-  });
-  
-  export const cellbanksArraySchema = z.array(cellbankSchema);
-  
-  export type TCellbank = z.infer<typeof cellbankSchema>;
-  export type TCellbanks = z.infer<typeof cellbanksArraySchema>;
-  
+  cell_bank_id: z.coerce.number(), // force a number type
+  strain: z.string(),
+  target_molecule: z.string(),
+  description: z.string(),
+  notes: z.string(),
+  date_timestamptz: z.string(),
+});
+
+export const cellbanksArraySchema = z.array(cellbankSchema);
+
+export type TCellbank = z.infer<typeof cellbankSchema>;
+export type TCellbanks = z.infer<typeof cellbanksArraySchema>;
+
 // create a cellbank
 export const createCellbankSchema = z.object({
-    strain: z.string(),
-    notes: z.string(),
-    target_molecule: z.string(),
-    description: z.string(),
-})
+  strain: z.string(),
+  notes: z.string(),
+  target_molecule: z.string(),
+  description: z.string(),
+});
 
 export type TCreateCellbankSchema = z.infer<typeof createCellbankSchema>;
 
 
 // update a cellbank
-export type TEditCellbankForm = TCreateCellbankSchema & {
-    cell_bank_id: string;
-    human_readable_date: string;
-  };
 
-  // cellbanks search functionality with search params
-  
-  export const CellbankSearchParamsSchema = z.object({
-      searchField: z.enum([
-        'cell_bank_id',
-        'strain',
-        'target_molecule',
-        'details',
-        'notes',
-        'date_timestampz',
-      ]),
-      searchText: z.string(),
-    });
-  
-    export type TCellbankSearchParamsSchema = z.infer<typeof CellbankSearchParamsSchema>;
-  
+export const initialEditCellbankForm = {
+  cell_bank_id: 0,
+  strain: '',
+  notes: '',
+  target_molecule: '',
+  description: '',
+  date_timestamptz: '',
+  human_readable_date: '',
+};
+
+export const updateCellbankSchema = cellbankSchema.extend({
+  human_readable_date: z.string(),
+});
+export type TUpdateCellbankForm = z.infer<typeof updateCellbankSchema>;
+
+// cellbanks search functionality with search params
+
+export const CellbankSearchParamsSchema = z.object({
+  searchField: z.enum([
+    'cell_bank_id',
+    'strain',
+    'target_molecule',
+    'details',
+    'notes',
+    'date_timestampz',
+  ]),
+  searchText: z.string(),
+});
+
+export type TCellbankSearchParamsSchema = z.infer<
+  typeof CellbankSearchParamsSchema
+>;
