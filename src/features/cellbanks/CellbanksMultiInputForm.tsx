@@ -14,9 +14,13 @@ import {
   FormTableCell,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
-import { useCreateCellbankMutation } from './cellbanks-hooks';
-import { initialEditCellbankForm } from './cellbanks-types';
+// import { useCreateCellbankMutation } from './cellbanks-hooks';
+import {
+  createCellbankSchema,
+  initialEditCellbankForm,
+} from './cellbanks-types';
 import { TCreateCellbankSchema } from './cellbanks-types';
+import { useCreateValidatedRowMutation } from '../../lib/hooks';
 
 const BulkInputTextArea = styled.textarea`
   background-color: transparent;
@@ -43,7 +47,17 @@ export default function CellbanksMultiInputForm() {
   const [bulkForm, setBulkForm] = useState<TCreateCellbankSchema[] | []>([
     initialEditCellbankForm,
   ]); // data for submitting cellbank(s)
-  const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
+
+  // const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
+
+  const {
+    mutate: createCellbankMutation,
+    isPending,
+    error,
+  } = useCreateValidatedRowMutation({
+    tableName: 'cellbank',
+    zodSchema: createCellbankSchema
+  });
 
   // update bulkForm when bulkTextAreaInput changes
   useEffect(() => {

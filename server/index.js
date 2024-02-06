@@ -234,14 +234,22 @@ app.get('/api/flasks/:id', async (req, res) => {
 
 // GET all samples
 
+// `SELECT
+// *
+// FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
+
 app.get('/api/samples', async (req, res) => {
   try {
-    const results = await db.query(`SELECT
-    *
-    ,
-    end_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_end_date_pacific,
-    TO_CHAR(end_date AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_end_date_pacific
-  FROM samples;`);
+    const query = `SELECT
+      s.*,
+      f.flask_id,
+      f.temp_c,
+      c.strain,
+      c.target_molecule
+      FROM samples as s 
+      LEFT JOIN flasks as f on s.flask_id = f.flask_id
+      LEFT JOIN cell_banks as c on f.cell_bank_id = c.cell_bank_id;`;
+    const results = await db.query(query);
     res.status(200).json({
       status: 'success',
       data: results.rows,

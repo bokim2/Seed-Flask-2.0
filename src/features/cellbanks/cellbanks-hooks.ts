@@ -12,37 +12,37 @@ import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
 // Utility or API service functions
 
 // create a cellbank
-async function createCellbank(form) {
-  const { strain, target_molecule, description, notes } = form;
-  const validationResult = createCellbankSchema.safeParse(form);
-  if (!validationResult.success) {
-    throw new Error(`Failed to validate createCellbank form: ${validationResult.error.message}`)
-  }
-  try {
-    console.log('form in postCellbank', form);
-    const res = await fetch(`${baseUrl}/api/cellbank`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        strain,
-        target_molecule,
-        description,
-        notes,
-      }),
-    });
-    if (!res.ok) {
-      throw new Error('Failed to create cellbank');
-    }
-    const { data } = await res.json();
-    console.log('data in postCellbank', data);
-    return data;
-  } catch (err) {
-    console.error('Error in createCellbank', err);
-    throw err;
-  }
-}
+// export async function createCellbank(form) {
+//   const { strain, target_molecule, description, notes } = form;
+//   const validationResult = createCellbankSchema.safeParse(form);
+//   if (!validationResult.success) {
+//     throw new Error(`Failed to validate createCellbank form: ${validationResult.error.message}`)
+//   }
+//   try {
+//     console.log('form in postCellbank', form);
+//     const res = await fetch(`${baseUrl}/api/cellbank`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({
+//         strain,
+//         target_molecule,
+//         description,
+//         notes,
+//       }),
+//     });
+//     if (!res.ok) {
+//       throw new Error('Failed to create cellbank');
+//     }
+//     const { data } = await res.json();
+//     console.log('data in postCellbank', data);
+//     return data;
+//   } catch (err) {
+//     console.error('Error in createCellbank', err);
+//     throw err;
+//   }
+// }
 
 // submit a single cellbank edit to the server
 async function updateCellbankEdit(editedForm) {
@@ -103,56 +103,56 @@ const deleteCellbankById = async (cell_bank_id: number) => {
 // Custom hooks utilizing the above functions
 
 // Get all cellbanks
-export function useFetchCellbanksQuery() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['cellbanks'],
-    queryFn: async () => {
-      const res = await fetch(`${baseUrl}/api/cellbanks`);
-      if (!res.ok)
-        throw new Error('Network response was not ok fetching cellbanks');
-      const { data } = await res.json();
+// export function useFetchCellbanksQuery() {
+//   const { data, isLoading, error } = useQuery({
+//     queryKey: ['cellbanks'],
+//     queryFn: async () => {
+//       const res = await fetch(`${baseUrl}/api/cellbanks`);
+//       if (!res.ok)
+//         throw new Error('Network response was not ok fetching cellbanks');
+//       const { data } = await res.json();
 
-      const validatedData = cellbanksArraySchema.safeParse(data);
+//       const validatedData = cellbanksArraySchema.safeParse(data);
 
-      if (!validatedData.success) {
-        console.error(validatedData.error);
-      throw new Error('Failed to validate fetched cellbanks data');
-      }
-      // zod puts the data in data key
-      return validatedData.data;
-    },
-    meta: {
-      errorMessage: 'Failed to fetch cellbanks data (meta option useQuery)',
-    },
-    // staleTime: 1000 * 60 * 60,
-    // refetchOnWindowFocus: true,
-    // retry: true,
-    // enabled: true,
-  });
+//       if (!validatedData.success) {
+//         console.error(validatedData.error);
+//       throw new Error('Failed to validate fetched cellbanks data');
+//       }
+//       // zod puts the data in data key
+//       return validatedData.data;
+//     },
+//     meta: {
+//       errorMessage: 'Failed to fetch cellbanks data (meta option useQuery)',
+//     },
+//     // staleTime: 1000 * 60 * 60,
+//     // refetchOnWindowFocus: true,
+//     // retry: true,
+//     // enabled: true,
+//   });
 
-  return [data, isLoading, error] as const;
-}
+//   return [data, isLoading, error] as const;
+// }
 
-// Create a new cellbank
-export function useCreateCellbankMutation() {
-  const queryClient = useQueryClient();
-  const { mutate, reset, isPending } = useMutation({
-    mutationFn: (form: TCreateCellbankSchema) => {
-      console.log('form in useCreateCellbankMutation', form);
-      return createCellbank(form);
-    },
-    onSuccess: () => {
-      console.log('success in useCreateCellbankMutation');
-      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
-      reset();
-    },
-    onError: () => {
-      console.log('error in useCreateCellbankMutation mutation fn');
-    },
-  });
+// // Create a new cellbank
+// export function useCreateCellbankMutation() {
+//   const queryClient = useQueryClient();
+//   const { mutate, reset, isPending } = useMutation({
+//     mutationFn: (form: TCreateCellbankSchema) => {
+//       console.log('form in useCreateCellbankMutation', form);
+//       return createCellbank(form);
+//     },
+//     onSuccess: () => {
+//       console.log('success in useCreateCellbankMutation');
+//       queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
+//       reset();
+//     },
+//     onError: () => {
+//       console.log('error in useCreateCellbankMutation mutation fn');
+//     },
+//   });
 
-  return [mutate, isPending] as const;
-}
+//   return [mutate, isPending] as const;
+// }
 
 // update a single cellbank
 export function useUpdateCellbankMutation(setEditedForm) {

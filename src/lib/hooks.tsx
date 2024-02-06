@@ -11,8 +11,85 @@ export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 // fetch all rows in table
-// useFetchQuery ()
+export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
+  const { data, isLoading, error } = useQuery({
+    queryKey: [tableName],
+    queryFn: async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/${tableName}`);
+        if (!res.ok) throw new Error('Failed to fetch table data');
+        const { data } = await res.json();
 
+        const validatedData = zodSchema.safeParse(data);
+        // console.log(validatedData, 'validatedData');
+        if (!validatedData.success) {
+          console.log(validatedData.error);
+          throw new Error(`Data validation in ${tableName} table failed`);
+        }
+        return validatedData.data;
+      } catch (err) {
+        console.log(err, 'error in useFetchValidatedTableQuery');
+        throw err;
+      }
+    },
+    meta: {
+      errorMessage: `Failed to fetch ${tableName} data (meta option useQuery)`,
+    },
+  });
+  return [data, isLoading, error] as const;
+}
+
+// create one row in table
+
+export function useCreateValidatedRowMutation({
+  tableName,
+  zodSchema
+}) {
+  const queryClient = useQueryClient();
+  const { mutate, isPending, reset, error } = useMutation({
+    mutationFn: (form) => createRow(form),
+    onSuccess: () => {
+      queryClient.invalidateQueries(tableName);
+      reset();
+    },
+    onError: (err) => {
+      throw err;
+    },
+  });
+  return { mutate, isPending, error };
+}
+
+// create a row
+export async function createRow(form) {
+  // const { ...columnNamesArray } = form;
+  const validationResult = createCellbankSchema.safeParse(form);
+  if (!validationResult.success) {
+    throw new Error(
+      `Failed to validate createCellbank form: ${validationResult.error.message}`
+    );
+  }
+  try {
+    console.log('form in postCellbank', form);
+    const res = await fetch(`${baseUrl}/api/cellbank`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...form
+      }),
+    });
+    if (!res.ok) {
+      throw new Error('Failed to create cellbank');
+    }
+    const { data } = await res.json();
+    console.log('data in postCellbank', data);
+    return data;
+  } catch (err) {
+    console.error('Error in createCellbank', err);
+    throw err;
+  }
+}
 
 // Flask hooks
 export function useFlask(id: number | null) {
@@ -117,7 +194,10 @@ import { format, parse } from 'date-fns';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { isPending } from '@reduxjs/toolkit';
 import { type } from 'os';
-import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
+import {
+  cellbanksArraySchema,
+  createCellbankSchema,
+} from '../features/cellbanks/cellbanks-types';
 
 // convert UTC timestamp to local time
 
