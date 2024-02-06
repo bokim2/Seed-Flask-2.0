@@ -16,11 +16,11 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { initialForm } from '../../lib/constants';
 import { useCreateCellbankMutation } from './cellbanks-hooks';
+import { initialEditCellbankForm } from './cellbanks-types';
 
 export default function CellbanksSingleInputForm() {
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(initialEditCellbankForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   // const queryClient = useQueryClient();
 
@@ -51,9 +51,9 @@ export default function CellbanksSingleInputForm() {
     e.preventDefault();
     setIsSubmitting(true);
     createCellbankMutation(form); // Trigger the mutation with the form <data>  </data>
-    console.log('initialForm', initialForm);
+    console.log('initialForm', initialEditCellbankForm);
     console.log('form', form);
-    setForm(initialForm);
+    setForm(initialEditCellbankForm);
     console.log('setForm is reset to initial');
     setIsSubmitting(false);
   };
