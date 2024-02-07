@@ -1,30 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { TableRow, TableDataCell, FormTextArea } from '../../styles/UtilStyles';
+import { TableRow, TableDataCell, FormTextArea, PreviousDataRow, EditRow, EditTextArea } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import styled, { css } from 'styled-components';
 import { TTableRow } from '../../lib/types';
 import { displayLocalTime } from '../../lib/hooks';
 import { initialEditFlasksForm } from '../flasks/flasks-types';
+import { initialEditCellbankForm } from './cellbanks-types';
 
-const EditCellbankTextArea = styled(FormTextArea)`
-  width: 100%;
-  height: auto;
-`;
 
-const PreviousDataRow = styled(TableRow)<TTableRow>`
-  background-color: ${(props) => props.$editing && 'red'};
-  &:nth-of-type(2n) {
-    background-color: ${(props) => props.$editing && 'red'};
-  }
-  &:hover {
-    background-color: ${(props) => props.$editing && 'red'};
-  }
-`;
-
-const EditRow = styled.tr`
-  background-color: yellow;
-  color: turquoise;
-`;
 
 export default function CellbanksRow({
   rowData,
@@ -35,17 +18,18 @@ export default function CellbanksRow({
   toggleTextTruncation,
   isPendingUpdate,
   isPendingDelete,
-  editingId, setEditingId
+  editingId, 
+  setEditingId
 }) {
   const { cell_bank_id, target_molecule, strain, description, notes, date_timestamptz } = rowData;
   
-  const editing = editingId === rowData.cell_bank_id;
+  const editing = editingId === cell_bank_id;
   return (
     <>
       <PreviousDataRow $editing={editing}>
         <TableDataCell
           data-cell="cell bank id"
-          onClick={() => handleAddBookmark(rowData.cell_bank_id)}
+          onClick={() => handleAddBookmark(cell_bank_id)}
         >
           {cell_bank_id}
         </TableDataCell>
@@ -86,7 +70,7 @@ export default function CellbanksRow({
             e.stopPropagation();
             if (editing) {
               setEditingId(null);
-              setEditedForm(initialEditFlasksForm);
+              setEditedForm(initialEditCellbankForm);
               return;
             } else {
               setEditedForm({
@@ -144,7 +128,7 @@ function CellbanksEditForm({
         </TableDataCell>
 
         <TableDataCell data-cell="strain">
-          <EditCellbankTextArea
+          <EditTextArea
             data-cell="strain"
             id="strain"
             name="strain"
@@ -154,11 +138,11 @@ function CellbanksEditForm({
             value={editedForm.strain}
           >
             {editedForm.strain}
-          </EditCellbankTextArea>
+          </EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="target_molecule">
-          <EditCellbankTextArea
+          <EditTextArea
             data-cell="target_molecule"
             id="target_molecule"
             name="target_molecule"
@@ -168,11 +152,11 @@ function CellbanksEditForm({
             value={editedForm.target_molecule}
           >
             {editedForm.target_molecule}
-          </EditCellbankTextArea>
+          </EditTextArea>
         </TableDataCell>
 
         <TableDataCell>
-          <EditCellbankTextArea
+          <EditTextArea
             id="description"
             name="description"
             onChange={handleChange}
@@ -183,7 +167,7 @@ function CellbanksEditForm({
         </TableDataCell>
 
         <TableDataCell>
-          <EditCellbankTextArea
+          <EditTextArea
             id="notes"
             name="notes"
             onChange={handleChange}
@@ -194,7 +178,7 @@ function CellbanksEditForm({
         </TableDataCell>
 
         <TableDataCell>
-          <EditCellbankTextArea
+          <EditTextArea
             id="human_readable_date"
             name="human_readable_date"
             // placeholder="YYYY-MM-DD HH:MM AM/PM"

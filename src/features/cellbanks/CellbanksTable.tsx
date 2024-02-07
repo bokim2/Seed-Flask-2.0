@@ -39,6 +39,8 @@ export default function CellbanksTable({
   const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
     initialEditCellbankForm
   );
+// id of edited cellbank
+const [editingId, setEditingId] = useState<number | null>(null);
 
   // update and delete cellbank custom hooks
   const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
@@ -48,10 +50,11 @@ export default function CellbanksTable({
 
   const {mutate: deleteCellbank, isPending: isPendingDelete, error} = useDeleteRowMutation({tableName: 'cellbanks'});
 
+  // searching cellbanks table through text input
 const [searchedData, setSearchedData] = useState([]);  
 const {searchText, setSearchText, SelectSearchField, performInputTextSearch} = useTextInputSearch();
 
-const [editingId, setEditingId] = useState<number | null>(null);
+
 
   const handleEditFormSubmit = (e, editedForm) => {
     e.preventDefault();
@@ -121,7 +124,7 @@ const [editingId, setEditingId] = useState<number | null>(null);
                 <TableHeaderCell data-column-name="date_timestampz">
                   date
                 </TableHeaderCell>
-                <TableHeaderCell>user/delete</TableHeaderCell>
+                <TableHeaderCell>user</TableHeaderCell>
                 <TableHeaderCell>edit</TableHeaderCell>
               </TableRow>
             </TableHeader>
@@ -131,15 +134,15 @@ const [editingId, setEditingId] = useState<number | null>(null);
                   <CellbanksRow
                     key={rowData.cell_bank_id}
                     rowData={rowData}
+                    toggleTextTruncation={toggleTextTruncation}
                     editedForm={editedForm}
                     setEditedForm={setEditedForm}
-                    deleteCellbank={deleteCellbank}
-                    handleAddBookmark={handleAddBookmark}
-                    toggleTextTruncation={toggleTextTruncation}
-                    isPendingUpdate={isPendingUpdate}
-                    editingId={editingId}
                     setEditingId={setEditingId}
+                    editingId={editingId}
+                    deleteCellbank={deleteCellbank}
+                    isPendingUpdate={isPendingUpdate}
                     isPendingDelete={isPendingDelete}
+                    handleAddBookmark={handleAddBookmark}
                   />
                 ))}
             </tbody>

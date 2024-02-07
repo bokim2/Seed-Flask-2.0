@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { TTableHeaderCell } from '../lib/types';
+import { TTableHeaderCell, TTableRow } from '../lib/types';
 // import { TTableHeaderCell } from '../lib/types';
 
 // Main page styles
@@ -298,4 +298,27 @@ export const TableDataCell = styled.td`
       font-size: 1.5rem;
     }
   }
+`;
+
+
+// EDIT FORM STYLES
+
+export const EditTextArea = styled(FormTextArea)`
+  width: 100%;
+  height: auto;
+`;
+
+export const PreviousDataRow = styled(TableRow)<TTableRow>`
+  background-color: ${(props) => props.$editing && 'red'};
+  &:nth-of-type(2n) {
+    background-color: ${(props) => props.$editing && 'red'};
+  }
+  &:hover {
+    background-color: ${(props) => props.$editing && 'red'};
+  }
+`;
+
+export const EditRow = styled.tr`
+  background-color: yellow;
+  color: turquoise;
 `;
