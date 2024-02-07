@@ -3,7 +3,7 @@ import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, Tab
 import SamplesRow from './SamplesRow'
 
 export default function SamplesTable({samples}) {
-  console.log('samples in samplestable', samples)
+  // console.log('samples in samplestable', samples)
   
   return (
     <Wrapper>

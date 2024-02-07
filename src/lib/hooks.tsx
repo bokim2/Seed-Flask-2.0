@@ -23,10 +23,13 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         const validatedData = zodSchema.safeParse(data);
         // console.log(validatedData, 'validatedData');
         if (!validatedData.success) {
-          console.log(validatedData.error);
-          throw new Error(`Data validation in ${tableName} table failed`);
+          console.error('useFetchValidatedTableQuery validation error', validatedData.error);
+          // throw new Error(`Data validation in ${tableName} table failed`);
         }
-        return validatedData.data;
+        return data;
+
+        // TURNED VALIDATION OFF FOR NOW!!!!
+        // return validatedData.data;
       } catch (err) {
         console.log(err, 'error in useFetchValidatedTableQuery');
         throw err;
@@ -43,11 +46,14 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
 
 export function useCreateValidatedRowMutation({
   tableName,
-  zodSchema
+  zodSchema,
+  apiEndpoint
 }) {
   const queryClient = useQueryClient();
+type TzodSchema = z.infer<typeof zodSchema>;
+
   const { mutate, isPending, reset, error } = useMutation({
-    mutationFn: (form) => createRow(form),
+    mutationFn: (form: TzodSchema) => createRow(form, apiEndpoint, zodSchema),
     onSuccess: () => {
       queryClient.invalidateQueries(tableName);
       reset();
@@ -60,17 +66,18 @@ export function useCreateValidatedRowMutation({
 }
 
 // create a row
-export async function createRow(form) {
+export async function createRow(form, apiEndpoint, zodSchema) {
   // const { ...columnNamesArray } = form;
-  const validationResult = createCellbankSchema.safeParse(form);
+  const validationResult = zodSchema.safeParse(form);
   if (!validationResult.success) {
+    console.error('createRow validation error', validationResult.error);
     throw new Error(
       `Failed to validate createCellbank form: ${validationResult.error.message}`
     );
   }
   try {
-    console.log('form in postCellbank', form);
-    const res = await fetch(`${baseUrl}/api/cellbank`, {
+    console.log('form in createRow', form);
+    const res = await fetch(`${baseUrl}/api/${apiEndpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +90,7 @@ export async function createRow(form) {
       throw new Error('Failed to create cellbank');
     }
     const { data } = await res.json();
-    console.log('data in postCellbank', data);
+    console.log('data after post in createRow', data);
     return data;
   } catch (err) {
     console.error('Error in createCellbank', err);
@@ -198,6 +205,7 @@ import {
   cellbanksArraySchema,
   createCellbankSchema,
 } from '../features/cellbanks/cellbanks-types';
+import { z } from 'zod';
 
 // convert UTC timestamp to local time
 

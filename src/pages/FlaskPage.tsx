@@ -10,14 +10,15 @@ import {
   PageContainer,
 } from '../styles/UtilStyles';
 import ErrorMessage from '../ui/ErrorMessage';
-import { flaskAndCellbankArraySchema } from '../features/flasks/flasks-types';
+import { flasksInfoArraySchema, flasksInfoSchema } from '../features/flasks/flasks-types'
+import FlasksMultiInputForm from '../features/flasks/FlasksMultiInputForm';
 
 export default function FlaskPage() {
   // const [flasks, isLoading, error] = useFlasks();
 
   const [flasks, isLoading, error] = useFetchValidatedTableQuery({
     tableName: 'flasks',
-    zodSchema: flaskAndCellbankArraySchema,
+    zodSchema: flasksInfoArraySchema,
   });
 
   // const [flask] = useFlask(1);
@@ -31,6 +32,7 @@ export default function FlaskPage() {
       </LoaderWrapper>
       <InnerPageContainer id="InnerFlaskPageContainer">
         {/* <LoaderBar /> */}
+        <FlasksMultiInputForm />
         {!isLoading && <FlasksTable flasks={flasks} />}
         {error && <ErrorMessage error={error} />}
       </InnerPageContainer>
