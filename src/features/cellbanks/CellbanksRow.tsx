@@ -4,6 +4,7 @@ import Button from '../../ui/Button';
 import styled, { css } from 'styled-components';
 import { TTableRow } from '../../lib/types';
 import { displayLocalTime } from '../../lib/hooks';
+import { initialEditFlasksForm } from '../flasks/flasks-types';
 
 const EditCellbankTextArea = styled(FormTextArea)`
   width: 100%;
@@ -26,78 +27,91 @@ const EditRow = styled.tr`
 `;
 
 export default function CellbanksRow({
-  cellbank,
+  rowData,
   editedForm,
   setEditedForm,
   deleteCellbank,
-  initializeCellbankEdit,
-  editing,
   handleAddBookmark,
   toggleTextTruncation,
   isPendingUpdate,
+  isPendingDelete,
+  editingId, setEditingId
 }) {
+  const { cell_bank_id, target_molecule, strain, description, notes, date_timestamptz } = rowData;
+  
+  const editing = editingId === rowData.cell_bank_id;
   return (
     <>
       <PreviousDataRow $editing={editing}>
         <TableDataCell
           data-cell="cell bank id"
-          onClick={() => handleAddBookmark(cellbank.cell_bank_id)}
+          onClick={() => handleAddBookmark(rowData.cell_bank_id)}
         >
-          {cellbank.cell_bank_id}
+          {cell_bank_id}
         </TableDataCell>
-        <TableDataCell data-cell="strain">{cellbank.strain}</TableDataCell>
+
+        <TableDataCell data-cell="strain">{strain}</TableDataCell>
+
         <TableDataCell data-cell="target_molecule">
-          {cellbank.target_molecule}
+          {target_molecule}
         </TableDataCell>
+
         <TableDataCell
           data-cell="description"
           className={toggleTextTruncation ? '' : 'ellipsis'}
         >
-          {cellbank.description}
+          {description}
         </TableDataCell>
+
         <TableDataCell
           data-cell="notes"
           className={toggleTextTruncation ? '' : 'ellipsis'}
         >
-          {cellbank.notes}
+          {notes}
         </TableDataCell>
+
         <TableDataCell data-cell="date">
-          {displayLocalTime(cellbank?.date_timestamptz)}
+          {displayLocalTime(date_timestamptz)}
         </TableDataCell>
+
+        <TableDataCell data-cell="user">username</TableDataCell>
+
         <TableDataCell
           data-cell="edit"
-          onClick={(e) => initializeCellbankEdit(e, cellbank.cell_bank_id)}
+          // onClick={(e) => initializeCellbankEdit(e, cellbank.cell_bank_id)}
+          // onClick={(e)=> initializeRowEdit(e, cellbank.cell_bank_id, "cell_bank_id")}
+
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (editing) {
+              setEditingId(null);
+              setEditedForm(initialEditFlasksForm);
+              return;
+            } else {
+              setEditedForm({
+                ...rowData,
+                human_readable_date: displayLocalTime(
+                  date_timestamptz
+                  ),
+                });
+                setEditingId(cell_bank_id);
+            }
+          }}
         >
           <Button $size={'small'}>Edit</Button>
-        </TableDataCell>
-        <TableDataCell data-cell="delete">
-          <Button
-            $size={'small'}
-            type="button"
-            onClick={() => {
-              const isConfirmed = window.confirm(
-                'Are you sure you want to delete this item?'
-              );
-              if (isConfirmed) {
-                console.log(
-                  'cellbank delete button clicked',
-                  cellbank.cell_bank_id
-                );
-                deleteCellbank(cellbank.cell_bank_id);
-              }
-            }}
-          >
-            delete
-          </Button>
         </TableDataCell>
       </PreviousDataRow>
 
       {editing && (
         <CellbanksEditForm
-          key={cellbank.cell_bank_id}
+          key={cell_bank_id}
+          // rowData={rowData}
           editedForm={editedForm}
           setEditedForm={setEditedForm}
           isPendingUpdate={isPendingUpdate}
+          deleteCellbank={deleteCellbank}
+          isPendingDelete={isPendingDelete}
         />
       )}
     </>
@@ -106,7 +120,15 @@ export default function CellbanksRow({
   );
 }
 
-function CellbanksEditForm({ setEditedForm, editedForm, isPendingUpdate }) {
+function CellbanksEditForm({
+  setEditedForm,
+  editedForm,
+  isPendingUpdate,
+  deleteCellbank,
+  // rowData,
+  isPendingDelete
+}) {
+  
   const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -120,6 +142,7 @@ function CellbanksEditForm({ setEditedForm, editedForm, isPendingUpdate }) {
         <TableDataCell data-cell="cell bank id">
           {editedForm.cell_bank_id}
         </TableDataCell>
+
         <TableDataCell data-cell="strain">
           <EditCellbankTextArea
             data-cell="strain"
@@ -133,6 +156,7 @@ function CellbanksEditForm({ setEditedForm, editedForm, isPendingUpdate }) {
             {editedForm.strain}
           </EditCellbankTextArea>
         </TableDataCell>
+
         <TableDataCell data-cell="target_molecule">
           <EditCellbankTextArea
             data-cell="target_molecule"
@@ -157,6 +181,7 @@ function CellbanksEditForm({ setEditedForm, editedForm, isPendingUpdate }) {
             value={editedForm.description}
           />
         </TableDataCell>
+
         <TableDataCell>
           <EditCellbankTextArea
             id="notes"
@@ -167,6 +192,7 @@ function CellbanksEditForm({ setEditedForm, editedForm, isPendingUpdate }) {
             required
           />
         </TableDataCell>
+
         <TableDataCell>
           <EditCellbankTextArea
             id="human_readable_date"
@@ -181,6 +207,28 @@ function CellbanksEditForm({ setEditedForm, editedForm, isPendingUpdate }) {
         <TableDataCell>
           <Button $size={'small'} type="submit" disabled={isPendingUpdate}>
             Update
+          </Button>
+        </TableDataCell>
+
+        <TableDataCell data-cell="delete">
+          <Button
+            $size={'small'}
+            type="button"
+            disabled={isPendingDelete}
+            onClick={() => {
+              const isConfirmed = window.confirm(
+                'Are you sure you want to delete this item?'
+              );
+              if (isConfirmed) {
+                console.log(
+                  'cellbank delete button clicked',
+                  editedForm.cell_bank_id
+                );
+                deleteCellbank(editedForm.cell_bank_id);
+              }
+            }}
+          >
+            delete
           </Button>
         </TableDataCell>
       </EditRow>

@@ -56,7 +56,7 @@ export default function CellbanksMultiInputForm() {
   } = useCreateValidatedRowMutation({
     tableName: 'cellbanks',
     zodSchema: createCellbankSchema,
-    apiEndpoint: 'cellbank'
+    // apiEndpoint: 'cellbank',
   });
 
   // update bulkForm when bulkTextAreaInput changes
@@ -106,6 +106,7 @@ export default function CellbanksMultiInputForm() {
   return (
     <>
       <BulkInputTextArea
+        name="bulkTextAreaInputForMultiSubmit"
         placeholder="copy/paste from excel"
         value={bulkTextAreaInput}
         onChange={(e) => setBulkTextAreaInput(e.target.value)}
@@ -201,7 +202,7 @@ export default function CellbanksMultiInputForm() {
 //   try {
 //     e.preventDefault();
 //     console.log('submitting', 'form', form, 'bulkform', bulkForm);
-//     await fetch(`${baseUrl}/api/cellbank`, {
+//     await fetch(`${baseUrl}/api/cellbanks`, {
 //       method: 'POST',
 //       headers: {
 //         'content-type': 'application/json',
