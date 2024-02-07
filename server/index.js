@@ -197,7 +197,8 @@ app.get('/api/flasks', async (req, res) => {
     const results = await db.query(
       `SELECT
       *
-      FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
+      FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
+      ORDER BY flask_id DESC;`
     );
     // console.log('trying to get timezone to work', results);
     res.status(200).json({
@@ -209,11 +210,7 @@ app.get('/api/flasks', async (req, res) => {
     console.log(err);
   }
 });
-// `SELECT
-// *,
-// start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS adjusted_start_date_pacific,
-// TO_CHAR(start_date AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH12:MI AM') AS readable_start_date_pacific
-// FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
+
 
 //GET one flask
 app.get('/api/flasks/:id', async (req, res) => {
@@ -232,11 +229,28 @@ app.get('/api/flasks/:id', async (req, res) => {
   }
 });
 
-// GET all samples
 
-// `SELECT
-// *
-// FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id;`
+// post one flask 
+
+app.post('/api/flask', badWordsMiddleware, async (req, res)=> {
+  try {
+const {cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm} = req.body;
+const values = [cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm];
+    const query = `INSERT INTO flasks (cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm) values ($1, $2, $3, $4, $5, $6, $7) returning *`;
+    const results = await db.query(query, values);
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    })
+  } catch (err) {
+    console.log(err);
+  } 
+})
+
+
+
+
+// GET all samples
 
 app.get('/api/samples', async (req, res) => {
   try {

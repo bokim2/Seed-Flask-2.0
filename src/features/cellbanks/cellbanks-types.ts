@@ -4,12 +4,12 @@ import { z } from 'zod';
 
 // cellbanks GET request
 export const cellbankSchema = z.object({
-  cell_bank_id: z.coerce.number(), // force a number type
-  strain: z.string(),
-  target_molecule: z.string(),
-  description: z.string(),
-  notes: z.string(),
-  date_timestamptz: z.string(),
+  cell_bank_id: z.coerce.number() || null, // force a number type
+  strain: z.string() || null,
+  target_molecule: z.string() || null,
+  description: z.string()  || null,
+  notes: z.string() || null,
+  date_timestamptz: z.string() || null,
 });
 
 export const cellbanksArraySchema = z.array(cellbankSchema);
