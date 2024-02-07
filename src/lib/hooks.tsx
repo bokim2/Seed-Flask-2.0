@@ -27,12 +27,12 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
             'useFetchValidatedTableQuery validation error',
             validatedData.error
           );
-          // throw new Error(`Data validation in ${tableName} table failed`);
+          throw new Error(`Data validation in ${tableName} table failed`);
         }
-        return data;
+        // return data;
 
         // TURNED VALIDATION OFF FOR NOW!!!!
-        // return validatedData.data;
+        return validatedData.data;
       } catch (err) {
         console.log(err, 'error in useFetchValidatedTableQuery');
         throw err;
@@ -136,6 +136,16 @@ export function useDeleteRowMutation({ tableName }) {
   });
   return { mutate, isPending, error };
 }
+
+// update a row
+
+
+// export useUpdateRowMutation({ tableName, zodSchema}) {
+//   const queryClient = useQueryClient();
+//   const {}
+// }
+
+
 
 // Flask hooks
 export function useFlask(id: number | null) {

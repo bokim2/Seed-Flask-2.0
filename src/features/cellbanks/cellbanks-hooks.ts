@@ -85,23 +85,23 @@ async function updateCellbankEdit(editedForm) {
 }
 
 // delete a single cellbank
-const deleteCellbankById = async (cell_bank_id: number) => {
-  try {
-    const response = await fetch(`${baseUrl}/api/cellbanks/${cell_bank_id}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(
-        err || 'Error deleting cellbank in deleteCellbankById function'
-      );
-    }
-    return response.json();
-  } catch (err) {
-    console.error('Error in deleteCellbankById', err);
-    throw err;
-  }
-};
+// const deleteCellbankById = async (cell_bank_id: number) => {
+//   try {
+//     const response = await fetch(`${baseUrl}/api/cellbanks/${cell_bank_id}`, {
+//       method: 'DELETE',
+//     });
+//     if (!response.ok) {
+//       const err = await response.text();
+//       throw new Error(
+//         err || 'Error deleting cellbank in deleteCellbankById function'
+//       );
+//     }
+//     return response.json();
+//   } catch (err) {
+//     console.error('Error in deleteCellbankById', err);
+//     throw err;
+//   }
+// };
 
 // Custom hooks utilizing the above functions
 
@@ -174,28 +174,28 @@ export function useUpdateCellbankMutation(setEditedForm) {
   return { mutate, isPending, error };
 }
 
-export function useDeleteCellbankMutation() {
-  const queryClient = useQueryClient();
-  const {
-    mutate: deleteCellbank,
-    isPending,
-    isError,
-    error,
-    reset,
-  } = useMutation({
-    mutationFn: (cell_bank_id: number) => deleteCellbankById(cell_bank_id),
-    onSuccess: () => {
-      // console.log('success');
-      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
-      reset();
-    },
-    onError: (err) => {
-      console.error('error', err);
-    },
-  });
+// export function useDeleteCellbankMutation() {
+//   const queryClient = useQueryClient();
+//   const {
+//     mutate: deleteCellbank,
+//     isPending,
+//     isError,
+//     error,
+//     reset,
+//   } = useMutation({
+//     mutationFn: (cell_bank_id: number) => deleteCellbankById(cell_bank_id),
+//     onSuccess: () => {
+//       // console.log('success');
+//       queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
+//       reset();
+//     },
+//     onError: (err) => {
+//       console.error('error', err);
+//     },
+//   });
 
-  return { mutate: deleteCellbank, isPending, isError, error };
-}
+//   return { mutate: deleteCellbank, isPending, isError, error };
+// }
 
 // perform text search on cellbanks
 import { CellbankSearchParamsSchema } from './cellbanks-types';

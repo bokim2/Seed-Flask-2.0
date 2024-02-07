@@ -133,6 +133,7 @@ export default function FlasksMultiInputForm() {
   return (
     <>
       <BulkInputTextArea
+      name="bulkTextAreaInputForMultiSubmit"
         placeholder="copy/paste from excel"
         value={bulkTextAreaInput}
         onChange={(e) => setBulkTextAreaInput(e.target.value)}

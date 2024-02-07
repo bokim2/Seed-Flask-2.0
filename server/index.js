@@ -156,6 +156,32 @@ app.delete('/api/cellbanks/:id', async (req, res) => {
   }
 });
 
+app.delete('/api/flasks/:id', async (req, res)=> {
+  const query = 'DELETE FROM flasks WHERE flask_id = $1';
+  const value = [req.params.id];
+
+  try {
+    const result = await db.query(query, value);
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Flask not found',
+      });
+    }
+      res.status(200).json({
+        status: 'success',
+        message: `flask ${req.params.id} deleted successfully`,
+      })
+    }
+   catch (err) {
+    console.error(`Error deleting flask ${req.params.id}`, err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+})
+
 //GET all flasks before trying left join
 // app.get('/api/flasks', async (req, res) => {
 //   try {
