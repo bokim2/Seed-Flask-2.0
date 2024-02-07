@@ -13,7 +13,7 @@ import { baseUrl } from '../../../configs';
 // import { InitialEditCellbankForm } from '../../lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { displayLocalTime, useDeleteRowMutation } from '../../lib/hooks';
-import { useDeleteCellbankMutation, useTextInputSearch, useUpdateCellbankMutation } from './cellbanks-hooks';
+import {  useTextInputSearch, useUpdateCellbankMutation } from './cellbanks-hooks';
 import { useSearchParams } from 'react-router-dom';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
