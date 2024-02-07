@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { baseUrl } from '../../../configs';
 // import { InitialEditCellbankForm } from '../../lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { displayLocalTime } from '../../lib/hooks';
+import { displayLocalTime, useDeleteRowMutation } from '../../lib/hooks';
 import { useDeleteCellbankMutation, useTextInputSearch, useUpdateCellbankMutation } from './cellbanks-hooks';
 import { useSearchParams } from 'react-router-dom';
 import Button from '../../ui/Button';
@@ -33,6 +33,7 @@ export default function CellbanksTable({
   cellbanks,
   handleAddBookmark,
   toggleTextTruncation,
+  
 }) {
 
   const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
@@ -42,38 +43,21 @@ export default function CellbanksTable({
   // update and delete cellbank custom hooks
   const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
 
-  const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
+  // delete row, only for cellbank (archive)
+  // const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
+
+  const {mutate: deleteCellbank, isPending: isPendingDelete, error} = useDeleteRowMutation({tableName: 'cellbanks'});
 
 const [searchedData, setSearchedData] = useState([]);  
 const {searchText, setSearchText, SelectSearchField, performInputTextSearch} = useTextInputSearch();
 
+const [editingId, setEditingId] = useState<number | null>(null);
 
   const handleEditFormSubmit = (e, editedForm) => {
     e.preventDefault();
     e.stopPropagation();
     submitEditedCellbankForm(editedForm);
-  };
-
-  // initialize single cellbank update form
-  const initializeCellbankEdit = (e, cell_bank_id) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // console.log('e in initializeCellbankEdit', e);
-    if (editedForm.cell_bank_id === cell_bank_id) {
-      setEditedForm(initialEditCellbankForm);
-    } else {
-      setEditedForm(() => {
-        const editedCellbankData = cellbanks.find(
-          (e) => e.cell_bank_id === cell_bank_id
-        );
-        return {
-          ...editedCellbankData,
-          human_readable_date: displayLocalTime(
-            editedCellbankData.date_timestamptz
-          ),
-        };
-      });
-    }
+    setEditingId(null)
   };
 
 
@@ -137,24 +121,25 @@ const {searchText, setSearchText, SelectSearchField, performInputTextSearch} = u
                 <TableHeaderCell data-column-name="date_timestampz">
                   date
                 </TableHeaderCell>
+                <TableHeaderCell>user/delete</TableHeaderCell>
                 <TableHeaderCell>edit</TableHeaderCell>
-                <TableHeaderCell>delete</TableHeaderCell>
               </TableRow>
             </TableHeader>
             <tbody>
-              {cellbanks &&
-                cellbanks?.map((cellbank) => (
+              {cellbanks.length > 0 &&
+                cellbanks?.map((rowData) => (
                   <CellbanksRow
-                    key={cellbank.cell_bank_id}
-                    cellbank={cellbank}
+                    key={rowData.cell_bank_id}
+                    rowData={rowData}
                     editedForm={editedForm}
                     setEditedForm={setEditedForm}
                     deleteCellbank={deleteCellbank}
-                    initializeCellbankEdit={initializeCellbankEdit}
-                    editing={cellbank.cell_bank_id === editedForm.cell_bank_id}
                     handleAddBookmark={handleAddBookmark}
                     toggleTextTruncation={toggleTextTruncation}
                     isPendingUpdate={isPendingUpdate}
+                    editingId={editingId}
+                    setEditingId={setEditingId}
+                    isPendingDelete={isPendingDelete}
                   />
                 ))}
             </tbody>

@@ -20,7 +20,7 @@ import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
 //   }
 //   try {
 //     console.log('form in postCellbank', form);
-//     const res = await fetch(`${baseUrl}/api/cellbank`, {
+//     const res = await fetch(`${baseUrl}/api/cellbanks`, {
 //       method: 'POST',
 //       headers: {
 //         'Content-Type': 'application/json',
@@ -47,15 +47,18 @@ import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
 // submit a single cellbank edit to the server
 async function updateCellbankEdit(editedForm) {
   try {
+    console.log('editedForm in updateCellbankEdit', editedForm)
     // console.log('cell_bank_id', editedForm.cell_bank_id);
     const validationResult = updateCellbankSchema.safeParse(editedForm);
     if (!validationResult.success) {
-      throw new Error(`Failed to validate updateCellbankEdit form: ${validationResult.error.message}`)
+      throw new Error(
+        `Failed to validate updateCellbankEdit form: ${validationResult.error.message}`
+      );
     }
     const { strain, target_molecule, description, notes, human_readable_date } =
       editedForm;
     const res = await fetch(
-      `${baseUrl}/api/cellbank/${editedForm.cell_bank_id}`,
+      `${baseUrl}/api/cellbanks/${editedForm.cell_bank_id}`,
       {
         method: 'PUT',
         headers: {
@@ -84,7 +87,7 @@ async function updateCellbankEdit(editedForm) {
 // delete a single cellbank
 const deleteCellbankById = async (cell_bank_id: number) => {
   try {
-    const response = await fetch(`${baseUrl}/api/cellbank/${cell_bank_id}`, {
+    const response = await fetch(`${baseUrl}/api/cellbanks/${cell_bank_id}`, {
       method: 'DELETE',
     });
     if (!response.ok) {
@@ -234,7 +237,7 @@ export function useTextInputSearch() {
       ).toString();
 
       const res = await fetch(
-        `${baseUrl}/api/cellbank/search?${fetchSearchParams}`
+        `${baseUrl}/api/cellbanks/search?${fetchSearchParams}`
       );
       const data = await res.json();
       console.log('data in performInputTextSearch', data);

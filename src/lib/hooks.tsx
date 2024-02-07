@@ -23,7 +23,10 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         const validatedData = zodSchema.safeParse(data);
         // console.log(validatedData, 'validatedData');
         if (!validatedData.success) {
-          console.error('useFetchValidatedTableQuery validation error', validatedData.error);
+          console.error(
+            'useFetchValidatedTableQuery validation error',
+            validatedData.error
+          );
           // throw new Error(`Data validation in ${tableName} table failed`);
         }
         return data;
@@ -47,13 +50,13 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
 export function useCreateValidatedRowMutation({
   tableName,
   zodSchema,
-  apiEndpoint
+  // apiEndpoint
 }) {
   const queryClient = useQueryClient();
-type TzodSchema = z.infer<typeof zodSchema>;
+  type TzodSchema = z.infer<typeof zodSchema>;
 
   const { mutate, isPending, reset, error } = useMutation({
-    mutationFn: (form: TzodSchema) => createRow(form, apiEndpoint, zodSchema),
+    mutationFn: (form: TzodSchema) => createRow(form, tableName, zodSchema),
     onSuccess: () => {
       queryClient.invalidateQueries(tableName);
       reset();
@@ -66,7 +69,7 @@ type TzodSchema = z.infer<typeof zodSchema>;
 }
 
 // create a row
-export async function createRow(form, apiEndpoint, zodSchema) {
+export async function createRow(form, tableName, zodSchema) {
   // const { ...columnNamesArray } = form;
   const validationResult = zodSchema.safeParse(form);
   if (!validationResult.success) {
@@ -77,13 +80,13 @@ export async function createRow(form, apiEndpoint, zodSchema) {
   }
   try {
     console.log('form in createRow', form);
-    const res = await fetch(`${baseUrl}/api/${apiEndpoint}`, {
+    const res = await fetch(`${baseUrl}/api/${tableName}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ...form
+        ...form,
       }),
     });
     if (!res.ok) {
@@ -96,6 +99,42 @@ export async function createRow(form, apiEndpoint, zodSchema) {
     console.error('Error in createCellbank', err);
     throw err;
   }
+}
+
+// delete a row
+
+export async function deleteRow(id, tableName) {
+  try {
+    const res = await fetch(`${baseUrl}/api/${tableName}/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Failed to delete row, ${errText}`);
+    }
+    const { data } = await res.json();
+    console.log('data after delete in deleteRow', data);
+    return data;
+  } catch (err) {
+    console.error('error in deleteRow', err);
+    throw err;
+  }
+}
+
+export function useDeleteRowMutation({ tableName }) {
+  const queryClient = useQueryClient();
+  const { mutate, isPending, error, reset } = useMutation({
+    mutationFn: (id: number) => deleteRow(id, tableName),
+    onSuccess: () => {
+      queryClient.invalidateQueries(tableName);
+      reset();
+    },
+    onError: (err) => {
+      console.error('error in useDeleteRowMutation', err);
+      throw err;
+    },
+  });
+  return { mutate, isPending, error };
 }
 
 // Flask hooks

@@ -59,7 +59,7 @@ export default function FlasksMultiInputForm() {
   } = useCreateValidatedRowMutation({
     tableName: 'flasks',
     zodSchema: createFlaskSchema,
-    apiEndpoint: 'flask',
+    // apiEndpoint: 'flask',
   });
 
   // update bulkForm when bulkTextAreaInput changes
@@ -96,15 +96,15 @@ export default function FlasksMultiInputForm() {
       } = row;
       const formattedRow = {
         cell_bank_id: Number(cell_bank_id),
-        vessel_type: "flask",
+        vessel_type: 'flask',
         media: String(media),
         media_ml: Number(media_ml),
         inoculum_ul: Number(inoculum_ul),
         temp_c: Number(temp_c),
         rpm: Number(rpm),
-      }
-      createFlaskMutation(formattedRow)
-    }); 
+      };
+      createFlaskMutation(formattedRow);
+    });
     try {
       await Promise.all(mutationPromises);
       setBulkForm([initialCreateFlasksForm]);
@@ -259,7 +259,6 @@ export default function FlasksMultiInputForm() {
                       value={bulkForm[i].start_date}
                     />
                   </CellbankFormCell> */}
-
                 </TableRow>
               ))}
           </CellbankFormBody>
@@ -281,7 +280,7 @@ export default function FlasksMultiInputForm() {
 //   try {
 //     e.preventDefault();
 //     console.log('submitting', 'form', form, 'bulkform', bulkForm);
-//     await fetch(`${baseUrl}/api/cellbank`, {
+//     await fetch(`${baseUrl}/api/cellbanks`, {
 //       method: 'POST',
 //       headers: {
 //         'content-type': 'application/json',

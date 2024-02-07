@@ -71,7 +71,7 @@ app.get('/api/cellbanks', async (req, res) => {
 //     FROM cell_banks;`
 
 // post one cell bank
-app.post('/api/cellbank', badWordsMiddleware, async (req, res) => {
+app.post('/api/cellbanks', badWordsMiddleware, async (req, res) => {
   try {
     // console.log(req.body, 'in post cell bank server');
     const results = await db.query(
@@ -95,7 +95,7 @@ app.post('/api/cellbank', badWordsMiddleware, async (req, res) => {
 
 // UPDATE one cell bank
 
-app.put('/api/cellbank/:id', async (req, res) => {
+app.put('/api/cellbanks/:id', async (req, res) => {
   try {
     const { strain, target_molecule, description, notes, date_timestamptz } =
       req.body;
@@ -131,7 +131,7 @@ app.put('/api/cellbank/:id', async (req, res) => {
 });
 
 // DELETE on cell bank
-app.delete('/api/cellbank/:id', async (req, res) => {
+app.delete('/api/cellbanks/:id', async (req, res) => {
   try {
     const result = await db.query(
       'DELETE FROM cell_banks WHERE cell_bank_id = $1',
@@ -211,7 +211,6 @@ app.get('/api/flasks', async (req, res) => {
   }
 });
 
-
 //GET one flask
 app.get('/api/flasks/:id', async (req, res) => {
   try {
@@ -229,26 +228,38 @@ app.get('/api/flasks/:id', async (req, res) => {
   }
 });
 
+// post one flask
 
-// post one flask 
-
-app.post('/api/flask', badWordsMiddleware, async (req, res)=> {
+app.post('/api/flasks', badWordsMiddleware, async (req, res) => {
   try {
-const {cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm} = req.body;
-const values = [cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm];
+    const {
+      cell_bank_id,
+      temp_c,
+      media,
+      inoculum_ul,
+      media_ml,
+      vessel_type,
+      rpm,
+    } = req.body;
+    const values = [
+      cell_bank_id,
+      temp_c,
+      media,
+      inoculum_ul,
+      media_ml,
+      vessel_type,
+      rpm,
+    ];
     const query = `INSERT INTO flasks (cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm) values ($1, $2, $3, $4, $5, $6, $7) returning *`;
     const results = await db.query(query, values);
     res.status(200).json({
       status: 'success',
       data: results.rows,
-    })
+    });
   } catch (err) {
     console.log(err);
-  } 
-})
-
-
-
+  }
+});
 
 // GET all samples
 
@@ -368,7 +379,7 @@ app.get('/api/chart/cellbank/:id', async (req, res) => {
 });
 
 // search cell banks
-app.get('/api/cellbank/search', async (req, res) => {
+app.get('/api/cellbanks/search', async (req, res) => {
   try {
     const { searchField, searchText } = req.query;
     console.log('searchField', searchField, 'searchText', searchText);
