@@ -71,6 +71,7 @@ export const initialCreateFlasksForm = {
 
 export type TinitialEditFlasksForm = {
   flask_id: number | null,
+  cell_bank_id: number | null,
   inoculum_ul: number | null,
   media: string | null,
   media_ml: number | null,
@@ -78,6 +79,7 @@ export type TinitialEditFlasksForm = {
   start_date: string | null,
   temp_c: number | null,
   vessel_type: string | null,
+  
 };
 
 export const initialEditFlasksForm = {

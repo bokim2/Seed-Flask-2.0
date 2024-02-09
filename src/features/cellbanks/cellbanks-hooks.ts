@@ -160,12 +160,13 @@ async function updateCellbankEdit(editedForm) {
 // update a single cellbank
 export function useUpdateCellbankMutation(setEditedForm) {
   const queryClient = useQueryClient();
-  const { mutate, isPending, error } = useMutation({
+  const { mutate, isPending, error, reset } = useMutation({
     mutationFn: (editedForm) => updateCellbankEdit(editedForm),
     onSuccess: () => {
       // console.log('success in useUpdateCellbankMutation');
       queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
       setEditedForm(initialEditCellbankForm);
+      reset();
       // console.log('isPending in onSuccess', isPending);
     },
     onError: () =>

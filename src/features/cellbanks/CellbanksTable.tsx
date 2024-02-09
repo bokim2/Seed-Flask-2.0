@@ -12,12 +12,12 @@ import { useState } from 'react';
 import { baseUrl } from '../../../configs';
 // import { InitialEditCellbankForm } from '../../lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { displayLocalTime, useDeleteRowMutation } from '../../lib/hooks';
+import { displayLocalTime, useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
 import {  useTextInputSearch, useUpdateCellbankMutation } from './cellbanks-hooks';
 import { useSearchParams } from 'react-router-dom';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
-import { TUpdateCellbankForm, initialEditCellbankForm } from './cellbanks-types';
+import { TUpdateCellbankForm, initialEditCellbankForm, updateCellbankSchema } from './cellbanks-types';
 
 
 const TextSearchContainer = styled.div``;
@@ -42,12 +42,16 @@ export default function CellbanksTable({
 // id of edited cellbank
 const [editingId, setEditingId] = useState<number | null>(null);
 
-  // update and delete cellbank custom hooks
-  const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
+// update cellbank 
+// const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
 
-  // delete row, only for cellbank (archive)
-  // const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
+// update row
+const {mutate: submitEditedCellbankForm, isPending: isPendingUpdate} = useUpdateRowMutation({tableName: 'cellbanks', zodSchema: updateCellbankSchema, initialEditForm: initialEditCellbankForm, setEditedForm: setEditedForm, idColumnName: 'cell_bank_id'});
 
+// delete row, only for cellbank (archive)
+// const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
+
+// delete cellbank
   const {mutate: deleteCellbank, isPending: isPendingDelete, error} = useDeleteRowMutation({tableName: 'cellbanks'});
 
   // searching cellbanks table through text input
