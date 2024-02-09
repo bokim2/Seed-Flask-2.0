@@ -46,7 +46,7 @@ const [editingId, setEditingId] = useState<number | null>(null);
 // const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
 
 // update row
-const {mutate: submitEditedCellbankForm, isPending: isPendingUpdate} = useUpdateRowMutation({tableName: 'cellbanks', zodSchema: updateCellbankSchema, initialEditForm: initialEditCellbankForm, setEditedForm: setEditedForm, idColumnName: 'cell_bank_id'});
+const {mutate: submitEditedCellbankForm, isPending: isPendingUpdate} = useUpdateRowMutation({tableName: 'cellbanks', zodSchema: updateCellbankSchema, initialEditForm: initialEditCellbankForm, setEditedForm: setEditedForm, idColumnName: 'cell_bank_id', dateColumnName: 'date_timestamptz'});
 
 // delete row, only for cellbank (archive)
 // const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
@@ -105,7 +105,7 @@ const {searchText, setSearchText, SelectSearchField, performInputTextSearch} = u
           handleEditFormSubmit(e, editedForm);
         }}
       >
-        <TableContainer id="TableContainer">
+        <TableContainer id="CellbanksTableContainer">
           <StyledTable>
             <Caption>Cell Banks Table</Caption>
             <TableHeader>
