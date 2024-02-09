@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDeleteRowMutation, useFlask, useFlasks, useUpdateRowMutation } from '../../lib/hooks';
 import styled from 'styled-components';
 import FlasksRow from './FlasksRow';
-import { TCreateFlask, createFlaskSchema } from './flasks-types';
+import { TCreateFlask, createFlaskSchema, editFlaskSchema } from './flasks-types';
 import {
   Caption,
   StyledForm,
@@ -24,10 +24,11 @@ export default function FlasksTable({ flasks }) {
   const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } = 
   useUpdateRowMutation({
     tableName: 'flasks',
-    zodSchema: createFlaskSchema,
+    zodSchema: editFlaskSchema,
     initialEditForm: initialCreateFlasksForm,
     setEditedForm,
     idColumnName: 'flask_id',
+    dateColumnName: 'start_date',
   })
 
   const {

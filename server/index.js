@@ -276,6 +276,19 @@ app.put('/api/flasks/:id', async (req, res) => {
     cell_bank_id,
   } = req.body;
 
+  //   const validatedData = editFlaskSchema.validate({
+  //   inoculum_ul,
+  //   media,
+  //   media_ml,
+  //   rpm,
+  //   start_date,
+  //   temp_c,
+  //   vessel_type,
+  //   cell_bank_id,
+  // });
+
+  // console.log('validatedData.success', validatedData.success);
+
   const flaskId = req.params.id;
 
   const query = `
@@ -343,7 +356,8 @@ app.get('/api/samples', async (req, res) => {
       c.target_molecule
       FROM samples as s 
       LEFT JOIN flasks as f on s.flask_id = f.flask_id
-      LEFT JOIN cell_banks as c on f.cell_bank_id = c.cell_bank_id;`;
+      LEFT JOIN cell_banks as c on f.cell_bank_id = c.cell_bank_id
+      ORDER BY s.sample_id DESC;`;
     const results = await db.query(query);
     res.status(200).json({
       status: 'success',
@@ -351,8 +365,47 @@ app.get('/api/samples', async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    throw err;
   }
 });
+
+// post one sample
+app.post('/api/samples', async (req, res)=> {
+  try {
+    const {flask_id, end_date,od600, completed} = req.body;
+    const query = `INSERT INTO samples (flask_id, end_date, od600, completed) values ($1, $2, $3, $4) returning *`;
+    const values = [flask_id, end_date, od600, completed];
+
+    const results = await db.query(query, values);
+    if (!results.success) {
+      return res.status(404).json({ message: 'Post not successful' });
+    }
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+})
+
+app.put('/api/samples/:id', async (req, res) => {
+  try {
+    const { flask_id, end_date, od600, completed } = req.body;
+    const sampleId = req.params.id;
+    const query = `UPDATE samples SET flask_id = $1, end_date = $2, od600 = $3, completed = $4 WHERE sample_id = $5 RETURNING *`;
+    const values = [flask_id, end_date, od600, completed, sampleId];
+    const results = await db.query(query, values);
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Sample not found' });
+    }
+    res.status(200).json({ message: 'Update successful', data: results.rows });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+})
 
 // GET aggregate samples by flask_id for graphing
 // for LineGraph component.  NOT being used.  this is a draft

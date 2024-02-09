@@ -34,6 +34,10 @@ export const createFlaskSchema = z.object({
 
 export type TCreateFlask = z.infer<typeof createFlaskSchema>;
 
+export const editFlaskSchema = createFlaskSchema.extend({
+  start_date: z.string(),
+})
+
 // edit a flask 
 
 // export type TInitialEditFlasksForm = {
@@ -69,18 +73,18 @@ export const initialCreateFlasksForm = {
   start_date: '',
 }
 
-export type TinitialEditFlasksForm = {
-  flask_id: number | null,
-  cell_bank_id: number | null,
-  inoculum_ul: number | null,
-  media: string | null,
-  media_ml: number | null,
-  rpm: number | null,
-  start_date: string | null,
-  temp_c: number | null,
-  vessel_type: string | null,
+// export type TinitialEditFlasksForm = {
+//   flask_id: number | null,
+//   cell_bank_id: number | null,
+//   inoculum_ul: number | null,
+//   media: string | null,
+//   media_ml: number | null,
+//   rpm: number | null,
+//   start_date: string | null,
+//   temp_c: number | null,
+//   vessel_type: string | null,
   
-};
+// };
 
 export const initialEditFlasksForm = {
   flask_id: null,

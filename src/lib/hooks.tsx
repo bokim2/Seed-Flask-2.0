@@ -139,9 +139,14 @@ export function useDeleteRowMutation({ tableName }) {
 
 // update a row
 
-async function updateRowEdit(editedForm, tableName, idColumnName) {
+async function updateRowEdit(editedForm, tableName, zodSchema, idColumnName, dateColumnName) {
   try {
     console.log('editedForm in updateRowEdit', editedForm, editedForm[idColumnName]);
+    const validatedData = zodSchema.safeParse(editedForm);
+    if (!validatedData.success) {
+      console.log('updateRowEdit validation error', validatedData.error);
+      throw new Error(`Failed to validate updateRowEdit form: ${validatedData.error.message}`)
+    }
     const res = await fetch(`${baseUrl}/api/${tableName}/${editedForm[idColumnName]}`, {
       method: 'PUT',
       headers: {
@@ -149,7 +154,7 @@ async function updateRowEdit(editedForm, tableName, idColumnName) {
       }, 
       body: 
         JSON.stringify({
-          ...editedForm, start_date: getUtcTimestampFromLocalTime(editedForm.human_readable_date),
+          ...editedForm, [dateColumnName]: getUtcTimestampFromLocalTime(editedForm.human_readable_date),
         })
       
     })
@@ -166,10 +171,10 @@ async function updateRowEdit(editedForm, tableName, idColumnName) {
 
 }
 
-export function useUpdateRowMutation({ tableName, zodSchema, initialEditForm, setEditedForm, idColumnName }) {
+export function useUpdateRowMutation({ tableName, zodSchema, initialEditForm, setEditedForm, idColumnName, dateColumnName }) {
   const queryClient = useQueryClient();
   const { mutate, isPending, error, reset} = useMutation({
-    mutationFn: (editedForm)=> updateRowEdit(editedForm, tableName, idColumnName),
+    mutationFn: (editedForm)=> updateRowEdit(editedForm, tableName, zodSchema, idColumnName, dateColumnName),
     onSuccess: ()=> {
       // console.log('onSuccess in useUpdateRowMutation', tableName, [tableName])
       queryClient.invalidateQueries({ queryKey: [tableName]});
@@ -294,7 +299,7 @@ import {
   cellbanksArraySchema,
   createCellbankSchema,
 } from '../features/cellbanks/cellbanks-types';
-import { z } from 'zod';
+import { ZodSchema, z } from 'zod';
 
 // convert UTC timestamp to local time
 
