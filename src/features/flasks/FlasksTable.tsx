@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useDeleteRowMutation, useFlask, useFlasks } from '../../lib/hooks';
+import { useDeleteRowMutation, useFlask, useFlasks, useUpdateRowMutation } from '../../lib/hooks';
 import styled from 'styled-components';
 import FlasksRow from './FlasksRow';
+import { TCreateFlask, createFlaskSchema } from './flasks-types';
 import {
   Caption,
   StyledForm,
@@ -20,6 +21,15 @@ export default function FlasksTable({ flasks }) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editedForm, setEditedForm] = useState(initialCreateFlasksForm);
 
+  const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } = 
+  useUpdateRowMutation({
+    tableName: 'flasks',
+    zodSchema: createFlaskSchema,
+    initialEditForm: initialCreateFlasksForm,
+    setEditedForm,
+    idColumnName: 'flask_id',
+  })
+
   const {
     mutate: deleteFlask,
     isPending: isPendingDelete,
@@ -28,6 +38,13 @@ export default function FlasksTable({ flasks }) {
 
   const [toggleCellbankData, setToggleCellbankData] = useState(false);
 
+  const handleEditFormSubmit = (e, editedForm) => {
+    e.preventDefault();
+    e.stopPropagation()
+    submitEditedFlaskForm(editedForm);
+    setEditingId(null);
+  }
+  
   return (
     <>
       <Button onClick={() => setToggleCellbankData((prev) => !prev)}>
@@ -37,7 +54,7 @@ export default function FlasksTable({ flasks }) {
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
-          // handleEditFormSubmit(editedForm)
+          handleEditFormSubmit(e, editedForm)
         }}
       >
         <TableContainer>

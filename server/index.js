@@ -156,32 +156,6 @@ app.delete('/api/cellbanks/:id', async (req, res) => {
   }
 });
 
-app.delete('/api/flasks/:id', async (req, res)=> {
-  const query = 'DELETE FROM flasks WHERE flask_id = $1';
-  const value = [req.params.id];
-
-  try {
-    const result = await db.query(query, value);
-    if (result.rowCount === 0) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Flask not found',
-      });
-    }
-      res.status(200).json({
-        status: 'success',
-        message: `flask ${req.params.id} deleted successfully`,
-      })
-    }
-   catch (err) {
-    console.error(`Error deleting flask ${req.params.id}`, err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
-  }
-})
-
 //GET all flasks before trying left join
 // app.get('/api/flasks', async (req, res) => {
 //   try {
@@ -284,6 +258,76 @@ app.post('/api/flasks', badWordsMiddleware, async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+  }
+});
+
+// update a flask
+
+app.put('/api/flasks/:id', async (req, res) => {
+  console.log('req.body in server', req.body, 'req.params.id', req.params.id);
+  const {
+    inoculum_ul,
+    media,
+    media_ml,
+    rpm,
+    start_date,
+    temp_c,
+    vessel_type,
+    cell_bank_id,
+  } = req.body;
+
+  const flaskId = req.params.id;
+
+  const query = `
+    UPDATE flasks
+    SET inoculum_ul = $1, media = $2, media_ml = $3, rpm = $4, start_date = $5, temp_c = $6, vessel_type = $7,  cell_bank_id = $8
+    WHERE flask_id = $9 `;
+
+  const values = [
+    inoculum_ul,
+    media,
+    media_ml,
+    rpm,
+    start_date,
+    temp_c,
+    vessel_type,
+    cell_bank_id,
+    flaskId,
+  ];
+  try {
+    const results = await db.query(query, values);
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Flask not found' });
+    }
+    res.status(200).json({ message: 'Update successful', data: results.rows });
+  } catch (err) {
+    console.error('Error in server PUT request:', err);
+    throw err;
+  }
+});
+
+app.delete('/api/flasks/:id', async (req, res) => {
+  const query = 'DELETE FROM flasks WHERE flask_id = $1';
+  const value = [req.params.id];
+
+  try {
+    const result = await db.query(query, value);
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Flask not found',
+      });
+    }
+    res.status(200).json({
+      status: 'success',
+      message: `flask ${req.params.id} deleted successfully`,
+    });
+  } catch (err) {
+    console.error(`Error deleting flask ${req.params.id}`, err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 });
 

@@ -139,11 +139,51 @@ export function useDeleteRowMutation({ tableName }) {
 
 // update a row
 
+async function updateRowEdit(editedForm, tableName, idColumnName) {
+  try {
+    console.log('editedForm in updateRowEdit', editedForm, editedForm[idColumnName]);
+    const res = await fetch(`${baseUrl}/api/${tableName}/${editedForm[idColumnName]}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      }, 
+      body: 
+        JSON.stringify({
+          ...editedForm, start_date: getUtcTimestampFromLocalTime(editedForm.human_readable_date),
+        })
+      
+    })
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Failed to update row, ${errText}`);
+    }
+    const {data} = await res.json();
+    return data
+  } catch (err) {
+    console.error('error in updateRowEdit', err);
+    throw err;
+  }
 
-// export useUpdateRowMutation({ tableName, zodSchema}) {
-//   const queryClient = useQueryClient();
-//   const {}
-// }
+}
+
+export function useUpdateRowMutation({ tableName, zodSchema, initialEditForm, setEditedForm, idColumnName }) {
+  const queryClient = useQueryClient();
+  const { mutate, isPending, error, reset} = useMutation({
+    mutationFn: (editedForm)=> updateRowEdit(editedForm, tableName, idColumnName),
+    onSuccess: ()=> {
+      // console.log('onSuccess in useUpdateRowMutation', tableName, [tableName])
+      queryClient.invalidateQueries({ queryKey: [tableName]});
+      setEditedForm(initialEditForm);
+      reset()
+    },
+    onError: (err) => {
+      console.error('error in useUpdateRowMutation', err);
+      throw err;
+    }
+  })
+
+  return {mutate, isPending, error}
+}
 
 
 
