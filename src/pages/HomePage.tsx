@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import MainMenuButton, { StyledImage } from '../ui/MainMenuButton';
 import styled from 'styled-components';
 import { MdHeight } from 'react-icons/md';
@@ -80,15 +81,31 @@ const SecondaryMenuButtonContainer = styled.div`
 `;
 
 export default function HomePage() {
+  // const [userProfile, setUserProfile] = useState({});
+
+  // useEffect(() => {
+  //   async function authProfile() {
+  //     const response = await fetch('http://localhost:3000/profile');
+  //     const data = await response.json();
+  //     setUserProfile(data);
+  //   }
+  //   authProfile();
+  // }, []);
   return (
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">
         <InnerWrapper id="HomeInnerWrapper">
+
+          <LoginButton />
+          <LogoutButton />
+          <Profile/>
+
+          {/* <h1>{JSON.stringify(userProfile)}</h1> */}
           <MenuButtonContainer>
             <MainMenuButton
               toPath="/cellbank"
               text={'register cell bank'}
-              backgroundColor={"rgba(var(--clr-accent-1), .8)"}
+              backgroundColor={'rgba(var(--clr-accent-1), .8)'}
               imgUrl="images/yeast-21.png"
               imgAlt="microbe"
               positionElement={{ left: '0%' }}
@@ -147,3 +164,39 @@ export default function HomePage() {
     </PageContainer>
   );
 }
+
+const LoginButton = () => {
+  const { loginWithRedirect } = useAuth0();
+
+  return <button onClick={() => loginWithRedirect()}>Log In</button>;
+};
+
+const LogoutButton = () => {
+  const { logout } = useAuth0();
+
+  return (
+    <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+      Log Out
+    </button>
+  );
+};
+
+const Profile = () => {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  console.log('user', user, 'isAuthenticated', isAuthenticated, 'isLoading', isLoading);
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
+
+  return (
+    isAuthenticated && user && (
+      <div>
+        <img src={user.picture} alt={user.name} />
+        <h2>{user.name}</h2>
+        <p>{user.email}</p>
+      </div>
+    )
+  );
+};
+
