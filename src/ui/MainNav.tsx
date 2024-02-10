@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../lib/types';
 import { useOnClickOutside } from '../lib/hooks';
+import { NavMenuButton, NavSection, UserButton } from '../styles/UtilStyles';
 
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
@@ -62,40 +63,11 @@ const StyledTitle = styled.h1`
   } */
 `;
 
-const UserButton = styled.button`
-  border-radius: 50%; /* Use 50% for a circular shape */
-  aspect-ratio: 1/1;
-  padding: 0.5rem; /* Add padding if needed */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 100ms ease-in-out;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-`;
-
-const NavMenuButton = styled.button`
-  padding: 0;
-  background-color: transparent;
-  transition: transform 100ms ease-in-out;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-`;
-
-const NavSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-`;
-
-const StyledFaUser = styled(FaUser)`
+export const StyledFaUser = styled(FaUser)`
   font-size: 1.75rem;
   fill: var(--clr-accent-0);
 `;
+
 
 const style = { color: '#F2D17C', fontSize: '3rem' };
 

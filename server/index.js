@@ -318,7 +318,7 @@ app.put('/api/flasks/:id', async (req, res) => {
     res.status(200).json({ message: 'Update successful', data: results.rows });
   } catch (err) {
     console.error('Error in server PUT request:', err);
-    throw err;
+    return res.status(500).json({ message: 'Internal server error', error: err.message })
   }
 });
 

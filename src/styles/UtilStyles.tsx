@@ -1,7 +1,42 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { TTableHeaderCell, TTableRow } from '../lib/types';
-// import { TTableHeaderCell } from '../lib/types';
+
+
+// Nav 
+
+export const UserButton = styled.button`
+  border-radius: 50%; /* Use 50% for a circular shape */
+  aspect-ratio: 1/1;
+  padding: 0.5rem; /* Add padding if needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 100ms ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+
+export const NavMenuButton = styled.button`
+  padding: 0;
+  background-color: transparent;
+  transition: transform 100ms ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+export const NavSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+`;
+
+
 
 // Main page styles
 
