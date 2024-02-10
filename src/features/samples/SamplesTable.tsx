@@ -12,6 +12,7 @@ import {
 import SamplesRow from './SamplesRow';
 import {
   TUpdateSampleForm,
+  TinitialEditSampleForm,
   initialEditSampleForm,
   updateSampleSchema,
 } from './samples-types';
@@ -19,7 +20,7 @@ import { useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
 
 export default function SamplesTable({ samples }) {
   console.log('samples in samplestable', samples);
-  const [editedForm, setEditedForm] = useState<TUpdateSampleForm>(
+  const [editedForm, setEditedForm] = useState<TUpdateSampleForm | TinitialEditSampleForm>(
     initialEditSampleForm
   );
   const [editingId, setEditingId] = useState<number | null>(null); // id of edited sample

@@ -252,6 +252,9 @@ app.post('/api/flasks', badWordsMiddleware, async (req, res) => {
     ];
     const query = `INSERT INTO flasks (cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm) values ($1, $2, $3, $4, $5, $6, $7) returning *`;
     const results = await db.query(query, values);
+    if (!results.rows.length) {
+      return res.status(404).json({ message: 'Post not successful' });
+    }
     res.status(200).json({
       status: 'success',
       data: results.rows,
@@ -372,22 +375,44 @@ app.get('/api/samples', async (req, res) => {
 // post one sample
 app.post('/api/samples', async (req, res)=> {
   try {
-    const {flask_id, end_date,od600, completed} = req.body;
-    const query = `INSERT INTO samples (flask_id, end_date, od600, completed) values ($1, $2, $3, $4) returning *`;
-    const values = [flask_id, end_date, od600, completed];
+    console.log(req.body, 'in post sample server')
+    const {flask_id, od600, completed} = req.body;
+    const query = `INSERT INTO samples (flask_id, od600, completed) values ($1, $2, $3) returning *`;
+    const values = [flask_id, od600, completed];
 
     const results = await db.query(query, values);
-    if (!results.success) {
+    console.log('results.success', results, 'results.rows', results.rows)
+    if (!results.rowCount) {
       return res.status(404).json({ message: 'Post not successful' });
     }
     res.status(200).json({
       status: 'success',
       data: results.rows,
     });
+
   } catch (err) {
     console.log(err);
     throw err;
   }
+})
+
+app.delete('/api/samples/:id', async (req, res) => {
+  try {
+const sampleId = req.params.id;
+const query = `DELETE FROM samples WHERE sample_id = $1`;
+const value = [sampleId];
+const result = await db.query(query, value);
+console.log(result.rowCount)
+if (result.rowCount === 0) {
+  return res.status(404).json({ message: 'Sample not found' });
+}
+res.status(200).json({ message: `Sample ${sampleId} deleted successfully` });
+  }
+  catch (err) {
+    console.log(err);
+    throw err;
+  }
+
 })
 
 app.put('/api/samples/:id', async (req, res) => {

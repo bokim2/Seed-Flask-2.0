@@ -13,6 +13,7 @@ import LoaderBar from '../ui/LoaderBar';
 import {
   samplesInfoArraySchema,
 } from '../lib/types';
+import SamplesMultiInputForm from '../features/samples/SamplesMultiInputForm';
 
 export default function SamplePage() {
   // const [samples, setSamples] = useState<any>([]);
@@ -43,6 +44,7 @@ export default function SamplePage() {
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
 
       <InnerPageContainer id="SampleInnerPageContainer">
+        <SamplesMultiInputForm />
         {error && <ErrorMessage error={error} />}
 
         {!isLoading && <SamplesTable samples={samples} />}
