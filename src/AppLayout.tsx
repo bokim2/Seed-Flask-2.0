@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import NavList from './ui/NavList';
 import LoaderBar from './ui/LoaderBar';
 import { THandleNavToggle, TNavOrUser } from './lib/types';
+import Footer from './ui/Footer';
 
 const StyledAppLayout = styled.div`
   flex: 1;
@@ -57,8 +58,6 @@ const MainPageContainer = styled.main`
 `;
 
 export default function AppLayout() {
-
-
   // const handleNavToggle: THandleNavToggle = (e, navOrUser) => {
   //   // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
   //   e.stopPropagation();
@@ -72,17 +71,15 @@ export default function AppLayout() {
   //   }
   // };
 
-
-
   return (
     <StyledAppLayout>
       <StyledBackgroundColor />
       <StyledBackgroundImg />
       <NavBar id="NavBar">
         <MainNav
-          // openNav={openNav}
-          // handleToggle={handleNavToggle}
-          // openUser={openUser}
+        // openNav={openNav}
+        // handleToggle={handleNavToggle}
+        // openUser={openUser}
         />
       </NavBar>
       {/* <LoaderBar /> */}
@@ -90,6 +87,7 @@ export default function AppLayout() {
       {/* <span>testing app layout</span> */}
       <MainPageContainer id="MainPageContainer">
         <Outlet />
+   <Footer />
       </MainPageContainer>
       {/* </StyledAppLayout> */}
     </StyledAppLayout>
