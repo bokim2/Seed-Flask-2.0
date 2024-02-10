@@ -16,7 +16,7 @@ const StyledImg = styled.img`
   /* &:hover {
     transform: scale(1.1);
     filter: brightness(1.5); */
-  }
+  /* } */
 `;
 
 // const InfoButton = styled(CircularButton)`
