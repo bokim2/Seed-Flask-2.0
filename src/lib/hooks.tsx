@@ -17,22 +17,22 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
     queryFn: async () => {
       try {
         const res = await fetch(`${baseUrl}/api/${tableName}`);
-        if (!res.ok) throw new Error('Failed to fetch table data');
+        if (!res.ok) throw new Error(`Failed to fetch ${tableName} table data`);
         const { data } = await res.json();
 
-        const validatedData = zodSchema.safeParse(data);
-        // console.log(validatedData, 'validatedData');
-        if (!validatedData.success) {
-          console.error(
-            'useFetchValidatedTableQuery validation error',
-            validatedData.error
-          );
-          throw new Error(`Data validation in ${tableName} table failed`);
-        }
-        // return data;
+        // const validatedData = zodSchema.safeParse(data);
+        // // console.log(validatedData, 'validatedData');
+        // if (!validatedData.success) {
+        //   console.error(
+        //     'useFetchValidatedTableQuery validation error',
+        //     validatedData.error
+        //   );
+        //   throw new Error(`Data validation in ${tableName} table failed`);
+        // }
+        // return validatedData.data;
+        return data;
 
         // TURNED VALIDATION OFF FOR NOW!!!!
-        return validatedData.data;
       } catch (err) {
         console.log(err, 'error in useFetchValidatedTableQuery');
         throw err;

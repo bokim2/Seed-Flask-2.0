@@ -20,6 +20,7 @@ export default function FlaskPage() {
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });
+  console.log('flasks in flaskPAGE', flasks);
 
   // const [flask] = useFlask(1);
 

@@ -93,7 +93,98 @@ CREATE TABLE samples (
   FOREIGN KEY (flask_id) REFERENCES flasks(flask_id)
 );
 
--- Trigger functions to update time_since_inoc_hr in hours
+-- Create a trigger function to update time_since_inoc_hr in hours
+CREATE OR REPLACE FUNCTION update_time_since_inoc_hr()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE samples s
+  SET time_since_inoc_hr = EXTRACT(EPOCH FROM (s.end_date - f.start_date)) / 3600.0 -- Convert to hours
+  FROM flasks f
+  WHERE s.flask_id = f.flask_id AND s.sample_id = NEW.sample_id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger on the samples table
+CREATE TRIGGER after_insert_update_time_since_inoc_hr
+AFTER INSERT ON samples
+FOR EACH ROW
+EXECUTE FUNCTION update_time_since_inoc_hr();
+
+DROP TRIGGER IF EXISTS after_insert_update_time_since_inoc_hr ON samples;
+
+-- Recreate the trigger to fire after both inserts and updates, specifically for end_date changes
+CREATE TRIGGER after_sample_update_update_time_since_inoc_hr
+AFTER INSERT OR UPDATE OF end_date ON samples
+FOR EACH ROW
+EXECUTE FUNCTION update_time_since_inoc_hr();
+
+INSERT INTO samples (flask_id, od600) VALUES (4, 0.2);
+
+-- Insert a sample to test the trigger
+INSERT INTO samples (flask_id, od600) VALUES (1, 4.2);
+INSERT INTO samples (flask_id, od600) VALUES (2, 3.1);
+
+INSERT INTO samples (flask_id, od600) VALUES (1, 7.8);
+INSERT INTO samples (flask_id, od600) VALUES (2, 9.4);
+
+INSERT INTO samples (flask_id, od600) VALUES (1, 9.1);
+INSERT INTO samples (flask_id, od600) VALUES (2, 10.1);
+
+
+
+
+-- THE QUERY THAT ACTUALLY WORKED IS BELOW!!!!!  20240209
+
+
+-- Create a trigger function to update time_since_inoc_hr in hours
+CREATE OR REPLACE FUNCTION update_time_since_inoc_hr()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE samples s
+  SET time_since_inoc_hr = EXTRACT(EPOCH FROM (s.end_date - f.start_date)) / 3600.0 -- Convert to hours
+  FROM flasks f
+  WHERE s.flask_id = f.flask_id AND s.sample_id = NEW.sample_id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION initial_time_since_inoc_hr()
+RETURNS TRIGGER AS $$
+DECLARE
+    f_start_date TIMESTAMPTZ;
+BEGIN
+    -- Fetch the start date of the flask associated with the new sample
+    SELECT f.start_date INTO f_start_date FROM flasks f WHERE f.flask_id = NEW.flask_id;
+
+    -- Ensure the start_date and end_date are available to perform the calculation
+    IF f_start_date IS NOT NULL AND NEW.end_date IS NOT NULL THEN
+        NEW.time_since_inoc_hr := EXTRACT(EPOCH FROM (NEW.end_date - f_start_date)) / 3600.0;
+    ELSE
+        NEW.time_since_inoc_hr := NULL; -- or some default value as per your logic
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+DROP TRIGGER IF EXISTS after_sample_update_update_time_since_inoc_hr ON samples;
+
+-- CREATE TRIGGER after_sample_update_update_time_since_inoc_hr
+-- AFTER UPDATE OF end_date ON samples
+-- FOR EACH ROW
+-- EXECUTE FUNCTION initial_time_since_inoc_hr();
+
+
+DROP TRIGGER IF EXISTS after_insert_update_time_since_inoc_hr ON samples;
+
+-- CREATE TRIGGER after_insert_update_time_since_inoc_hr
+-- BEFORE INSERT ON samples
+-- FOR EACH ROW
+-- EXECUTE FUNCTION initial_time_since_inoc_hr();
 
 CREATE OR REPLACE FUNCTION calculate_time_since_inoc_hr_before_insert()
 RETURNS TRIGGER AS $$
@@ -129,16 +220,3 @@ CREATE TRIGGER after_update_calculate_time_since_inoc_hr
 AFTER UPDATE OF end_date ON samples
 FOR EACH ROW
 EXECUTE FUNCTION calculate_time_since_inoc_hr_after_update();
-
-
--- Insert a sample to test the trigger
-INSERT INTO samples (flask_id, od600) VALUES (1, 4.2);
-INSERT INTO samples (flask_id, od600) VALUES (2, 3.1);
-
-INSERT INTO samples (flask_id, od600) VALUES (1, 7.8);
-INSERT INTO samples (flask_id, od600) VALUES (2, 9.4);
-
-INSERT INTO samples (flask_id, od600) VALUES (1, 9.1);
-INSERT INTO samples (flask_id, od600) VALUES (2, 10.1);
-
-

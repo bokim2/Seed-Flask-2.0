@@ -65,7 +65,9 @@ export default function CellbankPage() {
         </Button>
 
         <h3>{JSON.stringify(cellbankBookmarks)}</h3>
+
         <CellbanksMultiInputForm />
+        
         {error && <ErrorMessage error={error} />}
         {!isLoading && (
           <CellbanksTable

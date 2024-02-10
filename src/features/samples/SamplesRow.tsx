@@ -40,7 +40,7 @@ export default function SamplesRow({
         <TableDataCell data-cell="flask id">{flask_id}</TableDataCell>
         <TableDataCell data-cell="od600">{od600}</TableDataCell>
         <TableDataCell data-cell="time since inoc hr">
-          {time_since_inoc_hr.toFixed(2)}
+          {time_since_inoc_hr?.toFixed(2)}
         </TableDataCell>
         <TableDataCell data-cell="end date/time">
           {displayLocalTime(end_date)}
@@ -129,7 +129,7 @@ function SamplesEditForm({
         </TableDataCell>
 
         <TableDataCell data-cell="time since inoc hr">
-          {editedForm.time_since_inoc_hr}
+          {editedForm?.time_since_inoc_hr}
         </TableDataCell>
 
         <TableDataCell data-cell="end date/time">

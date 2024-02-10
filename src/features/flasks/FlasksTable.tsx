@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import { useDeleteRowMutation, useFlask, useFlasks, useUpdateRowMutation } from '../../lib/hooks';
+import {
+  useDeleteRowMutation,
+  useFlask,
+  useFlasks,
+  useUpdateRowMutation,
+} from '../../lib/hooks';
 import styled from 'styled-components';
 import FlasksRow from './FlasksRow';
-import { TCreateFlask, createFlaskSchema, editFlaskSchema } from './flasks-types';
+import {
+  TCreateFlask,
+  createFlaskSchema,
+  editFlaskSchema,
+  initialEditFlasksForm,
+} from './flasks-types';
 import {
   Caption,
   StyledForm,
@@ -17,19 +27,19 @@ import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from './flasks-types';
 
 export default function FlasksTable({ flasks }) {
-  // console.log('flaks in flaskstable', flasks);
+  console.log('flaks in flaskstable', flasks);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editedForm, setEditedForm] = useState(initialCreateFlasksForm);
+  const [editedForm, setEditedForm] = useState(initialEditFlasksForm);
 
-  const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } = 
-  useUpdateRowMutation({
-    tableName: 'flasks',
-    zodSchema: editFlaskSchema,
-    initialEditForm: initialCreateFlasksForm,
-    setEditedForm,
-    idColumnName: 'flask_id',
-    dateColumnName: 'start_date',
-  })
+  const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } =
+    useUpdateRowMutation({
+      tableName: 'flasks',
+      zodSchema: editFlaskSchema,
+      initialEditForm: initialCreateFlasksForm,
+      setEditedForm,
+      idColumnName: 'flask_id',
+      dateColumnName: 'start_date',
+    });
 
   const {
     mutate: deleteFlask,
@@ -41,11 +51,12 @@ export default function FlasksTable({ flasks }) {
 
   const handleEditFormSubmit = (e, editedForm) => {
     e.preventDefault();
-    e.stopPropagation()
+    e.stopPropagation();
+
     submitEditedFlaskForm(editedForm);
     setEditingId(null);
-  }
-  
+  };
+
   return (
     <>
       <Button onClick={() => setToggleCellbankData((prev) => !prev)}>
@@ -55,7 +66,19 @@ export default function FlasksTable({ flasks }) {
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
-          handleEditFormSubmit(e, editedForm)
+          const formattedEditedForm = {
+            flask_id: Number(editedForm.flask_id),
+            cell_bank_id: Number(editedForm.cell_bank_id),
+            vessel_type: 'flask',
+            media: String(editedForm.media),
+            media_ml: Number(editedForm.media_ml),
+            inoculum_ul: Number(editedForm.inoculum_ul),
+            temp_c: Number(editedForm.temp_c),
+            rpm: Number(editedForm.rpm),
+            start_date: String(editedForm.start_date),
+            human_readable_date: String(editedForm.human_readable_date),
+          };
+          handleEditFormSubmit(e, formattedEditedForm);
         }}
       >
         <TableContainer>
@@ -83,7 +106,7 @@ export default function FlasksTable({ flasks }) {
               </TableRow>
             </TableHeader>
             <tbody>
-              {flasks &&
+              {Array.isArray(flasks) &&
                 flasks?.map((rowData) => {
                   return (
                     <FlasksRow
