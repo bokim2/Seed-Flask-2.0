@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
+import 'dotenv/config';
 import cors from 'cors';
 import morgan from 'morgan';
 // auth0
@@ -27,9 +28,10 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
   // } else if (process.env.NODE_ENV === 'production') {
   //   dotenv.config({ path: path.resolve(__dirname, '.env.production') });
-} else {
-  dotenv.config();
-}
+} 
+// else {
+//   dotenv.config();
+// }
 
 // auth0
 const sslServer = https.createServer(
