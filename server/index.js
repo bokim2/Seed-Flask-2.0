@@ -668,6 +668,6 @@ if (process.env.NODE_ENV === 'development') {
 //   });
 // });
 
-sslServer.listen(PORT, () => {
-  console.log(`Server is running on https://localhost:${PORT}`);
-});
+// sslServer.listen(PORT, () => {
+//   console.log(`Server is running on https://localhost:${PORT}`);
+// });
