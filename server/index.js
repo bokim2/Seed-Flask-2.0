@@ -23,10 +23,10 @@ app.use(cors());
 
 // setting .env file based on environment
 if (process.env.NODE_ENV === 'development') {
-  dotenv.config({ path: path.resolve(__dirname, '.env') });
+  // dotenv.config({ path: path.resolve(__dirname, '.env') });
   app.use(morgan('dev'));
-} else if (process.env.NODE_ENV === 'production') {
-  dotenv.config({ path: path.resolve(__dirname, '.env.production') });
+// } else if (process.env.NODE_ENV === 'production') {
+//   dotenv.config({ path: path.resolve(__dirname, '.env.production') });
 } else {
   dotenv.config();
 }
