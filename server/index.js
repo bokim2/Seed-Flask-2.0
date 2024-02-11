@@ -57,7 +57,7 @@ const config = {
 // enable cors for development
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://localhost:5173', 'https://seed-flask-2-c1d8d446416a.herokuapp.com'],
     credentials: true, // Allow cookies to be sent
     allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
   })
