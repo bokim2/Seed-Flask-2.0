@@ -71,7 +71,7 @@ const config = {
   baseURL: process.env.BASE_URL,
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
-  redirectUri: process.env.BASE_URL + '/callback',
+  // redirectUri: process.env.BASE_URL + '/callback',
 };
 console.log('config for auth', config);
 
