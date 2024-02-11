@@ -81,8 +81,14 @@ const SecondaryMenuButtonContainer = styled.div`
   }
 `;
 
+type TuserProfile = {
+  picture: string;
+  name: string;
+  email: string;
+};
+
 export default function HomePage() {
-  const [userProfile, setUserProfile] = useState({});
+  const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
 
   useEffect(() => {
     async function authProfile() {
@@ -103,6 +109,7 @@ export default function HomePage() {
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">
           <p>{JSON.stringify(userProfile)}</p>
+          {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />}
         <InnerWrapper id="HomeInnerWrapper">
 
           {/* <LoginButton />
