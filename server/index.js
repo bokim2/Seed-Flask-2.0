@@ -5,7 +5,7 @@ import morgan from 'morgan';
 // auth0
 import fs from 'fs';
 import https from 'https';
-import http from 'http';  
+import http from 'http';
 //
 import path from 'path';
 import process from 'process';
@@ -25,17 +25,20 @@ app.use(cors());
 if (process.env.NODE_ENV === 'development') {
   // dotenv.config({ path: path.resolve(__dirname, '.env') });
   app.use(morgan('dev'));
-// } else if (process.env.NODE_ENV === 'production') {
-//   dotenv.config({ path: path.resolve(__dirname, '.env.production') });
+  // } else if (process.env.NODE_ENV === 'production') {
+  //   dotenv.config({ path: path.resolve(__dirname, '.env.production') });
 } else {
   dotenv.config();
 }
 
 // auth0
-const sslServer = https.createServer({
-  key: fs.readFileSync(path.join(__dirname, '/ssl/localhost+2-key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, '/ssl/localhost+2.pem')),
-}, app);
+const sslServer = https.createServer(
+  {
+    key: fs.readFileSync(path.join(__dirname, '/ssl/localhost+2-key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, '/ssl/localhost+2.pem')),
+  },
+  app
+);
 
 import pkg from 'express-openid-connect';
 const { auth, requiresAuth } = pkg;
@@ -44,9 +47,9 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: process.env.SECRET,
-  baseURL: 'https://localhost:3000',
+  baseURL: process.env.BASE_URL,
   clientID: process.env.CLIENT_ID,
-  issuerBaseURL: 'https://dev-1gk5wccsooddgtgs.us.auth0.com'
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
 
 // enable cors for development
@@ -54,7 +57,7 @@ app.use(
   cors({
     origin: ['http://localhost:5173', 'https://localhost:5173'],
     credentials: true, // Allow cookies to be sent
-  allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
+    allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
   })
 );
 
@@ -65,7 +68,6 @@ app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
 
-
 app.get('/profile', requiresAuth(), (req, res) => {
   res.json(JSON.stringify(req.oidc.user));
 });
@@ -74,12 +76,8 @@ app.get('/profile', requiresAuth(), (req, res) => {
 const PORT = process.env.PORT || 3000;
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
-
-
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, '../dist')));
-
-
 
 // set cache control headers for images
 app.use(
@@ -365,7 +363,9 @@ app.put('/api/flasks/:id', async (req, res) => {
     res.status(200).json({ message: 'Update successful', data: results.rows });
   } catch (err) {
     console.error('Error in server PUT request:', err);
-    return res.status(500).json({ message: 'Internal server error', error: err.message })
+    return res
+      .status(500)
+      .json({ message: 'Internal server error', error: err.message });
   }
 });
 
@@ -420,15 +420,15 @@ app.get('/api/samples', async (req, res) => {
 });
 
 // post one sample
-app.post('/api/samples', async (req, res)=> {
+app.post('/api/samples', async (req, res) => {
   try {
-    console.log(req.body, 'in post sample server')
-    const {flask_id, od600, completed} = req.body;
+    console.log(req.body, 'in post sample server');
+    const { flask_id, od600, completed } = req.body;
     const query = `INSERT INTO samples (flask_id, od600, completed) values ($1, $2, $3) returning *`;
     const values = [flask_id, od600, completed];
 
     const results = await db.query(query, values);
-    console.log('results.success', results, 'results.rows', results.rows)
+    console.log('results.success', results, 'results.rows', results.rows);
     if (!results.rowCount) {
       return res.status(404).json({ message: 'Post not successful' });
     }
@@ -436,31 +436,30 @@ app.post('/api/samples', async (req, res)=> {
       status: 'success',
       data: results.rows,
     });
-
   } catch (err) {
     console.log(err);
     throw err;
   }
-})
+});
 
 app.delete('/api/samples/:id', async (req, res) => {
   try {
-const sampleId = req.params.id;
-const query = `DELETE FROM samples WHERE sample_id = $1`;
-const value = [sampleId];
-const result = await db.query(query, value);
-console.log(result.rowCount)
-if (result.rowCount === 0) {
-  return res.status(404).json({ message: 'Sample not found' });
-}
-res.status(200).json({ message: `Sample ${sampleId} deleted successfully` });
-  }
-  catch (err) {
+    const sampleId = req.params.id;
+    const query = `DELETE FROM samples WHERE sample_id = $1`;
+    const value = [sampleId];
+    const result = await db.query(query, value);
+    console.log(result.rowCount);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Sample not found' });
+    }
+    res
+      .status(200)
+      .json({ message: `Sample ${sampleId} deleted successfully` });
+  } catch (err) {
     console.log(err);
     throw err;
   }
-
-})
+});
 
 app.put('/api/samples/:id', async (req, res) => {
   try {
@@ -477,7 +476,7 @@ app.put('/api/samples/:id', async (req, res) => {
     console.log(err);
     throw err;
   }
-})
+});
 
 // GET aggregate samples by flask_id for graphing
 // for LineGraph component.  NOT being used.  this is a draft
