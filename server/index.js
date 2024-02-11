@@ -60,30 +60,30 @@ const sslServer = https.createServer(
   app
 );
 
-// import pkg from 'express-openid-connect';
-// const { auth, requiresAuth } = pkg;
+import pkg from 'express-openid-connect';
+const { auth, requiresAuth } = pkg;
 
-// const config = {
-//   authRequired: false,
-//   auth0Logout: true,
-//   secret: process.env.SECRET,
-//   baseURL: process.env.BASE_URL,
-//   clientID: process.env.CLIENT_ID,
-//   issuerBaseURL: process.env.ISSUER_BASE_URL,
-// };
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.SECRET,
+  baseURL: process.env.BASE_URL,
+  clientID: process.env.CLIENT_ID,
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
+};
 
-// // auth router attaches /login, /logout, and /callback routes to the baseURL
-// app.use(auth(config));
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
 
-// app.get('/', (req, res) => {
-//   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-// });
+app.get('/', (req, res) => {
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+});
 
-// app.get('/profile', requiresAuth(), (req, res) => {
-//   res.json(req.oidc.user);
-// });
+app.get('/profile', requiresAuth(), (req, res) => {
+  res.json(req.oidc.user);
+});
 
-//
+
 
 // set cache control headers for images
 app.use(
