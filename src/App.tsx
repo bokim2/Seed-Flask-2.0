@@ -21,6 +21,16 @@ import ChartsPage from './pages/ChartsPage';
 import SignInPage from './pages/SignInPage';
 import BioreactorPage from './pages/BioreactorPage';
 
+// const StyledDiv = styled.div`
+//   /* background-color: #e4d0d0; */
+// `;
+// const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       staleTime: 60 * 1000,
+//     },
+//   },
+// });
 
 function App() {
   const queryClient = new QueryClient({
@@ -60,7 +70,7 @@ function App() {
               <Route path="bioreactor" element={<BioreactorPage/>} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="charts" element={<ChartsPage />} />
-              <Route path="signin" element={<SignInPage />} />
+              <Route path="login" element={<SignInPage />} />
             </Route>
 
             <Route path="*" element={<h1>Page not found</h1>} />
