@@ -1,1 +1,1 @@
-export const baseUrl = import.meta.env.PROD ? "" : "http://localhost:3000";
+export const baseUrl = import.meta.env.PROD ? "" : "https://localhost:3000";

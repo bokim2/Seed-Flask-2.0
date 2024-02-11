@@ -12,6 +12,7 @@ import {
   StyledMainMenuButtons,
   Wrapper,
 } from '../styles/UtilStyles';
+import { baseUrl } from '../../configs';
 
 const HomePageContainer = styled(PageContainer)`
   width: 80%;
@@ -81,26 +82,33 @@ const SecondaryMenuButtonContainer = styled.div`
 `;
 
 export default function HomePage() {
-  // const [userProfile, setUserProfile] = useState({});
+  const [userProfile, setUserProfile] = useState({});
 
-  // useEffect(() => {
-  //   async function authProfile() {
-  //     const response = await fetch('http://localhost:3000/profile');
-  //     const data = await response.json();
-  //     setUserProfile(data);
-  //   }
-  //   authProfile();
-  // }, []);
+  useEffect(() => {
+    async function authProfile() {
+      try{
+        const response = await fetch(`${baseUrl}/profile`, {
+          credentials: 'include', // Include cookies for cross-origin requests
+        });
+        console.log(response)
+      const data = await response.json();
+      setUserProfile(data);
+      } catch(errr){
+        console.log('error', errr)
+      }
+    }
+    authProfile();
+  }, []);
   return (
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">
+          <p>{JSON.stringify(userProfile)}</p>
         <InnerWrapper id="HomeInnerWrapper">
 
-          <LoginButton />
-          <LogoutButton />
-          <Profile/>
+          {/* <LoginButton />
+          <LogoutButton /> */}
+          {/* <Profile/> */}
 
-          {/* <h1>{JSON.stringify(userProfile)}</h1> */}
           <MenuButtonContainer>
             <MainMenuButton
               toPath="/cellbank"

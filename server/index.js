@@ -1,8 +1,12 @@
 import express, { Router } from 'express';
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
-
+// auth0
+import fs from 'fs';
+import https from 'https';
+import http from 'http';  
+//
 import path from 'path';
 import process from 'process';
 import { dirname } from 'path';
@@ -17,22 +21,65 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-const PORT = process.env.PORT || 3000;
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-
+// setting .env file based on environment
 if (process.env.NODE_ENV === 'development') {
+  dotenv.config({ path: path.resolve(__dirname, '.env') });
   app.use(morgan('dev'));
+} else if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: path.resolve(__dirname, '.env.production') });
+} else {
+  dotenv.config();
 }
 
-// Serve static files from the 'dist' directory
-app.use(express.static(path.join(__dirname, '../dist')));
+// auth0
+const sslServer = https.createServer({
+  key: fs.readFileSync(path.join(__dirname, '/ssl/localhost+2-key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, '/ssl/localhost+2.pem')),
+}, app);
+
+import pkg from 'express-openid-connect';
+const { auth, requiresAuth } = pkg;
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.SECRET,
+  baseURL: 'https://localhost:3000',
+  clientID: process.env.CLIENT_ID,
+  issuerBaseURL: 'https://dev-1gk5wccsooddgtgs.us.auth0.com'
+};
 
 // enable cors for development
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'https://localhost:5173'],
+    credentials: true, // Allow cookies to be sent
+  allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
   })
 );
+
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
+
+app.get('/', (req, res) => {
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+});
+
+
+app.get('/profile', requiresAuth(), (req, res) => {
+  res.json(JSON.stringify(req.oidc.user));
+});
+
+//
+const PORT = process.env.PORT || 3000;
+console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+
+
+
+// Serve static files from the 'dist' directory
+app.use(express.static(path.join(__dirname, '../dist')));
+
+
 
 // set cache control headers for images
 app.use(
@@ -617,6 +664,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+sslServer.listen(PORT, () => {
+  console.log(`Server is running on https://localhost:${PORT}`);
 });
