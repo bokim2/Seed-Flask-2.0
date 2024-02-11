@@ -108,6 +108,8 @@ export default function HomePage() {
   return (
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">
+        <button><a href="https://seed-flask-2-c1d8d446416a.herokuapp.com/login">login</a></button>
+        <button><a href="https://seed-flask-2-c1d8d446416a.herokuapp.com/logout">logout</a></button>
           <p>{JSON.stringify(userProfile)}</p>
           {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />}
         <InnerWrapper id="HomeInnerWrapper">

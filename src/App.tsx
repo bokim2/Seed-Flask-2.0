@@ -70,7 +70,7 @@ function App() {
               <Route path="bioreactor" element={<BioreactorPage/>} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="charts" element={<ChartsPage />} />
-              <Route path="login" element={<SignInPage />} />
+              <Route path="signin" element={<SignInPage />} />
             </Route>
 
             <Route path="*" element={<h1>Page not found</h1>} />
