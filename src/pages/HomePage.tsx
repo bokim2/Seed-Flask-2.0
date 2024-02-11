@@ -89,7 +89,7 @@ type TuserProfile = {
 
 export default function HomePage() {
   const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
-  console.log('process.env in authProfile',process.env)
+  const [env, setEnv] = useState<any>(null);
 
   useEffect(() => {
     async function authProfile() {
@@ -104,6 +104,19 @@ export default function HomePage() {
         console.log('error', errr)
       }
     }
+    async function getEnv() {
+      try{
+        const response = await fetch(`${baseUrl}/env`, {
+          credentials: 'include', // Include cookies for cross-origin requests
+        });
+        console.log(response)
+      const data = await response.json();
+      setEnv(data);
+      } catch(errr){
+        console.log('error', errr)
+      }
+    }
+    getEnv()
     authProfile();
   }, []);
   return (
@@ -111,7 +124,8 @@ export default function HomePage() {
       <InnerPageContainer id="HomeInnerPageContainer">
         <button><a href="https://seed-flask-2-c1d8d446416a.herokuapp.com/login">login</a></button>
         <button><a href="https://seed-flask-2-c1d8d446416a.herokuapp.com/logout">logout</a></button>
-          <p>{JSON.stringify(userProfile)}</p>
+          <p>{JSON.stringify(userProfile, null, 2)}</p>
+          <p>{JSON.stringify(env, null, 2)}</p>
           {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />}
         <InnerWrapper id="HomeInnerWrapper">
 

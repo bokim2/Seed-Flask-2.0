@@ -83,10 +83,18 @@ app.get('/', (req, res) => {
 
 app.get('/profile', requiresAuth(), (req, res) => {
   res.json(req.oidc.user);
-  res.send('process.env', process.env, process.env.NODE_ENV);
 });
 
-
+app.get('/env', (req, res) => {
+  res.json({
+    // processenv: process.env,
+    secret: process.env.SECRET,
+  baseURL: process.env.BASE_URL,
+  clientID: process.env.CLIENT_ID,
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
+    processenvNODE_ENV: process.env.NODE_ENV,
+  });
+});
 
 // set cache control headers for images
 app.use(
