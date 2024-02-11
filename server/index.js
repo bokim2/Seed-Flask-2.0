@@ -24,7 +24,11 @@ app.use(cors());
 // enable cors for development
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://localhost:5173', 'https://seed-flask-2-c1d8d446416a.herokuapp.com'],
+    origin: [
+      'http://localhost:5173',
+      'https://localhost:5173',
+      'https://seed-flask-2-c1d8d446416a.herokuapp.com',
+    ],
     credentials: true, // Allow cookies to be sent
     allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
   })
@@ -42,7 +46,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
   // } else if (process.env.NODE_ENV === 'production') {
   //   dotenv.config({ path: path.resolve(__dirname, '.env.production') });
-} 
+}
 // else {
 //   dotenv.config();
 // }
@@ -68,8 +72,6 @@ const sslServer = https.createServer(
 //   issuerBaseURL: process.env.ISSUER_BASE_URL,
 // };
 
-
-
 // // auth router attaches /login, /logout, and /callback routes to the baseURL
 // app.use(auth(config));
 
@@ -82,7 +84,6 @@ const sslServer = https.createServer(
 // });
 
 //
-
 
 // set cache control headers for images
 app.use(
@@ -668,6 +669,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-sslServer.listen(PORT, () => {
-  console.log(`Server is running on https://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV === 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+} else if (process.env.NODE_ENV === 'development') {
+  sslServer.listen(PORT, () => {
+    console.log(`Server is running on https://localhost:${PORT}`);
+  });
+}
