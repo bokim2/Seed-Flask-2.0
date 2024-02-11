@@ -21,6 +21,20 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+// enable cors for development
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'https://localhost:5173', 'https://seed-flask-2-c1d8d446416a.herokuapp.com'],
+    credentials: true, // Allow cookies to be sent
+    allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
+  })
+);
+
+const PORT = process.env.PORT || 3000;
+console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+
+// Serve static files from the 'dist' directory
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // setting .env file based on environment
 if (process.env.NODE_ENV === 'development') {
@@ -54,14 +68,7 @@ const config = {
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
 
-// enable cors for development
-app.use(
-  cors({
-    origin: ['http://localhost:5173', 'https://localhost:5173', 'https://seed-flask-2-c1d8d446416a.herokuapp.com'],
-    credentials: true, // Allow cookies to be sent
-    allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
-  })
-);
+
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
@@ -75,11 +82,7 @@ app.get('/profile', requiresAuth(), (req, res) => {
 });
 
 //
-const PORT = process.env.PORT || 3000;
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
-// Serve static files from the 'dist' directory
-app.use(express.static(path.join(__dirname, '../dist')));
 
 // set cache control headers for images
 app.use(
