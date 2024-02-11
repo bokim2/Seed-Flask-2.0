@@ -83,6 +83,7 @@ app.get('/', (req, res) => {
 
 app.get('/profile', requiresAuth(), (req, res) => {
   res.json(req.oidc.user);
+  res.send('process.env', process.env, process.env.NODE_ENV);
 });
 
 
