@@ -89,6 +89,7 @@ type TuserProfile = {
 
 export default function HomePage() {
   const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
+  console.log('process.env in authProfile',process.env)
 
   useEffect(() => {
     async function authProfile() {
