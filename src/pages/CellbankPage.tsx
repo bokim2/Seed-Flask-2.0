@@ -55,6 +55,7 @@ export default function CellbankPage() {
     <PageContainer id="CellbankPageContainer">
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
+      {/* {(error) && (<div>Error: {error.message}</div>)} */}
         <Button
           $size={'small'}
           onClick={() => settToggleTextTruncation((prev) => !prev)}
@@ -68,8 +69,8 @@ export default function CellbankPage() {
 
         <CellbanksMultiInputForm />
         
-        {error && <ErrorMessage error={error} />}
-        {!isLoading && (
+        {error?.message && <ErrorMessage error={error} />}
+        {!isLoading && cellbanks && cellbanks.length > 0 && (
           <CellbanksTable
             cellbanks={cellbanks}
             handleAddBookmark={handleAddBookmark}
