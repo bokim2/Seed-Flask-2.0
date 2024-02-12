@@ -152,7 +152,7 @@ app.get('/api/cellbanks', requiresAuth(), async (req, res) => {
       console.log(
        'user', user, 'userObj', userObj, 'url', url
       )
-      if(userObj[user].includes('admin' || 'user')) {
+      if(userObj[user].includes('admin') || userObj[user].includes('user')) {
         console.log('user is admin')
       } else {
         throw new Error('User is not authorized')
