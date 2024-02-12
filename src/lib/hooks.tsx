@@ -16,9 +16,20 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
     queryKey: [tableName],
     queryFn: async () => {
       try {
-        const res = await fetch(`${baseUrl}/api/${tableName}`);
-        if (!res.ok) throw new Error(`Failed to fetch ${tableName} table data`);
-        const { data } = await res.json();
+        const response = await fetch(`${baseUrl}/api/${tableName}`, {
+          credentials: 'include', // Include cookies for cross-origin requests
+        });
+        // if (!res.ok) throw new Error(`Failed to fetch ${tableName} table data`);
+        const {data} = await response.json();
+        if (!response.ok) {
+          const errorMessage =
+            data.message || `Failed to fetch from ${tableName}`;
+          // You can further customize the error object here if needed
+          throw Object.assign(new Error(errorMessage), {
+            statusCode: response.status,
+            data,
+          });
+        }
 
         // const validatedData = zodSchema.safeParse(data);
         // // console.log(validatedData, 'validatedData');
@@ -139,58 +150,85 @@ export function useDeleteRowMutation({ tableName }) {
 
 // update a row
 
-async function updateRowEdit(editedForm, tableName, zodSchema, idColumnName, dateColumnName) {
+async function updateRowEdit(
+  editedForm,
+  tableName,
+  zodSchema,
+  idColumnName,
+  dateColumnName
+) {
   try {
-    console.log('editedForm in updateRowEdit', editedForm, editedForm[idColumnName]);
+    console.log(
+      'editedForm in updateRowEdit',
+      editedForm,
+      editedForm[idColumnName]
+    );
     const validatedData = zodSchema.safeParse(editedForm);
     if (!validatedData.success) {
       console.log('updateRowEdit validation error', validatedData.error);
-      throw new Error(`Failed to validate updateRowEdit form: ${validatedData.error.message}`)
+      throw new Error(
+        `Failed to validate updateRowEdit form: ${validatedData.error.message}`
+      );
     }
-    const res = await fetch(`${baseUrl}/api/${tableName}/${editedForm[idColumnName]}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      }, 
-      body: 
-        JSON.stringify({
-          ...editedForm, [dateColumnName]: getUtcTimestampFromLocalTime(editedForm.human_readable_date),
-        })
-      
-    })
+    const res = await fetch(
+      `${baseUrl}/api/${tableName}/${editedForm[idColumnName]}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...editedForm,
+          [dateColumnName]: getUtcTimestampFromLocalTime(
+            editedForm.human_readable_date
+          ),
+        }),
+      }
+    );
     if (!res.ok) {
       const errText = await res.text();
       throw new Error(`Failed to update row, ${errText}`);
     }
-    const {data} = await res.json();
-    return data
+    const { data } = await res.json();
+    return data;
   } catch (err) {
     console.error('error in updateRowEdit', err);
     throw err;
   }
-
 }
 
-export function useUpdateRowMutation({ tableName, zodSchema, initialEditForm, setEditedForm, idColumnName, dateColumnName }) {
+export function useUpdateRowMutation({
+  tableName,
+  zodSchema,
+  initialEditForm,
+  setEditedForm,
+  idColumnName,
+  dateColumnName,
+}) {
   const queryClient = useQueryClient();
-  const { mutate, isPending, error, reset} = useMutation({
-    mutationFn: (editedForm)=> updateRowEdit(editedForm, tableName, zodSchema, idColumnName, dateColumnName),
-    onSuccess: ()=> {
+  const { mutate, isPending, error, reset } = useMutation({
+    mutationFn: (editedForm) =>
+      updateRowEdit(
+        editedForm,
+        tableName,
+        zodSchema,
+        idColumnName,
+        dateColumnName
+      ),
+    onSuccess: () => {
       // console.log('onSuccess in useUpdateRowMutation', tableName, [tableName])
-      queryClient.invalidateQueries({ queryKey: [tableName]});
+      queryClient.invalidateQueries({ queryKey: [tableName] });
       setEditedForm(initialEditForm);
-      reset()
+      reset();
     },
     onError: (err) => {
       console.error('error in useUpdateRowMutation', err);
       throw err;
-    }
-  })
+    },
+  });
 
-  return {mutate, isPending, error}
+  return { mutate, isPending, error };
 }
-
-
 
 // Flask hooks
 export function useFlask(id: number | null) {

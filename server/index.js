@@ -78,11 +78,14 @@ const config = {
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
   // redirect_uri: process.env.BASE_URL + '/callback',
+  // redirectUrl: process.env.CLIENT_URL,
 };
 console.log('config for auth', config);
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
+
+
 
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
@@ -138,16 +141,34 @@ app.get('/api', (req, res) => {
 });
 
 // GET all cell banks
-app.get('/api/cellbanks', async (req, res) => {
+app.get('/api/cellbanks', requiresAuth(), async (req, res) => {
   try {
+    console.log('req.oidc.user in cellbanks backend', req.oidc.user);
+    if (req?.oidc?.user) {
+      const userObj = req.oidc.user;
+      const url = 'https://seed-flask-2-c1d8d446416a.herokuapp.com'
+
+      const user = `${url}/roles`
+      console.log(
+       'user', user, 'userObj', userObj, 'url', url
+      )
+      if(userObj[user].includes('admin' || 'user')) {
+        console.log('user is admin')
+      } else {
+        throw new Error('User is not authorized')
+      }
+    }
     const results = await db.query(`SELECT * FROM cell_banks
     ORDER BY cell_bank_id DESC;`);
     res.status(200).json({
       status: 'success',
       data: results.rows,
+      // user: req.oidc.user,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+
   }
 });
 
