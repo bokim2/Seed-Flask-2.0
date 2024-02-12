@@ -23,11 +23,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { db } from './db/db.js';
 import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
+import {allowRolesAdminUser} from './middleware/allowRolesAdminUser.js';
+
+export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com'
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+// app.use(cors());
 // enable cors for development
 app.use(
   cors({
@@ -36,6 +39,7 @@ app.use(
       'https://localhost:5173',
       'https://seed-flask-2-c1d8d446416a.herokuapp.com',
       'https://dev-1gk5wccsooddgtgs.us.auth0.com',
+      'https://localhost:3000'
     ],
     credentials: true, // Allow cookies to be sent
     allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
@@ -140,24 +144,12 @@ app.get('/api', (req, res) => {
   res.send('Hello from the API');
 });
 
-// GET all cell banks
-app.get('/api/cellbanks', requiresAuth(), async (req, res) => {
-  try {
-    console.log('req.oidc.user in cellbanks backend', req.oidc.user);
-    if (req?.oidc?.user) {
-      const userObj = req.oidc.user;
-      const url = 'https://seed-flask-2-c1d8d446416a.herokuapp.com'
 
-      const user = `${url}/roles`
-      console.log(
-       'user', user, 'userObj', userObj, 'url', url
-      )
-      if(userObj[user].includes('admin') || userObj[user].includes('user')) {
-        console.log('user is admin')
-      } else {
-        throw new Error('User is not authorized')
-      }
-    }
+
+// GET all cell banks
+app.get('/api/cellbanks', allowRolesAdminUser, async (req, res) => {
+  try {
+
     const results = await db.query(`SELECT * FROM cell_banks
     ORDER BY cell_bank_id DESC;`);
     res.status(200).json({
@@ -179,8 +171,9 @@ app.get('/api/cellbanks', requiresAuth(), async (req, res) => {
 //     FROM cell_banks;`
 
 // post one cell bank
-app.post('/api/cellbanks', badWordsMiddleware, async (req, res) => {
+app.post('/api/cellbanks', allowRolesAdminUser, badWordsMiddleware, async (req, res) => {
   try {
+
     // console.log(req.body, 'in post cell bank server');
     const results = await db.query(
       'INSERT INTO cell_banks (strain, notes, target_molecule, description) values ($1, $2, $3, $4) returning *',
