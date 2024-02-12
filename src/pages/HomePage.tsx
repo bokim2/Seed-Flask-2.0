@@ -12,7 +12,7 @@ import {
   StyledMainMenuButtons,
   Wrapper,
 } from '../styles/UtilStyles';
-import { baseUrl } from '../../configs';
+import { Auth0Url, baseUrl } from '../../configs';
 
 const HomePageContainer = styled(PageContainer)`
   width: 80%;
@@ -119,11 +119,25 @@ export default function HomePage() {
     // getEnv()
     authProfile();
   }, []);
+
+  async function login() {
+    try{
+      const response = await fetch(`${baseUrl}/login`, {
+        credentials: 'include', // Include cookies for cross-origin requests
+      });
+      // console.log(response)
+    const data = await response.json();
+    // setUserProfile(data);
+    } catch(errr){
+      console.log('error', errr)
+    }
+  }
   return (
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">
-        <button><a href="https://seed-flask-2-c1d8d446416a.herokuapp.com/login">login</a></button>
-        <button><a href="https://seed-flask-2-c1d8d446416a.herokuapp.com/logout">logout</a></button>
+        <button onClick={login}>login function</button>
+        <button><a href={`${baseUrl}/login/`}>login</a></button>
+        <button><a href={`${baseUrl}/logout/`}>logout</a></button>
           <p>{JSON.stringify(userProfile, null, 2)}</p>
           <p>{JSON.stringify(env, null, 2)}</p>
           {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />}
