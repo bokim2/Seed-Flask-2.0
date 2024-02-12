@@ -20,16 +20,12 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
           credentials: 'include', // Include cookies for cross-origin requests
         });
         // if (!res.ok) throw new Error(`Failed to fetch ${tableName} table data`);
-        const {data} = await response.json();
-        if (!response.ok) {
-          const errorMessage =
-            data.message || `Failed to fetch from ${tableName}`;
-          // You can further customize the error object here if needed
-          throw Object.assign(new Error(errorMessage), {
-            statusCode: response.status,
-            data,
-          });
-        }
+        const data = await response.json();
+    if (!response.ok) {
+      const errorMessage = data.message || `Failed to fetch from ${tableName}`;
+      // You can further customize the error object here if needed
+      throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
+    }
 
         // const validatedData = zodSchema.safeParse(data);
         // // console.log(validatedData, 'validatedData');
@@ -41,7 +37,7 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         //   throw new Error(`Data validation in ${tableName} table failed`);
         // }
         // return validatedData.data;
-        return data;
+        return data.data;
 
         // TURNED VALIDATION OFF FOR NOW!!!!
       } catch (err) {
