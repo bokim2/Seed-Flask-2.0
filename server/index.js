@@ -7,6 +7,13 @@ import morgan from 'morgan';
 import fs from 'fs';
 import https from 'https';
 import http from 'http';
+import pkg from 'express-openid-connect';
+const { auth, requiresAuth } = pkg;
+
+// auth0 api
+// import pkgAPI from 'express-oauth2-jwt-bearer';
+// const { auth: authAPI } = pkgAPI;
+
 //
 import path from 'path';
 import process from 'process';
@@ -61,8 +68,7 @@ const sslServer = https.createServer(
   app
 );
 
-import pkg from 'express-openid-connect';
-const { auth, requiresAuth } = pkg;
+
 
 const config = {
   authRequired: false,
@@ -96,6 +102,24 @@ app.get('/env', (req, res) => {
     processenvNODE_ENV: process.env.NODE_ENV,
   });
 });
+
+
+// AUTH0 API //
+
+// const jwtCheck = authAPI({
+//   audience: 'https://seed-flask-2-c1d8d446416a.herokuapp.com',
+//   issuerBaseURL: 'https://dev-1gk5wccsooddgtgs.us.auth0.com/',
+//   tokenSigningAlg: 'RS256'
+// });
+
+// // enforce on all endpoints
+// // app.use(jwtCheck);
+
+// app.get('/authorized', function (req, res) {
+//     res.send('Secured Resource');
+// });
+
+//
 
 // set cache control headers for images
 app.use(
