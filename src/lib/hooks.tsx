@@ -82,13 +82,14 @@ export async function createRow(form, tableName, zodSchema) {
   if (!validationResult.success) {
     console.error('createRow validation error', validationResult.error);
     throw new Error(
-      `Failed to validate createCellbank form: ${validationResult.error.message}`
+      `Failed to validate createRow form: ${validationResult.error.message}`
     );
   }
   try {
     console.log('form in createRow', form);
     const res = await fetch(`${baseUrl}/api/${tableName}`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -96,8 +97,9 @@ export async function createRow(form, tableName, zodSchema) {
         ...form,
       }),
     });
+    console.log('res in createRow', res);
     if (!res.ok) {
-      throw new Error('Failed to create cellbank');
+      throw new Error('Failed to create row');
     }
     const { data } = await res.json();
     console.log('data after post in createRow', data);
