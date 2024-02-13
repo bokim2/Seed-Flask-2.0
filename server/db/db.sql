@@ -15,6 +15,9 @@
 --     target_molecule TEXT,
 --     description TEXT,
 --     date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+    -- project VARCHAR(250),
+    -- username VARCHAR(250),
+    -- user_id VARCHAR(250),
 -- );
 
 

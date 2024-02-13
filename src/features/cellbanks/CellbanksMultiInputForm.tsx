@@ -67,7 +67,8 @@ export default function CellbanksMultiInputForm() {
       const rowData = {
         strain: singleRow[0],
         target_molecule: singleRow[1],
-        description: singleRow[2],
+        project: singleRow[2],
+        description: singleRow[3],
         notes: singleRow[3],
       };
       return rowData;
@@ -153,6 +154,23 @@ export default function CellbanksMultiInputForm() {
                       placeholder="target molecule (e.g. farnesane)"
                       required
                       value={bulkForm[i].target_molecule}
+                    />
+                  </CellbankFormCell>
+
+                  <CellbankFormCell>
+                    {i == 0 && (
+                      <FormLabel htmlFor="project">
+                        project
+                      </FormLabel>
+                    )}
+                    <CellbankMultiInput
+                      type="text"
+                      id="project"
+                      name="project"
+                      onChange={(e) => handleChange(e, i)}
+                      placeholder="project (e.g. cloudberry)"
+                      required
+                      value={bulkForm[i].project}
                     />
                   </CellbankFormCell>
 

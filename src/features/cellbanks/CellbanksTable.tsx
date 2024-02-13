@@ -12,13 +12,24 @@ import { useState } from 'react';
 import { baseUrl } from '../../../configs';
 // import { InitialEditCellbankForm } from '../../lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { displayLocalTime, useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
-import {  useTextInputSearch, useUpdateCellbankMutation } from './cellbanks-hooks';
+import {
+  displayLocalTime,
+  useDeleteRowMutation,
+  useUpdateRowMutation,
+} from '../../lib/hooks';
+import {
+  useTextInputSearch,
+  useUpdateCellbankMutation,
+} from './cellbanks-hooks';
 import { useSearchParams } from 'react-router-dom';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
-import { TUpdateCellbankForm, initialEditCellbankForm, updateCellbankSchema } from './cellbanks-types';
-
+import {
+  TUpdateCellbankForm,
+  initialEditCellbankForm,
+  updateCellbankSchema,
+} from './cellbanks-types';
+import ErrorMessage from '../../ui/ErrorMessage';
 
 const TextSearchContainer = styled.div``;
 
@@ -33,40 +44,52 @@ export default function CellbanksTable({
   cellbanks,
   handleAddBookmark,
   toggleTextTruncation,
-  
 }) {
-
   const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
     initialEditCellbankForm
   );
-// id of edited cellbank
-const [editingId, setEditingId] = useState<number | null>(null);
+  // id of edited cellbank
+  const [editingId, setEditingId] = useState<number | null>(null);
 
-// update cellbank 
-// const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
+  // update cellbank
+  // const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
 
-// update row
-const {mutate: submitEditedCellbankForm, isPending: isPendingUpdate} = useUpdateRowMutation({tableName: 'cellbanks', zodSchema: updateCellbankSchema, initialEditForm: initialEditCellbankForm, setEditedForm: setEditedForm, idColumnName: 'cell_bank_id', dateColumnName: 'date_timestamptz'});
+  // update row
+  const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate, error: updateError } =
+    useUpdateRowMutation({
+      tableName: 'cellbanks',
+      zodSchema: updateCellbankSchema,
+      initialEditForm: initialEditCellbankForm,
+      setEditedForm: setEditedForm,
+      idColumnName: 'cell_bank_id',
+      dateColumnName: 'date_timestamptz',
+    });
 
-// delete row, only for cellbank (archive)
-// const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
+  // delete row, only for cellbank (archive)
+  // const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
 
-// delete cellbank
-  const {mutate: deleteCellbank, isPending: isPendingDelete, error} = useDeleteRowMutation({tableName: 'cellbanks'});
+  // delete cellbank
+  const {
+    mutate: deleteCellbank,
+    isPending: isPendingDelete,
+    error: deleteError,
+  } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
   // searching cellbanks table through text input
-const [searchedData, setSearchedData] = useState([]);  
-const {searchText, setSearchText, SelectSearchField, performInputTextSearch} = useTextInputSearch();
-
-
+  const [searchedData, setSearchedData] = useState([]);
+  const {
+    searchText,
+    setSearchText,
+    SelectSearchField,
+    performInputTextSearch,
+  } = useTextInputSearch();
 
   const handleEditFormSubmit = (e, editedForm) => {
     e.preventDefault();
     e.stopPropagation();
     submitEditedCellbankForm(editedForm);
-    setEditingId(null)
+    setEditingId(null);
   };
-
 
   return (
     <>
@@ -83,11 +106,11 @@ const {searchText, setSearchText, SelectSearchField, performInputTextSearch} = u
           type="button"
           $size={'small'}
           id="searchButton"
-          onClick={async()=> {
+          onClick={async () => {
             try {
               const data = await performInputTextSearch();
               setSearchedData(data);
-            } catch (err){
+            } catch (err) {
               console.log('error', err);
             }
           }}
@@ -99,6 +122,8 @@ const {searchText, setSearchText, SelectSearchField, performInputTextSearch} = u
       {/* Table Section */}
       {isPendingUpdate && <h1>edit is pending Update...</h1>}
       {isPendingDelete && <h1>edit is pending Delete...</h1>}
+      {updateError?.message && <ErrorMessage error={updateError} />}
+      {deleteError?.message && <ErrorMessage error={deleteError} />}
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
@@ -118,6 +143,9 @@ const {searchText, setSearchText, SelectSearchField, performInputTextSearch} = u
                 </TableHeaderCell>
                 <TableHeaderCell data-column-name="target_molecule">
                   target molecule
+                </TableHeaderCell>
+                <TableHeaderCell data-column-name="project">
+                  project
                 </TableHeaderCell>
                 <TableHeaderCell data-column-name="details">
                   details

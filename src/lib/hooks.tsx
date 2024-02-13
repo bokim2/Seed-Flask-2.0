@@ -45,6 +45,7 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         throw err;
       }
     },
+    retry: 2,
     meta: {
       errorMessage: `Failed to fetch ${tableName} data (meta option useQuery)`,
     },
