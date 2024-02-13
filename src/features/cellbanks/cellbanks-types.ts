@@ -7,6 +7,7 @@ export const cellbankSchema = z.object({
   cell_bank_id: z.coerce.number() || null, // force a number type
   strain: z.string() || null,
   target_molecule: z.string() || null,
+  project: z.string() || null,
   description: z.string()  || null,
   notes: z.string() || null,
   date_timestamptz: z.string() || null,
@@ -22,6 +23,7 @@ export const createCellbankSchema = z.object({
   strain: z.string(),
   notes: z.string(),
   target_molecule: z.string(),
+  project: z.string(),
   description: z.string(),
 });
 
@@ -35,6 +37,7 @@ export const initialEditCellbankForm = {
   strain: '',
   notes: '',
   target_molecule: '',
+  project: '',
   description: '',
   date_timestamptz: '',
   human_readable_date: '',
@@ -52,6 +55,7 @@ export const CellbankSearchParamsSchema = z.object({
     'cell_bank_id',
     'strain',
     'target_molecule',
+    'project',
     'details',
     'notes',
     'date_timestampz',

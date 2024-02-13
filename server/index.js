@@ -23,9 +23,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { db } from './db/db.js';
 import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
-import {allowRolesAdminUser} from './middleware/allowRolesAdminUser.js';
+import { allowRolesAdminUser } from './middleware/allowRolesAdminUser.js';
 
-export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com'
+export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';
 
 const app = express();
 app.use(express.json());
@@ -39,7 +39,7 @@ app.use(
       'https://localhost:5173',
       'https://seed-flask-2-c1d8d446416a.herokuapp.com',
       'https://dev-1gk5wccsooddgtgs.us.auth0.com',
-      'https://localhost:3000'
+      'https://localhost:3000',
     ],
     credentials: true, // Allow cookies to be sent
     allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
@@ -72,8 +72,6 @@ const sslServer = https.createServer(
   app
 );
 
-
-
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -89,8 +87,6 @@ console.log('config for auth', config);
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
-
-
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
@@ -103,13 +99,12 @@ app.get('/env', (req, res) => {
   res.json({
     // processenv: process.env,
     secret: process.env.SECRET,
-  baseURL: process.env.BASE_URL,
-  clientID: process.env.CLIENT_ID,
-  issuerBaseURL: process.env.ISSUER_BASE_URL,
+    baseURL: process.env.BASE_URL,
+    clientID: process.env.CLIENT_ID,
+    issuerBaseURL: process.env.ISSUER_BASE_URL,
     processenvNODE_ENV: process.env.NODE_ENV,
   });
 });
-
 
 // AUTH0 API //
 
@@ -144,12 +139,9 @@ app.get('/api', (req, res) => {
   res.send('Hello from the API');
 });
 
-
-
 // GET all cell banks
-app.get('/api/cellbanks', allowRolesAdminUser, async (req, res) => {
+app.get('/api/cellbanks',  async (req, res) => {
   try {
-
     const results = await db.query(`SELECT * FROM cell_banks
     ORDER BY cell_bank_id DESC;`);
     res.status(200).json({
@@ -160,7 +152,6 @@ app.get('/api/cellbanks', allowRolesAdminUser, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
-
   }
 });
 
@@ -171,28 +162,38 @@ app.get('/api/cellbanks', allowRolesAdminUser, async (req, res) => {
 //     FROM cell_banks;`
 
 // post one cell bank
-app.post('/api/cellbanks', allowRolesAdminUser, badWordsMiddleware, async (req, res) => {
-  try {
-
-    // console.log(req.body, 'in post cell bank server');
-    const results = await db.query(
-      'INSERT INTO cell_banks (strain, notes, target_molecule, description) values ($1, $2, $3, $4) returning *',
-      [
-        req.body.strain,
-        req.body.notes,
-        req.body.target_molecule,
-        req.body.description,
-      ]
-    );
-    console.log(results.rows);
-    res.status(200).json({
-      status: 'success',
-      data: results.rows,
-    });
-  } catch (err) {
-    console.log(err);
+app.post(
+  '/api/cellbanks',
+  allowRolesAdminUser,
+  badWordsMiddleware,
+  async (req, res) => {
+    try {
+      const userObj = req.oidc.user;
+      const username = userObj.name;
+      const user_id = userObj.sub;
+      // console.log(req.body, 'in post cell bank server');
+      const results = await db.query(
+        'INSERT INTO cell_banks (strain, notes, target_molecule, project, description, username, user_id) values ($1, $2, $3, $4, $5, $6, $7) returning *',
+        [
+          req.body.strain,
+          req.body.notes,
+          req.body.target_molecule,
+          req.body.project,
+          req.body.description,
+          username,
+          user_id,
+        ]
+      );
+      console.log(results.rows);
+      res.status(200).json({
+        status: 'success',
+        data: results.rows,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
-});
+);
 
 // UPDATE one cell bank
 
@@ -637,6 +638,7 @@ app.get('/api/cellbanks/search', async (req, res) => {
     const validFields = [
       'cell_bank_id',
       'strain',
+      'project',
       'target_molecule',
       'details',
       'notes',

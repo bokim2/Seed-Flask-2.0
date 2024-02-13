@@ -21,7 +21,7 @@ export default function CellbanksRow({
   editingId, 
   setEditingId
 }) {
-  const { cell_bank_id, target_molecule, strain, description, notes, date_timestamptz } = rowData;
+  const { cell_bank_id, target_molecule, strain, description, notes, date_timestamptz, username, project } = rowData;
   
   const editing = editingId === cell_bank_id;
   return (
@@ -38,6 +38,10 @@ export default function CellbanksRow({
 
         <TableDataCell data-cell="target_molecule">
           {target_molecule}
+        </TableDataCell>
+
+        <TableDataCell data-cell="project">
+          {project}
         </TableDataCell>
 
         <TableDataCell
@@ -58,7 +62,7 @@ export default function CellbanksRow({
           {displayLocalTime(date_timestamptz)}
         </TableDataCell>
 
-        <TableDataCell data-cell="user">username</TableDataCell>
+        <TableDataCell data-cell="user">{username}</TableDataCell>
 
         <TableDataCell
           data-cell="edit"
@@ -152,6 +156,20 @@ function CellbanksEditForm({
             value={editedForm.target_molecule}
           >
             {editedForm.target_molecule}
+          </EditTextArea>
+        </TableDataCell>
+
+        <TableDataCell data-cell="project">
+          <EditTextArea
+            data-cell="project"
+            id="project"
+            name="project"
+            onChange={handleChange}
+            placeholder="project"
+            required
+            value={editedForm.project}
+          >
+            {editedForm.project}
           </EditTextArea>
         </TableDataCell>
 
