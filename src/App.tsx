@@ -20,6 +20,8 @@ import CellbankPage from './pages/CellbankPage';
 import ChartsPage from './pages/ChartsPage';
 import SignInPage from './pages/SignInPage';
 import BioreactorPage from './pages/BioreactorPage';
+import { useEffect, useState } from 'react';
+import { baseUrl } from '../configs';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -31,6 +33,13 @@ import BioreactorPage from './pages/BioreactorPage';
 //     },
 //   },
 // });
+
+
+type TuserProfile = {
+  picture: string;
+  name: string;
+  email: string;
+};
 
 function App() {
   const queryClient = new QueryClient({
@@ -52,6 +61,27 @@ function App() {
       },
     },
   });
+
+  const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
+
+  useEffect(() => {
+    async function authProfile() {
+      try{
+        const response = await fetch(`${baseUrl}/profile`, {
+          credentials: 'include', // Include cookies for cross-origin requests
+        });
+        console.log(response)
+      const data = await response.json();
+      setUserProfile(data);
+      } catch(errr){
+        console.log('error', errr)
+      }
+    }
+
+    // getEnv()
+    authProfile();
+  }, []);
+
   return (
     <>
       <QueryClientProvider client={queryClient}>
@@ -62,7 +92,7 @@ function App() {
       </StyledDiv> */}
         <BrowserRouter>
           <Routes>
-            <Route element={<AppLayout />}>
+            <Route element={<AppLayout userProfile={userProfile}/>}>
               <Route index element={<HomePage />} />
               <Route path="cellbank" element={<CellbankPage />} />
               <Route path="flask" element={<FlaskPage />} />
@@ -70,7 +100,7 @@ function App() {
               <Route path="bioreactor" element={<BioreactorPage/>} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="charts" element={<ChartsPage />} />
-              <Route path="signin" element={<SignInPage />} />
+              {/* <Route path="signin" element={<SignInPage />} /> */}
             </Route>
 
             <Route path="*" element={<h1>Page not found</h1>} />

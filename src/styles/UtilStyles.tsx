@@ -2,6 +2,28 @@ import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { TTableHeaderCell, TTableRow } from '../lib/types';
 
+// a tag buttons
+export const LinkButton = styled.a`
+box-sizing: border-box;
+display: inline-block;
+padding: .5rem 1rem;
+margin: 1rem;
+color: var(--clr-text-1);
+letter-spacing: .1rem;
+text-align: center;
+background-color: rgba(var(--clr-accent-5), .8);
+   text-align: center;
+  border: none;
+  border-radius: .5em;
+  /* color: var(--clr-text-1); */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  &:hover {
+      background-color: rgba(var(--clr-accent-5),.8);
+    }
+
+`
+
 
 // Nav 
 

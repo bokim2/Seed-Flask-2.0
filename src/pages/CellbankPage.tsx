@@ -10,7 +10,7 @@ import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputFo
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCellbankBookmark } from '../features/settings/bookmarksSlice';
+import { addCellbankBookmark } from '../features/ui-state/bookmarksSlice';
 import { RootState } from '../lib/store';
 import Button from '../ui/Button';
 import { useFetchValidatedTableQuery } from '../lib/hooks';
@@ -55,7 +55,7 @@ export default function CellbankPage() {
     <PageContainer id="CellbankPageContainer">
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
-      {/* {(error) && (<div>Error: {error.message}</div>)} */}
+        {/* {(error) && (<div>Error: {error.message}</div>)} */}
         <Button
           $size={'small'}
           onClick={() => settToggleTextTruncation((prev) => !prev)}
@@ -68,7 +68,7 @@ export default function CellbankPage() {
         <h3>{JSON.stringify(cellbankBookmarks)}</h3>
 
         <CellbanksMultiInputForm />
-        
+
         {error?.message && <ErrorMessage error={error} />}
         {!isLoading && cellbanks && cellbanks.length > 0 && (
           <CellbanksTable
