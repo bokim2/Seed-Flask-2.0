@@ -30,7 +30,7 @@ const StyledNavLink = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: end;
-  padding-right: 2rem;
+  
 `;
 
 const StyledNav = styled.nav`
@@ -48,6 +48,7 @@ const StyledTitle = styled.h1`
   color: rgba(var(--clr-accent-0));
   font-size: clamp(2rem, 3vw, 3rem);
   letter-spacing: 0.08rem;
+  cursor: pointer;
   transition: transform 100ms ease-in-out, color 100ms ease-in-out,
     filter 100ms ease-in-out;
 
@@ -81,19 +82,34 @@ export const StyledUser = styled.img`
   z-index: 100;
   /* max-width: 50%; */
   padding: 0;
+  margin: 0;
   width: clamp(2rem, 4vw, 4rem);
   border-radius: 50%;
 `;
 
 const UserIconContainer = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-transform: uppercase;
+  
+`;
 
-`
+const StyledLinkButton = styled(LinkButton)`
+  display: none;
 
-const style = { color: '#F2D17C', fontSize: '3rem' };
+  @media (min-width: 600px) {
+    display: block;
+  }
+`;
+
+const style = {
+  color: '#F2D17C',
+  fontSize: '3rem',
+  height: 'auto',
+  width: 'auto',
+  cursor: 'pointer',
+};
 
 type MainNavProps = {
   // openNav: boolean;
@@ -199,28 +215,40 @@ export default function MainNav({ userProfile }) {
         </StyledNavLink>
 
         <NavSection>
-          {!userProfile?.name ?
-            <LinkButton href={`${baseUrl}/login/`}>login</LinkButton>
-          :
-          <LinkButton href={`${baseUrl}/logout/`}>logout</LinkButton>}
+          {!userProfile?.name ? (
+            <StyledLinkButton href={`${baseUrl}/login/`}>
+              login
+            </StyledLinkButton>
+          ) : (
+            <StyledLinkButton href={`${baseUrl}/logout/`}>
+              logout
+            </StyledLinkButton>
+          )}
 
-
-            {userProfile?.picture ? (
-              <UserIconContainer>
-
-                <StyledUser src={userProfile.picture}></StyledUser>
-                <small>{userProfile['https://seed-flask-2-c1d8d446416a.herokuapp.com/roles']}</small>
-              </UserIconContainer>
-            ) : (
-              <UserButton
+          {userProfile?.picture ? (
+            <UserIconContainer
               onClick={(e) => handleToggle(e, 'user')}
               aria-label="user and settings menu"
-              >
-                  <StyledFaUser>
+            >
+              <StyledUser src={userProfile.picture}></StyledUser>
+              <small>
+                {
+                  userProfile[
+                    'https://seed-flask-2-c1d8d446416a.herokuapp.com/roles'
+                  ]
+                }
+              </small>
+            </UserIconContainer>
+          ) : (
+            <UserButton
+              onClick={(e) => handleToggle(e, 'user')}
+              aria-label="user and settings menu"
+            >
+              <StyledFaUser>
                 {/* <NavLink to="/signin"></NavLink> */}
               </StyledFaUser>
-          </UserButton>
-            )}
+            </UserButton>
+          )}
 
           {openNav ? (
             <NavMenuButton aria-label="navigation menu">

@@ -12,6 +12,7 @@ import {
   TableDataCell,
   TableRow,
   FormTableCell,
+  FormInputCell,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
@@ -31,9 +32,9 @@ const BulkInputTextArea = styled.textarea`
 
 const CellbankFormBody = styled.tbody``;
 
-const CellbankFormCell = styled(FormTableCell)``;
+const CellbankFormCell = styled(FormInputCell)``; // td
 
-export const CellbankMultiInput = styled(MultiFormInput)``;
+export const CellbankMultiInput = styled(MultiFormInput)``; // input
 
 export const ButtonsContainer = styled.div`
   display: flex;
