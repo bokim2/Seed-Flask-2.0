@@ -1,6 +1,7 @@
 import React, { ForwardedRef, forwardRef, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { baseUrl } from '../../configs';
 
 const StyledNavList = styled.ul`
   display: flex;
@@ -18,18 +19,34 @@ const StyledNavLink = styled(NavLink)`
   justify-content: end;
   padding-right: 2rem;
 
-  &:focus{
+  &:focus {
+    color: red;
+  }
+`;
+
+const StyledLink = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding-right: 2rem;
+
+  &:focus {
     color: red;
   }
 `;
 
 const UserNavList = forwardRef((props, ref: ForwardedRef<HTMLUListElement>) => {
-
   return (
-    <StyledNavList ref={ref} >
-      <li  tabIndex={0}>
-        <StyledNavLink to="/signin" >Sign-In</StyledNavLink>
+    <StyledNavList ref={ref}>
+      <li tabIndex={0}>
+        <StyledLink href={`${baseUrl}/login/`}>login</StyledLink>
       </li>
+      <li>
+        <StyledLink href={`${baseUrl}/logout/`}>logout</StyledLink>
+      </li>
+      {/* <li>
+        <StyledNavLink to="/signin">Sign-In</StyledNavLink>
+      </li> */}
       <li>
         <StyledNavLink to="/settings">Settings</StyledNavLink>
       </li>

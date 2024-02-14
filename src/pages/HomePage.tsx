@@ -8,11 +8,13 @@ import FlasksRow from '../features/flasks/FlasksRow';
 import Settings from './SettingsPage';
 import {
   InnerPageContainer,
+  LinkButton,
   PageContainer,
   StyledMainMenuButtons,
   Wrapper,
 } from '../styles/UtilStyles';
 import { Auth0Url, baseUrl } from '../../configs';
+import Button from '../ui/Button';
 
 const HomePageContainer = styled(PageContainer)`
   width: 80%;
@@ -88,6 +90,7 @@ type TuserProfile = {
 };
 
 export default function HomePage() {
+  // const { user, isAuthenticated, isLoading } = useAuth0();
   const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
   const [env, setEnv] = useState<any>(null);
 
@@ -104,43 +107,40 @@ export default function HomePage() {
         console.log('error', errr)
       }
     }
-    async function getEnv() {
-      try{
-        const response = await fetch(`${baseUrl}/env`, {
-          credentials: 'include', // Include cookies for cross-origin requests
-        });
-        console.log(response)
-      const data = await response.json();
-      setEnv(data);
-      } catch(errr){
-        console.log('error', errr)
-      }
-    }
+
     // getEnv()
     authProfile();
   }, []);
 
-  async function login() {
-    try{
-      const response = await fetch(`${baseUrl}/login`, {
-        credentials: 'include', // Include cookies for cross-origin requests
-      });
-      // console.log(response)
-    const data = await response.json();
-    // setUserProfile(data);
-    } catch(errr){
-      console.log('error', errr)
-    }
-  }
+      // async function getEnv() {
+    //   try{
+    //     const response = await fetch(`${baseUrl}/env`, {
+    //       credentials: 'include', // Include cookies for cross-origin requests
+    //     });
+    //     console.log(response)
+    //   const data = await response.json();
+    //   setEnv(data);
+    //   } catch(errr){
+    //     console.log('error', errr)
+    //   }
+    // }
+
+  // async function login() {
+  //   try{
+  //     const response = await fetch(`${baseUrl}/login`, {
+  //       credentials: 'include', // Include cookies for cross-origin requests
+  //     });
+  //     // console.log(response)
+  //   const data = await response.json();
+  //   // setUserProfile(data);
+  //   } catch(errr){
+  //     console.log('error', errr)
+  //   }
+  // }
   return (
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">
-        <button onClick={login}>login function</button>
-        <button><a href={`${baseUrl}/login/`}>login</a></button>
-        <button><a href={`${baseUrl}/logout/`}>logout</a></button>
-          <p>{JSON.stringify(userProfile, null, 2)}</p>
-          <p>{JSON.stringify(env, null, 2)}</p>
-          {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />}
+
         <InnerWrapper id="HomeInnerWrapper">
 
           {/* <LoginButton />
@@ -206,6 +206,11 @@ export default function HomePage() {
             />
           </SecondaryMenuButtonContainer>
         </InnerWrapper>
+
+          {/* <p>{JSON.stringify(userProfile, null, 2)}</p>
+          <p>{JSON.stringify(env, null, 2)}</p>
+          {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />} */}
+
       </InnerPageContainer>
     </PageContainer>
   );
@@ -227,22 +232,22 @@ const LogoutButton = () => {
   );
 };
 
-const Profile = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
-  console.log('user', user, 'isAuthenticated', isAuthenticated, 'isLoading', isLoading);
+// const Profile = () => {
+//   const { user, isAuthenticated, isLoading } = useAuth0();
+//   console.log('user', user, 'isAuthenticated', isAuthenticated, 'isLoading', isLoading);
 
-  if (isLoading) {
-    return <div>Loading ...</div>;
-  }
+//   if (isLoading) {
+//     return <div>Loading ...</div>;
+//   }
 
-  return (
-    isAuthenticated && user && (
-      <div>
-        <img src={user.picture} alt={user.name} />
-        <h2>{user.name}</h2>
-        <p>{user.email}</p>
-      </div>
-    )
-  );
-};
+//   return (
+//     isAuthenticated && user && (
+//       <div>
+//         <img src={user.picture} alt={user.name} />
+//         <h2>{user.name}</h2>
+//         <p>{user.email}</p>
+//       </div>
+//     )
+//   );
+// };
 

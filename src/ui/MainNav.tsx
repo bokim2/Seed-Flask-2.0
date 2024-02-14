@@ -6,7 +6,13 @@ import { NavLink } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../lib/types';
 import { useOnClickOutside } from '../lib/hooks';
-import { NavMenuButton, NavSection, UserButton } from '../styles/UtilStyles';
+import {
+  LinkButton,
+  NavMenuButton,
+  NavSection,
+  UserButton,
+} from '../styles/UtilStyles';
+import { ProdUrl, baseUrl } from '../../configs';
 
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
@@ -68,6 +74,24 @@ export const StyledFaUser = styled(FaUser)`
   fill: var(--clr-accent-0);
 `;
 
+export const StyledUser = styled.img`
+  font-size: 1.75rem;
+  fill: var(--clr-accent-0);
+  opacity: 1;
+  z-index: 100;
+  /* max-width: 50%; */
+  padding: 0;
+  width: clamp(2rem, 4vw, 4rem);
+  border-radius: 50%;
+`;
+
+const UserIconContainer = styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+text-transform: uppercase;
+
+`
 
 const style = { color: '#F2D17C', fontSize: '3rem' };
 
@@ -81,7 +105,7 @@ type StyledMainNav = {
   $isScrolled?: boolean;
 };
 
-export default function MainNav() {
+export default function MainNav({ userProfile }) {
   const mainNavRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -165,6 +189,7 @@ export default function MainNav() {
   //     navButtonRef.current?.focus();
   //   }
   // }, [openUser]);
+  const roleUrl = ProdUrl + '/role';
 
   return (
     <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
@@ -174,14 +199,28 @@ export default function MainNav() {
         </StyledNavLink>
 
         <NavSection>
-          <UserButton
-            onClick={(e) => handleToggle(e, 'user')}
-            aria-label="user and settings menu"
-          >
-            <StyledFaUser>
-              {/* <NavLink to="/signin"></NavLink> */}
-            </StyledFaUser>
+          {!userProfile?.name ?
+            <LinkButton href={`${baseUrl}/login/`}>login</LinkButton>
+          :
+          <LinkButton href={`${baseUrl}/logout/`}>logout</LinkButton>}
+
+
+            {userProfile?.picture ? (
+              <UserIconContainer>
+
+                <StyledUser src={userProfile.picture}></StyledUser>
+                <small>{userProfile['https://seed-flask-2-c1d8d446416a.herokuapp.com/roles']}</small>
+              </UserIconContainer>
+            ) : (
+              <UserButton
+              onClick={(e) => handleToggle(e, 'user')}
+              aria-label="user and settings menu"
+              >
+                  <StyledFaUser>
+                {/* <NavLink to="/signin"></NavLink> */}
+              </StyledFaUser>
           </UserButton>
+            )}
 
           {openNav ? (
             <NavMenuButton aria-label="navigation menu">
@@ -209,6 +248,7 @@ export default function MainNav() {
           )}
         </NavSection>
       </StyledNav>
+
       {openNav && <NavList ref={navListRef} />}
       {openUser && <UserNavList ref={userListRef} />}
     </StyledMainNav>
