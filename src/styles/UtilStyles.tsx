@@ -6,8 +6,8 @@ import { TTableHeaderCell, TTableRow } from '../lib/types';
 export const LinkButton = styled.a`
 box-sizing: border-box;
 display: inline-block;
-padding: .5rem 1rem;
-margin: 1rem;
+padding: .25rem .5rem;
+/* margin: 1rem; */
 color: var(--clr-text-1);
 letter-spacing: .1rem;
 text-align: center;
@@ -22,6 +22,10 @@ background-color: rgba(var(--clr-accent-5), .8);
       background-color: rgba(var(--clr-accent-5),.8);
     }
 
+    @media (min-width: 600px) {
+      padding: .5rem 1rem;
+  }
+
 `
 
 
@@ -30,14 +34,19 @@ background-color: rgba(var(--clr-accent-5), .8);
 export const UserButton = styled.button`
   border-radius: 50%; /* Use 50% for a circular shape */
   aspect-ratio: 1/1;
-  padding: 0.5rem; /* Add padding if needed */
+  padding: 0.3rem; /* Add padding if needed */
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 100ms ease-in-out;
 
+
   &:hover {
     transform: scale(1.05);
+  }
+
+  @media (min-width: 600px) {
+    padding: 0.5rem; /* Add padding if needed */
   }
 `;
 
@@ -46,6 +55,7 @@ export const NavMenuButton = styled.button`
   padding: 0;
   background-color: transparent;
   transition: transform 100ms ease-in-out;
+  
 
   &:hover {
     transform: scale(1.05);
@@ -157,7 +167,9 @@ export const InputContainer = styled.div`
 
 export const FormTableCell = styled.td`
   @media (max-width: 600px) {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+
     &::before {
       content: attr(data-cell) ': ';
       font-weight: 700;
@@ -165,6 +177,15 @@ export const FormTableCell = styled.td`
       color: yellow;
     }
   }
+`;
+
+export const FormInputCell = styled.td`  // multi-form td
+  @media (max-width: 600px) {
+    display: flex;
+    flex-wrap: wrap;
+
+  }
+  
 `;
 
 export const FormLabel = styled.label`
@@ -176,7 +197,7 @@ export const FormLabel = styled.label`
   font-size: 1.75rem;
 `;
 
-export const MultiFormInput = styled.input`
+export const MultiFormInput = styled.input` // input for multi-form
   width: 90%;
   border: 0;
   font-family: inherit;
@@ -184,7 +205,9 @@ export const MultiFormInput = styled.input`
   background-color: transparent;
   color: inherit;
   border-bottom: 2px solid #f2d17c;
-  padding-top: 1.5rem;
+  padding-top: 1.5rem;  
+  justify-self: center;
+  align-self: center;
 
   &::placeholder {
     color: #faf7f0;
@@ -198,6 +221,8 @@ export const MultiFormInput = styled.input`
 
   @media (min-width: 800px) {
     /* width: 40vw; */
+  justify-self: initial;
+  align-self: initial;
   }
 `;
 
@@ -261,6 +286,7 @@ export const TableContainer = styled.div`
   margin-block: 1rem;
   max-height: 80vh;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 
   @media (max-width: 600px) {
     width: 100%;

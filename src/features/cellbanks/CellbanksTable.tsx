@@ -37,7 +37,11 @@ const TextSearchInput = styled.input`
   margin: 0.5rem;
   border-radius: 5px;
   padding: 0.5rem;
-  width: 400px;
+  width: 200px;
+
+  @media (min-width: 600px){
+    width: 400px;
+  }
 `;
 
 export default function CellbanksTable({
