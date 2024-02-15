@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { baseUrl } from '../../../configs';
 import styled from 'styled-components';
 import {
-  FormButton,
   FormLabel,
-  FormTextArea,
-  InputContainer,
   MultiFormInput,
   StyledForm,
   StyledTable,
-  TableDataCell,
   TableRow,
-  FormTableCell,
+  FormInputCell,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
@@ -31,7 +27,6 @@ const BulkInputTextArea = styled.textarea`
 
 const CellbankFormBody = styled.tbody``;
 
-const CellbankFormCell = styled(FormTableCell)``;
 
 export const CellbankMultiInput = styled(MultiFormInput)``;
 
@@ -149,7 +144,7 @@ export default function FlasksMultiInputForm() {
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
                 <TableRow key={i}>
-                  <CellbankFormCell>
+                  <FormInputCell>
                     {i == 0 && (
                       <FormLabel htmlFor="cell_bank_id">cell bank id</FormLabel>
                     )}
@@ -163,9 +158,9 @@ export default function FlasksMultiInputForm() {
                       autoFocus
                       value={bulkForm[i].cell_bank_id}
                     />
-                  </CellbankFormCell>
+                  </FormInputCell>
 
-                  <CellbankFormCell>
+                  <FormInputCell>
                     {i == 0 && (
                       <FormLabel htmlFor="vessel_type">vessel type</FormLabel>
                     )}
@@ -179,9 +174,9 @@ export default function FlasksMultiInputForm() {
                       autoFocus
                       value={bulkForm[i].vessel_type}
                     />
-                  </CellbankFormCell>
+                  </FormInputCell>
 
-                  <CellbankFormCell>
+                  <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="media">media</FormLabel>}
                     <CellbankMultiInput
                       type="text"
@@ -192,9 +187,9 @@ export default function FlasksMultiInputForm() {
                       required
                       value={bulkForm[i].media}
                     />
-                  </CellbankFormCell>
+                  </FormInputCell>
 
-                  <CellbankFormCell>
+                  <FormInputCell>
                     {i == 0 && (
                       <FormLabel htmlFor="media_ml">media_ml</FormLabel>
                     )}
@@ -206,9 +201,9 @@ export default function FlasksMultiInputForm() {
                       required
                       value={bulkForm[i].media_ml}
                     />
-                  </CellbankFormCell>
+                  </FormInputCell>
 
-                  <CellbankFormCell>
+                  <FormInputCell>
                     {i == 0 && (
                       <FormLabel htmlFor="inoculum_ul">inoculum_ul</FormLabel>
                     )}
@@ -220,9 +215,9 @@ export default function FlasksMultiInputForm() {
                       required
                       value={bulkForm[i].inoculum_ul}
                     />
-                  </CellbankFormCell>
+                  </FormInputCell>
 
-                  <CellbankFormCell>
+                  <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="temp_c">temp_c</FormLabel>}
                     <CellbankMultiInput
                       id="temp_c"
@@ -232,9 +227,9 @@ export default function FlasksMultiInputForm() {
                       required
                       value={bulkForm[i].temp_c}
                     />
-                  </CellbankFormCell>
+                  </FormInputCell>
 
-                  <CellbankFormCell>
+                  <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="rpm">RPM</FormLabel>}
                     <CellbankMultiInput
                       id="rpm"
@@ -244,9 +239,9 @@ export default function FlasksMultiInputForm() {
                       required
                       value={bulkForm[i].rpm}
                     />
-                  </CellbankFormCell>
+                  </FormInputCell>
 
-                  {/* <CellbankFormCell>
+                  {/* <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="start_date">start_date</FormLabel>}
                     <CellbankMultiInput
                       id="start_date"
@@ -256,7 +251,7 @@ export default function FlasksMultiInputForm() {
                       required
                       value={bulkForm[i].start_date}
                     />
-                  </CellbankFormCell> */}
+                  </FormInputCell> */}
                 </TableRow>
               ))}
           </CellbankFormBody>

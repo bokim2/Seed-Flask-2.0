@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { LineGraphColors } from '../../lib/constants';
 import styled from 'styled-components';
+import ChartsTable from './ChartsTable';
 
 ChartJS.register(
   CategoryScale,
@@ -28,8 +29,12 @@ export type TBookmarkedCellbankGraph = {
 };
 
 const StyledBookmarkedCellbankGraph = styled.div`
-  width:100%;
+  width: auto;
   height: auto;
+
+  @media (min-width: 600px){
+    width: 80%;
+  }
 `;
 
 const BookmarkedCellbankGraph = memo(
@@ -106,6 +111,8 @@ const BookmarkedCellbankGraph = memo(
           },
         },
         legend: {
+          // position: 'top' as const,
+          display: false,
           position: 'top' as const,
           labels: {
             color: '#dadada',
@@ -177,9 +184,13 @@ const BookmarkedCellbankGraph = memo(
               clickedXY[1]
             }?.toFixed(2)`}
         </h3>
+        {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
+        {/* <ChartsTable flasks={datasets}/> */}
+        {/* {JSON.stringify(datasets)} */}
         <StyledBookmarkedCellbankGraph>
           <Line ref={chartRef} options={options} data={data} />
         </StyledBookmarkedCellbankGraph>
+        <ChartsTable flasks={bookmarkedCellbankGraphData.flat()}/>
       </>
     );
   }

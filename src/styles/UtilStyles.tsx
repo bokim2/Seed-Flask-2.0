@@ -280,13 +280,15 @@ export const Wrapper = styled.div``;
 
 export const TableContainer = styled.div`
   position: relative;
-  max-width: 100%;
   /* overflow-x: scroll; */
   /* background-color: lightblue; */
   margin-block: 1rem;
-  max-height: 80vh;
+  
+  /* overflow */
+  /* max-height: 80vh;
+  max-width: 100%;
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; */
 
   @media (max-width: 600px) {
     width: 100%;
