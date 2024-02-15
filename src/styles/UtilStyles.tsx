@@ -305,6 +305,9 @@ export const StyledTable = styled.table`
 `;
 
 export const Caption = styled.caption`
+position: sticky;
+z-index: 100;
+top: 4rem;
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
@@ -316,7 +319,7 @@ export const Caption = styled.caption`
 
 export const TableHeader = styled.thead`
   position: sticky;
-  top: 0;
+  top: 9rem;
   background-color: black;
 `;
 
