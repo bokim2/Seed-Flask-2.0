@@ -4,32 +4,30 @@ import { TTableHeaderCell, TTableRow } from '../lib/types';
 
 // a tag buttons
 export const LinkButton = styled.a`
-box-sizing: border-box;
-display: inline-block;
-padding: .25rem .5rem;
-/* margin: 1rem; */
-color: var(--clr-text-1);
-letter-spacing: .1rem;
-text-align: center;
-background-color: rgba(var(--clr-accent-5), .8);
-   text-align: center;
+  box-sizing: border-box;
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  /* margin: 1rem; */
+  color: var(--clr-text-1);
+  letter-spacing: 0.1rem;
+  text-align: center;
+  background-color: rgba(var(--clr-accent-5), 0.8);
+  text-align: center;
   border: none;
-  border-radius: .5em;
+  border-radius: 0.5em;
   /* color: var(--clr-text-1); */
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
   &:hover {
-      background-color: rgba(var(--clr-accent-5),.8);
-    }
-
-    @media (min-width: 600px) {
-      padding: .5rem 1rem;
+    background-color: rgba(var(--clr-accent-5), 0.8);
   }
 
-`
+  @media (min-width: 600px) {
+    padding: 0.5rem 1rem;
+  }
+`;
 
-
-// Nav 
+// Nav
 
 export const UserButton = styled.button`
   border-radius: 50%; /* Use 50% for a circular shape */
@@ -40,7 +38,6 @@ export const UserButton = styled.button`
   justify-content: center;
   transition: transform 100ms ease-in-out;
 
-
   &:hover {
     transform: scale(1.05);
   }
@@ -50,12 +47,10 @@ export const UserButton = styled.button`
   }
 `;
 
-
 export const NavMenuButton = styled.button`
   padding: 0;
   background-color: transparent;
   transition: transform 100ms ease-in-out;
-  
 
   &:hover {
     transform: scale(1.05);
@@ -63,12 +58,12 @@ export const NavMenuButton = styled.button`
 `;
 
 export const NavSection = styled.div`
+height: 100%;
   display: flex;
   align-items: center;
+  /* justify-content: center; */
   gap: 1.5rem;
 `;
-
-
 
 // Main page styles
 
@@ -174,55 +169,55 @@ export const FormTableCell = styled.td`
       content: attr(data-cell) ': ';
       font-weight: 700;
       text-transform: capitalize;
-      color: yellow;
+      color: rgba(var(--clr-accent-0), 1);
     }
   }
 `;
 
-export const FormInputCell = styled.td`  // multi-form td
+export const FormInputCell = styled.td`
+  // multi-form td
   @media (max-width: 600px) {
     display: flex;
     flex-wrap: wrap;
-
   }
-  
 `;
 
 export const FormLabel = styled.label`
   font-weight: 600;
   /* margin-block: 2rem; */
   /* font-family: var(--font-serif); */
-  color: #f2d17c;
+  color: rgba(var(--clr-accent-0), 1);
   /* letter-spacing: .1rem; */
   font-size: 1.75rem;
 `;
 
-export const MultiFormInput = styled.input` // input for multi-form
+export const MultiFormInput = styled.input`
+  // input for multi-form
   width: 90%;
   border: 0;
   font-family: inherit;
   font-weight: 400;
   background-color: transparent;
   color: inherit;
-  border-bottom: 2px solid #f2d17c;
-  padding-top: 1.5rem;  
+  border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
+  padding-top: 1.5rem;
   justify-self: center;
   align-self: center;
 
   &::placeholder {
-    color: #faf7f0;
+    color: rgba(var(--clr-accent-1), 1); // #faf7f0
     opacity: 0.5;
   }
 
   &:focus {
     outline: none;
-    border-bottom: 2px solid #10e7dc;
+    border-bottom: 2px solid rgba(var(--clr-accent-6), 1);
   }
 
   @media (min-width: 800px) {
     /* width: 40vw; */
-  justify-self: initial;
-  align-self: initial;
+    justify-self: initial;
+    align-self: initial;
   }
 `;
 
@@ -233,17 +228,17 @@ export const SingleFormInput = styled.input`
   font-weight: 400;
   background-color: transparent;
   color: inherit;
-  border-bottom: 2px solid #f2d17c;
+  border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
   /* width: 100%; */
 
   &::placeholder {
-    color: #faf7f0;
+    color: rgba(var(--clr-accent-1), 1); // #faf7f0
     opacity: 0.5;
   }
 
   &:focus {
     outline: none;
-    border-bottom: 2px solid rgba(var(--clr-accent-6), 0.9);
+    border-bottom: 2px solid rgba(var(--clr-accent-6), 0.9); //#10e7dc
   }
 
   @media (min-width: 800px) {
@@ -260,11 +255,11 @@ export const FormTextArea = styled.textarea`
   background-color: transparent;
   height: 100px; /* Set the initial height */
   width: 100%; /* Make it take up the full width of its container */
-  border-bottom: 2px solid #f2d17c;
+  border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
 
   &:focus {
     outline: none;
-    border-bottom: 2px solid rgba(var(--clr-accent-6));
+    border-bottom: 2px solid rgba(var(--clr-accent-6)); // #10e7dc
   }
 
   @media (min-width: 800px) {
@@ -283,7 +278,7 @@ export const TableContainer = styled.div`
   /* overflow-x: scroll; */
   /* background-color: lightblue; */
   margin-block: 1rem;
-  
+
   /* overflow */
   /* max-height: 80vh;
   max-width: 100%;
@@ -298,28 +293,29 @@ export const TableContainer = styled.div`
 export const StyledTable = styled.table`
   /* padding-inline: 2rem; */
   /* border-radius: 50px; */
-  background-color: #262231;
+  background-color: rgba(var(--clr-table-100), 1); // #262231
   border-collapse: collapse;
   width: 100%;
   text-align: center;
 `;
 
 export const Caption = styled.caption`
-position: sticky;
-z-index: 100;
-top: 4rem;
+  position: sticky;
+  z-index: 10;
+  top: 3vh;
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
   font-size: 2rem;
   margin-bottom: 2rem;
   color: var(--clr-text-1);
-  /* background-color: red; */
+  /* background-color: #121118; */
+  /* background-color: rgba(var(--clr-table-100), 1); */
 `;
 
 export const TableHeader = styled.thead`
   position: sticky;
-  top: 9rem;
+  top: 10vh;  // reference at NavBar styles
   background-color: black;
 `;
 
@@ -370,7 +366,7 @@ export const TableDataCell = styled.td`
     &::before {
       content: attr(data-cell) ': ';
       font-weight: 700;
-      color: yellow;
+      color: rgba(var(--clr-accent-0), 1);
     }
 
     &.ellipsis {
@@ -387,7 +383,6 @@ export const TableDataCell = styled.td`
     }
   }
 `;
-
 
 // EDIT FORM STYLES
 
@@ -407,6 +402,6 @@ export const PreviousDataRow = styled(TableRow)<TTableRow>`
 `;
 
 export const EditRow = styled.tr`
-  background-color: yellow;
+  background-color: rgba(var(--clr-accent-0), 1);
   color: turquoise;
 `;

@@ -27,10 +27,10 @@ const StyledMainNav = styled.div<StyledMainNav>`
 `;
 
 const StyledNavLink = styled(NavLink)`
+height: 100%;
   display: flex;
   align-items: center;
   justify-content: end;
-  
 `;
 
 const StyledNav = styled.nav`
@@ -83,16 +83,17 @@ export const StyledUser = styled.img`
   /* max-width: 50%; */
   padding: 0;
   margin: 0;
-  width: clamp(2rem, 4vw, 4rem);
+  height: 70%;
+  /* width: clamp(2rem, 4vw, 4rem); */
   border-radius: 50%;
 `;
 
 const UserIconContainer = styled.div`
+height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-transform: uppercase;
-  
 `;
 
 const StyledLinkButton = styled(LinkButton)`
