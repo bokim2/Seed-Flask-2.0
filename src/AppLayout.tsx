@@ -41,7 +41,7 @@ const NavBar = styled.div`
   margin: 0;
   width: 100%;
   z-index: 10;
-  height: 10vh;
+  height: 10vh; // important for all other elements to be positioned correctly
   display: flex;
   align-items: center;
   justify-content: center;
