@@ -302,7 +302,7 @@ export const StyledTable = styled.table`
 export const Caption = styled.caption`
   position: sticky;
   z-index: 10;
-  top: 3vh;
+  top: 10vh;
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
@@ -311,6 +311,13 @@ export const Caption = styled.caption`
   color: var(--clr-text-1);
   /* background-color: #121118; */
   /* background-color: rgba(var(--clr-table-100), 1); */
+  background-color: rgba(var(--clr-table-200), 1);
+  padding-block: 1vh;
+
+  @media (min-width: 600px) {
+    top: 2vh;
+    background-color: transparent;
+  }
 `;
 
 export const TableHeader = styled.thead`
