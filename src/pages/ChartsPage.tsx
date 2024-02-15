@@ -106,7 +106,6 @@ export default function ChartsPage() {
       {JSON.stringify(setChartData)}
       <InnerPageContainer id="ChartsPage">
         {/* <LoaderBar /> */}
-        <ChartsTable />
 
         {bookmarkedCellbankGraphData?.length > 0 && (
           <BookmarkedCellbankGraph
