@@ -88,7 +88,7 @@ export async function createRow(form, tableName, zodSchema) {
   }
   try {
     console.log('form in createRow', form);
-    const res = await fetch(`${baseUrl}/api/${tableName}`, {
+    const response = await fetch(`${baseUrl}/api/${tableName}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -98,13 +98,18 @@ export async function createRow(form, tableName, zodSchema) {
         ...form,
       }),
     });
-    console.log('res in createRow', res);
-    if (!res.ok) {
-      throw new Error('Failed to create row');
+    console.log('res in createRow', response);
+    
+    const  data  = await response.json();
+
+    if (!response.ok) {
+      const errorMessage = data.message || `Failed to post entry in ${tableName}`;
+      // You can further customize the error object here if needed
+      throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
     }
-    const { data } = await res.json();
+
     console.log('data after post in createRow', data);
-    return data;
+    return data.data;
   } catch (err) {
     console.error('Error in createCellbank', err);
     throw err;

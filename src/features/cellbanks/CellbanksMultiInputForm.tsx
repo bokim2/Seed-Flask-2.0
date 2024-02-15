@@ -21,6 +21,7 @@ import {
 } from './cellbanks-types';
 import { TCreateCellbankSchema } from './cellbanks-types';
 import { useCreateValidatedRowMutation } from '../../lib/hooks';
+import ErrorMessage from '../../ui/ErrorMessage';
 
 const BulkInputTextArea = styled.textarea`
   background-color: transparent;
@@ -53,7 +54,7 @@ export default function CellbanksMultiInputForm() {
   const {
     mutate: createCellbankMutation,
     isPending,
-    error,
+    error: createError,
   } = useCreateValidatedRowMutation({
     tableName: 'cellbanks',
     zodSchema: createCellbankSchema,
@@ -114,7 +115,9 @@ export default function CellbanksMultiInputForm() {
         onChange={(e) => setBulkTextAreaInput(e.target.value)}
       ></BulkInputTextArea>
 
+      {createError && <ErrorMessage error={createError} />}
       {isPending && <h1>Submitting cellbank(s) in progress...</h1>}
+      
       <StyledForm
         onSubmit={(e) => {
           handleSubmit(e, bulkForm);
