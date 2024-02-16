@@ -15,6 +15,9 @@
 --     target_molecule TEXT,
 --     description TEXT,
 --     date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+    -- project VARCHAR(250),
+    -- username VARCHAR(250),
+    -- user_id VARCHAR(250),
 -- );
 
 
@@ -22,6 +25,9 @@
 -- INSERT INTO cell_banks (strain, notes, target_molecule, description) values ( 'Aspergillus', 'cell bank: 32C cultivation in test tube.  Final OD600 2.4.', 'alpha amylase', 'secrete alpha amylase for dish detergent applications.  for project Cloudberry. no inducer, constitutive expression.');
 
 
+
+-- Create the enum type for vessel_type
+CREATE TYPE vessel_type AS ENUM ('flask', 'test_tube', '96_well_plate', '24_well_plate');
 
 
 CREATE TABLE flasks (
@@ -90,26 +96,43 @@ CREATE TABLE samples (
   FOREIGN KEY (flask_id) REFERENCES flasks(flask_id)
 );
 
--- Create a trigger function to update time_since_inoc_hr in hours
-CREATE OR REPLACE FUNCTION update_time_since_inoc_hr()
+-- Trigger functions to update time_since_inoc_hr in hours
+
+CREATE OR REPLACE FUNCTION calculate_time_since_inoc_hr_before_insert()
 RETURNS TRIGGER AS $$
 BEGIN
-  UPDATE samples s
-  SET time_since_inoc_hr = EXTRACT(EPOCH FROM (s.end_date - f.start_date)) / 3600.0 -- Convert to hours
-  FROM flasks f
-  WHERE s.flask_id = f.flask_id AND s.sample_id = NEW.sample_id;
-
-  RETURN NEW;
+    -- Calculate and set time_since_inoc_hr for the new row
+    NEW.time_since_inoc_hr := EXTRACT(EPOCH FROM (NEW.end_date - (SELECT start_date FROM flasks WHERE flask_id = NEW.flask_id))) / 3600.0;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Create a trigger on the samples table
-CREATE TRIGGER after_insert_update_time_since_inoc_hr
-AFTER INSERT ON samples
+-- Create or replace the BEFORE INSERT trigger
+DROP TRIGGER IF EXISTS before_insert_calculate_time_since_inoc_hr ON samples;
+CREATE TRIGGER before_insert_calculate_time_since_inoc_hr
+BEFORE INSERT ON samples
 FOR EACH ROW
-EXECUTE FUNCTION update_time_since_inoc_hr();
+EXECUTE FUNCTION calculate_time_since_inoc_hr_before_insert();
 
-INSERT INTO samples (flask_id, od600) VALUES (4, 0.2);
+
+CREATE OR REPLACE FUNCTION calculate_time_since_inoc_hr_after_update()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update time_since_inoc_hr for the updated row
+    UPDATE samples
+    SET time_since_inoc_hr = EXTRACT(EPOCH FROM (NEW.end_date - (SELECT start_date FROM flasks WHERE flask_id = NEW.flask_id))) / 3600.0
+    WHERE sample_id = NEW.sample_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create or replace the AFTER UPDATE trigger
+DROP TRIGGER IF EXISTS after_update_calculate_time_since_inoc_hr ON samples;
+CREATE TRIGGER after_update_calculate_time_since_inoc_hr
+AFTER UPDATE OF end_date ON samples
+FOR EACH ROW
+EXECUTE FUNCTION calculate_time_since_inoc_hr_after_update();
+
 
 -- Insert a sample to test the trigger
 INSERT INTO samples (flask_id, od600) VALUES (1, 4.2);

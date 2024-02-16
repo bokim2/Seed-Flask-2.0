@@ -7,9 +7,13 @@ import {
 } from '../styles/UtilStyles';
 import { baseUrl } from '../../configs';
 import SamplesTable from '../features/samples/SamplesTable';
-import { useSamples } from '../lib/hooks';
+import { useFetchValidatedTableQuery, useSamples } from '../lib/hooks';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
+import {
+  samplesInfoArraySchema,
+} from '../lib/types';
+import SamplesMultiInputForm from '../features/samples/SamplesMultiInputForm';
 
 export default function SamplePage() {
   // const [samples, setSamples] = useState<any>([]);
@@ -26,20 +30,24 @@ export default function SamplePage() {
   //   getSamples();
 
   // }, []);
-  const [samples, isLoading, error] = useSamples();
+
+  // const [samples, isLoading, error] = useSamples();
+  // console.log('samples', samples);
+
+  const {data: samples, isLoading, error} = useFetchValidatedTableQuery({
+    tableName: 'samples',
+    zodSchema: samplesInfoArraySchema,
+  });
 
   return (
     <PageContainer id="SamplePageContainer">
-      <LoaderWrapper>
-        { 
-        isLoading && 
-      <LoaderBar />}
-      </LoaderWrapper>
+      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
 
       <InnerPageContainer id="SampleInnerPageContainer">
+        <SamplesMultiInputForm popularOptions={samples?.popularOptions}/>
         {error && <ErrorMessage error={error} />}
 
-        {!isLoading && <SamplesTable samples={samples} />}
+        {!isLoading && <SamplesTable samples={samples?.data} />}
       </InnerPageContainer>
     </PageContainer>
   );

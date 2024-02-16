@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import MainMenuButton, { StyledImage } from '../ui/MainMenuButton';
 import styled from 'styled-components';
 import { MdHeight } from 'react-icons/md';
@@ -7,10 +8,13 @@ import FlasksRow from '../features/flasks/FlasksRow';
 import Settings from './SettingsPage';
 import {
   InnerPageContainer,
+  LinkButton,
   PageContainer,
   StyledMainMenuButtons,
   Wrapper,
 } from '../styles/UtilStyles';
+import { Auth0Url, baseUrl } from '../../configs';
+import Button from '../ui/Button';
 
 const HomePageContainer = styled(PageContainer)`
   width: 80%;
@@ -79,16 +83,75 @@ const SecondaryMenuButtonContainer = styled.div`
   }
 `;
 
+type TuserProfile = {
+  picture: string;
+  name: string;
+  email: string;
+};
+
 export default function HomePage() {
+  // const { user, isAuthenticated, isLoading } = useAuth0();
+  const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
+  const [env, setEnv] = useState<any>(null);
+
+  useEffect(() => {
+    async function authProfile() {
+      try{
+        const response = await fetch(`${baseUrl}/profile`, {
+          credentials: 'include', // Include cookies for cross-origin requests
+        });
+        console.log(response)
+      const data = await response.json();
+      setUserProfile(data);
+      } catch(errr){
+        console.log('error', errr)
+      }
+    }
+
+    // getEnv()
+    authProfile();
+  }, []);
+
+      // async function getEnv() {
+    //   try{
+    //     const response = await fetch(`${baseUrl}/env`, {
+    //       credentials: 'include', // Include cookies for cross-origin requests
+    //     });
+    //     console.log(response)
+    //   const data = await response.json();
+    //   setEnv(data);
+    //   } catch(errr){
+    //     console.log('error', errr)
+    //   }
+    // }
+
+  // async function login() {
+  //   try{
+  //     const response = await fetch(`${baseUrl}/login`, {
+  //       credentials: 'include', // Include cookies for cross-origin requests
+  //     });
+  //     // console.log(response)
+  //   const data = await response.json();
+  //   // setUserProfile(data);
+  //   } catch(errr){
+  //     console.log('error', errr)
+  //   }
+  // }
   return (
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">
+
         <InnerWrapper id="HomeInnerWrapper">
+
+          {/* <LoginButton />
+          <LogoutButton /> */}
+          {/* <Profile/> */}
+
           <MenuButtonContainer>
             <MainMenuButton
               toPath="/cellbank"
               text={'register cell bank'}
-              backgroundColor={"rgba(var(--clr-accent-1), .8)"}
+              backgroundColor={'rgba(var(--clr-accent-1), .8)'}
               imgUrl="images/yeast-21.png"
               imgAlt="microbe"
               positionElement={{ left: '0%' }}
@@ -143,7 +206,48 @@ export default function HomePage() {
             />
           </SecondaryMenuButtonContainer>
         </InnerWrapper>
+
+          {/* <p>{JSON.stringify(userProfile, null, 2)}</p>
+          <p>{JSON.stringify(env, null, 2)}</p>
+          {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />} */}
+
       </InnerPageContainer>
     </PageContainer>
   );
 }
+
+const LoginButton = () => {
+  const { loginWithRedirect } = useAuth0();
+
+  return <button onClick={() => loginWithRedirect()}>Log In</button>;
+};
+
+const LogoutButton = () => {
+  const { logout } = useAuth0();
+
+  return (
+    <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+      Log Out
+    </button>
+  );
+};
+
+// const Profile = () => {
+//   const { user, isAuthenticated, isLoading } = useAuth0();
+//   console.log('user', user, 'isAuthenticated', isAuthenticated, 'isLoading', isLoading);
+
+//   if (isLoading) {
+//     return <div>Loading ...</div>;
+//   }
+
+//   return (
+//     isAuthenticated && user && (
+//       <div>
+//         <img src={user.picture} alt={user.name} />
+//         <h2>{user.name}</h2>
+//         <p>{user.email}</p>
+//       </div>
+//     )
+//   );
+// };
+

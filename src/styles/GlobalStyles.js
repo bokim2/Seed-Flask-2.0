@@ -137,8 +137,12 @@ ${
   --clr-primary-600: #475569;
   --clr-primary-700: #334155;
   --clr-primary-800: #150F1D; // app background
-  --clr-primary-900: 21,15,29; //dark black - navbar
-  --clr-primary-950: 2,6,23;  //darker black - navbar expanded
+  --clr-primary-900: 21, 15, 29; //dark black - navbar
+  --clr-primary-950: 2, 6, 23;  //darker black - navbar expanded
+
+
+  --clr-table-100: 38, 34, 49;  // less dark black - table #262231
+  --clr-table-200: 18, 17, 24;  // dark black - background of Page #121118
 
   --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
   --clr-accent-1: 250, 247, 240; /* menu button #FAF7F0 */ 
