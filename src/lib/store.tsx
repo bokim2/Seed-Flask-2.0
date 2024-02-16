@@ -1,19 +1,20 @@
-import { configureStore } from "@reduxjs/toolkit";
-import timeZoneReducer from "../features/settings/settingsSlice";
-import bookmarksReducer from "../features/settings/bookmarksSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import timeZoneReducer from '../features/ui-state/settingsSlice';
+import bookmarksReducer from '../features/ui-state/bookmarksSlice';
+import userReducer from '../features/ui-state/userSlice';
 
 const store = configureStore({
-    reducer: {
-        
-            // animation: animationReducer,
-            timeZone: timeZoneReducer,
-            bookmarks: bookmarksReducer,
-    }
-})
+  reducer: {
+    // animation: animationReducer,
+    timeZone: timeZoneReducer,
+    bookmarks: bookmarksReducer,
+    user: userReducer,
+  },
+});
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;
 
 export default store;

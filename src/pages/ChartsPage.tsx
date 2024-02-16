@@ -7,7 +7,7 @@ import {
 } from '../styles/UtilStyles';
 import LoaderBar from '../ui/LoaderBar';
 import FlasksTable from '../features/flasks/FlasksTable';
-import { useFlask, useFlasks } from '../lib/hooks';
+import { useFetchValidatedTableQuery, useFlask, useFlasks } from '../lib/hooks';
 import LineGraph from '../features/charts/LineGraph';
 import { baseUrl } from '../../configs';
 import TimeLineGraph from '../ui/TimeLineGraph';
@@ -15,12 +15,17 @@ import ChartsTable from '../features/charts/ChartsTable';
 import SingleCellbankGraph from '../features/charts/SingleCellbankGraph';
 import AllCellbanksGraph from '../features/charts/AllCellbanksGraph';
 import BookmarkedCellbankGraph from '../features/charts/BookmarkedCellbankGraph';
+import { flasksInfoArraySchema } from '../features/flasks/flasks-types';
 
 export default function ChartsPage() {
-  const [flasks, isLoading, error] = useFlasks();
-  const [flask] = useFlask(1);
+  const {data: flasks, isLoading, error} = useFetchValidatedTableQuery({
+    tableName: 'flasks',
+    zodSchema: flasksInfoArraySchema,
+  });
+  // const [flasks, isLoading, error] = useFlasks();
+  // const [flask] = useFlask(1);
   const [bookmarkedCellbanks, setBookmarkedCellbanks] = useState<number[]>([
-    1, 2, 4, 6,
+    1, 2, 3, 6,
   ]);
 
   const [chartData, setChartData] = useState<any>([]);
@@ -101,7 +106,6 @@ export default function ChartsPage() {
       {JSON.stringify(setChartData)}
       <InnerPageContainer id="ChartsPage">
         {/* <LoaderBar /> */}
-        <ChartsTable />
 
         {bookmarkedCellbankGraphData?.length > 0 && (
           <BookmarkedCellbankGraph

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import type { TypedUseSelectorHook } from 'react-redux';
 import { useAppSelector, useAppDispatch } from '../lib/hooks';
-import { changeTimezone } from '../features/settings/settingsSlice';
+import { changeTimezone } from '../features/ui-state/settingsSlice';
 
 // notes:
 // timezone

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import CellbanksSingleInputForm from '../features/cellbanks/CellbanksSingleInputForm';
 import { baseUrl } from '../../configs';
 import CellbanksTable from '../features/cellbanks/CellbanksTable';
 import {
@@ -7,17 +6,28 @@ import {
   LoaderWrapper,
   PageContainer,
 } from '../styles/UtilStyles';
-import { useFetchCellbanksQuery } from '../features/cellbanks/cellbanks-hooks';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCellbankBookmark } from '../features/settings/bookmarksSlice';
+import { addCellbankBookmark } from '../features/ui-state/bookmarksSlice';
 import { RootState } from '../lib/store';
 import Button from '../ui/Button';
+import { useFetchValidatedTableQuery } from '../lib/hooks';
+import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 
 export default function CellbankPage() {
-  const [cellbanks, isLoading, error] = useFetchCellbanksQuery();
+  // const [cellbanks, isLoading, error] = useFetchCellbanksQuery();
+  const {data: cellbanks, isLoading, error} = useFetchValidatedTableQuery({
+    tableName: 'cellbanks',
+    zodSchema: cellbanksArraySchema,
+  });
+  console.log('cellbanks in cellbanks page', cellbanks);
+  // const {data: cellbanks, popularOptions, isLoading, error} = useFetchValidatedTableQuery({
+  //   tableName: 'cellbanks',
+  //   zodSchema: cellbanksArraySchema,
+  // });
+
   // console.log('cellbanks in cellbanks page', cellbanks);
   const [toggleTextTruncation, settToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
 
@@ -50,6 +60,7 @@ export default function CellbankPage() {
     <PageContainer id="CellbankPageContainer">
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
+        {/* {(error) && (<div>Error: {error.message}</div>)} */}
         <Button
           $size={'small'}
           onClick={() => settToggleTextTruncation((prev) => !prev)}
@@ -60,11 +71,14 @@ export default function CellbankPage() {
         </Button>
 
         <h3>{JSON.stringify(cellbankBookmarks)}</h3>
-        <CellbanksMultiInputForm />
-        {error && <ErrorMessage error={error} />}
-        {!isLoading && (
+
+        <CellbanksMultiInputForm popularOptions={cellbanks?.popularOptions}/>
+
+        {error?.message && <ErrorMessage error={error} />}
+        {!isLoading && cellbanks?.data && cellbanks?.data?.length > 0 && (
           <CellbanksTable
-            cellbanks={cellbanks}
+            cellbanks={cellbanks?.data}
+      
             handleAddBookmark={handleAddBookmark}
             toggleTextTruncation={toggleTextTruncation}
           />

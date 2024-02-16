@@ -1,104 +1,105 @@
 import React, { useEffect, useState } from 'react';
-// import styled from 'styled-components';
-import {
-  TableRow,
-  TableDataCell,
-  StyledForm,
-  FormTextArea,
-} from '../../styles/UtilStyles';
+import { TableRow, TableDataCell, FormTextArea, PreviousDataRow, EditRow, EditTextArea } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
-import { CellbankMultiInput } from './CellbanksMultiInputForm';
 import styled, { css } from 'styled-components';
-import { InitialEditCellbankForm, initialForm } from '../../lib/constants';
-import {  TTableRow } from '../../lib/types';
-import { baseUrl } from '../../../configs';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TTableRow } from '../../lib/types';
 import { displayLocalTime } from '../../lib/hooks';
+import { initialEditFlasksForm } from '../flasks/flasks-types';
+import { initialEditCellbankForm } from './cellbanks-types';
 
-const EditCellbankTextArea = styled(FormTextArea)`
-  width: 100%;
-  height: auto;
-`;
 
-const PreviousDataRow = styled(TableRow)<TTableRow>`
-  background-color: ${(props) => props.$editing && 'red'};
-  &:nth-of-type(2n) {
-    background-color: ${(props) => props.$editing && 'red'};
-  }
-  &:hover {
-    background-color: ${(props) => props.$editing && 'red'};
-  }
-`;
-
-const EditRow = styled.tr`
-  background-color: yellow;
-  color: turquoise;
-`;
 
 export default function CellbanksRow({
-  cellbank,
+  rowData,
   editedForm,
   setEditedForm,
   deleteCellbank,
-  handleClickEdit,
-  editing,
   handleAddBookmark,
-  toggleTextTruncation
+  toggleTextTruncation,
+  isPendingUpdate,
+  isPendingDelete,
+  editingId, 
+  setEditingId
 }) {
- 
-
-
+  const { cell_bank_id, target_molecule, strain, description, notes, date_timestamptz, username, project } = rowData;
+  
+  const editing = editingId === cell_bank_id;
   return (
     <>
-
       <PreviousDataRow $editing={editing}>
-        <TableDataCell data-cell="cell bank id" onClick={()=>handleAddBookmark(cellbank.cell_bank_id)}>
-          {cellbank.cell_bank_id}
+        <TableDataCell
+          data-cell="cell bank id"
+          onClick={() => handleAddBookmark(cell_bank_id)}
+        >
+          {cell_bank_id}
         </TableDataCell>
-        <TableDataCell data-cell="strain">{cellbank.strain}</TableDataCell>
+
+        <TableDataCell data-cell="strain">{strain}</TableDataCell>
+
         <TableDataCell data-cell="target_molecule">
-          {cellbank.target_molecule}
+          {target_molecule}
         </TableDataCell>
-        <TableDataCell data-cell="description" className={toggleTextTruncation ? "" : "ellipsis"}>
-          {cellbank.description}
+
+        <TableDataCell data-cell="project">
+          {project}
         </TableDataCell>
-        <TableDataCell data-cell="notes" className={toggleTextTruncation ? "" : "ellipsis"}>{cellbank.notes}</TableDataCell>
+
+        <TableDataCell
+          data-cell="description"
+          className={toggleTextTruncation ? '' : 'ellipsis'}
+        >
+          {description}
+        </TableDataCell>
+
+        <TableDataCell
+          data-cell="notes"
+          className={toggleTextTruncation ? '' : 'ellipsis'}
+        >
+          {notes}
+        </TableDataCell>
+
         <TableDataCell data-cell="date">
-          {displayLocalTime(cellbank?.date_timestamptz)}
+          {displayLocalTime(date_timestamptz)}
         </TableDataCell>
+
+        <TableDataCell data-cell="user">{username}</TableDataCell>
+
         <TableDataCell
           data-cell="edit"
-          onClick={(e) => handleClickEdit(e, cellbank.cell_bank_id)}
+          // onClick={(e) => initializeCellbankEdit(e, cellbank.cell_bank_id)}
+          // onClick={(e)=> initializeRowEdit(e, cellbank.cell_bank_id, "cell_bank_id")}
+
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (editing) {
+              setEditingId(null);
+              setEditedForm(initialEditCellbankForm);
+              return;
+            } else {
+              setEditedForm({
+                ...rowData,
+                human_readable_date: displayLocalTime(
+                  date_timestamptz
+                  ),
+                });
+                setEditingId(cell_bank_id);
+            }
+          }}
         >
           <Button $size={'small'}>Edit</Button>
-        </TableDataCell>
-        <TableDataCell data-cell="delete">
-          <Button
-            $size={'small'}
-            type="button"
-            onClick={() => {
-              const isConfirmed = window.confirm(
-                'Are you sure you want to delete this item?'
-              );
-              if (isConfirmed) {
-                console.log(
-                  'cellbank delete button clicked',
-                  cellbank.cell_bank_id
-                );
-                deleteCellbank.mutate(cellbank.cell_bank_id);
-              }
-            }}
-          >
-            delete
-          </Button>
         </TableDataCell>
       </PreviousDataRow>
 
       {editing && (
         <CellbanksEditForm
-          key={cellbank.cell_bank_id}
+          key={cell_bank_id}
+          // rowData={rowData}
           editedForm={editedForm}
           setEditedForm={setEditedForm}
+          isPendingUpdate={isPendingUpdate}
+          deleteCellbank={deleteCellbank}
+          isPendingDelete={isPendingDelete}
         />
       )}
     </>
@@ -107,7 +108,15 @@ export default function CellbanksRow({
   );
 }
 
-function CellbanksEditForm({ setEditedForm, editedForm }) {
+function CellbanksEditForm({
+  setEditedForm,
+  editedForm,
+  isPendingUpdate,
+  deleteCellbank,
+  // rowData,
+  isPendingDelete
+}) {
+  
   const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -121,8 +130,9 @@ function CellbanksEditForm({ setEditedForm, editedForm }) {
         <TableDataCell data-cell="cell bank id">
           {editedForm.cell_bank_id}
         </TableDataCell>
+
         <TableDataCell data-cell="strain">
-          <EditCellbankTextArea
+          <EditTextArea
             data-cell="strain"
             id="strain"
             name="strain"
@@ -132,10 +142,11 @@ function CellbanksEditForm({ setEditedForm, editedForm }) {
             value={editedForm.strain}
           >
             {editedForm.strain}
-          </EditCellbankTextArea>
+          </EditTextArea>
         </TableDataCell>
+
         <TableDataCell data-cell="target_molecule">
-          <EditCellbankTextArea
+          <EditTextArea
             data-cell="target_molecule"
             id="target_molecule"
             name="target_molecule"
@@ -145,11 +156,25 @@ function CellbanksEditForm({ setEditedForm, editedForm }) {
             value={editedForm.target_molecule}
           >
             {editedForm.target_molecule}
-          </EditCellbankTextArea>
+          </EditTextArea>
+        </TableDataCell>
+
+        <TableDataCell data-cell="project">
+          <EditTextArea
+            data-cell="project"
+            id="project"
+            name="project"
+            onChange={handleChange}
+            placeholder="project"
+            required
+            value={editedForm.project}
+          >
+            {editedForm.project}
+          </EditTextArea>
         </TableDataCell>
 
         <TableDataCell>
-          <EditCellbankTextArea
+          <EditTextArea
             id="description"
             name="description"
             onChange={handleChange}
@@ -158,8 +183,9 @@ function CellbanksEditForm({ setEditedForm, editedForm }) {
             value={editedForm.description}
           />
         </TableDataCell>
+
         <TableDataCell>
-          <EditCellbankTextArea
+          <EditTextArea
             id="notes"
             name="notes"
             onChange={handleChange}
@@ -168,8 +194,9 @@ function CellbanksEditForm({ setEditedForm, editedForm }) {
             required
           />
         </TableDataCell>
+
         <TableDataCell>
-          <EditCellbankTextArea
+          <EditTextArea
             id="human_readable_date"
             name="human_readable_date"
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
@@ -180,12 +207,30 @@ function CellbanksEditForm({ setEditedForm, editedForm }) {
         </TableDataCell>
 
         <TableDataCell>
+          <Button $size={'small'} type="submit" disabled={isPendingUpdate}>
+            Update
+          </Button>
+        </TableDataCell>
+
+        <TableDataCell data-cell="delete">
           <Button
             $size={'small'}
-            type="submit"
-            // disabled={'isSubmitting EDIT THIS'}
+            type="button"
+            disabled={isPendingDelete}
+            onClick={() => {
+              const isConfirmed = window.confirm(
+                'Are you sure you want to delete this item?'
+              );
+              if (isConfirmed) {
+                console.log(
+                  'cellbank delete button clicked',
+                  editedForm.cell_bank_id
+                );
+                deleteCellbank(editedForm.cell_bank_id);
+              }
+            }}
           >
-            Update
+            delete
           </Button>
         </TableDataCell>
       </EditRow>

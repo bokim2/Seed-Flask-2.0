@@ -7,20 +7,20 @@ import {
   TableRow,
   TableHeaderCell,
   StyledForm,
+  SearchSection,
 } from '../../styles/UtilStyles';
 import { useState } from 'react';
-import { baseUrl } from '../../../configs';
-import { InitialEditCellbankForm } from '../../lib/constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { displayLocalTime } from '../../lib/hooks';
-import { useUpdateCellbankMutation } from './cellbanks-hooks';
-import { useSearchParams } from 'react-router-dom';
+// import { InitialEditCellbankForm } from '../../lib/constants';
+import { useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
+import { useTextInputSearch } from './cellbanks-hooks';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
 import {
-  CellbankSearchParamsSchema,
-  TEditCellbankForm,
+  TUpdateCellbankForm,
+  initialEditCellbankForm,
+  updateCellbankSchema,
 } from './cellbanks-types';
+import ErrorMessage from '../../ui/ErrorMessage';
 
 const TextSearchContainer = styled.div``;
 
@@ -28,7 +28,11 @@ const TextSearchInput = styled.input`
   margin: 0.5rem;
   border-radius: 5px;
   padding: 0.5rem;
-  width: 400px;
+  width: 200px;
+
+  @media (min-width: 600px) {
+    width: 400px;
+  }
 `;
 
 export default function CellbanksTable({
@@ -36,139 +40,114 @@ export default function CellbanksTable({
   handleAddBookmark,
   toggleTextTruncation,
 }) {
-  // search functionality with search params
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [searchText, setSearchText] = useState(
-    searchParams.get('searchText') || ''
+  console.log('cellbanks in cellbanks table', cellbanks);
+  const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
+    initialEditCellbankForm
   );
+  // id of edited cellbank
+  const [editingId, setEditingId] = useState<number | null>(null);
 
-  const [editedForm, setEditedForm] = useState<TEditCellbankForm>(
-    InitialEditCellbankForm
-  );
+  // update cellbank
+  // const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
 
-  // submit edited cellbank form and then reset form to initial
-  const { mutate: submitEditedCellbankForm, isPending } =
-    useUpdateCellbankMutation(setEditedForm);
+  // update row
+  const {
+    mutate: submitEditedCellbankForm,
+    isPending: isPendingUpdate,
+    error: updateError,
+  } = useUpdateRowMutation({
+    tableName: 'cellbanks',
+    zodSchema: updateCellbankSchema,
+    initialEditForm: initialEditCellbankForm,
+    setEditedForm: setEditedForm,
+    idColumnName: 'cell_bank_id',
+    dateColumnName: 'date_timestamptz',
+  });
+
+  // delete row, only for cellbank (archive)
+  // const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
+
+  // delete cellbank
+  const {
+    mutate: deleteCellbank,
+    isPending: isPendingDelete,
+    error: deleteError,
+  } = useDeleteRowMutation({ tableName: 'cellbanks' });
+
+  // searching cellbanks table through text input
+  const [searchedData, setSearchedData] = useState([]);
+  const {
+    searchText,
+    setSearchText,
+    SelectSearchField,
+    performInputTextSearch,
+    searchField,
+  } = useTextInputSearch();
 
   const handleEditFormSubmit = (e, editedForm) => {
     e.preventDefault();
     e.stopPropagation();
-    // console.log('isPending in handleSubmit', isPending);
     submitEditedCellbankForm(editedForm);
-    // console.log('isPending in handleSubmit AFTER', isPending);
-  };
-
-  // update in-progress cellbank edit
-  const handleClickEdit = (e, cell_bank_id) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // console.log('e in handleClickEdit', e);
-    if (editedForm.cell_bank_id === cell_bank_id) {
-      setEditedForm(InitialEditCellbankForm);
-    } else {
-      setEditedForm(() => {
-        const editedCellbankData = cellbanks.find(
-          (e) => e.cell_bank_id === cell_bank_id
-        );
-        return {
-          ...editedCellbankData,
-          human_readable_date: displayLocalTime(
-            editedCellbankData.date_timestamptz
-          ),
-        };
-      });
-    }
-  };
-
-  // delete a cellbank
-  const queryClient = useQueryClient();
-  const deleteCellbank = useMutation({
-    mutationFn: (cell_bank_id: number) => deleteCellbankHandler(cell_bank_id),
-    onSuccess: () => {
-      console.log('success');
-      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
-      deleteCellbank.reset();
-    },
-  });
-
-  const deleteCellbankHandler = async (cell_bank_id: number) => {
-    return fetch(`${baseUrl}/api/cellbank/${cell_bank_id}`, {
-      method: 'DELETE',
-    });
-  };
-
-  // set search params for selected column for text search
-  const handleSelectSearchColumn = (e) => {
-    // console.log('e in selectSearchColumn', e);
-    e.stopPropagation();
-    const columnName = e.target.getAttribute('data-column-name');
-
-    searchParams.set('searchField', columnName);
-    setSearchParams(searchParams);
-  };
-
-  const handleSetSearchText = async () => {
-    if (!searchParams.get('searchField')) {
-      searchParams.set('searchField', 'cell_bank_id');
-    }
-    searchParams.set('searchText', searchText);
-    setSearchParams(searchParams);
-
-    const validatedSearchParams = CellbankSearchParamsSchema.safeParse(
-      Object.fromEntries(searchParams)
-    );
-    if (!validatedSearchParams.success) {
-      console.log('error', validatedSearchParams.error);
-      return;
-    }
-
-    const fetchSearchParams = new URLSearchParams(
-      validatedSearchParams.data
-    ).toString();
-    // console.log('fetchSearchParams', fetchSearchParams);
-
-    const res = await fetch(
-      `${baseUrl}/api/cellbank/search?${fetchSearchParams}`
-    );
-    const data = await res.json();
-    console.log('data in handleSetSearchText', data);
+    setEditingId(null);
   };
 
   return (
     <>
       {/* Text Search Section */}
-      <TextSearchContainer>
-        <TextSearchInput
-          type="text"
-          id="search"
-          placeholder="Text Search"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
-        <Button
-          type="button"
-          $size={'small'}
-          id="searchButton"
-          onClick={handleSetSearchText}
-        >
-          Search
-        </Button>
-      </TextSearchContainer>
+      <SearchSection>
+        <h3>
+          Click on column to search:
+          <p>
+            {` ${
+              searchField == 'date_timestampz'
+                ? 'date'
+                : searchField.replace(/_/g, ' ')
+            }`}
+          </p>
+        </h3>
+        <TextSearchContainer>
+          <TextSearchInput
+            required
+            type="text"
+            id="search"
+            placeholder="Text Search"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <Button
+            type="button"
+            $size={'small'}
+            id="searchButton"
+            onClick={async () => {
+              try {
+                const data = await performInputTextSearch();
+                setSearchedData(data);
+              } catch (err) {
+                console.log('error', err);
+              }
+            }}
+          >
+            Search
+          </Button>
+        </TextSearchContainer>
+      </SearchSection>
 
       {/* Table Section */}
-      {isPending && <h1>edit is pending...</h1>}
+      {isPendingUpdate && <h1>edit is pending Update...</h1>}
+      {isPendingDelete && <h1>edit is pending Delete...</h1>}
+      {updateError?.message && <ErrorMessage error={updateError} />}
+      {deleteError?.message && <ErrorMessage error={deleteError} />}
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
           handleEditFormSubmit(e, editedForm);
         }}
       >
-        <TableContainer id="TableContainer">
+        <TableContainer id="CellbanksTableContainer">
           <StyledTable>
             <Caption>Cell Banks Table</Caption>
             <TableHeader>
-              <TableRow onClick={handleSelectSearchColumn}>
+              <TableRow onClick={SelectSearchField}>
                 <TableHeaderCell data-column-name="cell_bank_id">
                   cell bank id
                 </TableHeaderCell>
@@ -177,6 +156,9 @@ export default function CellbanksTable({
                 </TableHeaderCell>
                 <TableHeaderCell data-column-name="target_molecule">
                   target molecule
+                </TableHeaderCell>
+                <TableHeaderCell data-column-name="project">
+                  project
                 </TableHeaderCell>
                 <TableHeaderCell data-column-name="details">
                   details
@@ -187,23 +169,28 @@ export default function CellbanksTable({
                 <TableHeaderCell data-column-name="date_timestampz">
                   date
                 </TableHeaderCell>
+                <TableHeaderCell data-column-name="username">
+                  username
+                </TableHeaderCell>
+
                 <TableHeaderCell>edit</TableHeaderCell>
-                <TableHeaderCell>delete</TableHeaderCell>
               </TableRow>
             </TableHeader>
             <tbody>
-              {cellbanks &&
-                cellbanks?.map((cellbank) => (
+              {cellbanks.length > 0 &&
+                cellbanks?.map((rowData) => (
                   <CellbanksRow
-                    key={cellbank.cell_bank_id}
-                    cellbank={cellbank}
+                    key={rowData.cell_bank_id}
+                    rowData={rowData}
+                    toggleTextTruncation={toggleTextTruncation}
                     editedForm={editedForm}
                     setEditedForm={setEditedForm}
+                    setEditingId={setEditingId}
+                    editingId={editingId}
                     deleteCellbank={deleteCellbank}
-                    handleClickEdit={handleClickEdit}
-                    editing={cellbank.cell_bank_id === editedForm.cell_bank_id}
+                    isPendingUpdate={isPendingUpdate}
+                    isPendingDelete={isPendingDelete}
                     handleAddBookmark={handleAddBookmark}
-                    toggleTextTruncation={toggleTextTruncation}
                   />
                 ))}
             </tbody>
