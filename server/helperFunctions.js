@@ -18,5 +18,5 @@ Object.keys(uniqueValues).forEach(key => {
 })
 console.log('uniqueValues', uniqueValues)
 return uniqueValues
-    // Object.keys(uniqueValues)
+
 }
