@@ -59,6 +59,7 @@ export const CellbankSearchParamsSchema = z.object({
     'details',
     'notes',
     'date_timestampz',
+    'username'
   ]),
   searchText: z.string(),
 });

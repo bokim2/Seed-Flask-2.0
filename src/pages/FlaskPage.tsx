@@ -16,7 +16,7 @@ import FlasksMultiInputForm from '../features/flasks/FlasksMultiInputForm';
 export default function FlaskPage() {
   // const [flasks, isLoading, error] = useFlasks();
 
-  const [flasks, isLoading, error] = useFetchValidatedTableQuery({
+  const {data: flasks, isLoading, error} = useFetchValidatedTableQuery({
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });
@@ -33,8 +33,8 @@ export default function FlaskPage() {
       </LoaderWrapper>
       <InnerPageContainer id="InnerFlaskPageContainer">
         {/* <LoaderBar /> */}
-        <FlasksMultiInputForm />
-        {!isLoading && <FlasksTable flasks={flasks} />}
+        <FlasksMultiInputForm popularOptions={flasks?.popularOptions}/>
+        {!isLoading && <FlasksTable flasks={flasks?.data} />}
         {error && <ErrorMessage error={error} />}
       </InnerPageContainer>
     </PageContainer>
