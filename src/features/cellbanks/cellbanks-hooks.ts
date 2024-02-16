@@ -221,8 +221,14 @@ export function useTextInputSearch() {
     if (!searchParams.get('searchField')) {
       searchParams.set('searchField', 'cell_bank_id');
     }
+
+    if(searchParams.get('searchField') === 'date_timestampz') { 
+console.log('searchText', searchText, 'getUtcTimestampFromLocalTime(searchText)', getUtcTimestampFromLocalTime(searchText))
+      searchParams.set('searchText', getUtcTimestampFromLocalTime(searchText));
+    } else {
     searchParams.set('searchText', searchText);
     setSearchParams(searchParams);
+    }
 
     const validatedSearchParams = CellbankSearchParamsSchema.safeParse(
       Object.fromEntries(searchParams)
@@ -257,5 +263,6 @@ export function useTextInputSearch() {
     setSearchText,
     SelectSearchField,
     performInputTextSearch,
+    searchField: searchParams.get('searchField') || 'cell_bank_id',
   };
 }

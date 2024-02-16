@@ -18,10 +18,15 @@ import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 
 export default function CellbankPage() {
   // const [cellbanks, isLoading, error] = useFetchCellbanksQuery();
-  const [cellbanks, isLoading, error] = useFetchValidatedTableQuery({
+  const {data: cellbanks, isLoading, error} = useFetchValidatedTableQuery({
     tableName: 'cellbanks',
     zodSchema: cellbanksArraySchema,
   });
+  console.log('cellbanks in cellbanks page', cellbanks);
+  // const {data: cellbanks, popularOptions, isLoading, error} = useFetchValidatedTableQuery({
+  //   tableName: 'cellbanks',
+  //   zodSchema: cellbanksArraySchema,
+  // });
 
   // console.log('cellbanks in cellbanks page', cellbanks);
   const [toggleTextTruncation, settToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
@@ -67,12 +72,13 @@ export default function CellbankPage() {
 
         <h3>{JSON.stringify(cellbankBookmarks)}</h3>
 
-        <CellbanksMultiInputForm />
+        <CellbanksMultiInputForm popularOptions={cellbanks?.popularOptions}/>
 
         {error?.message && <ErrorMessage error={error} />}
-        {!isLoading && cellbanks && cellbanks.length > 0 && (
+        {!isLoading && cellbanks?.data && cellbanks?.data?.length > 0 && (
           <CellbanksTable
-            cellbanks={cellbanks}
+            cellbanks={cellbanks?.data}
+      
             handleAddBookmark={handleAddBookmark}
             toggleTextTruncation={toggleTextTruncation}
           />

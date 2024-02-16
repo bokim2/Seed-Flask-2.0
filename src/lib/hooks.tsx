@@ -19,25 +19,25 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         const response = await fetch(`${baseUrl}/api/${tableName}`, {
           credentials: 'include', // Include cookies for cross-origin requests
         });
-        // if (!res.ok) throw new Error(`Failed to fetch ${tableName} table data`);
-        const data = await response.json();
+        const dbData = await response.json();
+        console.log('data in useFetchValidatedTableQuery', dbData);
     if (!response.ok) {
       const errorMessage = data.message || `Failed to fetch from ${tableName}`;
-      // You can further customize the error object here if needed
       throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
     }
 
-        // const validatedData = zodSchema.safeParse(data);
-        // // console.log(validatedData, 'validatedData');
-        // if (!validatedData.success) {
-        //   console.error(
-        //     'useFetchValidatedTableQuery validation error',
-        //     validatedData.error
-        //   );
-        //   throw new Error(`Data validation in ${tableName} table failed`);
-        // }
+    // validation ON
+        const validatedData = zodSchema.safeParse(dbData.data);
+        // console.log(validatedData, 'validatedData');
+        if (!validatedData.success) {
+          console.error(
+            'useFetchValidatedTableQuery validation error',
+            validatedData.error
+          );
+          throw new Error(`Data validation in ${tableName} table failed`);
+        }
         // return validatedData.data;
-        return data.data;
+        return dbData;
 
         // TURNED VALIDATION OFF FOR NOW!!!!
       } catch (err) {
@@ -50,7 +50,8 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
       errorMessage: `Failed to fetch ${tableName} data (meta option useQuery)`,
     },
   });
-  return [data, isLoading, error] as const;
+  return {data, isLoading, error} as const;
+  // return {data: data.data, popularOptions: data.popularOptions, isLoading, error} as const;
 }
 
 // create one row in table

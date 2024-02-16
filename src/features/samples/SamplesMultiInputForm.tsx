@@ -15,9 +15,13 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 
-
 import { useCreateValidatedRowMutation } from '../../lib/hooks';
-import { TCreateSample, TinitialEditSampleForm, createSampleSchema, initialEditSampleForm } from './samples-types';
+import {
+  TCreateSample,
+  TinitialEditSampleForm,
+  createSampleSchema,
+  initialEditSampleForm,
+} from './samples-types';
 
 const BulkInputTextArea = styled.textarea`
   background-color: transparent;
@@ -27,11 +31,11 @@ const BulkInputTextArea = styled.textarea`
   margin: 1rem;
 `;
 
-const CellbankFormBody = styled.tbody``;
+const MultiInputFormBody = styled.tbody``;
 
-const CellbankFormCell = styled(FormTableCell)``;
+const MultiInputFormCell = styled(FormTableCell)``;
 
-export const CellbankMultiInput = styled(MultiFormInput)``;
+export const MultiInput = styled(MultiFormInput)``;
 
 export const ButtonsContainer = styled.div`
   display: flex;
@@ -39,11 +43,11 @@ export const ButtonsContainer = styled.div`
   gap: 1rem;
 `;
 
-export default function SamplesMultiInputForm() {
+export default function SamplesMultiInputForm({popularOptions}) {
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
-  const [bulkForm, setBulkForm] = useState<TCreateSample[] | TinitialEditSampleForm[]>([
-    initialEditSampleForm,
-  ]); // data for submitting cellbank(s)
+  const [bulkForm, setBulkForm] = useState<
+    TCreateSample[] | TinitialEditSampleForm[]
+  >([initialEditSampleForm]); // data for submitting cellbank(s)
 
   // const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
 
@@ -75,8 +79,14 @@ export default function SamplesMultiInputForm() {
 
   const handleSubmit = async (e, bulkForm) => {
     e.preventDefault();
-     
-    const mutationPromises = bulkForm.map((row) => createSampleMutation({ flask_id: Number(row.flask_id), od600: Number(row.od600), completed: Boolean(row.completed)}));
+
+    const mutationPromises = bulkForm.map((row) =>
+      createSampleMutation({
+        flask_id: Number(row.flask_id),
+        od600: Number(row.od600),
+        completed: Boolean(row.completed),
+      })
+    );
     try {
       await Promise.all(mutationPromises);
       setBulkForm([initialEditSampleForm]);
@@ -120,13 +130,15 @@ export default function SamplesMultiInputForm() {
         }}
       >
         <StyledTable>
-          <CellbankFormBody>
+          <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
                 <TableRow key={i}>
-                  <CellbankFormCell>
-                    {i == 0 && <FormLabel htmlFor="flask_id">flask_id</FormLabel>}
-                    <CellbankMultiInput
+                  <MultiInputFormCell>
+                    {i == 0 && (
+                      <FormLabel htmlFor="flask_id">flask_id</FormLabel>
+                    )}
+                    <MultiInput
                       type="text"
                       id="flask_id"
                       name="flask_id"
@@ -136,15 +148,11 @@ export default function SamplesMultiInputForm() {
                       autoFocus
                       value={bulkForm[i].flask_id}
                     />
-                  </CellbankFormCell>
+                  </MultiInputFormCell>
 
-                  <CellbankFormCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="od600">
-                        od600
-                      </FormLabel>
-                    )}
-                    <CellbankMultiInput
+                  <MultiInputFormCell>
+                    {i == 0 && <FormLabel htmlFor="od600">od600</FormLabel>}
+                    <MultiInput
                       type="text"
                       id="od600"
                       name="od600"
@@ -153,13 +161,13 @@ export default function SamplesMultiInputForm() {
                       required
                       value={bulkForm[i].od600}
                     />
-                  </CellbankFormCell>
+                  </MultiInputFormCell>
 
-                  <CellbankFormCell>
+                  <MultiInputFormCell>
                     {i == 0 && (
                       <FormLabel htmlFor="completed">completed</FormLabel>
                     )}
-                    <CellbankMultiInput
+                    <MultiInput
                       id="completed"
                       name="completed"
                       onChange={(e) => handleChange(e, i)}
@@ -167,12 +175,10 @@ export default function SamplesMultiInputForm() {
                       required
                       value={bulkForm[i].completed ? 'true' : 'false'}
                     />
-                  </CellbankFormCell>
-
-                  
+                  </MultiInputFormCell>
                 </TableRow>
               ))}
-          </CellbankFormBody>
+          </MultiInputFormBody>
         </StyledTable>
         <ButtonsContainer>
           <Button $size={'small'} type="submit" disabled={isPending}>

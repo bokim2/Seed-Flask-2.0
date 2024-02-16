@@ -18,7 +18,7 @@ import BookmarkedCellbankGraph from '../features/charts/BookmarkedCellbankGraph'
 import { flasksInfoArraySchema } from '../features/flasks/flasks-types';
 
 export default function ChartsPage() {
-  const [flasks, isLoading, error] = useFetchValidatedTableQuery({
+  const {data: flasks, isLoading, error} = useFetchValidatedTableQuery({
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });

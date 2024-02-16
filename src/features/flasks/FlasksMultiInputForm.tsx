@@ -25,10 +25,9 @@ const BulkInputTextArea = styled.textarea`
   margin: 1rem;
 `;
 
-const CellbankFormBody = styled.tbody``;
+const MultiInputFormBody = styled.tbody``;
 
-
-export const CellbankMultiInput = styled(MultiFormInput)``;
+export const MultiInput = styled(MultiFormInput)``;
 
 export const ButtonsContainer = styled.div`
   display: flex;
@@ -36,7 +35,7 @@ export const ButtonsContainer = styled.div`
   gap: 1rem;
 `;
 
-export default function FlasksMultiInputForm() {
+export default function FlasksMultiInputForm({popularOptions}) {
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<TinitialCreateFlasksForm[] | any[]>([
     initialCreateFlasksForm,
@@ -125,7 +124,7 @@ export default function FlasksMultiInputForm() {
   return (
     <>
       <BulkInputTextArea
-      name="bulkTextAreaInputForMultiSubmit"
+        name="bulkTextAreaInputForMultiSubmit"
         placeholder="copy/paste from excel"
         value={bulkTextAreaInput}
         onChange={(e) => setBulkTextAreaInput(e.target.value)}
@@ -140,7 +139,7 @@ export default function FlasksMultiInputForm() {
         }}
       >
         <StyledTable>
-          <CellbankFormBody>
+          <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
                 <TableRow key={i}>
@@ -148,7 +147,7 @@ export default function FlasksMultiInputForm() {
                     {i == 0 && (
                       <FormLabel htmlFor="cell_bank_id">cell bank id</FormLabel>
                     )}
-                    <CellbankMultiInput
+                    <MultiInput
                       type="text"
                       id="cell_bank_id"
                       name="cell_bank_id"
@@ -164,7 +163,7 @@ export default function FlasksMultiInputForm() {
                     {i == 0 && (
                       <FormLabel htmlFor="vessel_type">vessel type</FormLabel>
                     )}
-                    <CellbankMultiInput
+                    <MultiInput
                       type="text"
                       id="vessel_type"
                       name="vessel_type"
@@ -178,7 +177,7 @@ export default function FlasksMultiInputForm() {
 
                   <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="media">media</FormLabel>}
-                    <CellbankMultiInput
+                    <MultiInput
                       type="text"
                       id="media"
                       name="media"
@@ -193,7 +192,7 @@ export default function FlasksMultiInputForm() {
                     {i == 0 && (
                       <FormLabel htmlFor="media_ml">media_ml</FormLabel>
                     )}
-                    <CellbankMultiInput
+                    <MultiInput
                       id="media_ml"
                       name="media_ml"
                       onChange={(e) => handleChange(e, i)}
@@ -207,7 +206,7 @@ export default function FlasksMultiInputForm() {
                     {i == 0 && (
                       <FormLabel htmlFor="inoculum_ul">inoculum_ul</FormLabel>
                     )}
-                    <CellbankMultiInput
+                    <MultiInput
                       id="inoculum_ul"
                       name="inoculum_ul"
                       onChange={(e) => handleChange(e, i)}
@@ -219,7 +218,7 @@ export default function FlasksMultiInputForm() {
 
                   <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="temp_c">temp_c</FormLabel>}
-                    <CellbankMultiInput
+                    <MultiInput
                       id="temp_c"
                       name="temp_c"
                       onChange={(e) => handleChange(e, i)}
@@ -231,7 +230,7 @@ export default function FlasksMultiInputForm() {
 
                   <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="rpm">RPM</FormLabel>}
-                    <CellbankMultiInput
+                    <MultiInput
                       id="rpm"
                       name="rpm"
                       onChange={(e) => handleChange(e, i)}
@@ -243,7 +242,7 @@ export default function FlasksMultiInputForm() {
 
                   {/* <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="start_date">start_date</FormLabel>}
-                    <CellbankMultiInput
+                    <MultiInput
                       id="start_date"
                       name="start_date"
                       onChange={(e) => handleChange(e, i)}
@@ -254,7 +253,7 @@ export default function FlasksMultiInputForm() {
                   </FormInputCell> */}
                 </TableRow>
               ))}
-          </CellbankFormBody>
+          </MultiInputFormBody>
         </StyledTable>
         <ButtonsContainer>
           <Button $size={'small'} type="submit" disabled={isPending}>

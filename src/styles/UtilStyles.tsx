@@ -313,6 +313,7 @@ export const Caption = styled.caption`
   /* background-color: rgba(var(--clr-table-100), 1); */
   background-color: rgba(var(--clr-table-200), 1);
   padding-block: 1vh;
+  pointer-events: none;
 
   @media (min-width: 600px) {
     top: 2vh;
@@ -322,7 +323,7 @@ export const Caption = styled.caption`
 
 export const TableHeader = styled.thead`
   position: sticky;
-  top: 10vh;  // reference at NavBar styles
+  top: 9.7vh;  // reference at NavBar styles
   background-color: black;
 `;
 
@@ -412,3 +413,31 @@ export const EditRow = styled.tr`
   background-color: rgba(var(--clr-accent-0), 1);
   color: turquoise;
 `;
+
+
+// search section
+
+export const SearchSection = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-block: 1rem;
+`;
+
+
+// multi-input form
+
+export const BulkInputTextArea = styled.textarea`
+  background-color: transparent;
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 5px;
+  margin: 1rem;
+`;
+
+export const MultiInputFormBody = styled.tbody``;
+
+export const MultiInputFormCell = styled(FormInputCell)``; // td
+
+export const MultiInput = styled(MultiFormInput)``; // input

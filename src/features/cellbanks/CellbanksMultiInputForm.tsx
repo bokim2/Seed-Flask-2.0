@@ -2,17 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { baseUrl } from '../../../configs';
 import styled from 'styled-components';
 import {
-  FormButton,
   FormLabel,
-  FormTextArea,
-  InputContainer,
-  MultiFormInput,
   StyledForm,
   StyledTable,
-  TableDataCell,
   TableRow,
-  FormTableCell,
-  FormInputCell,
+  BulkInputTextArea,
+  MultiInputFormBody,
+  MultiInputFormCell,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
@@ -22,20 +18,8 @@ import {
 import { TCreateCellbankSchema } from './cellbanks-types';
 import { useCreateValidatedRowMutation } from '../../lib/hooks';
 import ErrorMessage from '../../ui/ErrorMessage';
-
-const BulkInputTextArea = styled.textarea`
-  background-color: transparent;
-  padding: 0.5rem;
-  text-align: center;
-  border-radius: 5px;
-  margin: 1rem;
-`;
-
-const CellbankFormBody = styled.tbody``;
-
-const CellbankFormCell = styled(FormInputCell)``; // td
-
-export const CellbankMultiInput = styled(MultiFormInput)``; // input
+import PopularOptionsSelectors from '../../ui/PopularOptionsSelectors';
+import { MultiInput } from '../samples/SamplesMultiInputForm';
 
 export const ButtonsContainer = styled.div`
   display: flex;
@@ -43,11 +27,14 @@ export const ButtonsContainer = styled.div`
   gap: 1rem;
 `;
 
-export default function CellbanksMultiInputForm() {
+export default function CellbanksMultiInputForm({ popularOptions }) {
+  console.log('popularOptions in cellbanks multi input form', popularOptions);
+
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<TCreateCellbankSchema[] | []>([
     initialEditCellbankForm,
   ]); // data for submitting cellbank(s)
+  console.log(bulkForm, 'bulkForm')
 
   // const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
 
@@ -106,6 +93,32 @@ export default function CellbanksMultiInputForm() {
     setBulkTextAreaInput('');
   };
 
+  // for popular options
+  const popularOptionsArray: any = []
+  for (let i = 0; i < 5; i++) {
+    
+      popularOptionsArray.push(<tr key={i}><PopularOptionsSelectors
+        popularOptions={popularOptions}
+        columns={[
+          'strain',
+          'target_molecule',
+          'project',
+          'description',
+          'notes',
+        ]}
+        i={i}
+        selectPopularOption={selectPopularOption}
+      ></PopularOptionsSelectors></tr>)
+    
+  }
+
+  function selectPopularOption(column, value){
+    console.log('value, column',value, column)
+    if (bulkForm.length > 1) return;
+    setBulkForm(prev => (prev.map(singleForm => ({...singleForm, [column]: value}))))
+  }
+  //
+
   return (
     <>
       <BulkInputTextArea
@@ -117,7 +130,7 @@ export default function CellbanksMultiInputForm() {
 
       {createError && <ErrorMessage error={createError} />}
       {isPending && <h1>Submitting cellbank(s) in progress...</h1>}
-      
+
       <StyledForm
         onSubmit={(e) => {
           handleSubmit(e, bulkForm);
@@ -126,13 +139,13 @@ export default function CellbanksMultiInputForm() {
         }}
       >
         <StyledTable>
-          <CellbankFormBody>
+          <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
                 <TableRow key={i}>
-                  <CellbankFormCell>
+                  <MultiInputFormCell>
                     {i == 0 && <FormLabel htmlFor="strain">strain</FormLabel>}
-                    <CellbankMultiInput
+                    <MultiInput
                       type="text"
                       id="strain"
                       name="strain"
@@ -142,15 +155,15 @@ export default function CellbanksMultiInputForm() {
                       autoFocus
                       value={bulkForm[i].strain}
                     />
-                  </CellbankFormCell>
+                  </MultiInputFormCell>
 
-                  <CellbankFormCell>
+                  <MultiInputFormCell>
                     {i == 0 && (
                       <FormLabel htmlFor="target_molecule">
                         target molecule
                       </FormLabel>
                     )}
-                    <CellbankMultiInput
+                    <MultiInput
                       type="text"
                       id="target_molecule"
                       name="target_molecule"
@@ -159,15 +172,11 @@ export default function CellbanksMultiInputForm() {
                       required
                       value={bulkForm[i].target_molecule}
                     />
-                  </CellbankFormCell>
+                  </MultiInputFormCell>
 
-                  <CellbankFormCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="project">
-                        project
-                      </FormLabel>
-                    )}
-                    <CellbankMultiInput
+                  <MultiInputFormCell>
+                    {i == 0 && <FormLabel htmlFor="project">project</FormLabel>}
+                    <MultiInput
                       type="text"
                       id="project"
                       name="project"
@@ -176,13 +185,13 @@ export default function CellbanksMultiInputForm() {
                       required
                       value={bulkForm[i].project}
                     />
-                  </CellbankFormCell>
+                  </MultiInputFormCell>
 
-                  <CellbankFormCell>
+                  <MultiInputFormCell>
                     {i == 0 && (
                       <FormLabel htmlFor="description">description</FormLabel>
                     )}
-                    <CellbankMultiInput
+                    <MultiInput
                       id="description"
                       name="description"
                       onChange={(e) => handleChange(e, i)}
@@ -190,11 +199,11 @@ export default function CellbanksMultiInputForm() {
                       required
                       value={bulkForm[i].description}
                     />
-                  </CellbankFormCell>
+                  </MultiInputFormCell>
 
-                  <CellbankFormCell>
+                  <MultiInputFormCell>
                     {i == 0 && <FormLabel htmlFor="notes">notes</FormLabel>}
-                    <CellbankMultiInput
+                    <MultiInput
                       id="notes"
                       name="notes"
                       onChange={(e) => handleChange(e, i)}
@@ -202,10 +211,13 @@ export default function CellbanksMultiInputForm() {
                       required
                       value={bulkForm[i].notes}
                     />
-                  </CellbankFormCell>
+                  </MultiInputFormCell>
                 </TableRow>
               ))}
-          </CellbankFormBody>
+
+            {popularOptionsArray }
+
+          </MultiInputFormBody>
         </StyledTable>
         <ButtonsContainer>
           <Button $size={'small'} type="submit" disabled={isPending}>

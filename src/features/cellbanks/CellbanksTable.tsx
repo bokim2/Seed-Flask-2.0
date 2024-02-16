@@ -7,16 +7,12 @@ import {
   TableRow,
   TableHeaderCell,
   StyledForm,
+  SearchSection,
 } from '../../styles/UtilStyles';
 import { useState } from 'react';
 // import { InitialEditCellbankForm } from '../../lib/constants';
-import {
-  useDeleteRowMutation,
-  useUpdateRowMutation,
-} from '../../lib/hooks';
-import {
-  useTextInputSearch,
-} from './cellbanks-hooks';
+import { useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
+import { useTextInputSearch } from './cellbanks-hooks';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
 import {
@@ -34,7 +30,7 @@ const TextSearchInput = styled.input`
   padding: 0.5rem;
   width: 200px;
 
-  @media (min-width: 600px){
+  @media (min-width: 600px) {
     width: 400px;
   }
 `;
@@ -44,6 +40,7 @@ export default function CellbanksTable({
   handleAddBookmark,
   toggleTextTruncation,
 }) {
+  console.log('cellbanks in cellbanks table', cellbanks);
   const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
     initialEditCellbankForm
   );
@@ -54,15 +51,18 @@ export default function CellbanksTable({
   // const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
 
   // update row
-  const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate, error: updateError } =
-    useUpdateRowMutation({
-      tableName: 'cellbanks',
-      zodSchema: updateCellbankSchema,
-      initialEditForm: initialEditCellbankForm,
-      setEditedForm: setEditedForm,
-      idColumnName: 'cell_bank_id',
-      dateColumnName: 'date_timestamptz',
-    });
+  const {
+    mutate: submitEditedCellbankForm,
+    isPending: isPendingUpdate,
+    error: updateError,
+  } = useUpdateRowMutation({
+    tableName: 'cellbanks',
+    zodSchema: updateCellbankSchema,
+    initialEditForm: initialEditCellbankForm,
+    setEditedForm: setEditedForm,
+    idColumnName: 'cell_bank_id',
+    dateColumnName: 'date_timestamptz',
+  });
 
   // delete row, only for cellbank (archive)
   // const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
@@ -81,6 +81,7 @@ export default function CellbanksTable({
     setSearchText,
     SelectSearchField,
     performInputTextSearch,
+    searchField,
   } = useTextInputSearch();
 
   const handleEditFormSubmit = (e, editedForm) => {
@@ -93,30 +94,43 @@ export default function CellbanksTable({
   return (
     <>
       {/* Text Search Section */}
-      <TextSearchContainer>
-        <TextSearchInput
-          type="text"
-          id="search"
-          placeholder="Text Search"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
-        <Button
-          type="button"
-          $size={'small'}
-          id="searchButton"
-          onClick={async () => {
-            try {
-              const data = await performInputTextSearch();
-              setSearchedData(data);
-            } catch (err) {
-              console.log('error', err);
-            }
-          }}
-        >
-          Search
-        </Button>
-      </TextSearchContainer>
+      <SearchSection>
+        <h3>
+          Click on column to search:
+          <p>
+            {` ${
+              searchField == 'date_timestampz'
+                ? 'date'
+                : searchField.replace(/_/g, ' ')
+            }`}
+          </p>
+        </h3>
+        <TextSearchContainer>
+          <TextSearchInput
+            required
+            type="text"
+            id="search"
+            placeholder="Text Search"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <Button
+            type="button"
+            $size={'small'}
+            id="searchButton"
+            onClick={async () => {
+              try {
+                const data = await performInputTextSearch();
+                setSearchedData(data);
+              } catch (err) {
+                console.log('error', err);
+              }
+            }}
+          >
+            Search
+          </Button>
+        </TextSearchContainer>
+      </SearchSection>
 
       {/* Table Section */}
       {isPendingUpdate && <h1>edit is pending Update...</h1>}
@@ -155,7 +169,10 @@ export default function CellbanksTable({
                 <TableHeaderCell data-column-name="date_timestampz">
                   date
                 </TableHeaderCell>
-                <TableHeaderCell>user</TableHeaderCell>
+                <TableHeaderCell data-column-name="username">
+                  username
+                </TableHeaderCell>
+
                 <TableHeaderCell>edit</TableHeaderCell>
               </TableRow>
             </TableHeader>

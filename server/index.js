@@ -24,6 +24,7 @@ const __dirname = dirname(__filename);
 import { db } from './db/db.js';
 import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
 import { allowRolesAdminUser } from './middleware/allowRolesAdminUser.js';
+import { getPopularOptions } from './helperFunctions.js';
 
 export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';
 
@@ -140,13 +141,18 @@ app.get('/api', (req, res) => {
 });
 
 // GET all cell banks
-app.get('/api/cellbanks',  async (req, res) => {
+app.get('/api/cellbanks', async (req, res) => {
   try {
     const results = await db.query(`SELECT * FROM cell_banks
     ORDER BY cell_bank_id DESC;`);
+    console.log('results of getting all cell banks', results.rows[0]);
+
+    const popularOptions = getPopularOptions(results.rows);
+    
     res.status(200).json({
       status: 'success',
       data: results.rows,
+      popularOptions: popularOptions,
       // user: req.oidc.user,
     });
   } catch (error) {
@@ -642,6 +648,8 @@ app.get('/api/cellbanks/search', async (req, res) => {
       'target_molecule',
       'details',
       'notes',
+      'username',
+      'date_timestampz',
     ];
     if (!validFields.includes(searchField)) {
       return res.status(400).send('Invalid search field.');
@@ -653,13 +661,25 @@ app.get('/api/cellbanks/search', async (req, res) => {
       ? `${searchField}::text`
       : searchField;
 
-    const query = {
-      text: `SELECT *, ts_rank(to_tsvector(${fieldForQuery}), plainto_tsquery($1)) AS relevance
+    let query;
+
+    if (searchField === 'date_timestampz') {
+      query = {
+        text: `SELECT *
+          FROM cell_banks
+          WHERE cell_banks.date_timestamptz > $1
+          ORDER BY cell_banks.date_timestamptz DESC;`,
+        values: [searchText],
+      };
+    } else {
+      query = {
+        text: `SELECT *, ts_rank(to_tsvector(${fieldForQuery}), plainto_tsquery($1)) AS relevance
         FROM cell_banks
         WHERE to_tsvector(${fieldForQuery}) @@ plainto_tsquery($1)
         ORDER BY relevance DESC;`,
-      values: [searchText],
-    };
+        values: [searchText],
+      };
+    }
 
     const result = await db.query(query);
     res.status(200).json(result.rows);
