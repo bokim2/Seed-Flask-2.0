@@ -24,7 +24,6 @@ import { db } from './db/db.js';
 import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
 import { allowRolesAdminUser } from './middleware/allowRolesAdminUser.js';
 import { getPopularOptions } from './helperFunctions.js';
-import { LIMIT } from '../src/lib/constants.js';
 
 export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';
 
@@ -107,6 +106,23 @@ app.get('/env', (req, res) => {
   });
 });
 
+// AUTH0 API //
+
+// const jwtCheck = authAPI({
+//   audience: 'https://seed-flask-2-c1d8d446416a.herokuapp.com',
+//   issuerBaseURL: 'https://dev-1gk5wccsooddgtgs.us.auth0.com/',
+//   tokenSigningAlg: 'RS256'
+// });
+
+// // enforce on all endpoints
+// // app.use(jwtCheck);
+
+// app.get('/authorized', function (req, res) {
+//     res.send('Secured Resource');
+// });
+
+//
+
 // set cache control headers for images
 app.use(
   '/images',
@@ -126,26 +142,15 @@ app.get('/api', (req, res) => {
 // GET cell banks - INFINITE SCROLL
 app.get('/api/cellbanks', async (req, res) => {
   try {
-    console.log(
-      'req.query',
-      req.query,
-      'req.query.limit',
-      req.query.limit,
-      'req.query.offset',
-      req.query.offset
-    );
-    const limit = parseInt(req.query.limit, 10) || LIMIT; // Default to 50 if not specified
-    const offset = parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
-    const results = await db.query(
-      `SELECT * FROM cell_banks
+    const limit = parseInt(req.query.limit, 10) || 50; // Default to 50 if not specified
+  const offset = parseInt(req.query.offset, 10) - 50 || 0; // Default to 0 if not specified
+    const results = await db.query(`SELECT * FROM cell_banks
     ORDER BY cell_bank_id DESC 
-    LIMIT $1 OFFSET $2;`,
-      [limit, offset]
-    );
+    LIMIT $1 OFFSET $2;`, [limit, offset]);
     // console.log('results of getting all cell banks', results.rows[0]);
 
     const popularOptions = getPopularOptions(results.rows);
-
+    
     res.status(200).json({
       status: 'success',
       data: results.rows,
@@ -157,6 +162,29 @@ app.get('/api/cellbanks', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+// GET all cell banks
+// app.get('/api/cellbanks', async (req, res) => {
+//   try {
+//     const results = await db.query(`SELECT * FROM cell_banks
+//     ORDER BY cell_bank_id DESC;`);
+//     console.log('results of getting all cell banks', results.rows[0]);
+
+//     const popularOptions = getPopularOptions(results.rows);
+    
+//     res.status(200).json({
+//       status: 'success',
+//       data: results.rows,
+//       popularOptions: popularOptions,
+//       // user: req.oidc.user,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
 
 // post one cell bank
 app.post(
@@ -255,18 +283,51 @@ app.delete('/api/cellbanks/:id', async (req, res) => {
   }
 });
 
+//GET all flasks before trying left join
+// app.get('/api/flasks', async (req, res) => {
+//   try {
+//     const results = await db.query('select * from flasks');
+//     console.log('results of getting all flasks', results.rows);
+//     res.status(200).json({
+//       status: 'success',
+//       // results: results.rows.length,
+//       data: results.rows,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
+//GET all flasks - flasks table joined with cell_banks table - format 2024-01-10T04:15:50.421Z returns pacific time
+// app.get('/api/flasks', async (req, res) => {
+//     try {
+//       const results = await db.query(
+//         `SELECT
+//         *,
+//         start_date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Los_Angeles' AS start_date_pacific
+//       FROM flasks;`
+//       );
+//       console.log('trying to get timezone to work', results);
+//       res.status(200).json({
+//         status: 'success',
+//         // results: results.rows.length,
+//         data: results.rows,
+//       });
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   });
+
 // get ALL flasks - infinite scroll
 app.get('/api/flasks', async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit, 10 || LIMIT);
-    const offset = parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
+    const limit = parseInt(req.query.limit, 10 || 50);
+    const offset = parseInt(req.query.offset, 10 || 50) - 50 || 
     const results = await db.query(
       `SELECT
       *
       FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
-      ORDER BY flask_id DESC
-      LIMIT $1 OFFSET $2;`,
-      [limit, offset]
+      ORDER BY flask_id DESC;`
     );
     // console.log('trying to get timezone to work', results);
     res.status(200).json({
@@ -279,7 +340,7 @@ app.get('/api/flasks', async (req, res) => {
   }
 });
 
-// get ALL flasks
+// get ALL flasks 
 // app.get('/api/flasks', async (req, res) => {
 //   try {
 //     const results = await db.query(
@@ -441,8 +502,6 @@ app.delete('/api/flasks/:id', async (req, res) => {
 
 app.get('/api/samples', async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit, 10 || LIMIT);
-    const offset = parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
     const query = `SELECT
       s.*,
       f.flask_id,
@@ -452,10 +511,8 @@ app.get('/api/samples', async (req, res) => {
       FROM samples as s 
       LEFT JOIN flasks as f on s.flask_id = f.flask_id
       LEFT JOIN cell_banks as c on f.cell_bank_id = c.cell_bank_id
-      ORDER BY s.sample_id DESC
-      LIMIT $1
-      OFFSET $2;`;
-    const results = await db.query(query, [limit, offset]);
+      ORDER BY s.sample_id DESC;`;
+    const results = await db.query(query);
     res.status(200).json({
       status: 'success',
       data: results.rows,

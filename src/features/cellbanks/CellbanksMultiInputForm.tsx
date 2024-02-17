@@ -36,7 +36,7 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
   ]); // data for submitting cellbank(s)
   console.log(bulkForm, 'bulkForm')
 
-  // const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
+
 
   const {
     mutate: createCellbankMutation,

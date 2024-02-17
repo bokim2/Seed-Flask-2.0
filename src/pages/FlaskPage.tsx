@@ -10,20 +10,34 @@ import {
   PageContainer,
 } from '../styles/UtilStyles';
 import ErrorMessage from '../ui/ErrorMessage';
-import { flasksInfoArraySchema, flasksInfoSchema } from '../features/flasks/flasks-types'
+import {
+  flasksInfoArraySchema,
+  flasksInfoSchema,
+} from '../features/flasks/flasks-types';
 import FlasksMultiInputForm from '../features/flasks/FlasksMultiInputForm';
+import Button from '../ui/Button';
 
 export default function FlaskPage() {
   // const [flasks, isLoading, error] = useFlasks();
 
-  const {data: flasks, isLoading, error} = useFetchValidatedTableQuery({
+  const {
+    data: flasks,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useFetchValidatedTableQuery({
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });
   console.log('flasks in flaskPAGE', flasks);
 
   // const [flask] = useFlask(1);
+  // console.log('flask in flaskPAGE', flask);
 
+  const flasksAll = flasks?.pages.map((page) => page.data).flat();
+  console.log(flasksAll, 'flasksAll');
   return (
     <PageContainer id="FlaskPageContainer">
       <LoaderWrapper>
@@ -33,9 +47,18 @@ export default function FlaskPage() {
       </LoaderWrapper>
       <InnerPageContainer id="InnerFlaskPageContainer">
         {/* <LoaderBar /> */}
-        <FlasksMultiInputForm popularOptions={flasks?.popularOptions}/>
-        {!isLoading && <FlasksTable flasks={flasks?.data} />}
+        {/* <FlasksMultiInputForm popularOptions={flasksAlls?.popularOptions}/> */}
         {error && <ErrorMessage error={error} />}
+        {flasksAll && flasksAll.length > 0 && !isLoading && (
+          <FlasksTable flasks={flasksAll} />
+        )}
+        <Button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {hasNextPage && !isFetchingNextPage && 'Load More'}
+          {!hasNextPage && 'No More Data'}
+        </Button>
       </InnerPageContainer>
     </PageContainer>
   );

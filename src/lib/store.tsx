@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import timeZoneReducer from '../features/ui-state/settingsSlice';
 import bookmarksReducer from '../features/ui-state/bookmarksSlice';
 import userReducer from '../features/ui-state/userSlice';
+import pageLimitReducer from '../features/ui-state/pageSlice';
 
 const store = configureStore({
   reducer: {
@@ -9,6 +10,7 @@ const store = configureStore({
     timeZone: timeZoneReducer,
     bookmarks: bookmarksReducer,
     user: userReducer,
+    page: pageLimitReducer,
   },
 });
 
