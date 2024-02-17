@@ -34,20 +34,30 @@ export default function SamplePage() {
   // const [samples, isLoading, error] = useSamples();
   // console.log('samples', samples);
 
-  const {data: samples, isLoading, error} = useFetchValidatedTableQuery({
+  const {
+    data: samples,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useFetchValidatedTableQuery({
     tableName: 'samples',
     zodSchema: samplesInfoArraySchema,
   });
+
+  const samplesAll = samples?.pages.map(page => page.data).flat()  || [];
 
   return (
     <PageContainer id="SamplePageContainer">
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
 
       <InnerPageContainer id="SampleInnerPageContainer">
-        <SamplesMultiInputForm popularOptions={samples?.popularOptions}/>
+        {/* <SamplesMultiInputForm popularOptions={samples?.popularOptions}/> */}
         {error && <ErrorMessage error={error} />}
 
-        {!isLoading && <SamplesTable samples={samples?.data} />}
+        {!isLoading && samplesAll && <SamplesTable samples={samplesAll} />}
       </InnerPageContainer>
     </PageContainer>
   );

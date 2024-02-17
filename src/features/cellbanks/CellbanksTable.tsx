@@ -9,9 +9,13 @@ import {
   StyledForm,
   SearchSection,
 } from '../../styles/UtilStyles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { InitialEditCellbankForm } from '../../lib/constants';
-import { useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
+import {
+  useAppSelector,
+  useDeleteRowMutation,
+  useUpdateRowMutation,
+} from '../../lib/hooks';
 import { useTextInputSearch } from './cellbanks-hooks';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
@@ -21,6 +25,10 @@ import {
   updateCellbankSchema,
 } from './cellbanks-types';
 import ErrorMessage from '../../ui/ErrorMessage';
+import { ButtonsContainer } from './CellbanksMultiInputForm';
+import { changePageLimit } from '../ui-state/pageSlice';
+import { useDispatch } from 'react-redux';
+import PageLimitDropDownSelector from '../../ui/PageLimitDropDownSelector';
 
 const TextSearchContainer = styled.div``;
 
@@ -39,8 +47,10 @@ export default function CellbanksTable({
   cellbanks,
   handleAddBookmark,
   toggleTextTruncation,
+  // tableName,
+  // refetch
 }) {
-  console.log('cellbanks in cellbanks table', cellbanks);
+  // console.log('cellbanks in cellbanks table', cellbanks);
   const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
     initialEditCellbankForm
   );
@@ -75,7 +85,7 @@ export default function CellbanksTable({
   } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
   // searching cellbanks table through text input
-  const [searchedData, setSearchedData] = useState([]);
+  const [searchedData, setSearchedData] = useState<any>([]);
   const {
     searchText,
     setSearchText,
@@ -89,6 +99,15 @@ export default function CellbanksTable({
     e.stopPropagation();
     submitEditedCellbankForm(editedForm);
     setEditingId(null);
+  };
+
+  // page limit
+  const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
+
+  const dispatch = useDispatch();
+  const handleChoosePageLimit = (limit) => {
+    dispatch(changePageLimit(limit));
+    
   };
 
   return (
@@ -114,23 +133,41 @@ export default function CellbanksTable({
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <Button
-            type="button"
-            $size={'small'}
-            id="searchButton"
-            onClick={async () => {
-              try {
-                const data = await performInputTextSearch();
-                setSearchedData(data);
-              } catch (err) {
-                console.log('error', err);
-              }
-            }}
-          >
-            Search
-          </Button>
+          <ButtonsContainer>
+            <Button
+              type="button"
+              $size={'small'}
+              className="searchButton"
+              onClick={async () => {
+                try {
+                  const data = await performInputTextSearch();
+                  setSearchedData(data);
+                } catch (err) {
+                  console.log('error', err);
+                }
+              }}
+            >
+              Search
+            </Button>
+
+            <Button
+              type="button"
+              $size={'small'}
+              className="clearSearchButton"
+              onClick={() => setSearchedData([])}
+            >
+              Clear Search
+            </Button>
+          </ButtonsContainer>
         </TextSearchContainer>
       </SearchSection>
+
+      {/* Page Limit Section */}
+      <PageLimitDropDownSelector
+        handleChoosePageLimit={handleChoosePageLimit}
+        pageLimitSetting={pageLimitSetting}
+        // tableName={tableName}
+      />
 
       {/* Table Section */}
       {isPendingUpdate && <h1>edit is pending Update...</h1>}
@@ -178,7 +215,25 @@ export default function CellbanksTable({
             </TableHeader>
             <tbody>
               {cellbanks.length > 0 &&
+                searchedData.length === 0 &&
                 cellbanks?.map((rowData) => (
+                  <CellbanksRow
+                    key={rowData.cell_bank_id}
+                    rowData={rowData}
+                    toggleTextTruncation={toggleTextTruncation}
+                    editedForm={editedForm}
+                    setEditedForm={setEditedForm}
+                    setEditingId={setEditingId}
+                    editingId={editingId}
+                    deleteCellbank={deleteCellbank}
+                    isPendingUpdate={isPendingUpdate}
+                    isPendingDelete={isPendingDelete}
+                    handleAddBookmark={handleAddBookmark}
+                  />
+                ))}
+
+              {searchedData.length > 0 &&
+                searchedData?.map((rowData) => (
                   <CellbanksRow
                     key={rowData.cell_bank_id}
                     rowData={rowData}

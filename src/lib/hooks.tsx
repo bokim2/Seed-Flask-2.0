@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../../configs';
 import axios from 'axios';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  UseInfiniteQueryOptions,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
@@ -10,49 +16,137 @@ import type { RootState, AppDispatch } from './store';
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-// fetch all rows in table
+// fetch rows in table - INFINITE SCROLL
 export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
-  const { data, isLoading, error } = useQuery({
-    queryKey: [tableName],
-    queryFn: async () => {
-      try {
-        const response = await fetch(`${baseUrl}/api/${tableName}`, {
-          credentials: 'include', // Include cookies for cross-origin requests
-        });
-        const dbData = await response.json();
-        console.log('data in useFetchValidatedTableQuery', dbData);
-    if (!response.ok) {
-      const errorMessage = data.message || `Failed to fetch from ${tableName}`;
-      throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
-    }
+  type FetchTableDataArgs = {
+    pageParam?: number;
+  };
 
-    // validation ON
-        const validatedData = zodSchema.safeParse(dbData.data);
-        // console.log(validatedData, 'validatedData');
-        if (!validatedData.success) {
-          console.error(
-            'useFetchValidatedTableQuery validation error',
-            validatedData.error
-          );
-          throw new Error(`Data validation in ${tableName} table failed`);
-        }
-        // return validatedData.data;
-        return dbData;
+  type TableData = any; // Replace 'any' with the actual type of your data
 
-        // TURNED VALIDATION OFF FOR NOW!!!!
-      } catch (err) {
-        console.log(err, 'error in useFetchValidatedTableQuery');
-        throw err;
+  // setting page limit - getting global state from redux store
+  const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
+  console.log('pageLimitSetting', pageLimitSetting);
+
+  const fetchTableData = async ({ pageParam = 0 }: FetchTableDataArgs) => {
+    try {
+      const url = `${baseUrl}/api/${tableName}?offset=${
+        pageParam * pageLimitSetting
+      }&limit=${pageLimitSetting}`; // Example for offset pagination
+      const response = await fetch(url, { credentials: 'include' });
+      if (!response.ok) {
+        // const errorMessage = data?.message || `Failed to fetch from ${tableName}`;
+        // throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
       }
+      return response.json();
+      // console.log('data in useFetchValidatedTableQuery', dbData);
+
+      // validation ON
+      // const validatedData = zodSchema.safeParse(dbData.data);
+      // // console.log(validatedData, 'validatedData');
+      // if (!validatedData.success) {
+      //   console.error(
+      //     'useFetchValidatedTableQuery validation error',
+      //     validatedData.error
+      //   );
+      //   throw new Error(`Data validation in ${tableName} table failed`);
+      // }
+      // // return validatedData.data;
+      // return dbData;
+
+      // TURNED VALIDATION OFF FOR NOW!!!!
+    } catch (err) {
+      console.log(err, 'error in useFetchValidatedTableQuery');
+      throw err;
+    }
+  };
+  const queryOptions = {
+    queryKey: [tableName, pageLimitSetting],
+    queryFn: ({ pageParam = 0 }) => fetchTableData({ pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => {
+      const nextPage = lastPage.data.length ? allPages.length + 1 : undefined;
+      console.log(
+        'allPages',
+        allPages,
+        'lastPage',
+        lastPage,
+        'lastPageParam',
+        lastPageParam,
+        'allPageParams',
+        allPageParams,
+        'nextPage',
+        nextPage
+      );
+      return nextPage;
     },
-    retry: 2,
-    meta: {
-      errorMessage: `Failed to fetch ${tableName} data (meta option useQuery)`,
-    },
-  });
-  return {data, isLoading, error} as const;
-  // return {data: data.data, popularOptions: data.popularOptions, isLoading, error} as const;
+  };
+
+  // export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteQuery(queryOptions);
+
+  return {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch
+  };
 }
+// }
+
+// // fetch all rows in table
+// export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
+//   const { data, isLoading, error } = useQuery({
+//     queryKey: [tableName],
+//     queryFn: async () => {
+//       try {
+//         const response = await fetch(`${baseUrl}/api/${tableName}`, {
+//           credentials: 'include', // Include cookies for cross-origin requests
+//         });
+//         const dbData = await response.json();
+//         console.log('data in useFetchValidatedTableQuery', dbData);
+//     if (!response.ok) {
+//       const errorMessage = data.message || `Failed to fetch from ${tableName}`;
+//       throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
+//     }
+
+//     // validation ON
+//         const validatedData = zodSchema.safeParse(dbData.data);
+//         // console.log(validatedData, 'validatedData');
+//         if (!validatedData.success) {
+//           console.error(
+//             'useFetchValidatedTableQuery validation error',
+//             validatedData.error
+//           );
+//           throw new Error(`Data validation in ${tableName} table failed`);
+//         }
+//         // return validatedData.data;
+//         return dbData;
+
+//         // TURNED VALIDATION OFF FOR NOW!!!!
+//       } catch (err) {
+//         console.log(err, 'error in useFetchValidatedTableQuery');
+//         throw err;
+//       }
+//     },
+//     retry: 2,
+//     meta: {
+//       errorMessage: `Failed to fetch ${tableName} data (meta option useQuery)`,
+//     },
+//   });
+//   return {data, isLoading, error} as const;
+// }
 
 // create one row in table
 
@@ -100,13 +194,17 @@ export async function createRow(form, tableName, zodSchema) {
       }),
     });
     console.log('res in createRow', response);
-    
-    const  data  = await response.json();
+
+    const data = await response.json();
 
     if (!response.ok) {
-      const errorMessage = data.message || `Failed to post entry in ${tableName}`;
+      const errorMessage =
+        data.message || `Failed to post entry in ${tableName}`;
       // You can further customize the error object here if needed
-      throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
+      throw Object.assign(new Error(errorMessage), {
+        statusCode: response.status,
+        data,
+      });
     }
 
     console.log('data after post in createRow', data);

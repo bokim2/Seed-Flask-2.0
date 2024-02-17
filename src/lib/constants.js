@@ -1,4 +1,4 @@
-
+export const LIMIT = 10; // Number of items to display per page used in client and server side code
 
 export const LineGraphColors = [
   "#FF5733",  // Bright Red
