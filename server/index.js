@@ -27,7 +27,7 @@ import { getPopularOptions } from './helperFunctions.js';
 import { LIMIT } from '../src/lib/constants.js';
 
 // export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';
-export const prodUrl = 'https://seedflask.com';
+export const prodUrl = 'https://www.seedflask.com';
 
 const app = express();
 app.use(express.json());
