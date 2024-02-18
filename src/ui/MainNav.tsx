@@ -27,7 +27,7 @@ const StyledMainNav = styled.div<StyledMainNav>`
 `;
 
 const StyledNavLink = styled(NavLink)`
-height: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: end;
@@ -89,7 +89,7 @@ export const StyledUser = styled.img`
 `;
 
 const UserIconContainer = styled.div`
-height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -234,11 +234,9 @@ export default function MainNav({ userProfile }) {
               <StyledUser src={userProfile.picture}></StyledUser>
               <p>{JSON.stringify(userProfile)}</p>
               <small>
-                {
-                  userProfile[
-                    'https://seedflask.com/roles'
-                  ]
-                }
+                {userProfile?.[
+                  'https://seed-flask-2-c1d8d446416a.herokuapp.com/roles'
+                ] ?? userProfile?.['https://seedflask.com/roles']}
               </small>
             </UserIconContainer>
           ) : (
