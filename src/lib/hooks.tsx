@@ -22,7 +22,6 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
     pageParam?: number;
   };
 
-  type TableData = any; // Replace 'any' with the actual type of your data
 
   // setting page limit - getting global state from redux store
   const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
