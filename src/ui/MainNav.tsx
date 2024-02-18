@@ -232,10 +232,11 @@ export default function MainNav({ userProfile }) {
               aria-label="user and settings menu"
             >
               <StyledUser src={userProfile.picture}></StyledUser>
+              <p>{JSON.stringify(userProfile)}</p>
               <small>
                 {
                   userProfile[
-                    'https://www.seedflask.com/roles'
+                    'https://seedflask.com/roles'
                   ]
                 }
               </small>
