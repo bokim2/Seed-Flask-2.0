@@ -235,7 +235,7 @@ export default function MainNav({ userProfile }) {
               <small>
                 {
                   userProfile[
-                    'https://seedflask.com/roles'
+                    'https://www.seedflask.com/roles'
                   ]
                 }
               </small>
