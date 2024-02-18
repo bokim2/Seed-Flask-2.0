@@ -26,7 +26,8 @@ import { allowRolesAdminUser } from './middleware/allowRolesAdminUser.js';
 import { getPopularOptions } from './helperFunctions.js';
 import { LIMIT } from '../src/lib/constants.js';
 
-export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';
+// export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';
+export const prodUrl = 'https://seedflask.com';
 
 const app = express();
 app.use(express.json());
@@ -39,7 +40,7 @@ app.use(
       'http://localhost:5173',
       'https://localhost:5173',
       'https://seed-flask-2-c1d8d446416a.herokuapp.com',
-      // 'https://seedflask.com',
+      'https://seedflask.com',
       'https://dev-1gk5wccsooddgtgs.us.auth0.com',
       'https://localhost:3000',
     ],

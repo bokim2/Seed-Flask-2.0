@@ -13,7 +13,7 @@ import {
   StyledMainMenuButtons,
   Wrapper,
 } from '../styles/UtilStyles';
-import { Auth0Url, baseUrl } from '../../configs';
+import {  baseUrl } from '../../configs';
 import Button from '../ui/Button';
 
 const HomePageContainer = styled(PageContainer)`

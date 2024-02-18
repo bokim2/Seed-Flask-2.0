@@ -235,7 +235,7 @@ export default function MainNav({ userProfile }) {
               <small>
                 {
                   userProfile[
-                    'https://seed-flask-2-c1d8d446416a.herokuapp.com/roles'
+                    'https://seedflask.com/roles'
                   ]
                 }
               </small>
