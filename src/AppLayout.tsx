@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import MainNav from './ui/MainNav';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import NavList from './ui/NavList';
 import LoaderBar from './ui/LoaderBar';
 import { THandleNavToggle, TNavOrUser } from './lib/types';
