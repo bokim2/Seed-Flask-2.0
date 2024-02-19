@@ -65,18 +65,18 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => {
       const nextPage = lastPage.data.length ? allPages.length + 1 : undefined;
-      console.log(
-        'allPages',
-        allPages,
-        'lastPage',
-        lastPage,
-        'lastPageParam',
-        lastPageParam,
-        'allPageParams',
-        allPageParams,
-        'nextPage',
-        nextPage
-      );
+      // console.log(
+      //   'allPages',
+      //   allPages,
+      //   'lastPage',
+      //   lastPage,
+      //   'lastPageParam',
+      //   lastPageParam,
+      //   'allPageParams',
+      //   allPageParams,
+      //   'nextPage',
+      //   nextPage
+      // );
       return nextPage;
     },
   };
