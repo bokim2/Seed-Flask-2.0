@@ -178,7 +178,7 @@ app.post(
       const userObj = req.oidc.user;
       const username = userObj.name;
       const user_id = userObj.sub;
-      // console.log(req.body, 'in post cell bank server');
+      console.log(req.body, 'in post cell bank server');
       const results = await db.query(
         'INSERT INTO cell_banks (strain, notes, target_molecule, project, description, username, user_id) values ($1, $2, $3, $4, $5, $6, $7) returning *',
         [
