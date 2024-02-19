@@ -58,7 +58,7 @@ export const NavMenuButton = styled.button`
 `;
 
 export const NavSection = styled.div`
-height: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   /* justify-content: center; */
@@ -323,7 +323,7 @@ export const Caption = styled.caption`
 
 export const TableHeader = styled.thead`
   position: sticky;
-  top: 9.7vh;  // reference at NavBar styles
+  top: 9.7vh; // reference at NavBar styles
   background-color: black;
 `;
 
@@ -332,17 +332,60 @@ export const TableHeader = styled.thead`
 // };
 
 export const TableHeaderCell = styled.th<TTableHeaderCell>`
+/* display: flex; */
+
   /* font-family: var(--font-serif); */
   padding: 0.5rem;
   font-weight: 600;
   font-size: 1.1rem;
   /* padding: 1rem 2rem; */
   color: rgba(var(--clr-accent-6), 0.8);
+
   width: ${(props) => props.width || 'auto'};
+
+  /* font-family: var(--font-serif);
+  letter-spacing: 0.09rem;
+  font-weight: 800; */
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.dbsearch {
+    cursor: pointer;
+    color: var(--clr-accent-7);
+    transform: scale(1.05);
+    transition: color 100ms ease-in-out, transform 100ms ease-in-out;
+  }
+
+  &.dbsearchActive {
+    cursor: pointer;
+    color: var(--clr-accent-7);
+    border-bottom: 2px solid var(--clr-accent-7);
+    transform: scale(1.05);
+    transition: color 100ms ease-in-out, transform 100ms ease-in-out;
+  }
+
   @media (max-width: 600px) {
     display: none;
   }
 `;
+
+export const TableHeaderCellInnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  
+  /* svg {
+    visibility: hidden;
+  } */
+
+  &:hover svg {
+    visibility: visible;
+  }
+
+
+  `
 
 export const TableRow = styled.tr`
   background-color: hsl(0, 0%, 0%, 0.5);
@@ -414,7 +457,6 @@ export const EditRow = styled.tr`
   color: turquoise;
 `;
 
-
 // search section
 
 export const SearchSection = styled.section`
@@ -423,6 +465,27 @@ export const SearchSection = styled.section`
   align-items: center;
   gap: 1rem;
   margin-block: 1rem;
+`;
+
+export const SearchInputPTag = styled.p`
+color: var(--clr-accent-7);
+font-weight: 600;
+font-size: 1.3rem;
+text-transform: capitalize;
+
+`;
+
+export const TextSearchContainer = styled.div``;
+
+export const TextSearchInput = styled.input`
+  margin: 0.5rem;
+  border-radius: 5px;
+  padding: 0.5rem;
+  width: 200px;
+
+  @media (min-width: 600px) {
+    width: 400px;
+  }
 `;
 
 

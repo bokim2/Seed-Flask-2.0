@@ -211,7 +211,16 @@ export function useTextInputSearch() {
   // set search params for selected column for text search
   const SelectSearchField = (e) => {
     e.stopPropagation();
-    const columnName = e.target.getAttribute('data-column-name');
+    // console.log(e.target, e.currentTarget)
+
+    let targetElement = e.target;
+
+    if (!targetElement.hasAttribute('data-column-name')) {
+      targetElement = e.target.closest('[data-column-name]');
+    }
+
+    const columnName = targetElement.getAttribute('data-column-name');
+    console.log('columnName cellbank???', columnName);
 
     searchParams.set('searchField', columnName);
     setSearchParams(searchParams);
