@@ -94,23 +94,23 @@ export default function HomePage() {
   const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
   const [env, setEnv] = useState<any>(null);
 
-  useEffect(() => {
-    async function authProfile() {
-      try{
-        const response = await fetch(`${baseUrl}/profile`, {
-          credentials: 'include', // Include cookies for cross-origin requests
-        });
-        console.log(response)
-      const data = await response.json();
-      setUserProfile(data);
-      } catch(errr){
-        console.log('error', errr)
-      }
-    }
+  // useEffect(() => {
+  //   async function authProfile() {
+  //     try{
+  //       const response = await fetch(`${baseUrl}/profile`, {
+  //         credentials: 'include', // Include cookies for cross-origin requests
+  //       });
+  //       console.log(response)
+  //     const data = await response.json();
+  //     setUserProfile(data);
+  //     } catch(errr){
+  //       console.log('error', errr)
+  //     }
+  //   }
 
-    // getEnv()
-    authProfile();
-  }, []);
+  //   // getEnv()
+  //   authProfile();
+  // }, []);
 
       // async function getEnv() {
     //   try{

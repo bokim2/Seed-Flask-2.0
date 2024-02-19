@@ -22,7 +22,6 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
     pageParam?: number;
   };
 
-
   // setting page limit - getting global state from redux store
   const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
   console.log('pageLimitSetting', pageLimitSetting);
@@ -37,7 +36,8 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         // const errorMessage = data?.message || `Failed to fetch from ${tableName}`;
         // throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
       }
-      return response.json();
+      const data = await response.json();
+      return data;
       // console.log('data in useFetchValidatedTableQuery', dbData);
 
       // validation ON
@@ -99,7 +99,7 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch
+    refetch,
   };
 }
 // }
@@ -157,10 +157,15 @@ export function useCreateValidatedRowMutation({
   const queryClient = useQueryClient();
   type TzodSchema = z.infer<typeof zodSchema>;
 
-  const { mutate, isPending, reset, error } = useMutation({
+  const { mutate, isPending, reset, error,  } = useMutation({
     mutationFn: (form: TzodSchema) => createRow(form, tableName, zodSchema),
     onSuccess: () => {
-      queryClient.invalidateQueries(tableName);
+      console.log('onSuccess in useCreateValidatedRowMutation!!!!', tableName);
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey.includes(tableName),
+      });
+      // queryClient.invalidateQueries(tableName);
+      queryClient.refetchQueries({ queryKey: [tableName] });
       reset();
     },
     onError: (err) => {

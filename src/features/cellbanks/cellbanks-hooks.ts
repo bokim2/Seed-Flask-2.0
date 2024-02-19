@@ -45,44 +45,44 @@ import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
 // }
 
 // submit a single cellbank edit to the server
-async function updateCellbankEdit(editedForm) {
-  try {
-    console.log('editedForm in updateCellbankEdit', editedForm)
-    // console.log('cell_bank_id', editedForm.cell_bank_id);
-    const validationResult = updateCellbankSchema.safeParse(editedForm);
-    if (!validationResult.success) {
-      throw new Error(
-        `Failed to validate updateCellbankEdit form: ${validationResult.error.message}`
-      );
-    }
-    const { strain, target_molecule, description, notes, human_readable_date } =
-      editedForm;
-    const res = await fetch(
-      `${baseUrl}/api/cellbanks/${editedForm.cell_bank_id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          strain,
-          target_molecule,
-          description,
-          notes,
-          date_timestamptz: getUtcTimestampFromLocalTime(human_readable_date),
-        }),
-      }
-    );
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    const { data } = await res.json();
-    return data;
-  } catch (err) {
-    console.log('error in updateCellbankEdit', err);
-    throw err;
-  }
-}
+// async function updateCellbankEdit(editedForm) {
+//   try {
+//     console.log('editedForm in updateCellbankEdit', editedForm)
+//     // console.log('cell_bank_id', editedForm.cell_bank_id);
+//     const validationResult = updateCellbankSchema.safeParse(editedForm);
+//     if (!validationResult.success) {
+//       throw new Error(
+//         `Failed to validate updateCellbankEdit form: ${validationResult.error.message}`
+//       );
+//     }
+//     const { strain, target_molecule, description, notes, human_readable_date } =
+//       editedForm;
+//     const res = await fetch(
+//       `${baseUrl}/api/cellbanks/${editedForm.cell_bank_id}`,
+//       {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//           strain,
+//           target_molecule,
+//           description,
+//           notes,
+//           date_timestamptz: getUtcTimestampFromLocalTime(human_readable_date),
+//         }),
+//       }
+//     );
+//     if (!res.ok) {
+//       throw new Error(`HTTP error! status: ${res.status}`);
+//     }
+//     const { data } = await res.json();
+//     return data;
+//   } catch (err) {
+//     console.log('error in updateCellbankEdit', err);
+//     throw err;
+//   }
+// }
 
 // delete a single cellbank
 // const deleteCellbankById = async (cell_bank_id: number) => {

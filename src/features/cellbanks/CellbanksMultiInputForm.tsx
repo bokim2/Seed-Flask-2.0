@@ -96,7 +96,7 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
   // for popular options
   const popularOptionsArray: any = []
   for (let i = 0; i < 5; i++) {
-      console.log('popularOptions in loop', popularOptions)
+      // console.log('popularOptions in loop', popularOptions)
       popularOptionsArray.push(<tr key={i}><PopularOptionsSelectors
         popularOptions={popularOptions}
         columns={[
@@ -113,7 +113,7 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
   }
 
   function selectPopularOption(column, value){
-    console.log('value, column',value, column)
+    // console.log('value, column',value, column)
     if (bulkForm.length > 1) return;
     setBulkForm(prev => (prev.map(singleForm => ({...singleForm, [column]: value}))))
   }
@@ -215,7 +215,7 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
                 </TableRow>
               ))}
 
-            {popularOptionsArray }
+            {/* {popularOptionsArray } */}
 
           </MultiInputFormBody>
         </StyledTable>

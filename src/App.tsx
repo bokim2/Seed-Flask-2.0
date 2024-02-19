@@ -1,5 +1,3 @@
-// import { useEffect, useState } from 'react';
-// import axios from 'axios';
 import styled from 'styled-components';
 import GlobalStyles from './styles/GlobalStyles';
 // import Button from './ui/Button';
@@ -42,25 +40,7 @@ type TuserProfile = {
 };
 
 function App() {
-  const queryClient = new QueryClient({
-    queryCache: new QueryCache({
-      onError: (error, query)=> {
-        if (query?.meta?.errorMessage) {
-          console.log(query.meta.errorMessage);
-        }
-      }
-    }),
-    mutationCache: new MutationCache({
-      onError: (error)=> {
-        console.log(error);
-      }
-    }),
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-      },
-    },
-  });
+
 
   const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
 
@@ -84,8 +64,8 @@ function App() {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+
+    
         <GlobalStyles />
         {/* <StyledDiv>
 
@@ -107,7 +87,7 @@ function App() {
           </Routes>
           {/* <TestComponent /> */}
         </BrowserRouter>
-      </QueryClientProvider>
+    
     </>
   );
 }
