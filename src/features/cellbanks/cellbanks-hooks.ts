@@ -158,22 +158,22 @@ import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
 // }
 
 // update a single cellbank
-export function useUpdateCellbankMutation(setEditedForm) {
-  const queryClient = useQueryClient();
-  const { mutate, isPending, error, reset } = useMutation({
-    mutationFn: (editedForm) => updateCellbankEdit(editedForm),
-    onSuccess: () => {
-      // console.log('success in useUpdateCellbankMutation');
-      queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
-      setEditedForm(initialEditCellbankForm);
-      reset();
-      // console.log('isPending in onSuccess', isPending);
-    },
-    onError: () =>
-      console.log('error in useUpdateCellbankMutation mutation fn'),
-  });
-  return { mutate, isPending, error };
-}
+// export function useUpdateCellbankMutation(setEditedForm) {
+//   const queryClient = useQueryClient();
+//   const { mutate, isPending, error, reset } = useMutation({
+//     mutationFn: (editedForm) => updateCellbankEdit(editedForm),
+//     onSuccess: () => {
+//       // console.log('success in useUpdateCellbankMutation');
+//       queryClient.invalidateQueries({ queryKey: ['cellbanks'] });
+//       setEditedForm(initialEditCellbankForm);
+//       reset();
+//       // console.log('isPending in onSuccess', isPending);
+//     },
+//     onError: () =>
+//       console.log('error in useUpdateCellbankMutation mutation fn'),
+//   });
+//   return { mutate, isPending, error };
+// }
 
 // export function useDeleteCellbankMutation() {
 //   const queryClient = useQueryClient();
