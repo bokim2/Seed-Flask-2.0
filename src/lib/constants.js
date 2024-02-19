@@ -1,5 +1,7 @@
 export const LIMIT = 10; // Number of items to display per page used in client and server side code
 
+export const RolesUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com/roles';
+
 export const LineGraphColors = [
   "#FF5733",  // Bright Red
   "#DAF7A6",  // Pastel Green

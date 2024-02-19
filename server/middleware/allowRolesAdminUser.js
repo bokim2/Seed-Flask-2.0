@@ -1,3 +1,4 @@
+import { RolesUrl } from '../../src/lib/constants.js';
 import {prodUrl} from '../index.js'
 
 
@@ -7,11 +8,12 @@ export const allowRolesAdminUser = (req, res, next) => {
       const userObj = req.oidc.user;
       
 
-      const user = `${prodUrl}/roles`
+      // const user = `${prodUrl}/roles`
       console.log(
-       'user', user, 'userObj', userObj, 'url', prodUrl
+       'RolesUrl', RolesUrl, 'userObj', userObj, 'url', prodUrl
       )
-      const roles = userObj[user] || [];
+      const roles = userObj[RolesUrl] || [];
+      console.log('roles', roles)
       if(roles.includes('admin') || roles.includes('user')) {
         console.log('user role is admin or user')
         next()
