@@ -52,6 +52,14 @@ app.use(
 const PORT = process.env.PORT || 3000;
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
+// redirect seedflask.com to www.seedflask.com
+app.use((req, res, next)=> {
+  if(req.hostname === 'seedflask.com'){
+    res.redirect(301, `https://www.seedflask.com${req.originalUrl}`)
+  }
+  next();
+})
+
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, '../dist')));
 

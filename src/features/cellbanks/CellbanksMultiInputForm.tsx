@@ -96,7 +96,7 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
   // for popular options
   const popularOptionsArray: any = []
   for (let i = 0; i < 5; i++) {
-    
+      console.log('popularOptions in loop', popularOptions)
       popularOptionsArray.push(<tr key={i}><PopularOptionsSelectors
         popularOptions={popularOptions}
         columns={[

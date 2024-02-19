@@ -14,6 +14,7 @@ import { RootState } from '../lib/store';
 import Button from '../ui/Button';
 import {  useFetchValidatedTableQuery } from '../lib/hooks';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
+import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 
 export default function CellbankPage() {
   const {
@@ -42,7 +43,7 @@ export default function CellbankPage() {
   );
 
   //
-
+const popularOptions = [];
   const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
   console.log(cellbanksAll, 'cellbanksAll');
 
@@ -62,7 +63,7 @@ export default function CellbankPage() {
 
         <h3>{JSON.stringify(cellbankBookmarks)}</h3>
 
-        {/* <CellbanksMultiInputForm popularOptions={cellbanks?.popularOptions}/> */}
+        <CellbanksMultiInputForm popularOptions={cellbanks?.pages?.map(page => page?.popularOptions).flat()}/>
 
         {error?.message && <ErrorMessage error={error} />}
         {!isLoading && cellbanks?.pages && cellbanks?.pages?.length > 0 && (
