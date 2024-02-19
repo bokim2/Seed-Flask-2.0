@@ -18,7 +18,7 @@ export const allowRolesAdminUser = (req, res, next) => {
         console.log('user role is admin or user')
         next()
       } else {
-        res.status(403).json({serverError: 'User is not authorized'})
+        res.status(403).json({serverError: 'User is not authorized', userObj})
       }
     } else {
         res.status(403).json({serverError: 'User authentication is required'})
