@@ -233,9 +233,9 @@ export default function MainNav({ userProfile }) {
               aria-label="user and settings menu"
             >
               <StyledUser src={userProfile.picture}></StyledUser>
-              <p>{JSON.stringify(userProfile)}</p>
+              {/* <p>{JSON.stringify(userProfile)}</p> */}
               <small>
-                {userProfile?.[RolesUrl] ?? userProfile?.['https://seedflask.com/roles']}
+                {userProfile?.[RolesUrl] }
               </small>
             </UserIconContainer>
           ) : (
