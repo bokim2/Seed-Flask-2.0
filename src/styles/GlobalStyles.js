@@ -151,10 +151,13 @@ ${
   --clr-accent-4: 228, 241, 238;/* #E4F1EE menu button */
   --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
   --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
-  --clr-accent-7: #FBC7CA;
+  --clr-accent-7: #D4F27C; // selected table header
   --clr-accent-8: #F68086; 
   --clr-accent-9: #10e7dc;
   --clr-accent-10: #fde5d4;
+  --clr-accent-11: #7C9DF2;
+  --clr-accent-12: #FBC7CA;
+  --clr-accent-13: #fff5e4;
 
   --clr-text-1: #D3D3D3;
   --clr-text-2: black;

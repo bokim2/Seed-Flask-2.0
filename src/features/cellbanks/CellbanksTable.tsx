@@ -8,8 +8,10 @@ import {
   TableHeaderCell,
   StyledForm,
   SearchSection,
+  SearchInputPTag,
+  TableHeaderCellInnerContainer,
 } from '../../styles/UtilStyles';
-import { useEffect, useState } from 'react';
+import { ReactEventHandler, useEffect, useState } from 'react';
 // import { InitialEditCellbankForm } from '../../lib/constants';
 import {
   useAppSelector,
@@ -29,19 +31,8 @@ import { ButtonsContainer } from './CellbanksMultiInputForm';
 import { changePageLimit } from '../ui-state/pageSlice';
 import { useDispatch } from 'react-redux';
 import PageLimitDropDownSelector from '../../ui/PageLimitDropDownSelector';
-
-const TextSearchContainer = styled.div``;
-
-const TextSearchInput = styled.input`
-  margin: 0.5rem;
-  border-radius: 5px;
-  padding: 0.5rem;
-  width: 200px;
-
-  @media (min-width: 600px) {
-    width: 400px;
-  }
-`;
+import SearchTableColumn from '../../ui/SearchTableColumn';
+import SortTableColumnsArrows from '../../ui/SortTableColumnsArrows';
 
 export default function CellbanksTable({
   cellbanks,
@@ -94,6 +85,39 @@ export default function CellbanksTable({
     searchField,
   } = useTextInputSearch();
 
+  // sort a column - client side, only with displayed data
+  type TColumn =
+    | 'cell_bank_id'
+    | 'strain'
+    | 'target_molecule'
+    | 'project'
+    | 'details'
+    | 'notes'
+    | 'date_timestampz'
+    | 'username';
+  type TOrder = 'asc' | 'desc' | '';
+  type TSortColumn = { [key in TColumn]?: TOrder };
+  const [sortColumn, setSortColumn] = useState<TSortColumn>({
+    'cell_bank_id': '',
+  });
+  console.log(sortColumn, 'sortColumn');
+  const handleSortColumn = (e, columnName) => {
+    const eTarget = e.target as Element;
+    if (
+      eTarget.closest('.sort-caret-asc') ||
+      eTarget.closest('.sort-caret-desc')
+    ) {
+      setSortColumn((prev) => {
+        if(prev?.[columnName]) { return { [columnName]: '' } }
+        const columnOrder = eTarget.closest('.sort-caret-asc') ? 'asc' : 'desc';
+        return {
+          [columnName]: columnOrder,
+        };
+      });
+    }
+  };
+
+  // editing a row
   const handleEditFormSubmit = (e, editedForm) => {
     e.preventDefault();
     e.stopPropagation();
@@ -107,60 +131,19 @@ export default function CellbanksTable({
   const dispatch = useDispatch();
   const handleChoosePageLimit = (limit) => {
     dispatch(changePageLimit(limit));
-    
   };
 
   return (
     <>
-      {/* Text Search Section */}
-      <SearchSection>
-        <h3>
-          Click on column to search:
-          <p>
-            {` ${
-              searchField == 'date_timestampz'
-                ? 'date'
-                : searchField.replace(/_/g, ' ')
-            }`}
-          </p>
-        </h3>
-        <TextSearchContainer>
-          <TextSearchInput
-            required
-            type="text"
-            id="search"
-            placeholder="Text Search"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <ButtonsContainer>
-            <Button
-              type="button"
-              $size={'small'}
-              className="searchButton"
-              onClick={async () => {
-                try {
-                  const data = await performInputTextSearch();
-                  setSearchedData(data);
-                } catch (err) {
-                  console.log('error', err);
-                }
-              }}
-            >
-              Search
-            </Button>
-
-            <Button
-              type="button"
-              $size={'small'}
-              className="clearSearchButton"
-              onClick={() => setSearchedData([])}
-            >
-              Clear Search
-            </Button>
-          </ButtonsContainer>
-        </TextSearchContainer>
-      </SearchSection>
+      {/* Search Section */}
+      <SearchTableColumn
+        searchText={searchText}
+        setSearchText={setSearchText}
+        SelectSearchField={SelectSearchField}
+        performInputTextSearch={performInputTextSearch}
+        searchField={searchField}
+        setSearchedData={setSearchedData}
+      />
 
       {/* Page Limit Section */}
       <PageLimitDropDownSelector
@@ -174,6 +157,8 @@ export default function CellbanksTable({
       {isPendingDelete && <h1>edit is pending Delete...</h1>}
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
+
+      {/* Edit row form */}
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
@@ -184,29 +169,128 @@ export default function CellbanksTable({
           <StyledTable>
             <Caption>Cell Banks Table</Caption>
             <TableHeader>
-              <TableRow onClick={SelectSearchField}>
-                <TableHeaderCell data-column-name="cell_bank_id">
-                  cell bank id
+              {/* select column to search */}
+              <TableRow
+                onClick={(e) => {
+                  // const eTarget = e.target as Element;
+                  // if (eTarget.closest('.sort-caret-asc') || eTarget.closest('.sort-caret-desc')) {
+                  //   setSortColumn(prev=> {
+                  //     const columnName = eTarget.closest('[data-column-name]').value
+                  //     const columnOrder = eTarget.closest('.sort-caret-asc') ? 'asc' : 'desc';
+                  //     return {
+                  //       [columnName]: columnOrder
+                  //     }
+                  //   })
+                  // } else {
+
+                  e.stopPropagation();
+                  setSearchedData([]);
+                  setSearchText('');
+                  SelectSearchField(e);
+                  // }
+                }}
+              >
+                <TableHeaderCell
+                  data-column-name="cell_bank_id"
+                  className={`${
+                    searchField == 'cell_bank_id' ? 'dbsearch' : ''
+                  } 
+                  ${
+                    searchField == 'cell_bank_id' &&
+                    searchedData?.length > 0 &&
+                    'dbsearchActive'
+                  }`}
+                  onClick={(e) => {
+                    handleSortColumn(e, 'cell_bank_id');
+                  }}
+                >
+                  <TableHeaderCellInnerContainer>
+                    cell bank id
+                    <SortTableColumnsArrows
+                      columnName="cell_bank_id"
+                      sortColumn={sortColumn}
+                    />
+                  </TableHeaderCellInnerContainer>
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="strain">
+                <TableHeaderCell
+                  data-column-name="strain"
+                  className={`${searchField == 'strain' ? 'dbsearch' : ''} 
+                  ${
+                    searchField == 'strain' &&
+                    searchedData?.length > 0 &&
+                    'dbsearchActive'
+                  }`}
+                >
                   strain
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="target_molecule">
+                <TableHeaderCell
+                  data-column-name="target_molecule"
+                  className={`${
+                    searchField == 'target_molecule' ? 'dbsearch' : ''
+                  } 
+                  ${
+                    searchField == 'target_molecule' &&
+                    searchedData?.length > 0 &&
+                    'dbsearchActive'
+                  }`}
+                >
                   target molecule
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="project">
+                <TableHeaderCell
+                  data-column-name="project"
+                  className={`${searchField == 'project' ? 'dbsearch' : ''} 
+                  ${
+                    searchField == 'project' &&
+                    searchedData?.length > 0 &&
+                    'dbsearchActive'
+                  }`}
+                >
                   project
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="details">
+                <TableHeaderCell
+                  data-column-name="details"
+                  className={`${searchField == 'details' ? 'dbsearch' : ''} 
+                  ${
+                    searchField == 'details' &&
+                    searchedData?.length > 0 &&
+                    'dbsearchActive'
+                  }`}
+                >
                   details
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="notes">
+                <TableHeaderCell
+                  data-column-name="notes"
+                  className={`${searchField == 'notes' ? 'dbsearch' : ''} 
+                  ${
+                    searchField == 'notes' &&
+                    searchedData?.length > 0 &&
+                    'dbsearchActive'
+                  }`}
+                >
                   notes
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="date_timestampz">
+                <TableHeaderCell
+                  data-column-name="date_timestampz"
+                  className={`${
+                    searchField == 'date_timestampz' ? 'dbsearch' : ''
+                  } 
+                  ${
+                    searchField == 'date_timestampz' &&
+                    searchedData?.length > 0 &&
+                    'dbsearchActive'
+                  }`}
+                >
                   date
                 </TableHeaderCell>
-                <TableHeaderCell data-column-name="username">
+                <TableHeaderCell
+                  data-column-name="username"
+                  className={`${searchField == 'username' ? 'dbsearch' : ''} 
+                  ${
+                    searchField == 'username' &&
+                    searchedData?.length > 0 &&
+                    'dbsearchActive'
+                  }`}
+                >
                   username
                 </TableHeaderCell>
 
