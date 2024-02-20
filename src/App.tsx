@@ -2,13 +2,11 @@ import styled from 'styled-components';
 import GlobalStyles from './styles/GlobalStyles';
 // import Button from './ui/Button';
 import TestComponent from './ui/TestComponent';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter,  Route, Routes } from 'react-router-dom';
 import MainNav from './ui/MainNav';
 import AppLayout from './AppLayout';
 import Dashboard from './pages/HomePage';
 
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SettingsPage from './pages/SettingsPage';
 
 import SamplePage from './pages/SamplePage';
@@ -16,7 +14,6 @@ import HomePage from './pages/HomePage';
 import FlaskPage from './pages/FlaskPage';
 import CellbankPage from './pages/CellbankPage';
 import ChartsPage from './pages/ChartsPage';
-import SignInPage from './pages/SignInPage';
 import BioreactorPage from './pages/BioreactorPage';
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../configs';

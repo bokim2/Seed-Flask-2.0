@@ -37,12 +37,16 @@ export const StyledFaCaretDown = styled(FaCaretDown)`
     }
 `
 
-export default function SortTableColumnsArrows({sortColumn, columnName}) {
+export default function SortTableColumnsArrows({sortColumn, columnName, handleSortColumn}) {
     // console.log('asc or des', sortColumn, columnName, sortColumn?.[columnName], sortColumn?.columnName === 'asc' ? 'asc' : '')
   return (
     <StyledArrowsContainer className={sortColumn?.[columnName] ? '' : 'hidden'}>
-      <StyledFaCaretUp className={`${'sort-caret-asc'} ${sortColumn?.[columnName] === 'asc' ? 'asc' : ''}`}/>
-      <StyledFaCaretDown className={`${'sort-caret-desc'} ${sortColumn?.[columnName] === 'desc' ? 'desc' : ''}`}/>
+      <StyledFaCaretUp className={`${'sort-caret-asc'} ${sortColumn?.[columnName] === 'asc' ? 'asc' : ''}`} onClick={(e) => {
+          handleSortColumn(e, columnName);
+        }}/>
+      <StyledFaCaretDown className={`${'sort-caret-desc'} ${sortColumn?.[columnName] === 'desc' ? 'desc' : ''}`} onClick={(e) => {
+          handleSortColumn(e, columnName);
+        }}/>
     </StyledArrowsContainer>
   );
 }

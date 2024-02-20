@@ -5,7 +5,7 @@ import type { RootState } from '../../lib/store'
 type TPageLimit = number;
 
 const initialState = {
-    LIMIT: 10 as TPageLimit,
+    LIMIT: 50 as TPageLimit,
 } 
 
 
