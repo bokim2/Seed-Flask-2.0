@@ -14,6 +14,7 @@ import {
 import { ReactEventHandler, useEffect, useState } from 'react';
 // import { InitialEditCellbankForm } from '../../lib/constants';
 import {
+  displayLocalTime,
   useAppSelector,
   useDeleteRowMutation,
   useUpdateRowMutation,
@@ -43,8 +44,9 @@ export default function CellbanksTable({
   // tableName,
   // refetch
 }) {
-  // filtered and sorted data that will be passed to child components 
-  const [filteredAndSortedData, setFilteredAndSortedData] = useState<TCellbanks>([]);
+  // filtered and sorted data that will be passed to child components
+  const [filteredAndSortedData, setFilteredAndSortedData] =
+    useState<TCellbanks>([]);
 
   // console.log('cellbanks in cellbanks table', cellbanks);
   const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
@@ -108,7 +110,7 @@ export default function CellbanksTable({
   console.log(sortColumn, 'sortColumn');
 
   const handleSortColumn = (e, columnName) => {
-    e.stopPropagation()
+    e.stopPropagation();
     const eTarget = e.target as Element;
 
     const ascClicked = eTarget.closest('.sort-caret-asc');
@@ -149,8 +151,33 @@ export default function CellbanksTable({
 
   // seting table to data (sorted and searched if any)
 
-  function filteredTableData(cellbanks, searchedData, sortColumn) {
-    let filteredTableData = [...cellbanks];
+  function filteredTableData(
+    tableRowsData,
+    searchedData,
+    sortColumn,
+    timestamp_column
+  ) {
+    console.log(
+      tableRowsData,
+      searchedData,
+      sortColumn,
+      timestamp_column,
+      'tableRowsData, searchedData, sortColumn, timestamp_column'
+    );
+    let filteredTableData = [...tableRowsData];
+
+    if (timestamp_column) {
+      filteredTableData = filteredTableData.map((tableRow) => {
+        console.log('tableRow?.[timestamp_column]', tableRow?.[timestamp_column])
+        if (tableRow?.[timestamp_column]) {
+          return {
+            ...tableRow,
+            human_readable_date: displayLocalTime(tableRow[timestamp_column]),
+          };
+        }
+        return tableRow;
+      });
+    }
 
     if (searchedData?.length > 0) {
       filteredTableData = searchedData;
@@ -159,27 +186,35 @@ export default function CellbanksTable({
     if (Object.values(sortColumn)[0]) {
       const sortDirection = Object.values(sortColumn)[0]; // asc or desc
       const sortColumnKey = Object.keys(sortColumn)[0]; // column name
-      console.log('sortDirection', sortDirection)
+      console.log('sortDirection', sortDirection);
 
       filteredTableData = [...filteredTableData].sort((a, b) => {
-        console.log('a[sortColumnKey], b[sortColumnKey]', a[sortColumnKey], b[sortColumnKey])
+        console.log(
+          'a[sortColumnKey], b[sortColumnKey]',
+          a[sortColumnKey],
+          b[sortColumnKey]
+        );
         if (sortDirection === 'asc') {
           return a[sortColumnKey]?.localeCompare(b[sortColumnKey]);
         } else {
           return b[sortColumnKey]?.localeCompare(a[sortColumnKey]);
         }
       });
-      
     }
+    console.log('FINAL filteredTableData', filteredTableData);
     return filteredTableData;
   }
 
-  useEffect(()=> {
-    console.log('in useEffect', cellbanks, searchedData, sortColumn)
-    const updatedData = filteredTableData(cellbanks, searchedData, sortColumn)
-    setFilteredAndSortedData(updatedData)
-  }, [cellbanks, searchedData, sortColumn, setFilteredAndSortedData])
-
+  useEffect(() => {
+    console.log('in useEffect', cellbanks, searchedData, sortColumn);
+    const updatedData = filteredTableData(
+      cellbanks,
+      searchedData,
+      sortColumn,
+      'date_timestamptz'
+    );
+    setFilteredAndSortedData(updatedData);
+  }, [cellbanks, searchedData, sortColumn, setFilteredAndSortedData]);
 
   return (
     <>
@@ -275,7 +310,7 @@ export default function CellbanksTable({
                   columnName="date_timestampz"
                   searchField={searchField}
                   searchedData={searchedData}
-                  handleSortColumn={handleSortColumn}
+                  handleSortColumn={(e, human_readable_date) => handleSortColumn(e, 'human_readable_date')}
                   sortColumn={sortColumn}
                 />
 
@@ -396,8 +431,9 @@ export default function CellbanksTable({
               </TableRow>
             </TableHeader>
             <tbody>
-              {filteredAndSortedData?.map(
-                (rowData) => (
+              {filteredAndSortedData &&
+                filteredAndSortedData.length > 0 &&
+                filteredAndSortedData?.map((rowData) => (
                   <CellbanksRow
                     key={rowData.cell_bank_id}
                     rowData={rowData}
@@ -411,8 +447,7 @@ export default function CellbanksTable({
                     isPendingDelete={isPendingDelete}
                     handleAddBookmark={handleAddBookmark}
                   />
-                )
-              )}
+                ))}
 
               {/* {searchedData.length > 0 &&
                 searchedData?.map((rowData) => (
