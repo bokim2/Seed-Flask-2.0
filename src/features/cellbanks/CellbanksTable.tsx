@@ -96,7 +96,7 @@ export default function CellbanksTable({
     | 'strain'
     | 'target_molecule'
     | 'project'
-    | 'details'
+    | 'description'
     | 'notes'
     | 'date_timestampz'
     | 'username';
@@ -162,10 +162,11 @@ export default function CellbanksTable({
       console.log('sortDirection', sortDirection)
 
       filteredTableData = [...filteredTableData].sort((a, b) => {
+        console.log('a[sortColumnKey], b[sortColumnKey]', a[sortColumnKey], b[sortColumnKey])
         if (sortDirection === 'asc') {
-          return a[sortColumnKey].localeCompare(b[sortColumnKey]);
+          return a[sortColumnKey]?.localeCompare(b[sortColumnKey]);
         } else {
-          return b[sortColumnKey].localeCompare(a[sortColumnKey]);
+          return b[sortColumnKey]?.localeCompare(a[sortColumnKey]);
         }
       });
       
@@ -255,7 +256,7 @@ export default function CellbanksTable({
                 />
 
                 <TableHeaderCellComponent
-                  columnName="details"
+                  columnName="description"
                   searchField={searchField}
                   searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
