@@ -219,8 +219,12 @@ export function useTextInputSearch() {
       targetElement = e.target.closest('[data-column-name]');
     }
 
-    const columnName = targetElement.getAttribute('data-column-name');
-    console.log('columnName cellbank???', columnName);
+    const columnName = targetElement?.getAttribute('data-column-name');
+    if (!columnName) {
+      return;
+    }
+
+    // console.log('columnName cellbank???', columnName);
 
     searchParams.set('searchField', columnName);
     setSearchParams(searchParams);
@@ -231,12 +235,17 @@ export function useTextInputSearch() {
       searchParams.set('searchField', 'cell_bank_id');
     }
 
-    if(searchParams.get('searchField') === 'date_timestampz') { 
-console.log('searchText', searchText, 'getUtcTimestampFromLocalTime(searchText)', getUtcTimestampFromLocalTime(searchText))
+    if (searchParams.get('searchField') === 'date_timestampz') {
+      console.log(
+        'searchText',
+        searchText,
+        'getUtcTimestampFromLocalTime(searchText)',
+        getUtcTimestampFromLocalTime(searchText)
+      );
       searchParams.set('searchText', getUtcTimestampFromLocalTime(searchText));
     } else {
-    searchParams.set('searchText', searchText);
-    setSearchParams(searchParams);
+      searchParams.set('searchText', searchText);
+      setSearchParams(searchParams);
     }
 
     const validatedSearchParams = CellbankSearchParamsSchema.safeParse(

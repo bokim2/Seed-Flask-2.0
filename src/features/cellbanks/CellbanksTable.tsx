@@ -22,6 +22,7 @@ import { useTextInputSearch } from './cellbanks-hooks';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
 import {
+  TCellbanks,
   TUpdateCellbankForm,
   initialEditCellbankForm,
   updateCellbankSchema,
@@ -33,6 +34,7 @@ import { useDispatch } from 'react-redux';
 import PageLimitDropDownSelector from '../../ui/PageLimitDropDownSelector';
 import SearchTableColumn from '../../ui/SearchTableColumn';
 import SortTableColumnsArrows from '../../ui/SortTableColumnsArrows';
+import TableHeaderCellComponent from '../../ui/TableHeaderCellComponent';
 
 export default function CellbanksTable({
   cellbanks,
@@ -41,6 +43,9 @@ export default function CellbanksTable({
   // tableName,
   // refetch
 }) {
+  // filtered and sorted data that will be passed to child components 
+  const [filteredAndSortedData, setFilteredAndSortedData] = useState<TCellbanks>([]);
+
   // console.log('cellbanks in cellbanks table', cellbanks);
   const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
     initialEditCellbankForm
@@ -76,7 +81,7 @@ export default function CellbanksTable({
   } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
   // searching cellbanks table through text input
-  const [searchedData, setSearchedData] = useState<any>([]);
+  const [searchedData, setSearchedData] = useState<TCellbanks>([]);
   const {
     searchText,
     setSearchText,
@@ -98,17 +103,26 @@ export default function CellbanksTable({
   type TOrder = 'asc' | 'desc' | '';
   type TSortColumn = { [key in TColumn]?: TOrder };
   const [sortColumn, setSortColumn] = useState<TSortColumn>({
-    'cell_bank_id': '',
+    cell_bank_id: '',
   });
   console.log(sortColumn, 'sortColumn');
+
   const handleSortColumn = (e, columnName) => {
+    e.stopPropagation()
     const eTarget = e.target as Element;
-    if (
-      eTarget.closest('.sort-caret-asc') ||
-      eTarget.closest('.sort-caret-desc')
-    ) {
+
+    const ascClicked = eTarget.closest('.sort-caret-asc');
+    const descClicked = eTarget.closest('.sort-caret-desc');
+    console.log(ascClicked, descClicked, 'ascClicked, descClicked');
+
+    if (ascClicked || descClicked) {
       setSortColumn((prev) => {
-        if(prev?.[columnName]) { return { [columnName]: '' } }
+        if (
+          (prev?.[columnName] === 'asc' && ascClicked) ||
+          (prev?.[columnName] === 'desc' && descClicked)
+        ) {
+          return { [columnName]: '' };
+        }
         const columnOrder = eTarget.closest('.sort-caret-asc') ? 'asc' : 'desc';
         return {
           [columnName]: columnOrder,
@@ -132,6 +146,39 @@ export default function CellbanksTable({
   const handleChoosePageLimit = (limit) => {
     dispatch(changePageLimit(limit));
   };
+
+  // seting table to data (sorted and searched if any)
+
+  function filteredTableData(cellbanks, searchedData, sortColumn) {
+    let filteredTableData = [...cellbanks];
+
+    if (searchedData?.length > 0) {
+      filteredTableData = searchedData;
+    }
+    // console.log('Object.values(sortColumn)[0]', Object.values(sortColumn)[0], Object.values(sortColumn))
+    if (Object.values(sortColumn)[0]) {
+      const sortDirection = Object.values(sortColumn)[0]; // asc or desc
+      const sortColumnKey = Object.keys(sortColumn)[0]; // column name
+      console.log('sortDirection', sortDirection)
+
+      filteredTableData = [...filteredTableData].sort((a, b) => {
+        if (sortDirection === 'asc') {
+          return a[sortColumnKey].localeCompare(b[sortColumnKey]);
+        } else {
+          return b[sortColumnKey].localeCompare(a[sortColumnKey]);
+        }
+      });
+      
+    }
+    return filteredTableData;
+  }
+
+  useEffect(()=> {
+    console.log('in useEffect', cellbanks, searchedData, sortColumn)
+    const updatedData = filteredTableData(cellbanks, searchedData, sortColumn)
+    setFilteredAndSortedData(updatedData)
+  }, [cellbanks, searchedData, sortColumn, setFilteredAndSortedData])
+
 
   return (
     <>
@@ -172,25 +219,74 @@ export default function CellbanksTable({
               {/* select column to search */}
               <TableRow
                 onClick={(e) => {
-                  // const eTarget = e.target as Element;
-                  // if (eTarget.closest('.sort-caret-asc') || eTarget.closest('.sort-caret-desc')) {
-                  //   setSortColumn(prev=> {
-                  //     const columnName = eTarget.closest('[data-column-name]').value
-                  //     const columnOrder = eTarget.closest('.sort-caret-asc') ? 'asc' : 'desc';
-                  //     return {
-                  //       [columnName]: columnOrder
-                  //     }
-                  //   })
-                  // } else {
-
                   e.stopPropagation();
                   setSearchedData([]);
                   setSearchText('');
                   SelectSearchField(e);
-                  // }
                 }}
               >
-                <TableHeaderCell
+                <TableHeaderCellComponent
+                  columnName="cell_bank_id"
+                  searchField={searchField}
+                  searchedData={searchedData}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+                <TableHeaderCellComponent
+                  columnName="strain"
+                  searchField={searchField}
+                  searchedData={searchedData}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+                <TableHeaderCellComponent
+                  columnName="target_molecule"
+                  searchField={searchField}
+                  searchedData={searchedData}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+                <TableHeaderCellComponent
+                  columnName="project"
+                  searchField={searchField}
+                  searchedData={searchedData}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+
+                <TableHeaderCellComponent
+                  columnName="details"
+                  searchField={searchField}
+                  searchedData={searchedData}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+
+                <TableHeaderCellComponent
+                  columnName="notes"
+                  searchField={searchField}
+                  searchedData={searchedData}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+
+                <TableHeaderCellComponent
+                  columnName="date_timestampz"
+                  searchField={searchField}
+                  searchedData={searchedData}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+
+                <TableHeaderCellComponent
+                  columnName="username"
+                  searchField={searchField}
+                  searchedData={searchedData}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+
+                {/* <TableHeaderCell
                   data-column-name="cell_bank_id"
                   className={`${
                     searchField == 'cell_bank_id' ? 'dbsearch' : ''
@@ -223,6 +319,7 @@ export default function CellbanksTable({
                 >
                   strain
                 </TableHeaderCell>
+
                 <TableHeaderCell
                   data-column-name="target_molecule"
                   className={`${
@@ -292,15 +389,14 @@ export default function CellbanksTable({
                   }`}
                 >
                   username
-                </TableHeaderCell>
+                </TableHeaderCell> */}
 
                 <TableHeaderCell>edit</TableHeaderCell>
               </TableRow>
             </TableHeader>
             <tbody>
-              {cellbanks.length > 0 &&
-                searchedData.length === 0 &&
-                cellbanks?.map((rowData) => (
+              {filteredAndSortedData?.map(
+                (rowData) => (
                   <CellbanksRow
                     key={rowData.cell_bank_id}
                     rowData={rowData}
@@ -314,9 +410,10 @@ export default function CellbanksTable({
                     isPendingDelete={isPendingDelete}
                     handleAddBookmark={handleAddBookmark}
                   />
-                ))}
+                )
+              )}
 
-              {searchedData.length > 0 &&
+              {/* {searchedData.length > 0 &&
                 searchedData?.map((rowData) => (
                   <CellbanksRow
                     key={rowData.cell_bank_id}
@@ -331,7 +428,7 @@ export default function CellbanksTable({
                     isPendingDelete={isPendingDelete}
                     handleAddBookmark={handleAddBookmark}
                   />
-                ))}
+                ))} */}
             </tbody>
           </StyledTable>
         </TableContainer>

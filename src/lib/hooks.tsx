@@ -160,12 +160,12 @@ export function useCreateValidatedRowMutation({
   const { mutate, isPending, reset, error,  } = useMutation({
     mutationFn: (form: TzodSchema) => createRow(form, tableName, zodSchema),
     onSuccess: () => {
-      console.log('onSuccess in useCreateValidatedRowMutation!!!!', tableName);
+      // console.log('onSuccess in useCreateValidatedRowMutation!!!!', tableName);
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey.includes(tableName),
       });
       // queryClient.invalidateQueries(tableName);
-      queryClient.refetchQueries({ queryKey: [tableName] });
+      // queryClient.refetchQueries({ queryKey: [tableName] });
       reset();
     },
     onError: (err) => {
