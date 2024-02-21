@@ -1,6 +1,6 @@
 import React from 'react';
 import FlasksTable from '../features/flasks/FlasksTable';
-import { useFetchValidatedTableQuery, useFlask, useFlasks } from '../lib/hooks';
+import { useFetchValidatedTableQuery, } from '../lib/hooks';
 
 import styled from 'styled-components';
 import LoaderBar from '../ui/LoaderBar';
@@ -31,7 +31,7 @@ export default function FlaskPage() {
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });
-  console.log('flasks in flaskPAGE', flasks);
+  // console.log('flasks in flaskPAGE', flasks);
 
   // const [flask] = useFlask(1);
   // console.log('flask in flaskPAGE', flask);

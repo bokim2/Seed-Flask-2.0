@@ -1,28 +1,51 @@
-import styled from 'styled-components'
-
+import { forwardRef } from 'react';
+import { createPortal } from 'react-dom';
+import styled from 'styled-components';
+import { useOnClickOutside } from '../lib/hooks';
 
 const StyledModal = styled.div`
-position: fixed;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-background-color: red;
-border-radius: 10px;
-padding: 1rem;
-transition: all .1s ease-in-out;
-`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: red;
+  border-radius: 10px;
+  padding: 1rem;
+  transition: all 0.1s ease-in-out;
+`;
+
+const InnerModalContainer = styled.div``;
 
 const Overlay = styled.div`
-position: fixed;
-inset: 0;
-z-index: 99999;
-background-color: grey;
-backdrop-filter: blur(5px);
-transition: all .1s ease-in-out;
-`
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: rgb(241, 237, 237, .1);
+  /* backdrop-filter: blur(5px); */
+  transition: all 0.1s ease-in-out;
+`;
 
-export default function Modal() {
-  return (
-    <StyledModal>Modal</StyledModal>
-  )
+type TModalProps = {
+    children: React.ReactNode;
+    setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+const Modal = forwardRef<HTMLDivElement, TModalProps>((props, ref)=> {
+const {setIsOpenModal} = props;
+    const appBody = document.body;
+    useOnClickOutside([ref], () => {
+  
+        setIsOpenModal((prev) => !prev)})
+
+  return createPortal(
+    <Overlay>
+      <StyledModal ref={ref}>
+        
+        <InnerModalContainer>{props.children}</InnerModalContainer>
+      </StyledModal>
+    </Overlay>,
+    appBody
+  );
+})
+
+export default Modal;

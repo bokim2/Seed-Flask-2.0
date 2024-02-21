@@ -4,16 +4,16 @@ import { useEffect, useRef, useState } from 'react';
 import NavList from './NavList';
 import { NavLink } from 'react-router-dom';
 import UserNavList from './UserNavList';
-import { THandleNavToggle, TNavOrUser } from '../lib/types';
-import { useOnClickOutside } from '../lib/hooks';
+import { THandleNavToggle, TNavOrUser } from '../../lib/types';
+import { useOnClickOutside } from '../../lib/hooks';
 import {
   LinkButton,
   NavMenuButton,
   NavSection,
   UserButton,
-} from '../styles/UtilStyles';
-import { ProdUrl, baseUrl } from '../../configs';
-import { RolesUrl } from '../lib/constants';
+} from '../../styles/UtilStyles';
+import { ProdUrl, baseUrl } from '../../../configs';
+import { RolesUrl } from '../../lib/constants';
 
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
@@ -234,9 +234,7 @@ export default function MainNav({ userProfile }) {
             >
               <StyledUser src={userProfile.picture}></StyledUser>
               {/* <p>{JSON.stringify(userProfile)}</p> */}
-              <small>
-                {userProfile?.[RolesUrl] }
-              </small>
+              <small>{userProfile?.[RolesUrl]}</small>
             </UserIconContainer>
           ) : (
             <UserButton

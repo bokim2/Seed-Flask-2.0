@@ -1,7 +1,7 @@
 import React, { ForwardedRef, forwardRef, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { baseUrl } from '../../configs';
+import { baseUrl } from '../../../configs';
 
 const StyledNavList = styled.ul`
   display: flex;

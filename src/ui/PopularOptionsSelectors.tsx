@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyledTable } from '../styles/UtilStyles';
 
 export default function PopularOptionsSelectors({
   popularOptions,
@@ -8,7 +7,7 @@ export default function PopularOptionsSelectors({
   selectPopularOption,
 }) {
   if (!popularOptions) return null;
-  console.log(popularOptions, columns, 'in popular options selectors');
+//   console.log(popularOptions, columns, 'in popular options selectors');
 
   const tr: any = [];
   console.log('tr', tr);

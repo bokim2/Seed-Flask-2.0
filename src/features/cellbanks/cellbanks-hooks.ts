@@ -199,88 +199,91 @@ import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
 // }
 
 // perform text search on cellbanks
-import { CellbankSearchParamsSchema } from './cellbanks-types';
-import { useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
+// import { CellbankSearchParamsSchema } from './cellbanks-types';
+// import { useSearchParams } from 'react-router-dom';
+// import { useState } from 'react';
 
-export function useTextInputSearch() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [searchText, setSearchText] = useState(
-    searchParams.get('searchText') || ''
-  );
-  // set search params for selected column for text search
-  const SelectSearchField = (e) => {
-    e.stopPropagation();
-    // console.log(e.target, e.currentTarget)
+// export function useTextInputSearch() {
+//   const [searchParams, setSearchParams] = useSearchParams();
+//   const [searchText, setSearchText] = useState(
+//     searchParams.get('searchText') || ''
+//   );
+//   // set search params for selected column for text search
+//   const SelectSearchField = (e) => {
+//     e.stopPropagation();
+//     // console.log(e.target, e.currentTarget)
 
-    let targetElement = e.target;
+//     let targetElement = e.target;
 
-    if (!targetElement.hasAttribute('data-column-name')) {
-      targetElement = e.target.closest('[data-column-name]');
-    }
+//     if (!targetElement.hasAttribute('data-column-name')) {
+//       targetElement = e.target.closest('[data-column-name]');
+//     }
 
-    const columnName = targetElement?.getAttribute('data-column-name');
-    if (!columnName) {
-      return;
-    }
+//     let columnName = targetElement?.getAttribute('data-column-name');
+//     if (!columnName) {
+//       return;
+//     }
+//     if (columnName === 'human_readable_date') {
+//       columnName = 'date_timestampz';
+//     }
 
-    // console.log('columnName cellbank???', columnName);
+//     // console.log('columnName cellbank???', columnName);
 
-    searchParams.set('searchField', columnName);
-    setSearchParams(searchParams);
-  };
+//     searchParams.set('searchField', columnName);
+//     setSearchParams(searchParams);
+//   };
 
-  const performInputTextSearch = async () => {
-    if (!searchParams.get('searchField')) {
-      searchParams.set('searchField', 'cell_bank_id');
-    }
+//   const performInputTextSearch = async () => {
+//     if (!searchParams.get('searchField')) {
+//       searchParams.set('searchField', 'cell_bank_id');
+//     }
 
-    if (searchParams.get('searchField') === 'date_timestampz') {
-      console.log(
-        'searchText',
-        searchText,
-        'getUtcTimestampFromLocalTime(searchText)',
-        getUtcTimestampFromLocalTime(searchText)
-      );
-      searchParams.set('searchText', getUtcTimestampFromLocalTime(searchText));
-    } else {
-      searchParams.set('searchText', searchText);
-      setSearchParams(searchParams);
-    }
+//     if (searchParams.get('searchField') === 'date_timestampz') {
+//       console.log(
+//         'searchText',
+//         searchText,
+//         'getUtcTimestampFromLocalTime(searchText)',
+//         getUtcTimestampFromLocalTime(searchText)
+//       );
+//       searchParams.set('searchText', getUtcTimestampFromLocalTime(searchText));
+//     } else {
+//       searchParams.set('searchText', searchText);
+//       setSearchParams(searchParams);
+//     }
 
-    const validatedSearchParams = CellbankSearchParamsSchema.safeParse(
-      Object.fromEntries(searchParams)
-    );
-    if (!validatedSearchParams.success) {
-      console.log('error', validatedSearchParams.error);
-      return [];
-    }
+//     const validatedSearchParams = CellbankSearchParamsSchema.safeParse(
+//       Object.fromEntries(searchParams)
+//     );
+//     if (!validatedSearchParams.success) {
+//       console.log('error', validatedSearchParams.error);
+//       return [];
+//     }
 
-    try {
-      const fetchSearchParams = new URLSearchParams(
-        validatedSearchParams.data
-      ).toString();
+//     try {
+//       const fetchSearchParams = new URLSearchParams(
+//         validatedSearchParams.data
+//       ).toString();
 
-      const res = await fetch(
-        `${baseUrl}/api/cellbanks/search?${fetchSearchParams}`
-      );
-      const data = await res.json();
-      console.log('data in performInputTextSearch', data);
-      if (!res.ok) {
-        throw new Error('Failed to perform input text search');
-      }
-      return data;
-    } catch (err) {
-      console.error('Error in performInputTextSearch', err);
-      return [];
-    }
-  };
+//       const res = await fetch(
+//         `${baseUrl}/api/cellbanks/search?${fetchSearchParams}`
+//       );
+//       const data = await res.json();
+//       console.log('data in performInputTextSearch', data);
+//       if (!res.ok) {
+//         throw new Error('Failed to perform input text search');
+//       }
+//       return data;
+//     } catch (err) {
+//       console.error('Error in performInputTextSearch', err);
+//       return [];
+//     }
+//   };
 
-  return {
-    searchText,
-    setSearchText,
-    SelectSearchField,
-    performInputTextSearch,
-    searchField: searchParams.get('searchField') || 'cell_bank_id',
-  };
-}
+//   return {
+//     searchText,
+//     setSearchText,
+//     SelectSearchField,
+//     performInputTextSearch,
+//     searchField: searchParams.get('searchField') || 'cell_bank_id',
+//   };
+// }

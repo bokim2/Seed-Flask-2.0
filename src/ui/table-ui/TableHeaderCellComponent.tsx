@@ -1,18 +1,21 @@
+import { useState } from 'react';
 import {
   TableHeaderCell,
   TableHeaderCellInnerContainer,
-} from '../styles/UtilStyles';
+} from '../../styles/UtilStyles';
 import SortTableColumnsArrows from './SortTableColumnsArrows';
 
 export default function TableHeaderCellComponent({
-  searchField,
+  // searchField,
   searchedData,
   handleSortColumn,
   sortColumn,
   columnName,
 }) {
+
+  
   function formatColumnName(columnName) {
-    if (columnName === 'date_timestampz') {
+    if (columnName === 'human_readable_date') {
       return 'date';
     } else {
       return columnName.replace(/_/g, ' ');
@@ -23,17 +26,17 @@ export default function TableHeaderCellComponent({
     <>
       <TableHeaderCell
         data-column-name={columnName}
-        className={`${searchField == columnName ? 'dbsearch' : ''} 
-                  ${
-                    searchField == columnName &&
-                    searchedData?.length > 0 &&
-                    'dbsearchActive'
-                  }`}
-        
+        // className={`${searchField == columnName ? 'dbsearch' : ''} 
+        //           ${
+        //             searchField == columnName &&
+        //             searchedData?.length > 0 &&
+        //             'dbsearchActive'
+        //           }`}
       >
         <TableHeaderCellInnerContainer>
           {formatColumnName(columnName)}
-          <SortTableColumnsArrows handleSortColumn={handleSortColumn}
+          <SortTableColumnsArrows
+            handleSortColumn={handleSortColumn}
             columnName={columnName}
             sortColumn={sortColumn}
           />

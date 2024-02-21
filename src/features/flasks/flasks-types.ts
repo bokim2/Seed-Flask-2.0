@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { cellbankSchema } from '../cellbanks/cellbanks-types';
 
 
-// fetch all flasks
+// fetch all flasks + important cellbank columns
 export const flasksInfoSchema = cellbankSchema.extend({
   flask_id: z.coerce.number() ,
   inoculum_ul: z.number()  || null,
