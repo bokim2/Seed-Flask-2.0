@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import {
   useDeleteRowMutation,
-  useFlask,
-  useFlasks,
   useUpdateRowMutation,
 } from '../../lib/hooks';
 import styled from 'styled-components';

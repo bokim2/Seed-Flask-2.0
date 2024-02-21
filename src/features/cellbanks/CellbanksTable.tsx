@@ -116,7 +116,6 @@ export default function CellbanksTable({
   const handleSortColumn = (e, columnName, sortOrder) => {
     e.stopPropagation();
 
-
     const sortObject = {
       [columnName]: sortOrder,
     };
@@ -157,7 +156,7 @@ export default function CellbanksTable({
   return (
     <>
       {/* Search Section */}
-      <SearchForm setSearchedData={setSearchedData}/>
+      <SearchForm setSearchedData={setSearchedData} />
       {/* <SearchTableColumn
         searchText={searchText}
         setSearchText={setSearchText}
@@ -198,62 +197,54 @@ export default function CellbanksTable({
             <TableHeader>
               {/* select column to search */}
               <TableRow
-                // onClick={(e) => {
-                //   e.stopPropagation();
-                //   setSearchedData([]);
-                //   setSearchText('');
-                //   SelectSearchField(e);
-                // }}
+              // onClick={(e) => {
+              //   e.stopPropagation();
+              //   setSearchedData([]);
+              //   setSearchText('');
+              //   SelectSearchField(e);
+              // }}
               >
                 <TableHeaderCellComponent
                   columnName="cell_bank_id"
-                  searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
                   sortColumn={sortColumn}
                 />
                 <TableHeaderCellComponent
                   columnName="strain"
-                  searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
                   sortColumn={sortColumn}
                 />
                 <TableHeaderCellComponent
                   columnName="target_molecule"
-                  searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
                   sortColumn={sortColumn}
                 />
                 <TableHeaderCellComponent
                   columnName="project"
-                  searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
                   sortColumn={sortColumn}
                 />
 
                 <TableHeaderCellComponent
                   columnName="description"
-                  searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
                   sortColumn={sortColumn}
                 />
 
                 <TableHeaderCellComponent
                   columnName="notes"
-                  searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
                   sortColumn={sortColumn}
                 />
 
                 <TableHeaderCellComponent
                   columnName="human_readable_date"
-                  searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
                   sortColumn={sortColumn}
                 />
 
                 <TableHeaderCellComponent
                   columnName="username"
-                  searchedData={searchedData}
                   handleSortColumn={handleSortColumn}
                   sortColumn={sortColumn}
                 />
