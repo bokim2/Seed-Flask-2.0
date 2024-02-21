@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import MainNav from './ui/MainNav';
+import MainNav from './ui/nav-ui/MainNav';
 import styled from 'styled-components';
-import NavList from './ui/NavList';
+import NavList from './ui/nav-ui/NavList';
 import LoaderBar from './ui/LoaderBar';
 import { THandleNavToggle, TNavOrUser } from './lib/types';
 import Footer from './ui/Footer';
@@ -56,7 +56,7 @@ const MainPageContainer = styled.main`
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
 `;
 
-export default function AppLayout({userProfile}) {
+export default function AppLayout({ userProfile }) {
   // const handleNavToggle: THandleNavToggle = (e, navOrUser) => {
   //   // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
   //   e.stopPropagation();
@@ -76,10 +76,10 @@ export default function AppLayout({userProfile}) {
       <StyledBackgroundImg />
       <NavBar id="NavBar">
         <MainNav
-        // openNav={openNav}
-        // handleToggle={handleNavToggle}
-        // openUser={openUser}
-        userProfile={userProfile}
+          // openNav={openNav}
+          // handleToggle={handleNavToggle}
+          // openUser={openUser}
+          userProfile={userProfile}
         />
       </NavBar>
       {/* <LoaderBar /> */}
@@ -87,7 +87,7 @@ export default function AppLayout({userProfile}) {
       {/* <span>testing app layout</span> */}
       <MainPageContainer id="MainPageContainer">
         <Outlet />
-   <Footer />
+        <Footer />
       </MainPageContainer>
       {/* </StyledAppLayout> */}
     </StyledAppLayout>

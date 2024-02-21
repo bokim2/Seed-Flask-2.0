@@ -7,7 +7,7 @@ import {
 } from '../styles/UtilStyles';
 import { baseUrl } from '../../configs';
 import SamplesTable from '../features/samples/SamplesTable';
-import { useFetchValidatedTableQuery, useSamples } from '../lib/hooks';
+import { useFetchValidatedTableQuery } from '../lib/hooks';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
 import {

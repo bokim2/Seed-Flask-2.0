@@ -43,9 +43,9 @@ export default function CellbankPage() {
   );
 
   //
-const popularOptions = [];
+// const popularOptions = [];
   const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
-  console.log(cellbanksAll, 'cellbanksAll');
+  // console.log(cellbanksAll, 'cellbanksAll');
 
   return (
     <PageContainer id="CellbankPageContainer">
@@ -63,7 +63,8 @@ const popularOptions = [];
 
         <h3>{JSON.stringify(cellbankBookmarks)}</h3>
 
-        <CellbanksMultiInputForm popularOptions={cellbanks?.pages?.map(page => page?.popularOptions).flat()}/>
+        {/* <CellbanksMultiInputForm popularOptions={cellbanks?.pages?.map(page => page?.popularOptions).flat()}/> */}
+        <CellbanksMultiInputForm />
 
         {error?.message && <ErrorMessage error={error} />}
         {!isLoading && cellbanks?.pages && cellbanks?.pages?.length > 0 && (

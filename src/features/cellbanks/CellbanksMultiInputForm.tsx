@@ -27,17 +27,17 @@ export const ButtonsContainer = styled.div`
   gap: 1rem;
 `;
 
-export default function CellbanksMultiInputForm({ popularOptions }) {
-  console.log('popularOptions in cellbanks multi input form', popularOptions);
+export default function CellbanksMultiInputForm() {
+  // console.log('popularOptions in cellbanks multi input form', popularOptions);
 
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<TCreateCellbankSchema[] | []>([
     initialEditCellbankForm,
   ]); // data for submitting cellbank(s)
-  console.log(bulkForm, 'bulkForm')
+  // console.log(bulkForm, 'bulkForm')
 
 
-
+  // create a row
   const {
     mutate: createCellbankMutation,
     isPending,
@@ -94,29 +94,34 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
   };
 
   // for popular options
-  const popularOptionsArray: any = []
-  for (let i = 0; i < 5; i++) {
-      // console.log('popularOptions in loop', popularOptions)
-      popularOptionsArray.push(<tr key={i}><PopularOptionsSelectors
-        popularOptions={popularOptions}
-        columns={[
-          'strain',
-          'target_molecule',
-          'project',
-          'description',
-          'notes',
-        ]}
-        i={i}
-        selectPopularOption={selectPopularOption}
-      ></PopularOptionsSelectors></tr>)
-    
-  }
+  // const popularOptionsArray: any = [];
+  // for (let i = 0; i < 5; i++) {
+  //   // console.log('popularOptions in loop', popularOptions)
+  //   popularOptionsArray.push(
+  //     <tr key={i}>
+  //       <PopularOptionsSelectors
+  //         popularOptions={popularOptions}
+  //         columns={[
+  //           'strain',
+  //           'target_molecule',
+  //           'project',
+  //           'description',
+  //           'notes',
+  //         ]}
+  //         i={i}
+  //         selectPopularOption={selectPopularOption}
+  //       ></PopularOptionsSelectors>
+  //     </tr>
+  //   );
+  // }
 
-  function selectPopularOption(column, value){
-    // console.log('value, column',value, column)
-    if (bulkForm.length > 1) return;
-    setBulkForm(prev => (prev.map(singleForm => ({...singleForm, [column]: value}))))
-  }
+  // function selectPopularOption(column, value) {
+  //   // console.log('value, column',value, column)
+  //   if (bulkForm.length > 1) return;
+  //   setBulkForm((prev) =>
+  //     prev.map((singleForm) => ({ ...singleForm, [column]: value }))
+  //   );
+  // }
   //
 
   return (
@@ -216,7 +221,6 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
               ))}
 
             {/* {popularOptionsArray } */}
-
           </MultiInputFormBody>
         </StyledTable>
         <ButtonsContainer>

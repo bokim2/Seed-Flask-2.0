@@ -11,7 +11,15 @@ export const cellbankSchema = z.object({
   description: z.string()  || null,
   notes: z.string() || null,
   date_timestamptz: z.string() || null,
+  username: z.string() || null,
+  user_id: z.string() || null,
 });
+
+// export const cellbankDataSchema = z.object({
+//   status: z.string(),
+//   data: z.array(cellbankSchema),
+//   // popularOptions: 
+// })
 
 export const cellbanksArraySchema = z.array(cellbankSchema);
 
@@ -43,7 +51,7 @@ export const initialEditCellbankForm = {
   human_readable_date: '',
 };
 
-export const updateCellbankSchema = cellbankSchema.extend({
+export const updateCellbankSchema = createCellbankSchema.extend({
   human_readable_date: z.string(),
 });
 export type TUpdateCellbankForm = z.infer<typeof updateCellbankSchema>;

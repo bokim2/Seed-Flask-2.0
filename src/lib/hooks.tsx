@@ -24,7 +24,7 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
 
   // setting page limit - getting global state from redux store
   const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
-  console.log('pageLimitSetting', pageLimitSetting);
+  // console.log('pageLimitSetting', pageLimitSetting);
 
   const fetchTableData = async ({ pageParam = 0 }: FetchTableDataArgs) => {
     try {
@@ -32,25 +32,32 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         pageParam * pageLimitSetting
       }&limit=${pageLimitSetting}`; // Example for offset pagination
       const response = await fetch(url, { credentials: 'include' });
+      
+      const  data  = await response.json();
+      // return data;
       if (!response.ok) {
-        // const errorMessage = data?.message || `Failed to fetch from ${tableName}`;
-        // throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
+        // Use the server-provided error message if available, otherwise, a generic error message
+        const errorMessage = data?.error || data?.message || `Failed to fetch from ${tableName}, status: ${response.status}`;
+        throw new Error(errorMessage);
       }
-      const data = await response.json();
-      return data;
-      // console.log('data in useFetchValidatedTableQuery', dbData);
+      // console.log('data in useFetchValidatedTableQuery', data);
 
+      const serverDataSchema = z.object({
+        status: z.string(),
+        data: zodSchema});
+        
       // validation ON
-      // const validatedData = zodSchema.safeParse(dbData.data);
-      // // console.log(validatedData, 'validatedData');
-      // if (!validatedData.success) {
-      //   console.error(
-      //     'useFetchValidatedTableQuery validation error',
-      //     validatedData.error
-      //   );
-      //   throw new Error(`Data validation in ${tableName} table failed`);
-      // }
-      // // return validatedData.data;
+      const validatedData = serverDataSchema.safeParse(data);
+      // console.log(validatedData, 'validatedData');
+      if (!validatedData.success) {
+        console.error(
+          'useFetchValidatedTableQuery validation error',
+          validatedData.error
+        );
+        throw new Error(`Data validation in ${tableName} table failed`);
+      }
+      console.log('validatedData.data', validatedData.data);
+      return validatedData.data;
       // return dbData;
 
       // TURNED VALIDATION OFF FOR NOW!!!!
@@ -59,6 +66,7 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
       throw err;
     }
   };
+
   const queryOptions = {
     queryKey: [tableName, pageLimitSetting],
     queryFn: ({ pageParam = 0 }) => fetchTableData({ pageParam }),
@@ -102,53 +110,8 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
     refetch,
   };
 }
-// }
 
-// // fetch all rows in table
-// export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
-//   const { data, isLoading, error } = useQuery({
-//     queryKey: [tableName],
-//     queryFn: async () => {
-//       try {
-//         const response = await fetch(`${baseUrl}/api/${tableName}`, {
-//           credentials: 'include', // Include cookies for cross-origin requests
-//         });
-//         const dbData = await response.json();
-//         console.log('data in useFetchValidatedTableQuery', dbData);
-//     if (!response.ok) {
-//       const errorMessage = data.message || `Failed to fetch from ${tableName}`;
-//       throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
-//     }
-
-//     // validation ON
-//         const validatedData = zodSchema.safeParse(dbData.data);
-//         // console.log(validatedData, 'validatedData');
-//         if (!validatedData.success) {
-//           console.error(
-//             'useFetchValidatedTableQuery validation error',
-//             validatedData.error
-//           );
-//           throw new Error(`Data validation in ${tableName} table failed`);
-//         }
-//         // return validatedData.data;
-//         return dbData;
-
-//         // TURNED VALIDATION OFF FOR NOW!!!!
-//       } catch (err) {
-//         console.log(err, 'error in useFetchValidatedTableQuery');
-//         throw err;
-//       }
-//     },
-//     retry: 2,
-//     meta: {
-//       errorMessage: `Failed to fetch ${tableName} data (meta option useQuery)`,
-//     },
-//   });
-//   return {data, isLoading, error} as const;
-// }
-
-// create one row in table
-
+// create a row
 export function useCreateValidatedRowMutation({
   tableName,
   zodSchema,
@@ -157,7 +120,7 @@ export function useCreateValidatedRowMutation({
   const queryClient = useQueryClient();
   type TzodSchema = z.infer<typeof zodSchema>;
 
-  const { mutate, isPending, reset, error,  } = useMutation({
+  const { mutate, isPending, reset, error } = useMutation({
     mutationFn: (form: TzodSchema) => createRow(form, tableName, zodSchema),
     onSuccess: () => {
       // console.log('onSuccess in useCreateValidatedRowMutation!!!!', tableName);
@@ -337,81 +300,85 @@ export function useUpdateRowMutation({
   return { mutate, isPending, error };
 }
 
-// Flask hooks
-export function useFlask(id: number | null) {
-  const { isLoading, data, error } = useQuery({
-    queryKey: ['flask', id],
-    queryFn: async () => {
-      const res = await fetch(`${baseUrl}/api/flasks/${id}`);
-      if (!res.ok)
-        throw new Error(
-          `Network response ${res.status}, was not ok fetching flask ${id}`
-        );
-      const data = await res.json();
-      // console.log('in query function')
-      return data;
-    },
-    meta: {
-      errorMessage: 'Failed to fetch flask data (meta option useQuery)',
-    },
-    staleTime: 1000 * 60 * 60,
-    refetchOnWindowFocus: true,
-    retry: false,
-    enabled: Boolean(id),
-    // onError: ()=> console.log('error in useFlask'),
-  });
-  // console.log('data in useFlask', data);
-  const flask = data;
-  return [flask, isLoading, error] as const;
+// submit edited row form - submitting in Table in StyledForm
+// might want to erase this, it doesn't add anything.  just move it into styledForm
+export function handleEditFormSubmit(
+  e,
+  editedForm,
+  submitEditedForm,
+  setEditingId
+) {
+  // console.log('editedForm in handleEditFormSubmit', editedForm);
+  // e.preventDefault();
+  // e.stopPropagation();
+  submitEditedForm(editedForm);
+  setEditingId(null);
 }
 
-export function useFlasks() {
-  const { isLoading, data, error } = useQuery({
-    queryKey: ['flasks'],
-    queryFn: async () => {
-      const res = await fetch(`${baseUrl}/api/flasks`);
-      if (!res.ok)
-        throw new Error(
-          'Network response ${res.status}, was not ok fetching flasks'
-        );
-      const data = await res.json();
-      // console.log('in query function')
-      return data;
-    },
-    meta: {
-      errorMessage: 'Failed to fetch flasks data (meta option useQuery)',
-    },
-    // staleTime: 1000 * 60 * 60,
-    // staleTime: 1000 * 5,
-    // refetchOnWindowFocus: true,
-    // retry: false,
-    // enabled: true,
-  });
-  // console.log('data in useFlask', data);
-  const flasks = data?.data;
+// seting table to data (sorted and searched if any)
 
-  return [flasks, isLoading, error] as const;
-}
+export function filteredTableData(
+  tableRowsData,
+  searchedData,
+  sortColumn,
+  timestamp_column
+) {
+  // console.log(
+  //   // tableRowsData,
+  //   // searchedData,
+  //   sortColumn,
+  //   timestamp_column,
+  //   'tableRowsData, searchedData, sortColumn, timestamp_column'
+  // );
+  let filteredTableData = [...tableRowsData];
+  // console.log('filteredTableData.cellbankid', filteredTableData.map(e => e.cell_bank_id));
 
-export function useSamples() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['samples'],
-    queryFn: async () => {
-      const res = await fetch(`${baseUrl}/api/samples`);
-      if (!res.ok)
-        throw new Error(
-          'Network response ${res.status}, was not ok fetching samples'
-        );
-      const data = await res.json();
-      return data;
-    },
-    meta: {
-      errorMessage: 'Failed to fetch samples data (meta option useQuery)',
-    },
-    staleTime: 1000 * 60 * 60,
-  });
-  const samples = data?.data;
-  return [samples, isLoading, error] as const;
+  if (timestamp_column) {
+    filteredTableData = filteredTableData.map((tableRow) => {
+      // console.log(
+      //   'tableRow?.[timestamp_column]',
+      //   tableRow?.[timestamp_column]
+      // );
+      if (tableRow?.[timestamp_column]) {
+        return {
+          ...tableRow,
+          human_readable_date: displayLocalTime(tableRow[timestamp_column]),
+        };
+      }
+      return tableRow;
+    });
+  }
+
+  if (searchedData?.length > 0) {
+    filteredTableData = searchedData;
+  }
+  // console.log('Object.values(sortColumn)[0]', Object.values(sortColumn)[0], Object.values(sortColumn))
+  if (Object.values(sortColumn)[0]) {
+    const sortDirection = Object.values(sortColumn)[0]; // asc or desc
+    const sortColumnKey = Object.keys(sortColumn)[0]; // column name
+    // console.log('sortDirection', sortDirection);
+
+    filteredTableData = [...filteredTableData].sort((a, b) => {
+      // console.log(
+      //   'a[sortColumnKey], b[sortColumnKey]',
+      //   a[sortColumnKey],
+      //   b[sortColumnKey],        
+      //   a[sortColumnKey] < b[sortColumnKey]
+
+      // );
+      const numericColumns = new Set(['cell_bank_id', 'flask_id', 'sample_id'])
+      if (!numericColumns.has(sortColumnKey)) {
+        if(sortDirection === 'desc') return a[sortColumnKey].localeCompare(b[sortColumnKey]);
+        if(sortDirection === 'asc') return b[sortColumnKey].localeCompare(a[sortColumnKey]);
+      } else {
+        if(sortDirection === 'desc') return a[sortColumnKey] - b[sortColumnKey];
+        if(sortDirection === 'asc') return b[sortColumnKey] - a[sortColumnKey];
+      }
+
+    });
+  }
+  // console.log('FINAL filteredTableData', filteredTableData);
+  return filteredTableData;
 }
 
 // toggle menus off when clicking outside of them
@@ -480,3 +447,125 @@ export function getUtcTimestampFromLocalTime(
 
   return utcDate.toISOString();
 }
+
+// // fetch all rows in table
+// export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
+//   const { data, isLoading, error } = useQuery({
+//     queryKey: [tableName],
+//     queryFn: async () => {
+//       try {
+//         const response = await fetch(`${baseUrl}/api/${tableName}`, {
+//           credentials: 'include', // Include cookies for cross-origin requests
+//         });
+//         const dbData = await response.json();
+//         console.log('data in useFetchValidatedTableQuery', dbData);
+//     if (!response.ok) {
+//       const errorMessage = data.message || `Failed to fetch from ${tableName}`;
+//       throw Object.assign(new Error(errorMessage), { statusCode: response.status, data });
+//     }
+
+//     // validation ON
+//         const validatedData = zodSchema.safeParse(dbData.data);
+//         // console.log(validatedData, 'validatedData');
+//         if (!validatedData.success) {
+//           console.error(
+//             'useFetchValidatedTableQuery validation error',
+//             validatedData.error
+//           );
+//           throw new Error(`Data validation in ${tableName} table failed`);
+//         }
+//         // return validatedData.data;
+//         return dbData;
+
+//         // TURNED VALIDATION OFF FOR NOW!!!!
+//       } catch (err) {
+//         console.log(err, 'error in useFetchValidatedTableQuery');
+//         throw err;
+//       }
+//     },
+//     retry: 2,
+//     meta: {
+//       errorMessage: `Failed to fetch ${tableName} data (meta option useQuery)`,
+//     },
+//   });
+//   return {data, isLoading, error} as const;
+// }
+
+// create one row in table
+
+// // Flask hooks
+// export function useFlask(id: number | null) {
+//   const { isLoading, data, error } = useQuery({
+//     queryKey: ['flask', id],
+//     queryFn: async () => {
+//       const res = await fetch(`${baseUrl}/api/flasks/${id}`);
+//       if (!res.ok)
+//         throw new Error(
+//           `Network response ${res.status}, was not ok fetching flask ${id}`
+//         );
+//       const data = await res.json();
+//       // console.log('in query function')
+//       return data;
+//     },
+//     meta: {
+//       errorMessage: 'Failed to fetch flask data (meta option useQuery)',
+//     },
+//     staleTime: 1000 * 60 * 60,
+//     refetchOnWindowFocus: true,
+//     retry: false,
+//     enabled: Boolean(id),
+//     // onError: ()=> console.log('error in useFlask'),
+//   });
+//   // console.log('data in useFlask', data);
+//   const flask = data;
+//   return [flask, isLoading, error] as const;
+// }
+
+// export function useFlasks() {
+//   const { isLoading, data, error } = useQuery({
+//     queryKey: ['flasks'],
+//     queryFn: async () => {
+//       const res = await fetch(`${baseUrl}/api/flasks`);
+//       if (!res.ok)
+//         throw new Error(
+//           'Network response ${res.status}, was not ok fetching flasks'
+//         );
+//       const data = await res.json();
+//       // console.log('in query function')
+//       return data;
+//     },
+//     meta: {
+//       errorMessage: 'Failed to fetch flasks data (meta option useQuery)',
+//     },
+//     // staleTime: 1000 * 60 * 60,
+//     // staleTime: 1000 * 5,
+//     // refetchOnWindowFocus: true,
+//     // retry: false,
+//     // enabled: true,
+//   });
+//   // console.log('data in useFlask', data);
+//   const flasks = data?.data;
+
+//   return [flasks, isLoading, error] as const;
+// }
+
+// export function useSamples() {
+//   const { data, isLoading, error } = useQuery({
+//     queryKey: ['samples'],
+//     queryFn: async () => {
+//       const res = await fetch(`${baseUrl}/api/samples`);
+//       if (!res.ok)
+//         throw new Error(
+//           'Network response ${res.status}, was not ok fetching samples'
+//         );
+//       const data = await res.json();
+//       return data;
+//     },
+//     meta: {
+//       errorMessage: 'Failed to fetch samples data (meta option useQuery)',
+//     },
+//     staleTime: 1000 * 60 * 60,
+//   });
+//   const samples = data?.data;
+//   return [samples, isLoading, error] as const;
+// }

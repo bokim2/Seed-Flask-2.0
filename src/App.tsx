@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import GlobalStyles from './styles/GlobalStyles';
 // import Button from './ui/Button';
 import TestComponent from './ui/TestComponent';
-import { BrowserRouter,  Route, Routes } from 'react-router-dom';
-import MainNav from './ui/MainNav';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import MainNav from './ui/nav-ui/MainNav';
 import AppLayout from './AppLayout';
 import Dashboard from './pages/HomePage';
 
@@ -29,7 +29,6 @@ import { baseUrl } from '../configs';
 //   },
 // });
 
-
 type TuserProfile = {
   picture: string;
   name: string;
@@ -37,21 +36,19 @@ type TuserProfile = {
 };
 
 function App() {
-
-
   const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
 
   useEffect(() => {
     async function authProfile() {
-      try{
+      try {
         const response = await fetch(`${baseUrl}/profile`, {
           credentials: 'include', // Include cookies for cross-origin requests
         });
-        console.log(response)
-      const data = await response.json();
-      setUserProfile(data);
-      } catch(errr){
-        console.log('error', errr)
+        console.log(response);
+        const data = await response.json();
+        setUserProfile(data);
+      } catch (errr) {
+        console.log('error', errr);
       }
     }
 
@@ -61,30 +58,27 @@ function App() {
 
   return (
     <>
-
-    
-        <GlobalStyles />
-        {/* <StyledDiv>
+      <GlobalStyles />
+      {/* <StyledDiv>
 
       </StyledDiv> */}
-        <BrowserRouter>
-          <Routes>
-            <Route element={<AppLayout userProfile={userProfile}/>}>
-              <Route index element={<HomePage />} />
-              <Route path="cellbank" element={<CellbankPage />} />
-              <Route path="flask" element={<FlaskPage />} />
-              <Route path="sample" element={<SamplePage />} />
-              <Route path="bioreactor" element={<BioreactorPage/>} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="charts" element={<ChartsPage />} />
-              {/* <Route path="signin" element={<SignInPage />} /> */}
-            </Route>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppLayout userProfile={userProfile} />}>
+            <Route index element={<HomePage />} />
+            <Route path="cellbank" element={<CellbankPage />} />
+            <Route path="flask" element={<FlaskPage />} />
+            <Route path="sample" element={<SamplePage />} />
+            <Route path="bioreactor" element={<BioreactorPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="charts" element={<ChartsPage />} />
+            {/* <Route path="signin" element={<SignInPage />} /> */}
+          </Route>
 
-            <Route path="*" element={<h1>Page not found</h1>} />
-          </Routes>
-          {/* <TestComponent /> */}
-        </BrowserRouter>
-    
+          <Route path="*" element={<h1>Page not found</h1>} />
+        </Routes>
+        {/* <TestComponent /> */}
+      </BrowserRouter>
     </>
   );
 }

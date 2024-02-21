@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import {
   useDeleteRowMutation,
-  useFlask,
-  useFlasks,
   useUpdateRowMutation,
 } from '../../lib/hooks';
 import styled from 'styled-components';
@@ -21,7 +19,6 @@ import {
   TableHeader,
   TableHeaderCell,
   TableRow,
-  Wrapper,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from './flasks-types';
@@ -44,7 +41,7 @@ export default function FlasksTable({ flasks }) {
   const {
     mutate: deleteFlask,
     isPending: isPendingDelete,
-    error,
+    error: deleteError,
   } = useDeleteRowMutation({ tableName: 'flasks' });
 
   const [toggleCellbankData, setToggleCellbankData] = useState(false);

@@ -154,12 +154,13 @@ app.get('/api/cellbanks', async (req, res) => {
     );
     // console.log('results of getting all cell banks', results.rows[0]);
 
-    const popularOptions = getPopularOptions(results.rows);
+    // const popularOptions = getPopularOptions(results.rows);
 
     res.status(200).json({
       status: 'success',
+      // data: results.rows,
       data: results.rows,
-      popularOptions: popularOptions,
+      // popularOptions: popularOptions,
       // user: req.oidc.user,
     });
   } catch (error) {
@@ -206,14 +207,14 @@ app.post(
 
 app.put('/api/cellbanks/:id', async (req, res) => {
   try {
-    const { strain, target_molecule, description, notes, date_timestamptz } =
+    const { strain, target_molecule, description, notes, date_timestamptz, project } =
       req.body;
     const cellBankId = req.params.id;
 
     const query = `
       UPDATE cell_banks 
-      SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 
-      WHERE cell_bank_id = $6 
+      SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 , project = $6
+      WHERE cell_bank_id = $7 
       RETURNING *;
     `;
     const updateValues = [
@@ -222,6 +223,7 @@ app.put('/api/cellbanks/:id', async (req, res) => {
       target_molecule,
       description,
       date_timestamptz,
+      project,
       cellBankId,
     ];
     const results = await db.query(query, updateValues);
@@ -629,59 +631,59 @@ app.get('/api/chart/cellbank/:id', async (req, res) => {
   }
 });
 
-// search cell banks
-app.get('/api/cellbanks/search', async (req, res) => {
-  try {
-    const { searchField, searchText } = req.query;
-    console.log('searchField', searchField, 'searchText', searchText);
+// search cell banks -original
+// app.get('/api/cellbanks/search', async (req, res) => {
+//   try {
+//     const { searchField, searchText } = req.query;
+//     console.log('searchField', searchField, 'searchText', searchText);
 
-    const validFields = [
-      'cell_bank_id',
-      'strain',
-      'project',
-      'target_molecule',
-      'details',
-      'notes',
-      'username',
-      'date_timestampz',
-    ];
-    if (!validFields.includes(searchField)) {
-      return res.status(400).send('Invalid search field.');
-    }
+//     const validFields = [
+//       'cell_bank_id',
+//       'strain',
+//       'project',
+//       'target_molecule',
+//       'details',
+//       'notes',
+//       'username',
+//       'date_timestampz',
+//     ];
+//     if (!validFields.includes(searchField)) {
+//       return res.status(400).send('Invalid search field.');
+//     }
 
-    // Determine if the search field is 'cell_bank_id' and needs casting to text
-    const isNumericSearchField = searchField === 'cell_bank_id';
-    const fieldForQuery = isNumericSearchField
-      ? `${searchField}::text`
-      : searchField;
+//     // Determine if the search field is 'cell_bank_id' and needs casting to text
+//     const isNumericSearchField = searchField === 'cell_bank_id';
+//     const fieldForQuery = isNumericSearchField
+//       ? `${searchField}::text`
+//       : searchField;
 
-    let query;
+//     let query;
 
-    if (searchField === 'date_timestampz') {
-      query = {
-        text: `SELECT *
-          FROM cell_banks
-          WHERE cell_banks.date_timestamptz > $1
-          ORDER BY cell_banks.date_timestamptz DESC;`,
-        values: [searchText],
-      };
-    } else {
-      query = {
-        text: `SELECT *, ts_rank(to_tsvector(${fieldForQuery}), plainto_tsquery($1)) AS relevance
-        FROM cell_banks
-        WHERE to_tsvector(${fieldForQuery}) @@ plainto_tsquery($1)
-        ORDER BY relevance DESC;`,
-        values: [searchText],
-      };
-    }
+//     if (searchField === 'date_timestampz') {
+//       query = {
+//         text: `SELECT *
+//           FROM cell_banks
+//           WHERE cell_banks.date_timestamptz > $1
+//           ORDER BY cell_banks.date_timestamptz DESC;`,
+//         values: [searchText],
+//       };
+//     } else {
+//       query = {
+//         text: `SELECT *, ts_rank(to_tsvector(${fieldForQuery}), plainto_tsquery($1)) AS relevance
+//         FROM cell_banks
+//         WHERE to_tsvector(${fieldForQuery}) @@ plainto_tsquery($1)
+//         ORDER BY relevance DESC;`,
+//         values: [searchText],
+//       };
+//     }
 
-    const result = await db.query(query);
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
-});
+//     const result = await db.query(query);
+//     res.status(200).json(result.rows);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Server error');
+//   }
+// });
 
 // simpler version of graphs query just od600 and interval
 // app.get('/api/graphs', async (req, res) => {
@@ -713,6 +715,62 @@ app.get('/api/cellbanks/search', async (req, res) => {
 //   FROM samples s
 //   JOIN flasks f ON s.flask_id = f.flask_id
 //   GROUP BY f.flask_id;
+
+
+app.get('/api/cellbanks/search', async (req, res) => {
+  try {
+    // Assuming all queries come in as `searchField[]=field&searchText[]=text`
+    let { searchField, searchText } = req.query;
+
+    // Ensure searchField and searchText are arrays (single query param or none will not be arrays)
+    searchField = Array.isArray(searchField) ? searchField : (searchField ? [searchField] : []);
+    searchText = Array.isArray(searchText) ? searchText : (searchText ? [searchText] : []);
+
+    const validFields = [
+      'cell_bank_id',
+      'strain',
+      'project',
+      'target_molecule',
+      'details',
+      'notes',
+      'username',
+      'date_timestampz',
+    ];
+
+    // Filter out invalid fields
+    const queries = searchField.map((field, index) => ({
+      field,
+      text: searchText[index] || '',
+    })).filter(q => validFields.includes(q.field));
+
+    if (queries.length === 0) {
+      return res.status(400).send('Invalid or missing search fields.');
+    }
+
+    // Construct WHERE clause dynamically
+    const whereClauses = queries.map((q, index) => {
+      const fieldForQuery = q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
+      if (q.field === 'date_timestampz') {
+        return `cell_banks.date_timestamptz > $${index + 1}`;
+      } else {
+        return `to_tsvector(${fieldForQuery}) @@ plainto_tsquery($${index + 1})`;
+      }
+    });
+
+    const whereClause = whereClauses.join(' AND ');
+
+    const query = {
+      text: `SELECT * FROM cell_banks WHERE ${whereClause} ORDER BY cell_bank_id DESC;`,
+      values: queries.map(q => q.text),
+    };
+
+    const result = await db.query(query);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
 
 // For any other route, serve the index.html file
 app.get('*', (req, res) => {
