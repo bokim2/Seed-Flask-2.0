@@ -19,12 +19,14 @@ import {
   handleEditFormSubmit,
   useAppSelector,
   useDeleteRowMutation,
+  useSetSortColumn,
   useUpdateRowMutation,
 } from '../../lib/hooks';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
 import {
   TCellbanks,
+  TCellbanksColumns,
   TUpdateCellbankForm,
   initialEditCellbankForm,
   updateCellbankSchema,
@@ -46,21 +48,22 @@ export default function CellbanksTable({
   // tableName,
   // refetch
 }) {
+
+  // console.log('cellbanks in cellbanks table', cellbanks);
+  
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
     useState<TCellbanks>([]);
 
-  // console.log('cellbanks in cellbanks table', cellbanks);
+
+  // state of edited form
   const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
     initialEditCellbankForm
   );
   // id of edited cellbank
   const [editingId, setEditingId] = useState<number | null>(null);
 
-  // update cellbank
-  // const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
-
-  // update row
+  // update/edit a row
   const {
     mutate: submitEditedCellbankForm,
     isPending: isPendingUpdate,
@@ -74,9 +77,6 @@ export default function CellbanksTable({
     dateColumnName: 'date_timestamptz',
   });
 
-  // delete row, only for cellbank (archive)
-  // const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
-
   // delete cellbank
   const {
     mutate: deleteCellbank,
@@ -84,56 +84,13 @@ export default function CellbanksTable({
     error: deleteError,
   } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
-  // searching cellbanks table through text input
+  // sort selected column
+  const { sortColumn, handleSortColumn }= useSetSortColumn<TCellbanksColumns>();
+
+  // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
   const [searchedData, setSearchedData] = useState<TCellbanks>([]);
-  // const {
-  //   searchText,
-  //   setSearchText,
-  //   SelectSearchField,
-  //   performInputTextSearch,
-  //   searchField,
-  // } = useTextInputSearch();
 
-  // sort a column - client side, only with displayed data
-  type TColumn =
-    | 'cell_bank_id'
-    | 'strain'
-    | 'target_molecule'
-    | 'project'
-    | 'description'
-    | 'notes'
-    | 'date_timestampz'
-    | 'username'
-    | 'human_readable_date';
-
-  type TOrder = 'asc' | 'desc' | '';
-  type TSortColumn = { [key in TColumn]?: TOrder };
-  const [sortColumn, setSortColumn] = useState<TSortColumn>({
-    cell_bank_id: '',
-  });
-  // console.log(sortColumn, 'sortColumn');
-
-  const handleSortColumn = (e, columnName, sortOrder) => {
-    e.stopPropagation();
-
-    const sortObject = {
-      [columnName]: sortOrder,
-    };
-
-    if (sortOrder) {
-      setSortColumn((prev) => {
-        if (
-          (prev?.[columnName] === 'asc') === sortOrder ||
-          (prev?.[columnName] === 'desc') === sortOrder
-        ) {
-          return { [columnName]: '' };
-        }
-        return sortObject;
-      });
-    }
-  };
-
-  // page limit
+  // page limit - how many rows to display per fetch  ex: 10, 20, 50
   const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
 
   const dispatch = useDispatch();
@@ -141,6 +98,7 @@ export default function CellbanksTable({
     dispatch(changePageLimit(limit));
   };
 
+  // update selected data based on filter and sort settings
   useEffect(() => {
     // console.log('in useEffect', cellbanks, searchedData, sortColumn);
     const updatedData = filteredTableData(

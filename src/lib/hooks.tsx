@@ -32,20 +32,24 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         pageParam * pageLimitSetting
       }&limit=${pageLimitSetting}`; // Example for offset pagination
       const response = await fetch(url, { credentials: 'include' });
-      
-      const  data  = await response.json();
+
+      const data = await response.json();
       // return data;
       if (!response.ok) {
         // Use the server-provided error message if available, otherwise, a generic error message
-        const errorMessage = data?.error || data?.message || `Failed to fetch from ${tableName}, status: ${response.status}`;
+        const errorMessage =
+          data?.error ||
+          data?.message ||
+          `Failed to fetch from ${tableName}, status: ${response.status}`;
         throw new Error(errorMessage);
       }
       // console.log('data in useFetchValidatedTableQuery', data);
 
       const serverDataSchema = z.object({
         status: z.string(),
-        data: zodSchema});
-        
+        data: zodSchema,
+      });
+
       // validation ON
       const validatedData = serverDataSchema.safeParse(data);
       // console.log(validatedData, 'validatedData');
@@ -362,26 +366,28 @@ export function filteredTableData(
       // console.log(
       //   'a[sortColumnKey], b[sortColumnKey]',
       //   a[sortColumnKey],
-      //   b[sortColumnKey],        
+      //   b[sortColumnKey],
       //   a[sortColumnKey] < b[sortColumnKey]
 
       // );
-      const numericColumns = new Set(['cell_bank_id', 'flask_id', 'sample_id'])
+      const numericColumns = new Set(['cell_bank_id', 'flask_id', 'sample_id']);
       if (!numericColumns.has(sortColumnKey)) {
-        if(sortDirection === 'desc') return a[sortColumnKey].localeCompare(b[sortColumnKey]);
-        if(sortDirection === 'asc') return b[sortColumnKey].localeCompare(a[sortColumnKey]);
+        if (sortDirection === 'desc')
+          return a[sortColumnKey].localeCompare(b[sortColumnKey]);
+        if (sortDirection === 'asc')
+          return b[sortColumnKey].localeCompare(a[sortColumnKey]);
       } else {
-        if(sortDirection === 'desc') return a[sortColumnKey] - b[sortColumnKey];
-        if(sortDirection === 'asc') return b[sortColumnKey] - a[sortColumnKey];
+        if (sortDirection === 'desc')
+          return a[sortColumnKey] - b[sortColumnKey];
+        if (sortDirection === 'asc') return b[sortColumnKey] - a[sortColumnKey];
       }
-
     });
   }
   // console.log('FINAL filteredTableData', filteredTableData);
   return filteredTableData;
 }
 
-// format column name to remove _ and replace with ' '
+// format column name - to remove _ and replace with ' '
 export function formatColumnName(columnName) {
   if (columnName === 'human_readable_date') {
     return 'date';
@@ -390,6 +396,37 @@ export function formatColumnName(columnName) {
   }
 }
 
+// set sorted column and asc or desc
+
+
+export function useSetSortColumn<TTableColumns extends string>() {
+  type TSortOrder = 'asc' | 'desc' | '';
+  type TSortColumn = { [key in TTableColumns]?: TSortOrder };
+
+  const [sortColumn, setSortColumn] = useState<TSortColumn>({});
+  // console.log(sortColumn, 'sortColumn');
+
+  const handleSortColumn = (e, columnName, sortOrder) => {
+    e.stopPropagation();
+
+    const sortObject = {
+      [columnName]: sortOrder,
+    };
+
+    if (sortOrder) {
+      setSortColumn((prev) => {
+        if (
+          (prev?.[columnName] === 'asc') === sortOrder ||
+          (prev?.[columnName] === 'desc') === sortOrder
+        ) {
+          return { [columnName]: '' };
+        }
+        return sortObject;
+      });
+    }
+  };
+  return { sortColumn, handleSortColumn, setSortColumn };
+}
 
 // toggle menus off when clicking outside of them
 export function useOnClickOutside(refs, handlerFn) {
