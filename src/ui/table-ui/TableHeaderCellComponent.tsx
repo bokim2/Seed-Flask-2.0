@@ -4,6 +4,7 @@ import {
   TableHeaderCellInnerContainer,
 } from '../../styles/UtilStyles';
 import SortTableColumnsArrows from './SortTableColumnsArrows';
+import { formatColumnName } from '../../lib/hooks';
 
 export default function TableHeaderCellComponent({
   // searchField,
@@ -13,13 +14,7 @@ export default function TableHeaderCellComponent({
 }) {
 
   
-  function formatColumnName(columnName) {
-    if (columnName === 'human_readable_date') {
-      return 'date';
-    } else {
-      return columnName.replace(/_/g, ' ');
-    }
-  }
+
 
   return (
     <>

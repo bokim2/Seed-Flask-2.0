@@ -75,3 +75,14 @@ export const CellbankSearchParamsSchema = z.object({
 export type TCellbankSearchParamsSchema = z.infer<
   typeof CellbankSearchParamsSchema
 >;
+
+export const cellbanksValidFields = [
+  'cell_bank_id',
+  'strain',
+  'project',
+  'target_molecule',
+  'details',
+  'notes',
+  'username',
+  'date_timestampz',
+];

@@ -2,6 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { baseUrl } from '../../configs';
+import { cellbanksValidFields } from '../features/cellbanks/cellbanks-types';
+import { formatColumnName } from '../lib/hooks';
 
 export function useTextInputSearch() {
   // Keep search criteria as an array of objects { field, text }
@@ -78,11 +80,17 @@ export default function SearchForm({setSearchedData}) {
     <form onSubmit={handleSubmit}>
       {searchCriteria.map((criterion, index) => (
         <div key={index}>
-          <input
+          {/* <input
             value={criterion.field}
             onChange={(e) => handleFieldChange(index, e.target.value)}
             placeholder="Field"
-          />
+          /> */}
+
+          <select name="selectField" id="selectField" onChange={(e) => handleFieldChange(index, e.target.value)}>
+            {cellbanksValidFields.map((field)=> {
+                return <option key={field} value={field}>{formatColumnName(field)}</option>
+            })}
+          </select>
           <input
             value={criterion.text}
             onChange={(e) => handleTextChange(index, e.target.value)}
