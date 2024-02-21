@@ -86,3 +86,15 @@ export const cellbanksValidFields = [
   'username',
   'date_timestampz',
 ];
+
+// for searchForm
+export type TCellbanksColumns =
+  | 'cell_bank_id'
+  | 'strain'
+  | 'target_molecule'
+  | 'project'
+  | 'description'
+  | 'notes'
+  | 'date_timestampz'
+  | 'username'
+  | 'human_readable_date';
