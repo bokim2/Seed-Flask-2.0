@@ -7,7 +7,6 @@ import SortTableColumnsArrows from './SortTableColumnsArrows';
 
 export default function TableHeaderCellComponent({
   // searchField,
-  searchedData,
   handleSortColumn,
   sortColumn,
   columnName,

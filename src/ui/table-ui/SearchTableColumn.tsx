@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useTextInputSearch } from '../../features/cellbanks/cellbanks-hooks';
 import {
   SearchInputPTag,
   SearchSection,
