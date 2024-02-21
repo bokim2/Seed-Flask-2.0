@@ -7,7 +7,7 @@ import {
 } from '../styles/UtilStyles';
 import LoaderBar from '../ui/LoaderBar';
 import FlasksTable from '../features/flasks/FlasksTable';
-import { useFetchValidatedTableQuery, useFlask, useFlasks } from '../lib/hooks';
+import { useFetchValidatedTableQuery } from '../lib/hooks';
 import LineGraph from '../features/charts/LineGraph';
 import { baseUrl } from '../../configs';
 import TimeLineGraph from '../ui/TimeLineGraph';
