@@ -381,6 +381,16 @@ export function filteredTableData(
   return filteredTableData;
 }
 
+// format column name to remove _ and replace with ' '
+export function formatColumnName(columnName) {
+  if (columnName === 'human_readable_date') {
+    return 'date';
+  } else {
+    return columnName.replace(/_/g, ' ');
+  }
+}
+
+
 // toggle menus off when clicking outside of them
 export function useOnClickOutside(refs, handlerFn) {
   useEffect(() => {
