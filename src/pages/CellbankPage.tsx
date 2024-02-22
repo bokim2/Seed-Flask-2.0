@@ -30,7 +30,7 @@ export default function CellbankPage() {
   });
   console.log('cellbanks in cellbanks page', cellbanks);
 
-  const [toggleTextTruncation, settToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
+  const [toggleTextTruncation, setToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
 
   // bookmarked cellbanks
   const dispatch = useDispatch();
@@ -42,8 +42,7 @@ export default function CellbankPage() {
     (state: RootState) => state.bookmarks.cellbank_bookmark
   );
 
-  //
-// const popularOptions = [];
+  // data from cellbanks table
   const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
   // console.log(cellbanksAll, 'cellbanksAll');
 
@@ -51,10 +50,11 @@ export default function CellbankPage() {
     <PageContainer id="CellbankPageContainer">
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
-        {/* {(error) && (<div>Error: {error.message}</div>)} */}
+        {/* <ErrorMessage error={error} /> */}
+
         <Button
           $size={'small'}
-          onClick={() => settToggleTextTruncation((prev) => !prev)}
+          onClick={() => setToggleTextTruncation((prev) => !prev)}
         >
           {!toggleTextTruncation
             ? 'Show Table Cell Details'
@@ -66,7 +66,7 @@ export default function CellbankPage() {
         {/* <CellbanksMultiInputForm popularOptions={cellbanks?.pages?.map(page => page?.popularOptions).flat()}/> */}
         <CellbanksMultiInputForm />
 
-        {error?.message && <ErrorMessage error={error} />}
+        {/* {error?.message && <ErrorMessage error={error} />} */}
         {!isLoading && cellbanks?.pages && cellbanks?.pages?.length > 0 && (
           <CellbanksTable
             cellbanks={cellbanksAll}
