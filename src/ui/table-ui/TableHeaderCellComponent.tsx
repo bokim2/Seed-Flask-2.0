@@ -4,7 +4,7 @@ import {
   TableHeaderCellInnerContainer,
 } from '../../styles/UtilStyles';
 import SortTableColumnsArrows from './SortTableColumnsArrows';
-import { formatColumnName } from '../../lib/hooks';
+import { formatColumnName } from '../../hooks/hooks';
 
 export default function TableHeaderCellComponent({
   // searchField,
@@ -12,15 +12,11 @@ export default function TableHeaderCellComponent({
   sortColumn,
   columnName,
 }) {
-
-  
-
-
   return (
     <>
       <TableHeaderCell
         data-column-name={columnName}
-        // className={`${searchField == columnName ? 'dbsearch' : ''} 
+        // className={`${searchField == columnName ? 'dbsearch' : ''}
         //           ${
         //             searchField == columnName &&
         //             searchedData?.length > 0 &&

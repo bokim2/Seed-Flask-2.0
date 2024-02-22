@@ -1,324 +1,14 @@
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../../configs';
-import axios from 'axios';
-import {
-  UseInfiniteQueryOptions,
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
-import type { RootState, AppDispatch } from './store';
+import type { RootState, AppDispatch } from '../lib/store';
 
 // ReduxToolkit - for typescript - Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-// fetch rows in table - INFINITE SCROLL
-export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
-  type FetchTableDataArgs = {
-    pageParam?: number;
-  };
 
-  // setting page limit - getting global state from redux store
-  const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
-  // console.log('pageLimitSetting', pageLimitSetting);
-
-  const fetchTableData = async ({ pageParam = 0 }: FetchTableDataArgs) => {
-    try {
-      const url = `${baseUrl}/api/${tableName}?offset=${
-        pageParam * pageLimitSetting
-      }&limit=${pageLimitSetting}`; // Example for offset pagination
-      const response = await fetch(url, { credentials: 'include' });
-
-      const data = await response.json();
-      // return data;
-      if (!response.ok) {
-        // Use the server-provided error message if available, otherwise, a generic error message
-        const errorMessage =
-          data?.error ||
-          data?.message ||
-          `Failed to fetch from ${tableName}, status: ${response.status}`;
-        throw new Error(errorMessage);
-      }
-      // console.log('data in useFetchValidatedTableQuery', data);
-
-      const serverDataSchema = z.object({
-        status: z.string(),
-        data: zodSchema,
-      });
-
-      // validation ON
-      const validatedData = serverDataSchema.safeParse(data);
-      // console.log(validatedData, 'validatedData');
-      if (!validatedData.success) {
-        console.error(
-          'useFetchValidatedTableQuery validation error',
-          validatedData.error
-        );
-        throw new Error(`Data validation in ${tableName} table failed`);
-      }
-      console.log('validatedData.data', validatedData.data);
-      return validatedData.data;
-      // return dbData;
-
-      // TURNED VALIDATION OFF FOR NOW!!!!
-    } catch (err) {
-      console.log(err, 'error in useFetchValidatedTableQuery');
-      throw err;
-    }
-  };
-
-  const queryOptions = {
-    queryKey: [tableName, pageLimitSetting],
-    queryFn: ({ pageParam = 0 }) => fetchTableData({ pageParam }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => {
-      const nextPage = lastPage.data.length ? allPages.length + 1 : undefined;
-      // console.log(
-      //   'allPages',
-      //   allPages,
-      //   'lastPage',
-      //   lastPage,
-      //   'lastPageParam',
-      //   lastPageParam,
-      //   'allPageParams',
-      //   allPageParams,
-      //   'nextPage',
-      //   nextPage
-      // );
-      return nextPage;
-    },
-  };
-
-  // export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
-  const {
-    data,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = useInfiniteQuery(queryOptions);
-
-  return {
-    data,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-  };
-}
-
-// create a row
-export function useCreateValidatedRowMutation({
-  tableName,
-  zodSchema,
-  // apiEndpoint
-}) {
-  const queryClient = useQueryClient();
-  type TzodSchema = z.infer<typeof zodSchema>;
-
-  const { mutate, isPending, reset, error } = useMutation({
-    mutationFn: (form: TzodSchema) => createRow(form, tableName, zodSchema),
-    onSuccess: () => {
-      // console.log('onSuccess in useCreateValidatedRowMutation!!!!', tableName);
-      queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey.includes(tableName),
-      });
-      // queryClient.invalidateQueries(tableName);
-      // queryClient.refetchQueries({ queryKey: [tableName] });
-      reset();
-    },
-    onError: (err) => {
-      throw err;
-    },
-  });
-  return { mutate, isPending, error };
-}
-
-// create a row
-export async function createRow(form, tableName, zodSchema) {
-  // const { ...columnNamesArray } = form;
-  const validationResult = zodSchema.safeParse(form);
-  if (!validationResult.success) {
-    console.error('createRow validation error', validationResult.error);
-    throw new Error(
-      `Failed to validate createRow form: ${validationResult.error.message}`
-    );
-  }
-  try {
-    console.log('form in createRow', form);
-    const response = await fetch(`${baseUrl}/api/${tableName}`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...form,
-      }),
-    });
-    console.log('res in createRow', response);
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      const errorMessage =
-        data.message || `Failed to post entry in ${tableName}`;
-      // You can further customize the error object here if needed
-      throw Object.assign(new Error(errorMessage), {
-        statusCode: response.status,
-        data,
-      });
-    }
-
-    console.log('data after post in createRow', data);
-    return data.data;
-  } catch (err) {
-    console.error('Error in createCellbank', err);
-    throw err;
-  }
-}
-
-// delete a row
-
-export async function deleteRow(id, tableName) {
-  try {
-    const res = await fetch(`${baseUrl}/api/${tableName}/${id}`, {
-      method: 'DELETE',
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`Failed to delete row, ${errText}`);
-    }
-    const { data } = await res.json();
-    console.log('data after delete in deleteRow', data);
-    return data;
-  } catch (err) {
-    console.error('error in deleteRow', err);
-    throw err;
-  }
-}
-
-export function useDeleteRowMutation({ tableName }) {
-  const queryClient = useQueryClient();
-  const { mutate, isPending, error, reset } = useMutation({
-    mutationFn: (id: number) => deleteRow(id, tableName),
-    onSuccess: () => {
-      queryClient.invalidateQueries(tableName);
-      reset();
-    },
-    onError: (err) => {
-      console.error('error in useDeleteRowMutation', err);
-      throw err;
-    },
-  });
-  return { mutate, isPending, error };
-}
-
-// update a row
-
-async function updateRowEdit(
-  editedForm,
-  tableName,
-  zodSchema,
-  idColumnName,
-  dateColumnName
-) {
-  try {
-    console.log(
-      'editedForm in updateRowEdit',
-      editedForm,
-      editedForm[idColumnName]
-    );
-    const validatedData = zodSchema.safeParse(editedForm);
-    if (!validatedData.success) {
-      console.log('updateRowEdit validation error', validatedData.error);
-      throw new Error(
-        `Failed to validate updateRowEdit form: ${validatedData.error.message}`
-      );
-    }
-    const res = await fetch(
-      `${baseUrl}/api/${tableName}/${editedForm[idColumnName]}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...editedForm,
-          [dateColumnName]: getUtcTimestampFromLocalTime(
-            editedForm.human_readable_date
-          ),
-        }),
-      }
-    );
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`Failed to update row, ${errText}`);
-    }
-    const { data } = await res.json();
-    return data;
-  } catch (err) {
-    console.error('error in updateRowEdit', err);
-    throw err;
-  }
-}
-
-export function useUpdateRowMutation({
-  tableName,
-  zodSchema,
-  initialEditForm,
-  setEditedForm,
-  idColumnName,
-  dateColumnName,
-}) {
-  const queryClient = useQueryClient();
-  const { mutate, isPending, error, reset } = useMutation({
-    mutationFn: (editedForm) =>
-      updateRowEdit(
-        editedForm,
-        tableName,
-        zodSchema,
-        idColumnName,
-        dateColumnName
-      ),
-    onSuccess: () => {
-      // console.log('onSuccess in useUpdateRowMutation', tableName, [tableName])
-      queryClient.invalidateQueries({ queryKey: [tableName] });
-      setEditedForm(initialEditForm);
-      reset();
-    },
-    onError: (err) => {
-      console.error('error in useUpdateRowMutation', err);
-      throw err;
-    },
-  });
-
-  return { mutate, isPending, error };
-}
-
-// submit edited row form - submitting in Table in StyledForm
-// might want to erase this, it doesn't add anything.  just move it into styledForm
-// actually it helped w typescript errors.  keep for now. 
-export function handleEditFormSubmit(
-  e,
-  editedForm,
-  submitEditedForm,
-  setEditingId
-) {
-  // console.log('editedForm in handleEditFormSubmit', editedForm);
-  // e.preventDefault();
-  // e.stopPropagation();
-  submitEditedForm(editedForm);
-  setEditingId(null);
-}
 
 // seting table to data (sorted and searched if any)
 
@@ -373,14 +63,14 @@ export function filteredTableData(
       // );
       const numericColumns = new Set(['cell_bank_id', 'flask_id', 'sample_id']);
       if (!numericColumns.has(sortColumnKey)) {
-        if (sortDirection === 'desc')
-          return a[sortColumnKey].localeCompare(b[sortColumnKey]);
         if (sortDirection === 'asc')
+          return a[sortColumnKey].localeCompare(b[sortColumnKey]);
+        if (sortDirection === 'desc')
           return b[sortColumnKey].localeCompare(a[sortColumnKey]);
       } else {
+        if (sortDirection === 'asc') return a[sortColumnKey] - b[sortColumnKey];
         if (sortDirection === 'desc')
-          return a[sortColumnKey] - b[sortColumnKey];
-        if (sortDirection === 'asc') return b[sortColumnKey] - a[sortColumnKey];
+          return b[sortColumnKey] - a[sortColumnKey];
       }
     });
   }
@@ -398,7 +88,6 @@ export function formatColumnName(columnName) {
 }
 
 // set sorted column and asc or desc
-
 
 export function useSetSortColumn<TTableColumns extends string>() {
   type TSortOrder = 'asc' | 'desc' | '';
@@ -429,7 +118,28 @@ export function useSetSortColumn<TTableColumns extends string>() {
   return { sortColumn, handleSortColumn, setSortColumn };
 }
 
-// toggle menus off when clicking outside of them
+// update table data based on filter and sort settings
+export function useFilterSortTableData({
+  cellbanks,
+  searchedData,
+  sortColumn,
+  setFilteredAndSortedData,
+}) {
+  // update selected data based on filter and sort settings
+  useEffect(() => {
+    // console.log('in useEffect', cellbanks, searchedData, sortColumn);
+    const updatedData = filteredTableData(
+      cellbanks,
+      searchedData,
+      sortColumn,
+      'date_timestamptz'
+    );
+    setFilteredAndSortedData(updatedData);
+    // console.log('useEffect in cellbanks table', cellbanks);
+  }, [cellbanks, searchedData, sortColumn, setFilteredAndSortedData]);
+}
+
+// toggle nav menus off when clicking outside of them
 export function useOnClickOutside(refs, handlerFn) {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -449,28 +159,6 @@ export function useOnClickOutside(refs, handlerFn) {
   }, [refs, handlerFn]);
 }
 
-// update table data based on filter and sort settings
-export function useFilterSortTableData({
-  cellbanks,
-  searchedData,
-  sortColumn,
-  setFilteredAndSortedData,
-}){
-  // update selected data based on filter and sort settings
-  useEffect(() => {
-    // console.log('in useEffect', cellbanks, searchedData, sortColumn);
-    const updatedData = filteredTableData(
-      cellbanks,
-      searchedData,
-      sortColumn,
-      'date_timestamptz'
-    );
-    setFilteredAndSortedData(updatedData);
-    // console.log('useEffect in cellbanks table', cellbanks);
-  }, [cellbanks, searchedData, sortColumn, setFilteredAndSortedData]);
-
-}
-
 
 
 // TIMEZONE CONVERSION FUNCTION
@@ -478,7 +166,6 @@ export function useFilterSortTableData({
 import { format, parse } from 'date-fns';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { isPending } from '@reduxjs/toolkit';
-import { type } from 'os';
 import {
   cellbanksArraySchema,
   createCellbankSchema,

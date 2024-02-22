@@ -11,13 +11,10 @@ import {
 import { useState } from 'react';
 // import { InitialEditCellbankForm } from '../../lib/constants';
 import {
-  handleEditFormSubmit,
   useAppSelector,
-  useDeleteRowMutation,
   useFilterSortTableData,
   useSetSortColumn,
-  useUpdateRowMutation,
-} from '../../lib/hooks';
+} from '../../hooks/hooks';
 import {
   TCellbanks,
   TCellbanksColumns,
@@ -32,6 +29,8 @@ import { useDispatch } from 'react-redux';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
 import SearchForm from '../../ui/SearchForm';
+import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
+import { handleEditFormSubmit, useUpdateRowMutation } from '../../hooks/table-hooks/useUpdateRowMutation';
 
 export default function CellbanksTable({
   cellbanks,
@@ -132,8 +131,9 @@ export default function CellbanksTable({
             <TableHeader>
               {/* select column to search */}
               <TableRow>
-                {cellbanksTableHeaderCellsArray.map((headerCell) => (
+                {cellbanksTableHeaderCellsArray.map((headerCell, i) => (
                   <TableHeaderCellComponent
+                    key={headerCell}
                     columnName={headerCell}
                     handleSortColumn={handleSortColumn}
                     sortColumn={sortColumn}

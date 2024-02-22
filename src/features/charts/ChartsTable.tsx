@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import {
-  useDeleteRowMutation,
-  useUpdateRowMutation,
-} from '../../lib/hooks';
+import { useDeleteRowMutation, useUpdateRowMutation } from '../../hooks/hooks';
 import styled from 'styled-components';
 import FlasksRow from './FlasksRow';
 import {

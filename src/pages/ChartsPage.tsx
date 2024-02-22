@@ -7,7 +7,7 @@ import {
 } from '../styles/UtilStyles';
 import LoaderBar from '../ui/LoaderBar';
 import FlasksTable from '../features/flasks/FlasksTable';
-import { useFetchValidatedTableQuery } from '../lib/hooks';
+import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import LineGraph from '../features/charts/LineGraph';
 import { baseUrl } from '../../configs';
 import TimeLineGraph from '../ui/TimeLineGraph';
@@ -18,7 +18,11 @@ import BookmarkedCellbankGraph from '../features/charts/BookmarkedCellbankGraph'
 import { flasksInfoArraySchema } from '../features/flasks/flasks-types';
 
 export default function ChartsPage() {
-  const {data: flasks, isLoading, error} = useFetchValidatedTableQuery({
+  const {
+    data: flasks,
+    isLoading,
+    error,
+  } = useFetchValidatedTableQuery({
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });
@@ -113,7 +117,7 @@ export default function ChartsPage() {
           />
         )}
 
-        {allCellbankGraphData?.length &&(
+        {allCellbankGraphData?.length && (
           <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} />
         )}
         {singleCellbankGraphData?.length && (

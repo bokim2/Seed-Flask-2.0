@@ -15,7 +15,7 @@ import {
   createFlaskSchema,
   initialCreateFlasksForm,
 } from './flasks-types';
-import { useCreateValidatedRowMutation } from '../../lib/hooks';
+import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 
 const BulkInputTextArea = styled.textarea`
   background-color: transparent;
@@ -35,7 +35,7 @@ export const ButtonsContainer = styled.div`
   gap: 1rem;
 `;
 
-export default function FlasksMultiInputForm({popularOptions}) {
+export default function FlasksMultiInputForm({ popularOptions }) {
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<TinitialCreateFlasksForm[] | any[]>([
     initialCreateFlasksForm,

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { baseUrl } from '../../configs';
 import { cellbanksValidFields } from '../features/cellbanks/cellbanks-types';
-import { formatColumnName } from '../lib/hooks';
+import { formatColumnName } from '../hooks/hooks';
 
 export function useTextInputSearch() {
   // Keep search criteria as an array of objects { field, text }
@@ -17,13 +17,15 @@ export function useTextInputSearch() {
   const performInputTextSearch = async (tableName) => {
     // Construct URLSearchParams with multiple searchField and searchText entries
     const params = new URLSearchParams();
-    searchCriteria.forEach(criterion => {
+    searchCriteria.forEach((criterion) => {
       params.append('searchField[]', criterion.field);
       params.append('searchText[]', criterion.text);
     });
 
     try {
-      const response = await fetch(`${baseUrl}/api/${tableName}/search?${params}`);
+      const response = await fetch(
+        `${baseUrl}/api/${tableName}/search?${params}`
+      );
       if (!response.ok) {
         throw new Error('Failed to perform input text search');
       }
@@ -42,9 +44,9 @@ export function useTextInputSearch() {
   };
 }
 
-
-export default function SearchForm({setSearchedData, tableName}) {
-  const { searchCriteria, updateSearchCriteria, performInputTextSearch } = useTextInputSearch();
+export default function SearchForm({ setSearchedData, tableName }) {
+  const { searchCriteria, updateSearchCriteria, performInputTextSearch } =
+    useTextInputSearch();
 
   const handleAddCriteria = () => {
     updateSearchCriteria([...searchCriteria, { field: '', text: '' }]);
@@ -71,7 +73,7 @@ export default function SearchForm({setSearchedData, tableName}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = await performInputTextSearch(tableName);
-    console.log('performInputTextSearch', data)
+    console.log('performInputTextSearch', data);
     setSearchedData(data);
     console.log(data); // Do something with the data
   };
@@ -86,9 +88,17 @@ export default function SearchForm({setSearchedData, tableName}) {
             placeholder="Field"
           /> */}
 
-          <select name="selectField" id="selectField" onChange={(e) => handleFieldChange(index, e.target.value)}>
-            {cellbanksValidFields.map((field)=> {
-                return <option key={field} value={field}>{formatColumnName(field)}</option>
+          <select
+            name="selectField"
+            id="selectField"
+            onChange={(e) => handleFieldChange(index, e.target.value)}
+          >
+            {cellbanksValidFields.map((field) => {
+              return (
+                <option key={field} value={field}>
+                  {formatColumnName(field)}
+                </option>
+              );
             })}
           </select>
           <input
@@ -96,10 +106,14 @@ export default function SearchForm({setSearchedData, tableName}) {
             onChange={(e) => handleTextChange(index, e.target.value)}
             placeholder="Search Text"
           />
-          <button type="button" onClick={() => handleRemoveCriteria(index)}>Remove</button>
+          <button type="button" onClick={() => handleRemoveCriteria(index)}>
+            Remove
+          </button>
         </div>
       ))}
-      <button type="button" onClick={handleAddCriteria}>Add Search Criterion</button>
+      <button type="button" onClick={handleAddCriteria}>
+        Add Search Criterion
+      </button>
       <button type="submit">Search</button>
     </form>
   );

@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { baseUrl } from '../../../configs';
+import { baseUrl } from '../configs';
 import {
   TCreateCellbankSchema,
   cellbanksArraySchema,
   createCellbankSchema,
   initialEditCellbankForm,
   updateCellbankSchema,
-} from './cellbanks-types';
-import { getUtcTimestampFromLocalTime } from '../../lib/hooks';
+} from '../src/features/cellbanks/cellbanks-types';
+import { getUtcTimestampFromLocalTime } from '../src/hooks/hooks';
 
 // Utility or API service functions
 

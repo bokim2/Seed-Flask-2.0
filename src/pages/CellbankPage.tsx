@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addCellbankBookmark } from '../features/ui-state/bookmarksSlice';
 import { RootState } from '../lib/store';
 import Button from '../ui/Button';
-import {  useFetchValidatedTableQuery } from '../lib/hooks';
+import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { CircularButton } from '../pages/HomePage';
 import { UserButton } from '../styles/UtilStyles';
 
-import { useOnClickOutside } from '../lib/hooks';
+import { useOnClickOutside } from '../hooks/hooks';
 import InfoButtonForModal from './InfoButtonForModal';
 
 const StyledFooter = styled.footer`
@@ -17,7 +17,9 @@ export default function Footer() {
     <StyledFooter>
       {/* <StyledImg src="images/info/info.png" alt="info button" /> */}
 
-      <InfoButtonForModal imgSrc="images/info/book.png" alt="info button">{<div>'hello test'</div>}</InfoButtonForModal>
+      <InfoButtonForModal imgSrc="images/info/book.png" alt="info button">
+        {<div>'hello test'</div>}
+      </InfoButtonForModal>
     </StyledFooter>
   );
 }

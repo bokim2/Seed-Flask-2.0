@@ -16,13 +16,14 @@ import {
   initialEditSampleForm,
   updateSampleSchema,
 } from './samples-types';
-import { useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
+import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
+import { useUpdateRowMutation } from '../../hooks/table-hooks/useUpdateRowMutation';
 
 export default function SamplesTable({ samples }) {
   console.log('samples in samplestable', samples);
-  const [editedForm, setEditedForm] = useState<TUpdateSampleForm | TinitialEditSampleForm>(
-    initialEditSampleForm
-  );
+  const [editedForm, setEditedForm] = useState<
+    TUpdateSampleForm | TinitialEditSampleForm
+  >(initialEditSampleForm);
   const [editingId, setEditingId] = useState<number | null>(null); // id of edited sample
 
   // update row
@@ -49,8 +50,8 @@ export default function SamplesTable({ samples }) {
     const typedEditedForm = {
       ...editedForm,
       od600: Number(editedForm.od600),
-      completed: editedForm.completed === 'true'
-    }
+      completed: editedForm.completed === 'true',
+    };
     submitEditedSampleForm(typedEditedForm);
     setEditingId(null);
   };
@@ -82,18 +83,19 @@ export default function SamplesTable({ samples }) {
           <tbody>
             {samples &&
               samples?.map((rowData) => {
-                return <SamplesRow 
-                key={rowData.sample_id} 
-                rowData={rowData}
-                editedForm={editedForm}
-                setEditedForm={setEditedForm}
-                setEditingId={setEditingId}
-                editingId={editingId}
-                deleteSample={deleteSample}
-                isPendingUpdate={isPendingUpdate}
-                isPendingDelete={isPendingDelete}
-                
-                />;
+                return (
+                  <SamplesRow
+                    key={rowData.sample_id}
+                    rowData={rowData}
+                    editedForm={editedForm}
+                    setEditedForm={setEditedForm}
+                    setEditingId={setEditingId}
+                    editingId={editingId}
+                    deleteSample={deleteSample}
+                    isPendingUpdate={isPendingUpdate}
+                    isPendingDelete={isPendingDelete}
+                  />
+                );
               })}
           </tbody>
         </StyledTable>
