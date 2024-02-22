@@ -6,7 +6,7 @@ import {
   TableDataCell,
   TableRow,
 } from '../../styles/UtilStyles';
-import { displayLocalTime } from '../../lib/hooks';
+import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditSampleForm } from './samples-types';
 import { set } from 'date-fns';
 import Button from '../../ui/Button';
@@ -112,8 +112,7 @@ function SamplesEditForm({
             placeholder="flask id"
             required
             value={editedForm.flask_id}
-          >
-          </EditTextArea>
+          ></EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="od600">
@@ -124,8 +123,7 @@ function SamplesEditForm({
             placeholder="od600"
             required
             value={editedForm.od600}
-          >
-          </EditTextArea>
+          ></EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="time since inoc hr">
@@ -135,24 +133,22 @@ function SamplesEditForm({
         <TableDataCell data-cell="end date/time">
           <EditTextArea
             name="human_readable_date"
-            onChange={handleChange} 
+            onChange={handleChange}
             placeholder="YYYY-MM-DD HH:MM AM/PM"
             required
             value={editedForm.human_readable_date}
-          >
-          </EditTextArea>
+          ></EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="completed">
-          <select id="completed" name="completed" 
-          value={editedForm.completed} 
-          onChange={handleChange}>
-            <option value="true" >
-              completed
-            </option>
-            <option value="false" >
-              in-progress
-            </option>
+          <select
+            id="completed"
+            name="completed"
+            value={editedForm.completed}
+            onChange={handleChange}
+          >
+            <option value="true">completed</option>
+            <option value="false">in-progress</option>
           </select>
         </TableDataCell>
 

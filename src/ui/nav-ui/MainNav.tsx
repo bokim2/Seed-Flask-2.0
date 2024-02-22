@@ -5,7 +5,7 @@ import NavList from './NavList';
 import { NavLink } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../../lib/types';
-import { useOnClickOutside } from '../../lib/hooks';
+import { useOnClickOutside } from '../../hooks/hooks';
 import {
   LinkButton,
   NavMenuButton,

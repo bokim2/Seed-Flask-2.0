@@ -1,6 +1,6 @@
 import React from 'react';
 import FlasksTable from '../features/flasks/FlasksTable';
-import { useFetchValidatedTableQuery, } from '../lib/hooks';
+import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 
 import styled from 'styled-components';
 import LoaderBar from '../ui/LoaderBar';

@@ -7,12 +7,10 @@ import {
 } from '../styles/UtilStyles';
 import { baseUrl } from '../../configs';
 import SamplesTable from '../features/samples/SamplesTable';
-import { useFetchValidatedTableQuery } from '../lib/hooks';
+import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
-import {
-  samplesInfoArraySchema,
-} from '../lib/types';
+import { samplesInfoArraySchema } from '../lib/types';
 import SamplesMultiInputForm from '../features/samples/SamplesMultiInputForm';
 
 export default function SamplePage() {
@@ -47,7 +45,7 @@ export default function SamplePage() {
     zodSchema: samplesInfoArraySchema,
   });
 
-  const samplesAll = samples?.pages.map(page => page.data).flat()  || [];
+  const samplesAll = samples?.pages.map((page) => page.data).flat() || [];
 
   return (
     <PageContainer id="SamplePageContainer">

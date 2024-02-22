@@ -9,7 +9,7 @@ import {
 import Button from '../../ui/Button';
 import styled, { css } from 'styled-components';
 import { TTableRow } from '../../lib/types';
-import { displayLocalTime } from '../../lib/hooks';
+import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditFlasksForm } from '../flasks/flasks-types';
 import { initialEditCellbankForm } from './cellbanks-types';
 
@@ -70,9 +70,7 @@ export default function CellbanksRow({
           {notes}
         </TableDataCell>
 
-        <TableDataCell data-cell="date">
-          {human_readable_date}
-        </TableDataCell>
+        <TableDataCell data-cell="date">{human_readable_date}</TableDataCell>
 
         <TableDataCell data-cell="user">{username}</TableDataCell>
 

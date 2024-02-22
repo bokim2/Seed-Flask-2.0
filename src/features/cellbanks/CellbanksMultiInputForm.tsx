@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { baseUrl } from '../../../configs';
 import styled from 'styled-components';
 import {
   FormLabel,
@@ -12,14 +11,16 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
+  createCellbankColumnsArray,
   createCellbankSchema,
-  initialEditCellbankForm,
+  initialCreateCellbankForm,
 } from './cellbanks-types';
 import { TCreateCellbankSchema } from './cellbanks-types';
-import { useCreateValidatedRowMutation } from '../../lib/hooks';
+
 import ErrorMessage from '../../ui/ErrorMessage';
-import PopularOptionsSelectors from '../../ui/PopularOptionsSelectors';
 import { MultiInput } from '../samples/SamplesMultiInputForm';
+import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
+import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 
 export const ButtonsContainer = styled.div`
   display: flex;
@@ -28,29 +29,6 @@ export const ButtonsContainer = styled.div`
 `;
 
 export default function CellbanksMultiInputForm() {
-  const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
-  const [bulkForm, setBulkForm] = useState<TCreateCellbankSchema[] | []>([
-    initialEditCellbankForm,
-  ]); // data for submitting cellbank(s)
-  // console.log(bulkForm, 'bulkForm')
-  
-    // update bulkForm when bulkTextAreaInput changes
-    useEffect(() => {
-      if (bulkTextAreaInput === '') return;
-      const pastedInputsArray = bulkTextAreaInput.split('\n').map((row) => {
-        const singleRow = row.split('\t');
-        const rowData = {
-          strain: singleRow[0],
-          target_molecule: singleRow[1],
-          project: singleRow[2],
-          description: singleRow[3],
-          notes: singleRow[3],
-        };
-        return rowData;
-      });
-      setBulkForm(pastedInputsArray);
-    }, [bulkTextAreaInput]);
-
   // create a row
   const {
     mutate: createCellbankMutation,
@@ -61,64 +39,18 @@ export default function CellbanksMultiInputForm() {
     zodSchema: createCellbankSchema,
   });
 
-  const handleSubmit = async (e, bulkForm) => {
-    e.preventDefault();
-    const mutationPromises = bulkForm.map((row) => createCellbankMutation(row));
-    try {
-      await Promise.all(mutationPromises);
-      setBulkForm([initialEditCellbankForm]);
-      setBulkTextAreaInput('');
-    } catch (err) {
-      console.log(err, 'error in bulkForm mutation submit');
-    }
-  };
-
-  const handleChange = (e, rowNumber: number) => {
-    setBulkForm((prev) => {
-      return prev.map((row, i) => {
-        if (i === rowNumber) {
-          return { ...row, [e.target.name]: e.target.value };
-        }
-        return row;
-      });
-    });
-  };
-
-  const handleClearForm = () => {
-    setBulkForm([initialEditCellbankForm]);
-    setBulkTextAreaInput('');
-  };
-
-  // for popular options
-  // const popularOptionsArray: any = [];
-  // for (let i = 0; i < 5; i++) {
-  //   // console.log('popularOptions in loop', popularOptions)
-  //   popularOptionsArray.push(
-  //     <tr key={i}>
-  //       <PopularOptionsSelectors
-  //         popularOptions={popularOptions}
-  //         columns={[
-  //           'strain',
-  //           'target_molecule',
-  //           'project',
-  //           'description',
-  //           'notes',
-  //         ]}
-  //         i={i}
-  //         selectPopularOption={selectPopularOption}
-  //       ></PopularOptionsSelectors>
-  //     </tr>
-  //   );
-  // }
-
-  // function selectPopularOption(column, value) {
-  //   // console.log('value, column',value, column)
-  //   if (bulkForm.length > 1) return;
-  //   setBulkForm((prev) =>
-  //     prev.map((singleForm) => ({ ...singleForm, [column]: value }))
-  //   );
-  // }
-  //
+  const {
+    bulkTextAreaInput,
+    setBulkTextAreaInput,
+    bulkForm,
+    handleSubmit,
+    handleChange,
+    handleClearForm,
+  } = useBulkInputForm<TCreateCellbankSchema>({
+    createTableColumnsArray: createCellbankColumnsArray,
+    createTableRowMutation: createCellbankMutation,
+    initialCreateCellbankForm: initialCreateCellbankForm,
+  });
 
   return (
     <>
@@ -236,7 +168,6 @@ export default function CellbanksMultiInputForm() {
 //   try {
 //     e.preventDefault();
 //     console.log('submitting', 'form', form, 'bulkform', bulkForm);
-//     await fetch(`${baseUrl}/api/cellbanks`, {
 //       method: 'POST',
 //       headers: {
 //         'content-type': 'application/json',

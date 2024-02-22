@@ -15,13 +15,13 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 
-import { useCreateValidatedRowMutation } from '../../lib/hooks';
 import {
   TCreateSample,
   TinitialEditSampleForm,
   createSampleSchema,
   initialEditSampleForm,
 } from './samples-types';
+import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 
 const BulkInputTextArea = styled.textarea`
   background-color: transparent;
@@ -43,7 +43,7 @@ export const ButtonsContainer = styled.div`
   gap: 1rem;
 `;
 
-export default function SamplesMultiInputForm({popularOptions}) {
+export default function SamplesMultiInputForm({ popularOptions }) {
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<
     TCreateSample[] | TinitialEditSampleForm[]

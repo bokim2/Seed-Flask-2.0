@@ -1,8 +1,4 @@
 import React, { useState } from 'react';
-import {
-  useDeleteRowMutation,
-  useUpdateRowMutation,
-} from '../../lib/hooks';
 import styled from 'styled-components';
 import FlasksRow from './FlasksRow';
 import {
@@ -22,6 +18,8 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from './flasks-types';
+import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
+import { useUpdateRowMutation } from '../../hooks/table-hooks/useUpdateRowMutation';
 
 export default function FlasksTable({ flasks }) {
   console.log('flaks in flaskstable', flasks);
