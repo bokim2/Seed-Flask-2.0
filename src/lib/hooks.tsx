@@ -306,6 +306,7 @@ export function useUpdateRowMutation({
 
 // submit edited row form - submitting in Table in StyledForm
 // might want to erase this, it doesn't add anything.  just move it into styledForm
+// actually it helped w typescript errors.  keep for now. 
 export function handleEditFormSubmit(
   e,
   editedForm,
@@ -447,6 +448,30 @@ export function useOnClickOutside(refs, handlerFn) {
     };
   }, [refs, handlerFn]);
 }
+
+// update table data based on filter and sort settings
+export function useFilterSortTableData({
+  cellbanks,
+  searchedData,
+  sortColumn,
+  setFilteredAndSortedData,
+}){
+  // update selected data based on filter and sort settings
+  useEffect(() => {
+    // console.log('in useEffect', cellbanks, searchedData, sortColumn);
+    const updatedData = filteredTableData(
+      cellbanks,
+      searchedData,
+      sortColumn,
+      'date_timestamptz'
+    );
+    setFilteredAndSortedData(updatedData);
+    // console.log('useEffect in cellbanks table', cellbanks);
+  }, [cellbanks, searchedData, sortColumn, setFilteredAndSortedData]);
+
+}
+
+
 
 // TIMEZONE CONVERSION FUNCTION
 

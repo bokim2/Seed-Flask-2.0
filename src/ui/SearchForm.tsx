@@ -14,7 +14,7 @@ export function useTextInputSearch() {
     setSearchCriteria(criteria);
   };
 
-  const performInputTextSearch = async () => {
+  const performInputTextSearch = async (tableName) => {
     // Construct URLSearchParams with multiple searchField and searchText entries
     const params = new URLSearchParams();
     searchCriteria.forEach(criterion => {
@@ -23,7 +23,7 @@ export function useTextInputSearch() {
     });
 
     try {
-      const response = await fetch(`${baseUrl}/api/cellbanks/search?${params}`);
+      const response = await fetch(`${baseUrl}/api/${tableName}/search?${params}`);
       if (!response.ok) {
         throw new Error('Failed to perform input text search');
       }
@@ -43,7 +43,7 @@ export function useTextInputSearch() {
 }
 
 
-export default function SearchForm({setSearchedData}) {
+export default function SearchForm({setSearchedData, tableName}) {
   const { searchCriteria, updateSearchCriteria, performInputTextSearch } = useTextInputSearch();
 
   const handleAddCriteria = () => {
@@ -70,7 +70,7 @@ export default function SearchForm({setSearchedData}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = await performInputTextSearch();
+    const data = await performInputTextSearch(tableName);
     console.log('performInputTextSearch', data)
     setSearchedData(data);
     console.log(data); // Do something with the data

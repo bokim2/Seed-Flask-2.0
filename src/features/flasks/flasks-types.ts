@@ -22,9 +22,9 @@ export type TFlasksInfo = z.infer<typeof flasksInfoSchema>;
 
 // create a flask
 export const createFlaskSchema = z.object({
-  cell_bank_id: z.number()  || null,
-  vessel_type: z.string()  || null,
-  media: z.string()  || null,
+  cell_bank_id: z.number()|| null,
+  vessel_type: z.string().trim()  || null,
+  media: z.string().trim()  || null,
   media_ml: z.number()  || null,
   inoculum_ul: z.number()  || null,
   temp_c: z.number()  || null,

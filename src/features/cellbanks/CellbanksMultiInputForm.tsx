@@ -28,14 +28,28 @@ export const ButtonsContainer = styled.div`
 `;
 
 export default function CellbanksMultiInputForm() {
-  // console.log('popularOptions in cellbanks multi input form', popularOptions);
-
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<TCreateCellbankSchema[] | []>([
     initialEditCellbankForm,
   ]); // data for submitting cellbank(s)
   // console.log(bulkForm, 'bulkForm')
-
+  
+    // update bulkForm when bulkTextAreaInput changes
+    useEffect(() => {
+      if (bulkTextAreaInput === '') return;
+      const pastedInputsArray = bulkTextAreaInput.split('\n').map((row) => {
+        const singleRow = row.split('\t');
+        const rowData = {
+          strain: singleRow[0],
+          target_molecule: singleRow[1],
+          project: singleRow[2],
+          description: singleRow[3],
+          notes: singleRow[3],
+        };
+        return rowData;
+      });
+      setBulkForm(pastedInputsArray);
+    }, [bulkTextAreaInput]);
 
   // create a row
   const {
@@ -45,25 +59,7 @@ export default function CellbanksMultiInputForm() {
   } = useCreateValidatedRowMutation({
     tableName: 'cellbanks',
     zodSchema: createCellbankSchema,
-    // apiEndpoint: 'cellbank',
   });
-
-  // update bulkForm when bulkTextAreaInput changes
-  useEffect(() => {
-    if (bulkTextAreaInput === '') return;
-    const pastedInputsArray = bulkTextAreaInput.split('\n').map((row) => {
-      const singleRow = row.split('\t');
-      const rowData = {
-        strain: singleRow[0],
-        target_molecule: singleRow[1],
-        project: singleRow[2],
-        description: singleRow[3],
-        notes: singleRow[3],
-      };
-      return rowData;
-    });
-    setBulkForm(pastedInputsArray);
-  }, [bulkTextAreaInput]);
 
   const handleSubmit = async (e, bulkForm) => {
     e.preventDefault();

@@ -27,12 +27,14 @@ export type TCellbank = z.infer<typeof cellbankSchema>;
 export type TCellbanks = z.infer<typeof cellbanksArraySchema>;
 
 // create a cellbank
+export const createCellbankColumnsArray = ['strain', 'target_molecule', 'project', 'description', 'notes',]
+
 export const createCellbankSchema = z.object({
-  strain: z.string(),
-  notes: z.string(),
-  target_molecule: z.string(),
-  project: z.string(),
-  description: z.string(),
+  strain: z.string().trim(),
+  notes: z.string().trim(),
+  target_molecule: z.string().trim(),
+  project: z.string().trim(),
+  description: z.string().trim(),
 });
 
 export type TCreateCellbankSchema = z.infer<typeof createCellbankSchema>;
@@ -64,7 +66,7 @@ export const CellbankSearchParamsSchema = z.object({
     'strain',
     'target_molecule',
     'project',
-    'details',
+    'description',
     'notes',
     'date_timestampz',
     'username'
@@ -81,7 +83,7 @@ export const cellbanksValidFields = [
   'strain',
   'project',
   'target_molecule',
-  'details',
+  'description',
   'notes',
   'username',
   'date_timestampz',
@@ -96,5 +98,16 @@ export type TCellbanksColumns =
   | 'description'
   | 'notes'
   | 'date_timestampz'
-  | 'username'
-  | 'human_readable_date';
+  | 'human_readable_date'
+  | 'username';
+
+  export const cellbanksTableHeaderCellsArray = [
+    'cell_bank_id',
+    'strain',
+    'target_molecule',
+    'project',
+    'description',
+    'notes',
+    'human_readable_date',
+    'username',
+  ];

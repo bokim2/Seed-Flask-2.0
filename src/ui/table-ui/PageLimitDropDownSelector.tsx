@@ -4,7 +4,7 @@ import React from 'react';
 export default function PageLimitDropDownSelector({
   handleChoosePageLimit,
   pageLimitSetting,
-//   tableName,
+  tableName,
   
 }) {
   const pageLimitOtions = [10, 20, 50, 100];
@@ -16,7 +16,7 @@ export default function PageLimitDropDownSelector({
       value={pageLimitSetting}
       onChange={(e) => {
         handleChoosePageLimit(e.target.value)
-        // queryClient.invalidateQueries({ queryKey: [tableName] });
+        queryClient.removeQueries({ queryKey: [tableName] });
     }}
     >
       {pageLimitOtions.map((pageLimitOption) => (
