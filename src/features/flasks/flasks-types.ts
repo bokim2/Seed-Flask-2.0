@@ -6,10 +6,10 @@ export const flasksInfoSchema = z.object({
   cell_bank_id: z.coerce.number() || null,
   inoculum_ul: z.number() || null,
   media: z.string() || null,
-  media_ml: z.number() || null,
-  rpm: z.number(),
+  media_ml: z.coerce.number() || null,
+  rpm: z.coerce.number(),
   start_date: z.string(),
-  temp_c: z.number(),
+  temp_c: z.coerce.number(),
   vessel_type: z.string(),
 
   // cellbank columns

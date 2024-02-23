@@ -9,85 +9,48 @@ import {
   MultiInputFormBody,
   MultiInput,
   ButtonsContainer,
+  CreateEntryTable,
+  CreateEntryTableRow,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 
 import {
   TCreateSample,
   TinitialEditSampleForm,
+  createSampleColumnsArray,
   createSampleSchema,
+  initialCreateSampleForm,
   initialEditSampleForm,
 } from './samples-types';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
+import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 
 export default function SamplesMultiInputForm() {
-  const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
-  const [bulkForm, setBulkForm] = useState<
-    TCreateSample[] | TinitialEditSampleForm[]
-  >([initialEditSampleForm]); // data for submitting cellbank(s)
 
-  // const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
-
+  // create a row
   const {
     mutate: createSampleMutation,
     isPending,
-    error,
+    error: createError,
   } = useCreateValidatedRowMutation({
     tableName: 'samples',
     zodSchema: createSampleSchema,
-    // apiEndpoint: 'cellbank',
   });
+  
+  const {
+    bulkTextAreaInput,
+    setBulkTextAreaInput,
+    bulkForm,
+    handleSubmit,
+    handleChange,
+    handleClearForm,
+  } = useBulkInputForm<TCreateSample>({
+    createTableColumnsArray: createSampleColumnsArray,
+    createTableRowMutation: createSampleMutation,
+    initialCreateRowForm: initialCreateSampleForm,
+  });
+  
 
-  // update bulkForm when bulkTextAreaInput changes
-  useEffect(() => {
-    if (bulkTextAreaInput === '') return;
-    const pastedInputsArray = bulkTextAreaInput.split('\n').map((row) => {
-      const singleRow = row.split('\t');
-      const rowData = {
-        flask_id: Number(singleRow[0]),
-        od600: Number(singleRow[1]),
-        completed: Boolean(singleRow[2]),
-        // notes: singleRow[3],
-      };
-      return rowData;
-    });
-    setBulkForm(pastedInputsArray);
-  }, [bulkTextAreaInput]);
-
-  const handleSubmit = async (e, bulkForm) => {
-    e.preventDefault();
-
-    const mutationPromises = bulkForm.map((row) =>
-      createSampleMutation({
-        flask_id: Number(row.flask_id),
-        od600: Number(row.od600),
-        completed: Boolean(row.completed),
-      })
-    );
-    try {
-      await Promise.all(mutationPromises);
-      setBulkForm([initialEditSampleForm]);
-      setBulkTextAreaInput('');
-    } catch (err) {
-      console.log(err, 'error in bulkForm mutation submit');
-    }
-  };
-
-  const handleChange = (e, rowNumber: number) => {
-    setBulkForm((prev) => {
-      return prev.map((row, i) => {
-        if (i === rowNumber) {
-          return { ...row, [e.target.name]: e.target.value };
-        }
-        return row;
-      });
-    });
-  };
-
-  const handleClearForm = () => {
-    setBulkForm([initialEditSampleForm]);
-    setBulkTextAreaInput('');
-  };
 
   return (
     <>
@@ -106,15 +69,12 @@ export default function SamplesMultiInputForm() {
           console.log('bulkForm in submit', bulkForm);
         }}
       >
-        <StyledTable>
+        <CreateEntryTable>
           <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
-                <TableRow key={i}>
+                <CreateEntryTableRow key={i}>
                   <FormInputCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="flask_id">flask_id</FormLabel>
-                    )}
                     <MultiInput
                       id="flask_id"
                       name="flask_id"
@@ -122,26 +82,26 @@ export default function SamplesMultiInputForm() {
                       onChange={(e) => handleChange(e, i)}
                       required
                       autoFocus
-                      value={bulkForm[i].flask_id}
-                    />
+                      value={bulkForm[i].flask_id || ''}
+                      />
+                      {i == 0 && (
+                        <FormLabel htmlFor="flask_id">flask_id</FormLabel>
+                      )}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && <FormLabel htmlFor="od600">od600</FormLabel>}
                     <MultiInput
                       id="od600"
                       name="od600"
                       onChange={(e) => handleChange(e, i)}
                       placeholder="od600 (e.g. 3.4)"
                       required
-                      value={bulkForm[i].od600}
-                    />
+                      value={bulkForm[i].od600 || ''}
+                      />
+                      {i == 0 && <FormLabel htmlFor="od600">od600</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="completed">completed</FormLabel>
-                    )}
                     <MultiInput
                       id="completed"
                       name="completed"
@@ -149,12 +109,15 @@ export default function SamplesMultiInputForm() {
                       placeholder="completed"
                       required
                       value={bulkForm[i].completed ? 'true' : 'false'}
-                    />
+                      />
+                      {i == 0 && (
+                        <FormLabel htmlFor="completed">completed</FormLabel>
+                      )}
                   </FormInputCell>
-                </TableRow>
+                </CreateEntryTableRow>
               ))}
           </MultiInputFormBody>
-        </StyledTable>
+        </CreateEntryTable>
         <ButtonsContainer>
           <Button $size={'small'} type="submit" disabled={isPending}>
             Submit

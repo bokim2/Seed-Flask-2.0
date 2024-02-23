@@ -21,6 +21,7 @@ import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from './flasks-types';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import { useEditTableRowForm, useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
+import ErrorMessage from '../../ui/ErrorMessage';
 
 export default function FlasksTable({ flasks }) {
   // console.log('flaks in flaskstable', flasks);
@@ -76,6 +77,12 @@ export default function FlasksTable({ flasks }) {
         cellbank data
       </Button>
 
+      {/* loading and error messages */}
+      {isPendingUpdate && <h1>edit is pending Update...</h1>}
+      {isPendingDelete && <h1>edit is pending Delete...</h1>}
+      {updateError?.message && <ErrorMessage error={updateError} />}
+      {deleteError?.message && <ErrorMessage error={deleteError} />}
+
       <StyledForm
         // onSubmit={(e) => {
         //   e.preventDefault();
@@ -93,6 +100,15 @@ export default function FlasksTable({ flasks }) {
         //   };
         //   handleEditFormSubmit(e, formattedEditedForm);
         // }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleEditFormSubmit(
+            e,
+            editedForm,
+            submitEditedRowForm,
+            setEditingId
+          );
+        }}
       >
         <TableContainer>
           <StyledTable>

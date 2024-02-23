@@ -52,7 +52,7 @@ export default function SamplePage() {
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
 
       <InnerPageContainer id="SampleInnerPageContainer">
-        {/* <SamplesMultiInputForm popularOptions={samples?.popularOptions}/> */}
+        <SamplesMultiInputForm />
         {error && <ErrorMessage error={error} />}
 
         {!isLoading && samplesAll && <SamplesTable samples={samplesAll} />}

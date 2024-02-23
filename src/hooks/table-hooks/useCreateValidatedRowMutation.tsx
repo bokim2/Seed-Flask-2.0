@@ -32,6 +32,7 @@ export function useCreateValidatedRowMutation({
   // create a row
   export async function createRow(form, tableName, zodSchema) {
     const validationResult = zodSchema.safeParse(form);
+    console.log('validationResult in createRow', validationResult);
     if (!validationResult.success) {
       console.error('createRow validation error', validationResult.error);
       throw new Error(
@@ -47,7 +48,7 @@ export function useCreateValidatedRowMutation({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...form,
+          ...validationResult.data,
         }),
       });
       console.log('res in createRow', response);

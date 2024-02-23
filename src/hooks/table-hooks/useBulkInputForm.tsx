@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 export function useBulkInputForm<TCreateTableRowSchema>({
   createTableColumnsArray,
   createTableRowMutation,
-  initialCreateCellbankForm,
+  initialCreateRowForm,
 }) {
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<TCreateTableRowSchema[]>([
-    initialCreateCellbankForm,
+    initialCreateRowForm,
   ]); // data for submitting cellbank(s)
   // console.log(bulkForm, 'bulkForm')
 
@@ -47,7 +47,7 @@ export function useBulkInputForm<TCreateTableRowSchema>({
     const mutationPromises = bulkForm.map((row) => createTableRowMutation(row));
     try {
       await Promise.all(mutationPromises);
-      setBulkForm([initialCreateCellbankForm]);
+      setBulkForm([initialCreateRowForm]);
       setBulkTextAreaInput('');
     } catch (err) {
       console.log(err, 'error in bulkForm mutation submit');
@@ -70,7 +70,7 @@ export function useBulkInputForm<TCreateTableRowSchema>({
   };
 
   const handleClearForm = () => {
-    setBulkForm([initialCreateCellbankForm]);
+    setBulkForm([initialCreateRowForm]);
     setBulkTextAreaInput('');
   };
 

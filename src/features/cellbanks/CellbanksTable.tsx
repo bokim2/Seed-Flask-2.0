@@ -57,6 +57,13 @@ export default function CellbanksTable({
     dateColumnName: 'date_timestamptz',
   });
 
+    // delete cellbank
+    const {
+      mutate: deleteCellbank,
+      isPending: isPendingDelete,
+      error: deleteError,
+    } = useDeleteRowMutation({ tableName: 'cellbanks' });
+
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
   const [searchedData, setSearchedData] = useState<TCellbanks>([]);
   // state of edited form
@@ -70,26 +77,6 @@ export default function CellbanksTable({
   const [filteredAndSortedData, setFilteredAndSortedData] =
     useState<TCellbanks>([]);
 
-  // update/edit a row
-  // const {
-  //   mutate: submitEditedCellbankForm,
-  //   isPending: isPendingUpdate,
-  //   error: updateError,
-  // } = useUpdateRowMutation({
-  //   tableName: 'cellbanks',
-  //   zodSchema: updateCellbankSchema,
-  //   initialEditForm: initialEditCellbankForm,
-  //   setEditedForm: setEditedForm,
-  //   idColumnName: 'cell_bank_id',
-  //   dateColumnName: 'date_timestamptz',
-  // });
-
-  // delete cellbank
-  const {
-    mutate: deleteCellbank,
-    isPending: isPendingDelete,
-    error: deleteError,
-  } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
   // sort selected column
   const { sortColumn, handleSortColumn } =
