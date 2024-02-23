@@ -4,8 +4,8 @@ import FlasksRow from './FlasksRow';
 import {
   TCreateFlask,
   createFlaskSchema,
-  editFlaskSchema,
   initialEditFlasksForm,
+  updateFlaskSchema,
 } from '../flasks/flasks-types';
 import {
   Caption,
@@ -20,7 +20,7 @@ import {
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
 import ChartsRow from './FlasksRow';
-import { useUpdateRowMutation } from '../../hooks/table-hooks/useUpdateRowMutation';
+import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 
 export default function ChartsTable({ flasks }) {
@@ -31,7 +31,7 @@ export default function ChartsTable({ flasks }) {
   const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } =
     useUpdateRowMutation({
       tableName: 'flasks',
-      zodSchema: editFlaskSchema,
+      zodSchema: updateFlaskSchema,
       initialEditForm: initialCreateFlasksForm,
       setEditedForm,
       idColumnName: 'flask_id',

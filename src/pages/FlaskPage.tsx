@@ -10,16 +10,11 @@ import {
   PageContainer,
 } from '../styles/UtilStyles';
 import ErrorMessage from '../ui/ErrorMessage';
-import {
-  flasksInfoArraySchema,
-  flasksInfoSchema,
-} from '../features/flasks/flasks-types';
+import { flasksInfoArraySchema } from '../features/flasks/flasks-types';
 import FlasksMultiInputForm from '../features/flasks/FlasksMultiInputForm';
 import Button from '../ui/Button';
 
 export default function FlaskPage() {
-  // const [flasks, isLoading, error] = useFlasks();
-
   const {
     data: flasks,
     isLoading,
@@ -31,24 +26,17 @@ export default function FlaskPage() {
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });
-  // console.log('flasks in flaskPAGE', flasks);
 
-  // const [flask] = useFlask(1);
-  // console.log('flask in flaskPAGE', flask);
-
-  const flasksAll = flasks?.pages.map((page) => page.data).flat();
+  const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
   console.log(flasksAll, 'flasksAll');
+
   return (
     <PageContainer id="FlaskPageContainer">
-      <LoaderWrapper>
-        {/* <LoaderBar /> */}
-        {isLoading && <LoaderBar />}
-        {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
-      </LoaderWrapper>
+      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
       <InnerPageContainer id="InnerFlaskPageContainer">
-        {/* <LoaderBar /> */}
-        {/* <FlasksMultiInputForm popularOptions={flasksAlls?.popularOptions}/> */}
         {error && <ErrorMessage error={error} />}
+        
+        <FlasksMultiInputForm />
         {flasksAll && flasksAll.length > 0 && !isLoading && (
           <FlasksTable flasks={flasksAll} />
         )}

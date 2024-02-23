@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import FlasksRow from './FlasksRow';
 import {
   TCreateFlask,
+  TUpdateFlaskForm,
   createFlaskSchema,
-  editFlaskSchema,
   initialEditFlasksForm,
+  updateFlaskSchema,
 } from './flasks-types';
 import {
   Caption,
@@ -19,22 +20,46 @@ import {
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from './flasks-types';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
-import { useUpdateRowMutation } from '../../hooks/table-hooks/useUpdateRowMutation';
+import { useEditTableRowForm, useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
 
 export default function FlasksTable({ flasks }) {
-  console.log('flaks in flaskstable', flasks);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editedForm, setEditedForm] = useState(initialEditFlasksForm);
+  // console.log('flaks in flaskstable', flasks);
+  // const [editingId, setEditingId] = useState<number | null>(null);
+  // const [editedForm, setEditedForm] = useState(initialEditFlasksForm);
 
-  const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } =
-    useUpdateRowMutation({
-      tableName: 'flasks',
-      zodSchema: editFlaskSchema,
-      initialEditForm: initialCreateFlasksForm,
-      setEditedForm,
-      idColumnName: 'flask_id',
-      dateColumnName: 'start_date',
-    });
+  // const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } =
+  //   useUpdateRowMutation({
+  //     tableName: 'flasks',
+  //     zodSchema: editFlaskSchema,
+  //     initialEditForm: initialCreateFlasksForm,
+  //     setEditedForm,
+  //     idColumnName: 'flask_id',
+  //     dateColumnName: 'start_date',
+  //   });
+  // const handleEditFormSubmit = (e, editedForm) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+
+  //   submitEditedFlaskForm(editedForm);
+  //   setEditingId(null);
+  // };
+
+  const  {
+    editedForm,
+    setEditedForm,
+    editingId,
+    setEditingId,
+    submitEditedRowForm,
+    isPendingUpdate,
+    updateError,
+    handleEditFormSubmit
+  } = useEditTableRowForm<TUpdateFlaskForm>({
+    tableName: 'flasks',
+    zodSchema: updateFlaskSchema,
+    initialEditForm: initialEditFlasksForm,
+    idColumnName: 'flask_id',
+    dateColumnName: 'start_date',
+  });
 
   const {
     mutate: deleteFlask,
@@ -44,13 +69,6 @@ export default function FlasksTable({ flasks }) {
 
   const [toggleCellbankData, setToggleCellbankData] = useState(false);
 
-  const handleEditFormSubmit = (e, editedForm) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    submitEditedFlaskForm(editedForm);
-    setEditingId(null);
-  };
 
   return (
     <>
@@ -59,22 +77,22 @@ export default function FlasksTable({ flasks }) {
       </Button>
 
       <StyledForm
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formattedEditedForm = {
-            flask_id: Number(editedForm.flask_id),
-            cell_bank_id: Number(editedForm.cell_bank_id),
-            vessel_type: 'flask',
-            media: String(editedForm.media),
-            media_ml: Number(editedForm.media_ml),
-            inoculum_ul: Number(editedForm.inoculum_ul),
-            temp_c: Number(editedForm.temp_c),
-            rpm: Number(editedForm.rpm),
-            start_date: String(editedForm.start_date),
-            human_readable_date: String(editedForm.human_readable_date),
-          };
-          handleEditFormSubmit(e, formattedEditedForm);
-        }}
+        // onSubmit={(e) => {
+        //   e.preventDefault();
+        //   const formattedEditedForm = {
+        //     flask_id: Number(editedForm.flask_id),
+        //     cell_bank_id: Number(editedForm.cell_bank_id),
+        //     vessel_type: 'flask',
+        //     media: String(editedForm.media),
+        //     media_ml: Number(editedForm.media_ml),
+        //     inoculum_ul: Number(editedForm.inoculum_ul),
+        //     temp_c: Number(editedForm.temp_c),
+        //     rpm: Number(editedForm.rpm),
+        //     start_date: String(editedForm.start_date),
+        //     human_readable_date: String(editedForm.human_readable_date),
+        //   };
+        //   handleEditFormSubmit(e, formattedEditedForm);
+        // }}
       >
         <TableContainer>
           <StyledTable>
