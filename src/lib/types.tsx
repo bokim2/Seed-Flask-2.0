@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TCreateCellbankSchema } from '../features/cellbanks/cellbanks-types';
+import { TCreateCellbank } from '../features/cellbanks/cellbanks-types';
 
 export type TNavOrUser = 'user' | 'nav'; //  main navlist and user navlist toggles
 

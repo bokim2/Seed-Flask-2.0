@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { baseUrl } from '../configs';
 import {
-  TCreateCellbankSchema,
+  TCreateCellbank,
   cellbanksArraySchema,
   createCellbankSchema,
   initialEditCellbankForm,
