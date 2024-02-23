@@ -9,7 +9,6 @@ import {
   StyledForm,
 } from '../../styles/UtilStyles';
 import { useState } from 'react';
-// import { InitialEditCellbankForm } from '../../lib/constants';
 import {
   useAppSelector,
   useFilterSortTableData,
@@ -30,7 +29,9 @@ import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelect
 import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
 import SearchForm from '../../ui/SearchForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
-import { handleEditFormSubmit, useUpdateRowMutation } from '../../hooks/table-hooks/useUpdateRowMutation';
+import {
+  useEditTableRowForm,
+} from '../../hooks/table-hooks/useEditTableRowForm';
 
 export default function CellbanksTable({
   cellbanks,
@@ -39,33 +40,49 @@ export default function CellbanksTable({
 }) {
   // console.log('cellbanks in cellbanks table', cellbanks);
 
+  const {
+    editedForm,
+    setEditedForm,
+    editingId,
+    setEditingId,
+    submitEditedRowForm,
+    isPendingUpdate,
+    updateError,
+    handleEditFormSubmit,
+  } = useEditTableRowForm<TUpdateCellbankForm>({
+    tableName: 'cellbanks',
+    zodSchema: updateCellbankSchema,
+    initialEditForm: initialEditCellbankForm,
+    idColumnName: 'cell_bank_id',
+    dateColumnName: 'date_timestamptz',
+  });
+
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
   const [searchedData, setSearchedData] = useState<TCellbanks>([]);
+  // state of edited form
+  // const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
+  //   initialEditCellbankForm
+  // );
+  // // id of edited cellbank
+  // const [editingId, setEditingId] = useState<number | null>(null);
 
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
     useState<TCellbanks>([]);
 
-  // state of edited form
-  const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
-    initialEditCellbankForm
-  );
-  // id of edited cellbank
-  const [editingId, setEditingId] = useState<number | null>(null);
-
   // update/edit a row
-  const {
-    mutate: submitEditedCellbankForm,
-    isPending: isPendingUpdate,
-    error: updateError,
-  } = useUpdateRowMutation({
-    tableName: 'cellbanks',
-    zodSchema: updateCellbankSchema,
-    initialEditForm: initialEditCellbankForm,
-    setEditedForm: setEditedForm,
-    idColumnName: 'cell_bank_id',
-    dateColumnName: 'date_timestamptz',
-  });
+  // const {
+  //   mutate: submitEditedCellbankForm,
+  //   isPending: isPendingUpdate,
+  //   error: updateError,
+  // } = useUpdateRowMutation({
+  //   tableName: 'cellbanks',
+  //   zodSchema: updateCellbankSchema,
+  //   initialEditForm: initialEditCellbankForm,
+  //   setEditedForm: setEditedForm,
+  //   idColumnName: 'cell_bank_id',
+  //   dateColumnName: 'date_timestamptz',
+  // });
 
   // delete cellbank
   const {
@@ -119,7 +136,7 @@ export default function CellbanksTable({
           handleEditFormSubmit(
             e,
             editedForm,
-            submitEditedCellbankForm,
+            submitEditedRowForm,
             setEditingId
           );
         }}

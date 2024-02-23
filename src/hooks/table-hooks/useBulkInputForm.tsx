@@ -55,7 +55,7 @@ export function useBulkInputForm<TCreateTableRowSchema>({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e,
     rowNumber: number
   ) => {
     const { name, value } = e.target;

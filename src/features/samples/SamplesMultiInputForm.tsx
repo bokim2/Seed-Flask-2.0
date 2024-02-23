@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { baseUrl } from '../../../configs';
-import styled from 'styled-components';
 import {
-  FormButton,
   FormLabel,
-  FormTextArea,
-  InputContainer,
-  MultiFormInput,
   StyledForm,
   StyledTable,
-  TableDataCell,
   TableRow,
-  FormTableCell,
+  FormInputCell,
+  BulkInputTextArea,
+  MultiInputFormBody,
+  MultiInput,
+  ButtonsContainer,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 
@@ -23,27 +20,7 @@ import {
 } from './samples-types';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 
-const BulkInputTextArea = styled.textarea`
-  background-color: transparent;
-  padding: 0.5rem;
-  text-align: center;
-  border-radius: 5px;
-  margin: 1rem;
-`;
-
-const MultiInputFormBody = styled.tbody``;
-
-const MultiInputFormCell = styled(FormTableCell)``;
-
-export const MultiInput = styled(MultiFormInput)``;
-
-export const ButtonsContainer = styled.div`
-  display: flex;
-  margin: 1rem;
-  gap: 1rem;
-`;
-
-export default function SamplesMultiInputForm({ popularOptions }) {
+export default function SamplesMultiInputForm() {
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<
     TCreateSample[] | TinitialEditSampleForm[]
@@ -134,12 +111,11 @@ export default function SamplesMultiInputForm({ popularOptions }) {
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
                 <TableRow key={i}>
-                  <MultiInputFormCell>
+                  <FormInputCell>
                     {i == 0 && (
                       <FormLabel htmlFor="flask_id">flask_id</FormLabel>
                     )}
                     <MultiInput
-                      type="text"
                       id="flask_id"
                       name="flask_id"
                       placeholder="flask_id (e.g. 2)"
@@ -148,12 +124,11 @@ export default function SamplesMultiInputForm({ popularOptions }) {
                       autoFocus
                       value={bulkForm[i].flask_id}
                     />
-                  </MultiInputFormCell>
+                  </FormInputCell>
 
-                  <MultiInputFormCell>
+                  <FormInputCell>
                     {i == 0 && <FormLabel htmlFor="od600">od600</FormLabel>}
                     <MultiInput
-                      type="text"
                       id="od600"
                       name="od600"
                       onChange={(e) => handleChange(e, i)}
@@ -161,9 +136,9 @@ export default function SamplesMultiInputForm({ popularOptions }) {
                       required
                       value={bulkForm[i].od600}
                     />
-                  </MultiInputFormCell>
+                  </FormInputCell>
 
-                  <MultiInputFormCell>
+                  <FormInputCell>
                     {i == 0 && (
                       <FormLabel htmlFor="completed">completed</FormLabel>
                     )}
@@ -175,7 +150,7 @@ export default function SamplesMultiInputForm({ popularOptions }) {
                       required
                       value={bulkForm[i].completed ? 'true' : 'false'}
                     />
-                  </MultiInputFormCell>
+                  </FormInputCell>
                 </TableRow>
               ))}
           </MultiInputFormBody>

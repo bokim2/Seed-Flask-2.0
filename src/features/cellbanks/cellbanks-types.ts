@@ -37,9 +37,9 @@ export const createCellbankSchema = z.object({
   description: z.string().trim(),
 });
 
-export type TCreateCellbankSchema = z.infer<typeof createCellbankSchema>;
+export type TCreateCellbank = z.infer<typeof createCellbankSchema>;
 
-export const initialCreateCellbankForm: TCreateCellbankSchema = {
+export const initialCreateCellbankForm: TCreateCellbank = {
   strain: '',
   notes: '',
   target_molecule: '',

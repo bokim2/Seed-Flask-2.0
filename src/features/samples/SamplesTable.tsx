@@ -17,7 +17,7 @@ import {
   updateSampleSchema,
 } from './samples-types';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
-import { useUpdateRowMutation } from '../../hooks/table-hooks/useUpdateRowMutation';
+import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
 
 export default function SamplesTable({ samples }) {
   console.log('samples in samplestable', samples);

@@ -191,7 +191,7 @@ export const FormLabel = styled.label`
   font-size: 1.75rem;
 `;
 
-export const MultiFormInput = styled.input`
+export const MultiFormInput = styled.textarea`
   // input for multi-form
   width: 90%;
   border: 0;
@@ -504,3 +504,11 @@ export const MultiInputFormBody = styled.tbody``;
 export const MultiInputFormCell = styled(FormInputCell)``; // td
 
 export const MultiInput = styled(MultiFormInput)``; // input
+
+
+// buttons container 
+export const ButtonsContainer = styled.div`
+  display: flex;
+  margin: 1rem;
+  gap: 1rem;
+`;

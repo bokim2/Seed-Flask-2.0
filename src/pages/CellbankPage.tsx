@@ -50,8 +50,7 @@ export default function CellbankPage() {
     <PageContainer id="CellbankPageContainer">
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
-        {/* <ErrorMessage error={error} /> */}
-
+        {error && <ErrorMessage error={error} />}
         <Button
           $size={'small'}
           onClick={() => setToggleTextTruncation((prev) => !prev)}
@@ -63,11 +62,10 @@ export default function CellbankPage() {
 
         <h3>{JSON.stringify(cellbankBookmarks)}</h3>
 
-        {/* <CellbanksMultiInputForm popularOptions={cellbanks?.pages?.map(page => page?.popularOptions).flat()}/> */}
         <CellbanksMultiInputForm />
 
         {/* {error?.message && <ErrorMessage error={error} />} */}
-        {!isLoading && cellbanks?.pages && cellbanks?.pages?.length > 0 && (
+        {cellbanksAll && cellbanksAll.length > 0 && !isLoading && (
           <CellbanksTable
             cellbanks={cellbanksAll}
             handleAddBookmark={handleAddBookmark}
