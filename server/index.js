@@ -53,12 +53,12 @@ const PORT = process.env.PORT || 3000;
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
 // redirect seedflask.com to www.seedflask.com
-app.use((req, res, next)=> {
-  if(req.hostname === 'seedflask.com'){
-    res.redirect(301, `https://www.seedflask.com${req.originalUrl}`)
+app.use((req, res, next) => {
+  if (req.hostname === 'seedflask.com') {
+    res.redirect(301, `https://www.seedflask.com${req.originalUrl}`);
   }
   next();
-})
+});
 
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -145,7 +145,8 @@ app.get('/api/cellbanks', async (req, res) => {
       req.query.offset
     );
     const limit = parseInt(req.query.limit, 10) || LIMIT; // Default to 50 if not specified
-    const offset = parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
     const results = await db.query(
       `SELECT * FROM cell_banks
     ORDER BY cell_bank_id DESC 
@@ -207,8 +208,14 @@ app.post(
 
 app.put('/api/cellbanks/:id', async (req, res) => {
   try {
-    const { strain, target_molecule, description, notes, date_timestamptz, project } =
-      req.body;
+    const {
+      strain,
+      target_molecule,
+      description,
+      notes,
+      date_timestamptz,
+      project,
+    } = req.body;
     const cellBankId = req.params.id;
 
     const query = `
@@ -271,7 +278,8 @@ app.delete('/api/cellbanks/:id', async (req, res) => {
 app.get('/api/flasks', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit, 10 || LIMIT);
-    const offset = parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
     const results = await db.query(
       `SELECT
       *
@@ -330,39 +338,49 @@ app.get('/api/flasks/:id', async (req, res) => {
 
 // post one flask
 
-app.post('/api/flasks', badWordsMiddleware, async (req, res) => {
-  try {
-    const {
-      cell_bank_id,
-      temp_c,
-      media,
-      inoculum_ul,
-      media_ml,
-      vessel_type,
-      rpm,
-    } = req.body;
-    const values = [
-      cell_bank_id,
-      temp_c,
-      media,
-      inoculum_ul,
-      media_ml,
-      vessel_type,
-      rpm,
-    ];
-    const query = `INSERT INTO flasks (cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm) values ($1, $2, $3, $4, $5, $6, $7) returning *`;
-    const results = await db.query(query, values);
-    if (!results.rows.length) {
-      return res.status(404).json({ message: 'Post not successful' });
+app.post(
+  '/api/flasks',
+  allowRolesAdminUser,
+  badWordsMiddleware,
+  async (req, res) => {
+    try {
+      const userObj = req.oidc.user;
+      const username = userObj.name;
+      const user_id = userObj.sub;
+      const {
+        cell_bank_id,
+        temp_c,
+        media,
+        inoculum_ul,
+        media_ml,
+        vessel_type,
+        rpm,
+      } = req.body;
+      const values = [
+        cell_bank_id,
+        temp_c,
+        media,
+        inoculum_ul,
+        media_ml,
+        vessel_type,
+        rpm,
+        username,
+        user_id,
+      ];
+      const query = `INSERT INTO flasks (cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm, username, user_id) values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *`;
+      const results = await db.query(query, values);
+      if (!results.rows.length) {
+        return res.status(404).json({ message: 'Post not successful' });
+      }
+      res.status(200).json({
+        status: 'success',
+        data: results.rows,
+      });
+    } catch (err) {
+      console.log(err);
     }
-    res.status(200).json({
-      status: 'success',
-      data: results.rows,
-    });
-  } catch (err) {
-    console.log(err);
   }
-});
+);
 
 // update a flask
 
@@ -454,7 +472,8 @@ app.delete('/api/flasks/:id', async (req, res) => {
 app.get('/api/samples', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit, 10 || LIMIT);
-    const offset = parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
     const query = `SELECT
       s.*,
       f.flask_id,
@@ -479,27 +498,36 @@ app.get('/api/samples', async (req, res) => {
 });
 
 // post one sample
-app.post('/api/samples', async (req, res) => {
-  try {
-    console.log(req.body, 'in post sample server');
-    const { flask_id, od600, completed } = req.body;
-    const query = `INSERT INTO samples (flask_id, od600, completed) values ($1, $2, $3) returning *`;
-    const values = [flask_id, od600, completed];
+app.post(
+  '/api/samples',
+  allowRolesAdminUser,
+  badWordsMiddleware,
+  async (req, res) => {
+    try {
+      const userObj = req.oidc.user;
+      const username = userObj.name;
+      const user_id = userObj.sub;
 
-    const results = await db.query(query, values);
-    console.log('results.success', results, 'results.rows', results.rows);
-    if (!results.rowCount) {
-      return res.status(404).json({ message: 'Post not successful' });
+      console.log(req.body, 'in post sample server');
+      const { flask_id, od600, completed } = req.body;
+      const query = `INSERT INTO samples (flask_id, od600, completed, username, user_id) values ($1, $2, $3, $4, $5) returning *`;
+      const values = [flask_id, od600, completed, username, user_id];
+
+      const results = await db.query(query, values);
+      console.log('results.success', results, 'results.rows', results.rows);
+      if (!results.rowCount) {
+        return res.status(404).json({ message: 'Post not successful' });
+      }
+      res.status(200).json({
+        status: 'success',
+        data: results.rows,
+      });
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
-    res.status(200).json({
-      status: 'success',
-      data: results.rows,
-    });
-  } catch (err) {
-    console.log(err);
-    throw err;
   }
-});
+);
 
 app.delete('/api/samples/:id', async (req, res) => {
   try {
@@ -716,15 +744,22 @@ app.get('/api/chart/cellbank/:id', async (req, res) => {
 //   JOIN flasks f ON s.flask_id = f.flask_id
 //   GROUP BY f.flask_id;
 
-
 app.get('/api/cellbanks/search', async (req, res) => {
   try {
     // Assuming all queries come in as `searchField[]=field&searchText[]=text`
     let { searchField, searchText } = req.query;
 
     // Ensure searchField and searchText are arrays (single query param or none will not be arrays)
-    searchField = Array.isArray(searchField) ? searchField : (searchField ? [searchField] : []);
-    searchText = Array.isArray(searchText) ? searchText : (searchText ? [searchText] : []);
+    searchField = Array.isArray(searchField)
+      ? searchField
+      : searchField
+      ? [searchField]
+      : [];
+    searchText = Array.isArray(searchText)
+      ? searchText
+      : searchText
+      ? [searchText]
+      : [];
 
     const validFields = [
       'cell_bank_id',
@@ -738,10 +773,12 @@ app.get('/api/cellbanks/search', async (req, res) => {
     ];
 
     // Filter out invalid fields
-    const queries = searchField.map((field, index) => ({
-      field,
-      text: searchText[index] || '',
-    })).filter(q => validFields.includes(q.field));
+    const queries = searchField
+      .map((field, index) => ({
+        field,
+        text: searchText[index] || '',
+      }))
+      .filter((q) => validFields.includes(q.field));
 
     if (queries.length === 0) {
       return res.status(400).send('Invalid or missing search fields.');
@@ -749,11 +786,14 @@ app.get('/api/cellbanks/search', async (req, res) => {
 
     // Construct WHERE clause dynamically
     const whereClauses = queries.map((q, index) => {
-      const fieldForQuery = q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
+      const fieldForQuery =
+        q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
       if (q.field === 'date_timestampz') {
         return `cell_banks.date_timestamptz > $${index + 1}`;
       } else {
-        return `to_tsvector(${fieldForQuery}) @@ plainto_tsquery($${index + 1})`;
+        return `to_tsvector(${fieldForQuery}) @@ plainto_tsquery($${
+          index + 1
+        })`;
       }
     });
 
@@ -761,7 +801,7 @@ app.get('/api/cellbanks/search', async (req, res) => {
 
     const query = {
       text: `SELECT * FROM cell_banks WHERE ${whereClause} ORDER BY cell_bank_id DESC;`,
-      values: queries.map(q => q.text),
+      values: queries.map((q) => q.text),
     };
 
     const result = await db.query(query);

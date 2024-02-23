@@ -12,6 +12,7 @@ import {
   BulkInputTextArea,
   MultiInput,
   ButtonsContainer,
+  CreateEntryTableRow,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
@@ -23,11 +24,6 @@ import {
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import ErrorMessage from '../../ui/ErrorMessage';
-
-
-
-
-
 
 export default function FlasksMultiInputForm() {
   // create a row
@@ -50,7 +46,7 @@ export default function FlasksMultiInputForm() {
   } = useBulkInputForm<TCreateFlask>({
     createTableColumnsArray: createFlaskColumnsArray,
     createTableRowMutation: createFlaskMutation,
-    initialCreateCellbankForm: initialCreateFlaskForm,
+    initialCreateRowForm: initialCreateFlaskForm,
   });
 
   return (
@@ -62,7 +58,7 @@ export default function FlasksMultiInputForm() {
         onChange={(e) => setBulkTextAreaInput(e.target.value)}
       ></BulkInputTextArea>
 
-{createError && <ErrorMessage error={createError} />}
+      {createError && <ErrorMessage error={createError} />}
       {isPending && <h1>Submitting cellbank(s) in progress...</h1>}
 
       <StyledForm
@@ -76,11 +72,8 @@ export default function FlasksMultiInputForm() {
           <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
-                <TableRow key={i}>
+                <CreateEntryTableRow key={i}>
                   <FormInputCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="cell_bank_id">cell bank id</FormLabel>
-                    )}
                     <MultiInput
                       id="cell_bank_id"
                       name="cell_bank_id"
@@ -89,13 +82,13 @@ export default function FlasksMultiInputForm() {
                       required
                       autoFocus
                       value={bulkForm[i].cell_bank_id || ''}
-                    />
+                      />
+                      {i == 0 && (
+                        <FormLabel htmlFor="cell_bank_id">cell bank id</FormLabel>
+                      )}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="vessel_type">vessel type</FormLabel>
-                    )}
                     <MultiInput
                       id="vessel_type"
                       name="vessel_type"
@@ -105,24 +98,24 @@ export default function FlasksMultiInputForm() {
                       autoFocus
                       value={bulkForm[i].vessel_type || ''}
                     />
+                      {i == 0 && (
+                        <FormLabel htmlFor="vessel_type">vessel type</FormLabel>
+                      )}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && <FormLabel htmlFor="media">media</FormLabel>}
                     <MultiInput
                       id="media"
                       name="media"
                       onChange={(e) => handleChange(e, i)}
                       placeholder="media (e.g. farnesane)"
                       required
-                      value={bulkForm[i].media|| ''}
-                    />
+                      value={bulkForm[i].media || ''}
+                      />
+                      {i == 0 && <FormLabel htmlFor="media">media</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="media_ml">media mL</FormLabel>
-                    )}
                     <MultiInput
                       id="media_ml"
                       name="media_ml"
@@ -130,13 +123,13 @@ export default function FlasksMultiInputForm() {
                       placeholder="media_ml"
                       required
                       value={bulkForm[i].media_ml || ''}
-                    />
+                      />
+                      {i == 0 && (
+                        <FormLabel htmlFor="media_ml">media mL</FormLabel>
+                      )}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="inoculum_ul">inoculum uL</FormLabel>
-                    )}
                     <MultiInput
                       id="inoculum_ul"
                       name="inoculum_ul"
@@ -144,34 +137,36 @@ export default function FlasksMultiInputForm() {
                       placeholder="inoculum_ul"
                       required
                       value={bulkForm[i].inoculum_ul || ''}
-                    />
+                      />
+                      {i == 0 && (
+                        <FormLabel htmlFor="inoculum_ul">inoculum uL</FormLabel>
+                      )}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && <FormLabel htmlFor="temp_c">temp c</FormLabel>}
                     <MultiInput
                       id="temp_c"
                       name="temp_c"
                       onChange={(e) => handleChange(e, i)}
                       placeholder="temp_c"
                       required
-                      value={bulkForm[i].temp_c  || ''}
-                    />
+                      value={bulkForm[i].temp_c || ''}
+                      />
+                      {i == 0 && <FormLabel htmlFor="temp_c">temp c</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && <FormLabel htmlFor="rpm">RPM</FormLabel>}
                     <MultiInput
                       id="rpm"
                       name="rpm"
                       onChange={(e) => handleChange(e, i)}
                       placeholder="rpm"
                       required
-                      value={bulkForm[i].rpm  || ''}
-                    />
+                      value={bulkForm[i].rpm || ''}
+                      />
+                      {i == 0 && <FormLabel htmlFor="rpm">RPM</FormLabel>}
                   </FormInputCell>
-
-                </TableRow>
+                </CreateEntryTableRow>
               ))}
           </MultiInputFormBody>
         </StyledTable>

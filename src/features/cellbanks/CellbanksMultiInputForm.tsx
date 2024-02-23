@@ -10,6 +10,8 @@ import {
   FormInputCell,
   MultiInput,
   ButtonsContainer,
+  CreateEntryTable,
+  CreateEntryTableRow,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
@@ -22,8 +24,6 @@ import {
 import ErrorMessage from '../../ui/ErrorMessage';
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
-
-
 
 export default function CellbanksMultiInputForm() {
   // create a row
@@ -46,7 +46,7 @@ export default function CellbanksMultiInputForm() {
   } = useBulkInputForm<TCreateCellbank>({
     createTableColumnsArray: createCellbankColumnsArray,
     createTableRowMutation: createCellbankMutation,
-    initialCreateCellbankForm: initialCreateCellbankForm,
+    initialCreateRowForm: initialCreateCellbankForm,
   });
 
   return (
@@ -68,13 +68,12 @@ export default function CellbanksMultiInputForm() {
           console.log('bulkForm in submit', bulkForm);
         }}
       >
-        <StyledTable>
+        <CreateEntryTable>
           <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
-                <TableRow key={i}>
-                  <FormInputCell>
-                    {i == 0 && <FormLabel htmlFor="strain">strain</FormLabel>}
+                <CreateEntryTableRow key={i}>
+                  <FormInputCell className="create-row">
                     <MultiInput
                       id="strain"
                       name="strain"
@@ -84,14 +83,10 @@ export default function CellbanksMultiInputForm() {
                       autoFocus
                       value={bulkForm[i].strain}
                     />
+                    {i == 0 && <FormLabel htmlFor="strain">strain</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="target_molecule">
-                        target molecule
-                      </FormLabel>
-                    )}
                     <MultiInput
                       id="target_molecule"
                       name="target_molecule"
@@ -100,10 +95,14 @@ export default function CellbanksMultiInputForm() {
                       required
                       value={bulkForm[i].target_molecule}
                     />
+                    {i == 0 && (
+                      <FormLabel htmlFor="target_molecule">
+                        target molecule
+                      </FormLabel>
+                    )}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && <FormLabel htmlFor="project">project</FormLabel>}
                     <MultiInput
                       id="project"
                       name="project"
@@ -112,12 +111,10 @@ export default function CellbanksMultiInputForm() {
                       required
                       value={bulkForm[i].project}
                     />
+                    {i == 0 && <FormLabel htmlFor="project">project</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="description">description</FormLabel>
-                    )}
                     <MultiInput
                       id="description"
                       name="description"
@@ -126,10 +123,12 @@ export default function CellbanksMultiInputForm() {
                       required
                       value={bulkForm[i].description}
                     />
+                    {i == 0 && (
+                      <FormLabel htmlFor="description">description</FormLabel>
+                    )}
                   </FormInputCell>
 
                   <FormInputCell>
-                    {i == 0 && <FormLabel htmlFor="notes">notes</FormLabel>}
                     <MultiInput
                       id="notes"
                       name="notes"
@@ -137,14 +136,15 @@ export default function CellbanksMultiInputForm() {
                       placeholder="notes"
                       required
                       value={bulkForm[i].notes}
-                    />
+                      />
+                      {i == 0 && <FormLabel htmlFor="notes">notes</FormLabel>}
                   </FormInputCell>
-                </TableRow>
+                </CreateEntryTableRow>
               ))}
 
             {/* {popularOptionsArray } */}
           </MultiInputFormBody>
-        </StyledTable>
+        </CreateEntryTable>
         <ButtonsContainer>
           <Button $size={'small'} type="submit" disabled={isPending}>
             Submit

@@ -1,21 +1,27 @@
 import { z } from 'zod'
 
+
+// GET
+
+// CREATE
+export const createSampleColumnsArray = ['flask_id', 'od600', 'completed']
+
 export const createSampleSchema = z.object({
-    completed: z.boolean(),
-    // end_date: z.string(),
-    flask_id: z.coerce.number(),
-    od600: z.number()
+  flask_id: z.coerce.number().nullable(),
+  od600: z.coerce.number().nullable(),
+  completed: z.boolean().nullable(),
+  // end_date: z.string(),
 })
 
 export type TCreateSample = z.infer<typeof createSampleSchema>
 
-// export const initialSampleCreationForm = {
-//   completed: false,
-//     // end_date: '',
-//     flask_id: 0,
-//     od600: 0,
-//     // human_readable_date: '',
-// }
+export const initialCreateSampleForm: TCreateSample = {
+  // end_date: '',
+  flask_id: null,
+  od600: null,
+  completed: false,
+    // human_readable_date: '',
+}
 
 // Update
 

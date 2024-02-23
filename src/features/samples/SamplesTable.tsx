@@ -17,89 +17,97 @@ import {
   updateSampleSchema,
 } from './samples-types';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
-import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
+import {
+  useEditTableRowForm,
+  useUpdateRowMutation,
+} from '../../hooks/table-hooks/useEditTableRowForm';
+import ErrorMessage from '../../ui/ErrorMessage';
 
 export default function SamplesTable({ samples }) {
   console.log('samples in samplestable', samples);
-  const [editedForm, setEditedForm] = useState<
-    TUpdateSampleForm | TinitialEditSampleForm
-  >(initialEditSampleForm);
-  const [editingId, setEditingId] = useState<number | null>(null); // id of edited sample
 
   // update row
-  const { mutate: submitEditedSampleForm, isPending: isPendingUpdate } =
-    useUpdateRowMutation({
-      tableName: 'samples',
-      zodSchema: updateSampleSchema,
-      initialEditForm: initialEditSampleForm,
-      setEditedForm,
-      idColumnName: 'sample_id',
-      dateColumnName: 'end_date',
-    });
+  const {
+    editedForm,
+    setEditedForm,
+    editingId,
+    setEditingId,
+    submitEditedRowForm,
+    isPendingUpdate,
+    updateError,
+    handleEditFormSubmit,
+  } = useEditTableRowForm<TUpdateSampleForm>({
+    tableName: 'samples',
+    zodSchema: updateSampleSchema,
+    initialEditForm: initialEditSampleForm,
+    idColumnName: 'sample_id',
+    dateColumnName: 'end_date_time',
+  });
 
   // delete a row
   const {
     mutate: deleteSample,
     isPending: isPendingDelete,
-    error,
+    error: deleteError,
   } = useDeleteRowMutation({ tableName: 'samples' });
 
-  const handleEditFormSubmit = (e, editedForm) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const typedEditedForm = {
-      ...editedForm,
-      od600: Number(editedForm.od600),
-      completed: editedForm.completed === 'true',
-    };
-    submitEditedSampleForm(typedEditedForm);
-    setEditingId(null);
-  };
-
   return (
-    <StyledForm
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleEditFormSubmit(e, editedForm);
-      }}
-    >
-      <TableContainer id="SamplesTableContainer">
-        <StyledTable>
-          <Caption>Samples</Caption>
-          <TableHeader>
-            <TableRow>
-              <TableHeaderCell>Sample ID</TableHeaderCell>
-              {/* <TableHeaderCell>Cell Bank ID</TableHeaderCell>  */}
-              <TableHeaderCell>Flask ID</TableHeaderCell>
-              <TableHeaderCell>od600</TableHeaderCell>
-              <TableHeaderCell>time since inoc hr</TableHeaderCell>
-              <TableHeaderCell>end date/time</TableHeaderCell>
-              <TableHeaderCell>completed</TableHeaderCell>
-              <TableHeaderCell>user</TableHeaderCell>
-              <TableHeaderCell>edit</TableHeaderCell>
-            </TableRow>
-          </TableHeader>
+    <>
+      {/* loading and error messages */}
+      {isPendingUpdate && <h1>edit is pending Update...</h1>}
+      {isPendingDelete && <h1>edit is pending Delete...</h1>}
+      {updateError?.message && <ErrorMessage error={updateError} />}
+      {deleteError?.message && <ErrorMessage error={deleteError} />}
 
-          <tbody>
-            {samples &&
-              samples?.map((rowData) => {
-                return (
-                  <SamplesRow
-                    key={rowData.sample_id}
-                    rowData={rowData}
-                    editedForm={editedForm}
-                    setEditedForm={setEditedForm}
-                    setEditingId={setEditingId}
-                    editingId={editingId}
-                    deleteSample={deleteSample}
-                    isPendingUpdate={isPendingUpdate}
-                    isPendingDelete={isPendingDelete}
-                  />
-                );
-              })}
-          </tbody>
-        </StyledTable>
-      </TableContainer>
-    </StyledForm>
+      <StyledForm
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleEditFormSubmit(
+            e,
+            editedForm,
+            submitEditedRowForm,
+            setEditingId
+          );
+        }}
+      >
+        <TableContainer id="SamplesTableContainer">
+          <StyledTable>
+            <Caption>Samples</Caption>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderCell>Sample ID</TableHeaderCell>
+                {/* <TableHeaderCell>Cell Bank ID</TableHeaderCell>  */}
+                <TableHeaderCell>Flask ID</TableHeaderCell>
+                <TableHeaderCell>od600</TableHeaderCell>
+                <TableHeaderCell>time since inoc hr</TableHeaderCell>
+                <TableHeaderCell>end date/time</TableHeaderCell>
+                <TableHeaderCell>completed</TableHeaderCell>
+                <TableHeaderCell>user</TableHeaderCell>
+                <TableHeaderCell>edit</TableHeaderCell>
+              </TableRow>
+            </TableHeader>
+
+            <tbody>
+              {samples &&
+                samples?.map((rowData) => {
+                  return (
+                    <SamplesRow
+                      key={rowData.sample_id}
+                      rowData={rowData}
+                      editedForm={editedForm}
+                      setEditedForm={setEditedForm}
+                      setEditingId={setEditingId}
+                      editingId={editingId}
+                      deleteSample={deleteSample}
+                      isPendingUpdate={isPendingUpdate}
+                      isPendingDelete={isPendingDelete}
+                    />
+                  );
+                })}
+            </tbody>
+          </StyledTable>
+        </TableContainer>
+      </StyledForm>
+    </>
   );
 }

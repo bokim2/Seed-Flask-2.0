@@ -39,6 +39,8 @@ media_mL REAL,
 temp_c REAL NOT NULL,
 rpm REAL NOT NULL,
 start_date TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    username VARCHAR(250),
+    user_id VARCHAR(250),
 PRIMARY KEY(flask_id),
 cell_bank_id INT NOT NULL,
 FOREIGN KEY (cell_bank_id) REFERENCES cell_banks(cell_bank_id)
@@ -92,6 +94,8 @@ CREATE TABLE samples (
   end_date TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
   od600 REAL NOT NULL,
   completed BOOLEAN DEFAULT false,
+    username VARCHAR(250),
+    user_id VARCHAR(250),
   time_since_inoc_hr REAL, -- Updated data type
   FOREIGN KEY (flask_id) REFERENCES flasks(flask_id)
 );

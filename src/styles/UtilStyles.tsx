@@ -161,26 +161,42 @@ export const InputContainer = styled.div`
 `;
 
 export const FormTableCell = styled.td`
-  @media (max-width: 600px) {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  
 
-    &::before {
-      content: attr(data-cell) ': ';
-      font-weight: 700;
-      text-transform: capitalize;
-      color: rgba(var(--clr-accent-0), 1);
-    }
+  &::before {
+    content: attr(data-cell) ': ';
+    font-weight: 700;
+    text-transform: capitalize;
+    color: rgba(var(--clr-accent-0), 1);
+  }
+
+  @media (min-width: 600px) {
+    display: table-cell;
   }
 `;
 
 export const FormInputCell = styled.td`
   // multi-form td
-  @media (max-width: 600px) {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 1rem;
+  flex-direction: column-reverse;
+  
+  
+    textarea:focus + label {
+    color: rgba(var(--clr-accent-6), 1);
+  }
+
+  
+  @media (min-width: 600px) {
+    /* display: table-cell; */
   }
 `;
+
+
 
 export const FormLabel = styled.label`
   font-weight: 600;
@@ -188,7 +204,13 @@ export const FormLabel = styled.label`
   /* font-family: var(--font-serif); */
   color: rgba(var(--clr-accent-0), 1);
   /* letter-spacing: .1rem; */
-  font-size: 1.75rem;
+  font-size: 1.2rem;
+
+
+
+  @media (min-width: 600px) {
+    font-size: 1.5rem;
+  }
 `;
 
 export const MultiFormInput = styled.textarea`
@@ -278,6 +300,7 @@ export const TableContainer = styled.div`
   /* overflow-x: scroll; */
   /* background-color: lightblue; */
   margin-block: 1rem;
+  width: 100%;
 
   /* overflow */
   /* max-height: 80vh;
@@ -285,8 +308,8 @@ export const TableContainer = styled.div`
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch; */
 
-  @media (max-width: 600px) {
-    width: 100%;
+  @media (min-width: 600px) {
+    width: auto;
   }
 `;
 
@@ -332,7 +355,7 @@ export const TableHeader = styled.thead`
 // };
 
 export const TableHeaderCell = styled.th<TTableHeaderCell>`
-/* display: flex; */
+  /* display: flex; */
 
   /* font-family: var(--font-serif); */
   padding: 0.5rem;
@@ -375,7 +398,7 @@ export const TableHeaderCellInnerContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 0.25rem;
-  
+
   /* svg {
     visibility: hidden;
   } */
@@ -383,9 +406,7 @@ export const TableHeaderCellInnerContainer = styled.div`
   &:hover svg {
     visibility: visible;
   }
-
-
-  `
+`;
 
 export const TableRow = styled.tr`
   background-color: hsl(0, 0%, 0%, 0.5);
@@ -468,11 +489,10 @@ export const SearchSection = styled.section`
 `;
 
 export const SearchInputPTag = styled.p`
-color: var(--clr-accent-7);
-font-weight: 600;
-font-size: 1.3rem;
-text-transform: capitalize;
-
+  color: var(--clr-accent-7);
+  font-weight: 600;
+  font-size: 1.3rem;
+  text-transform: capitalize;
 `;
 
 export const TextSearchContainer = styled.div``;
@@ -488,7 +508,6 @@ export const TextSearchInput = styled.input`
   }
 `;
 
-
 // multi-input form
 
 export const BulkInputTextArea = styled.textarea`
@@ -499,14 +518,45 @@ export const BulkInputTextArea = styled.textarea`
   margin: 1rem;
 `;
 
+export const CreateEntryTable = styled.table`
+  /* padding-inline: 2rem; */
+  /* border-radius: 50px; */
+  background-color: hsl(0, 0%, 0%, 0.8); // #262231
+  border-radius: 20px;
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+
+  &:hover {
+    background-color: hsl(0, 0%, 0%, 0.2);
+    /* font-size: 120%; */
+    /* transform: scale(1.01); */
+  }
+`;
+
+export const CreateEntryTableRow = styled.tr`
+
+display: flex;
+flex-direction: column;
+justify-content: center;
+/* font-size: 1.5rem; */
+gap: 1rem;
+padding: 1rem;
+border-radius: 20px;
+
+@media (min-width: 600px) {
+  /* display: table-row; */
+flex-direction: row;
+}
+`;
+
 export const MultiInputFormBody = styled.tbody``;
 
 export const MultiInputFormCell = styled(FormInputCell)``; // td
 
 export const MultiInput = styled(MultiFormInput)``; // input
 
-
-// buttons container 
+// buttons container
 export const ButtonsContainer = styled.div`
   display: flex;
   margin: 1rem;
