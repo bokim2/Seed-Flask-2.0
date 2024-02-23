@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
+  ButtonsContainer,
   SearchInputPTag,
   SearchSection,
   TableHeaderCellInnerContainer,
   TextSearchContainer,
   TextSearchInput,
 } from '../../styles/UtilStyles';
-import { ButtonsContainer } from '../../features/samples/SamplesMultiInputForm';
 import Button from '../Button';
 import SortTableColumnsArrows, {
   StyledArrowsContainer,
