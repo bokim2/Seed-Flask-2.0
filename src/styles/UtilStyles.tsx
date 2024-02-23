@@ -182,6 +182,7 @@ export const FormInputCell = styled.td`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   font-size: 1rem;
   flex-direction: column-reverse;
   
