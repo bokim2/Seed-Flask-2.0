@@ -5,13 +5,10 @@
   "type": "module",
   "main": "server/index.ts",
   "scripts": {
-    "build:server": "tsc -p tsconfig.node.json",
-    "build": "npm run build:server && vite build",
-    "dev:server": "nodemon server/index.ts --watch server -e ts,tsx",
-    "dev": "concurrently \"npm run dev:server\" \"vite\"",
+
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "devstart": "NODE_ENV=development nodemon server/index.ts",
+
     "start": "node build/server/index.js",
     "postinstall": "tsc"
   },
