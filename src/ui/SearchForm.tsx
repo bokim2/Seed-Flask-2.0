@@ -49,7 +49,7 @@ export default function SearchForm({ setSearchedData, tableName }) {
     useTextInputSearch();
 
   const handleAddCriteria = () => {
-    updateSearchCriteria([...searchCriteria, { field: '', text: '' }]);
+    updateSearchCriteria([...searchCriteria, { field: 'cell_bank_id', text: '' }]);
   };
 
   const handleRemoveCriteria = (index) => {

@@ -66,12 +66,6 @@ export default function CellbanksTable({
 
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
   const [searchedData, setSearchedData] = useState<TCellbanks>([]);
-  // state of edited form
-  // const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
-  //   initialEditCellbankForm
-  // );
-  // // id of edited cellbank
-  // const [editingId, setEditingId] = useState<number | null>(null);
 
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =

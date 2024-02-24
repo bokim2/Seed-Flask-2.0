@@ -216,7 +216,8 @@ export const FormLabel = styled.label`
 
 export const MultiFormInput = styled.textarea`
   // input for multi-form
-  width: 90%;
+  align-items: center;
+  width: 95%;
   border: 0;
   font-family: inherit;
   font-weight: 400;
