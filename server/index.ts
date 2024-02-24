@@ -4,29 +4,29 @@ import path from 'path';
 // Initialize express app
 const app = express();
 
-// Use JSON and URL Encoded middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// A simple route to test that the server is working
-app.get('/api/test', (req, res) => {
-  res.json({ message: "API is working!" });
-});
-
-// Serve static files from the 'dist' directory
-app.use(express.static(path.join(__dirname, '../dist')));
-
-// For any other route, serve the index.html file
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
-});
-
-// Use the PORT environment variable provided by Heroku or default to 3000
+// Define a port for the app to listen on
 const PORT = process.env.PORT || 3000;
 
+// Serve static files from the Vite build directory in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+
+  // Serve the index.html file (for SPA support)
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+  });
+}
+
+// A simple test route
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
 
 
 // import express, { Router } from 'express';
