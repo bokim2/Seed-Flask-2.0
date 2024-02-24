@@ -9,7 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
 
-    "start": "node build/server/index.js",
+    "start": "node ./build/server/index.js",
     "postinstall": "tsc"
   },
   "engines": {
