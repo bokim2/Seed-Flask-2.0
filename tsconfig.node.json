@@ -1,0 +1,32 @@
+// {
+//   "compilerOptions": {
+//     "composite": true,
+//     "module": "CommonJS",
+//     "target": "ES2019",
+//     "moduleResolution": "node",
+//     "allowSyntheticDefaultImports": true,
+//     "esModuleInterop": true,
+//     "noEmit": false,
+//     "outDir": "./dist/server",
+//   },
+//   "include": [
+//     "server/**/*",
+//     "./vite.config.ts" // Adjust path as necessary
+//   ],
+//   "exclude": ["node_modules", "**/*.spec.ts"]
+// }
+
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    // "composite": true,
+    "module": "NodeNext",
+
+    "moduleResolution": "NodeNext",
+    "target": "ES2019",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist/server"
+  },
+  "include": ["server/**/*", "vite.config.ts"]
+}
