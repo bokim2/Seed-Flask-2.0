@@ -1,31 +1,30 @@
+// Simplified index.ts for testing
+
 import express from 'express';
 import path from 'path';
 
-// Initialize express app
 const app = express();
-
-// Define a port for the app to listen on
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from the Vite build directory in production
+// Simple route for testing
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working!' });
+});
+
+// Serve static files from the 'dist' directory
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')));
 
-  // Serve the index.html file (for SPA support)
+  // Handle SPA routing, return all requests to the SPA
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
+    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
   });
 }
 
-// A simple test route
-app.get('/ping', (req, res) => {
-  res.send('pong');
-});
-
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
 
 
 
