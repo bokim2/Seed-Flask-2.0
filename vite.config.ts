@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import eslint from 'vite-plugin-eslint'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import eslint from 'vite-plugin-eslint';
 // added by bk
 import fs from 'fs';
 import path from 'path';
@@ -11,10 +11,18 @@ export default defineConfig({
   optimizeDeps: {
     include: ['date-fns', 'date-fns-tz'],
   }, // added by bk
+  build: {
+    outDir: 'dist', // Output directory for frontend build
+  },
+
   server: {
     https: {
-      key: fs.readFileSync(path.join(__dirname, '/server/ssl/localhost+2-key.pem')),
-      cert: fs.readFileSync(path.join(__dirname, '/server/ssl/localhost+2.pem'))
-    }  // added by bk
+      key: fs.readFileSync(
+        path.join(__dirname, '/server/ssl/localhost+2-key.pem')
+      ),
+      cert: fs.readFileSync(
+        path.join(__dirname, '/server/ssl/localhost+2.pem')
+      ),
+    }, // added by bk
   },
-})
+});
