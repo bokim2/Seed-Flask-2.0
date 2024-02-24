@@ -23,7 +23,6 @@ const __dirname = dirname(__filename);
 import { db } from './db/db.js';
 import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
 import { allowRolesAdminUser } from './middleware/allowRolesAdminUser.js';
-import { getPopularOptions } from './helperFunctions.js';
 import { LIMIT } from '../src/lib/constants.js';
 
 // export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';

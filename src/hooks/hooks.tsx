@@ -63,8 +63,15 @@ export function filteredTableData(
       // );
       const numericColumns = new Set(['cell_bank_id', 'flask_id', 'sample_id']);
       if (!numericColumns.has(sortColumnKey)) {
-        if (sortDirection === 'asc')
+        if (sortDirection === 'asc'){
+          // console.log(
+          //   'a[sortColumnKey].localeCompare(b[sortColumnKey])', a[sortColumnKey], b[sortColumnKey], a[sortColumnKey].localeCompare(b[sortColumnKey])
+          // )
+          // console.log(
+          //   'a[sortColumnKey].localeCompare(b[sortColumnKey])', a[sortColumnKey], b[sortColumnKey], 'rgfdf'.localeCompare('1')
+          // )
           return a[sortColumnKey].localeCompare(b[sortColumnKey]);
+        }
         if (sortDirection === 'desc')
           return b[sortColumnKey].localeCompare(a[sortColumnKey]);
       } else {
@@ -94,7 +101,7 @@ export function useSetSortColumn<TTableColumns extends string>() {
   type TSortColumn = { [key in TTableColumns]?: TSortOrder };
 
   const [sortColumn, setSortColumn] = useState<TSortColumn>({});
-  // console.log(sortColumn, 'sortColumn');
+  console.log(sortColumn, 'sortColumn');
 
   const handleSortColumn = (e, columnName, sortOrder) => {
     e.stopPropagation();
