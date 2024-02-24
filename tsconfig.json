@@ -1,5 +1,5 @@
 {
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"], // dist added by bk 20240224
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -25,11 +25,13 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "src",
+    "src/**/*", // added by bk 20240224
+    "server/**/*", // added by bk 20240224
+    // "src",
     "src/styles/GlobalStyles.js",
-    "server/*",
-    "custom.d.ts",
-    "Archive/cellbanks-hooks.ts"
+    // "server/*",
+    "custom.d.ts"
+    // "Archive/cellbanks-hooks.ts"
   ], // "server/*" and "custom.d.ts" added by BK
   "references": [{ "path": "./tsconfig.node.json" }]
 }
