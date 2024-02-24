@@ -6,6 +6,8 @@
   "compilerOptions": {
     "target": "ES2020",
     "outDir": "./build",
+    "forceConsistentCasingInFileNames": true,
+    // "strict": true,
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
