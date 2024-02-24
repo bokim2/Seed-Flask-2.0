@@ -3,8 +3,16 @@
     "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
+    "target": "ES2019",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noEmit": false,
+    "outDir": "./dist/server"
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "server/**/*",
+    "./vite.config.ts" // Adjust path as necessary
+  ],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
