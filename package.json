@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "devstart": "NODE_ENV=development nodemon server/index.ts",
     "start": "node dist/server/index.js"
+
   },
   "engines": {
     "node": "^21.2.0",
