@@ -3,17 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "dist/server/index.ts",
+  "main": "server/index.ts",
   "scripts": {
-    "build:server": "tsc -p tsconfig.node.json",
-    "build:client": "vite build",
-    "build": "npm run build:server && npm run build:client",
-    "start": "node dist/server/index.js",
+
+    "start": "node build/index.js",
+    "postinstall": "tsc",
     "dev": "concurrently \"npm run dev:server\" \"vite\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "devstart": "NODE_ENV=development nodemon server/index.ts",
-    "postinstall": "tsc"
+    "devstart": "NODE_ENV=development nodemon server/index.ts"
   },
   "engines": {
     "node": "^21.2.0",
