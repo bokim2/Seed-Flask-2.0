@@ -1,4 +1,5 @@
 import pkg from 'pg';
+import {QueryResult } from 'pg';
 const { Pool } = pkg;
 import 'dotenv/config';
 import process from 'process';
@@ -8,7 +9,7 @@ import process from 'process';
 const pool = new Pool({ connectionString: process.env.PG_URI, 
   max: 3, // added by BK
   min: 0, // added by BK
-  idle: 10000,  // added by BK
+  // idle: 10000,  // added by BK
 });
 
 // Adding some notes about the database here will be helpful for future you or other developers.
@@ -21,7 +22,8 @@ const pool = new Pool({ connectionString: process.env.PG_URI,
 // Remove the import statement for 'pool' since it is already defined in the previous code block
 
 export const db = {
-  query: (text, params, callback) => {
-    return pool.query(text, params, callback);
+  query: (text: string, params: any[]): Promise<QueryResult<any>> => {
+    return pool.query(text, params);
   },
 };
+

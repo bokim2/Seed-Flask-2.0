@@ -10,6 +10,9 @@
     "resolveJsonModule": true,
     "sourceMap": true
   },
+  "ts-node": {
+    "esm": true
+  },
   "include": ["server/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src"]
 }
