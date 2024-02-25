@@ -36,7 +36,7 @@ export default defineConfig({
   build: {
     // When building for production, output the files to the "build" directory.
     // This is where you can configure the output directory and other build options.
-    outDir: 'build',
+    outDir: 'dist/client', 
   },
   server: {
     // Define server-specific options here, such as setting up proxying for API requests to your backend during development.
