@@ -6,7 +6,7 @@
   "main": "server/index.ts",
   "scripts": {
 
-    "start": "node build/index.js",
+    "start": "node build/server/index.js",
     "postinstall": "tsc",
     "dev": "concurrently \"npm run dev:server\" \"vite\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
