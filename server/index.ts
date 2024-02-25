@@ -1,28 +1,14 @@
-// Simplified index.ts for testing
-
 import express from 'express';
-import path from 'path';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-// Simple route for testing
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working!' });
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
 
-// Serve static files from the 'dist' directory
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')));
-
-  // Handle SPA routing, return all requests to the SPA
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
-  });
-}
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
 
 

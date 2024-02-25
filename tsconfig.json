@@ -1,44 +1,66 @@
-{
-  // "exclude": ["node_modules"], 
+// {
+//   // "exclude": ["node_modules"],
 
-    "exclude": ["node_modules", "dist", "server"],  // modiefied by BK 20240224
-  
+//     "exclude": ["node_modules", "dist", "server"],  // modiefied by BK 20240224
+
+//   "compilerOptions": {
+//     "target": "ES2020",
+//     "sourceMap": true,
+//     "outDir": "./dist",
+//     "forceConsistentCasingInFileNames": true,
+//     // "strict": true,
+//     "useDefineForClassFields": true,
+//     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+//     "module": "ESNext",
+//     "skipLibCheck": true,
+//     "allowJs": true, // added by BK
+//     "noImplicitAny": false, // added by BK
+//     // "esModuleInterop": true, // added by BK - for typescript backend
+
+//     /* Bundler mode */
+//     "moduleResolution": "bundler",
+//     // "allowImportingTsExtensions": true,
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "noEmit": false,
+//     "jsx": "react-jsx",
+
+//     /* Linting */
+//     "strict": true,
+//     "noUnusedLocals": false, //changed from true to false by BK
+//     "noUnusedParameters": false, //changed from true to false by BK
+//     "noFallthroughCasesInSwitch": true
+//   },
+//   "include": [
+//     "src/**/*", // added by bk 20240224
+//     "server/**/*", // added by bk 20240224
+//     // "src",
+//     "src/styles/GlobalStyles.js",
+//     // "server/*",
+//     "custom.d.ts"
+//     // "Archive/cellbanks-hooks.ts"
+//   ], // "server/*" and "custom.d.ts" added by BK
+//   // "references": [{ "path": "./tsconfig.node.json" }]
+// }
+
+{
   "compilerOptions": {
     "target": "ES2020",
-    "sourceMap": true,
-    "outDir": "./build",
-    "forceConsistentCasingInFileNames": true,
-    // "strict": true,
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "lib": ["ES2020", "DOM"],
+    "allowJs": true,
     "skipLibCheck": true,
-    "allowJs": true, // added by BK
-    "noImplicitAny": false, // added by BK
-    // "esModuleInterop": true, // added by BK - for typescript backend
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noEmit": false,
     "isolatedModules": true,
-    "noEmit": true,
+    "sourceMap": true,
+    "outDir": "./dist",
     "jsx": "react-jsx",
-
-    /* Linting */
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "noUnusedLocals": false, //changed from true to false by BK
-    "noUnusedParameters": false, //changed from true to false by BK
-    "noFallthroughCasesInSwitch": true
+    "noImplicitAny": false // added by BK
   },
-  "include": [
-    "src/**/*", // added by bk 20240224
-    // "server/**/*", // added by bk 20240224
-    // "src",
-    "src/styles/GlobalStyles.js",
-    // "server/*",
-    "custom.d.ts"
-    // "Archive/cellbanks-hooks.ts"
-  ], // "server/*" and "custom.d.ts" added by BK
-  // "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "server"]
 }
