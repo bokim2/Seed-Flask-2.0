@@ -10,8 +10,8 @@ import SamplesTable from '../features/samples/SamplesTable';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
-import { samplesInfoArraySchema } from '../lib/types';
 import SamplesMultiInputForm from '../features/samples/SamplesMultiInputForm';
+import { samplesInfoArraySchema } from '../features/samples/samples-types';
 
 export default function SamplePage() {
   // const [samples, setSamples] = useState<any>([]);
@@ -52,7 +52,9 @@ export default function SamplePage() {
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
 
       <InnerPageContainer id="SampleInnerPageContainer">
-        <SamplesMultiInputForm />
+
+        {/* input form and dilution calculator */}
+        <SamplesMultiInputForm /> 
         {error && <ErrorMessage error={error} />}
 
         {!isLoading && samplesAll && <SamplesTable samples={samplesAll} />}

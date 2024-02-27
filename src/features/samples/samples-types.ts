@@ -3,6 +3,24 @@ import { z } from 'zod'
 
 // GET
 
+export const samplesInfoSchema = z.object({
+  completed: z.boolean(),
+  end_date: z.string(),
+  flask_id: z.coerce.number(),
+  od600: z.number(),
+  sample_id: z.coerce.number(),
+  strain: z.string(),
+  target_molecule: z.string(),
+  temp_c: z.number(),
+  time_since_inoc_hr: z.number(),
+  username: z.string() || null,
+  user_id: z.string() || null,
+});
+
+export type TSamplesInfo = z.infer<typeof samplesInfoSchema>;
+
+export const samplesInfoArraySchema = z.array(samplesInfoSchema);
+
 // CREATE
 export const createSampleColumnsArray = ['flask_id', 'od600', 'completed']
 

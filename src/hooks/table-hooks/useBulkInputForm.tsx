@@ -54,10 +54,7 @@ export function useBulkInputForm<TCreateTableRowSchema>({
     }
   };
 
-  const handleChange = (
-    e,
-    rowNumber: number
-  ) => {
+  const handleChange = (e, rowNumber: number) => {
     const { name, value } = e.target;
     setBulkForm((prev) =>
       prev.map((row, index) => {

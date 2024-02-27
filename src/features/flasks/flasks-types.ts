@@ -11,6 +11,8 @@ export const flasksInfoSchema = z.object({
   start_date: z.string(),
   temp_c: z.coerce.number(),
   vessel_type: z.string(),
+  username: z.string(),
+  user_id: z.string(),
 
   // cellbank columns
   strain: z.string() || null,
@@ -47,16 +49,23 @@ export const initialCreateFlaskForm: TCreateFlask = {
   rpm: null,
 };
 
-
 // create a flask
-export const createFlaskColumnsArray = ['cell_bank_id', 'vessel_type', 'media', 'media_ml', 'inoculum_ul', 'temp_c', 'rpm']
+export const createFlaskColumnsArray = [
+  'cell_bank_id',
+  'vessel_type',
+  'media',
+  'media_ml',
+  'inoculum_ul',
+  'temp_c',
+  'rpm',
+];
 
 export const updateFlaskSchema = createFlaskSchema.extend({
   start_date: z.string(),
   human_readable_date: z.string(),
 });
 
-export type TUpdateFlaskForm = z.infer<typeof updateFlaskSchema>
+export type TUpdateFlaskForm = z.infer<typeof updateFlaskSchema>;
 
 export type TinitialCreateFlasksForm = {
   cell_bank_id: number | null;

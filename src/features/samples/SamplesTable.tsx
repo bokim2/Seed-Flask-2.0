@@ -12,14 +12,12 @@ import {
 import SamplesRow from './SamplesRow';
 import {
   TUpdateSampleForm,
-  TinitialEditSampleForm,
   initialEditSampleForm,
   updateSampleSchema,
 } from './samples-types';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import {
   useEditTableRowForm,
-  useUpdateRowMutation,
 } from '../../hooks/table-hooks/useEditTableRowForm';
 import ErrorMessage from '../../ui/ErrorMessage';
 
