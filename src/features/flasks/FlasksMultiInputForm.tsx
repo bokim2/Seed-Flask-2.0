@@ -13,6 +13,7 @@ import {
   MultiInput,
   ButtonsContainer,
   CreateEntryTableRow,
+  CreateEntryTable,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
@@ -68,7 +69,7 @@ export default function FlasksMultiInputForm() {
           console.log('bulkForm in submit', bulkForm);
         }}
       >
-        <StyledTable>
+        <CreateEntryTable>
           <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
@@ -169,7 +170,7 @@ export default function FlasksMultiInputForm() {
                 </CreateEntryTableRow>
               ))}
           </MultiInputFormBody>
-        </StyledTable>
+        </CreateEntryTable>
         <ButtonsContainer>
           <Button $size={'small'} type="submit" disabled={isPending}>
             Submit

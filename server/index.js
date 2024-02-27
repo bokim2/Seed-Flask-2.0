@@ -199,6 +199,7 @@ app.post(
       });
     } catch (err) {
       console.log(err);
+      res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   }
 );
@@ -376,7 +377,13 @@ app.post(
         data: results.rows,
       });
     } catch (err) {
-      console.log(err);
+      // console.log(err.detail);
+      res
+        .status(500)
+        .json({
+          message: err?.detail || 'Internal server error',
+          error: err.message,
+        });
     }
   }
 );
@@ -523,7 +530,7 @@ app.post(
       });
     } catch (err) {
       console.log(err);
-      throw err;
+      res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   }
 );

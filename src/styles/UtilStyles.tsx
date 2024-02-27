@@ -163,7 +163,6 @@ export const InputContainer = styled.div`
 export const FormTableCell = styled.td`
   display: flex;
   flex-wrap: wrap;
-  
 
   &::before {
     content: attr(data-cell) ': ';
@@ -185,19 +184,15 @@ export const FormInputCell = styled.td`
   align-items: center;
   font-size: 1rem;
   flex-direction: column-reverse;
-  
-  
-    textarea:focus + label {
+
+  textarea:focus + label {
     color: rgba(var(--clr-accent-6), 1);
   }
 
-  
   @media (min-width: 600px) {
     /* display: table-cell; */
   }
 `;
-
-
 
 export const FormLabel = styled.label`
   font-weight: 600;
@@ -206,8 +201,6 @@ export const FormLabel = styled.label`
   color: rgba(var(--clr-accent-0), 1);
   /* letter-spacing: .1rem; */
   font-size: 1.2rem;
-
-
 
   @media (min-width: 600px) {
     font-size: 1.5rem;
@@ -271,13 +264,14 @@ export const SingleFormInput = styled.input`
 `;
 
 export const FormTextArea = styled.textarea`
+
   resize: both;
   border: 0;
   font-family: inherit;
   font-weight: 500;
   color: inherit;
   background-color: transparent;
-  height: 100px; /* Set the initial height */
+  /* height: 100px; */
   width: 100%; /* Make it take up the full width of its container */
   border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
 
@@ -424,6 +418,7 @@ export const TableRow = styled.tr`
 `;
 
 export const TableDataCell = styled.td`
+  text-align: center;
   padding: 0.5rem;
   text-transform: none;
   /* max-width: 20vw; */
@@ -461,6 +456,8 @@ export const TableDataCell = styled.td`
 // EDIT FORM STYLES
 
 export const EditTextArea = styled(FormTextArea)`
+/* padding-top: 0rem !important; */
+  text-align: center;
   width: 100%;
   height: auto;
 `;
@@ -537,26 +534,27 @@ export const CreateEntryTable = styled.table`
 `;
 
 export const CreateEntryTableRow = styled.tr`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* font-size: 1.5rem; */
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 20px;
 
-display: flex;
-flex-direction: column;
-justify-content: center;
-/* font-size: 1.5rem; */
-gap: 1rem;
-padding: 1rem;
-border-radius: 20px;
-
-@media (min-width: 600px) {
-  /* display: table-row; */
-flex-direction: row;
-}
+  @media (min-width: 600px) {
+    /* display: table-row; */
+    flex-direction: row;
+  }
 `;
 
 export const MultiInputFormBody = styled.tbody``;
 
 export const MultiInputFormCell = styled(FormInputCell)``; // td
 
-export const MultiInput = styled(MultiFormInput)``; // input
+export const MultiInput = styled(MultiFormInput)`
+/* padding: 0rem; */
+`; // input
 
 // buttons container
 export const ButtonsContainer = styled.div`

@@ -24,9 +24,11 @@ import {
 } from './samples-types';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
+import ErrorMessage from '../../ui/ErrorMessage';
+import SamplesDilutionCalculator from './SamplesDilutionCalculator';
+import SamplesDilutionsSection from './SamplesDilutionsSection';
 
 export default function SamplesMultiInputForm() {
-
   // create a row
   const {
     mutate: createSampleMutation,
@@ -36,7 +38,7 @@ export default function SamplesMultiInputForm() {
     tableName: 'samples',
     zodSchema: createSampleSchema,
   });
-  
+
   const {
     bulkTextAreaInput,
     setBulkTextAreaInput,
@@ -49,11 +51,13 @@ export default function SamplesMultiInputForm() {
     createTableRowMutation: createSampleMutation,
     initialCreateRowForm: initialCreateSampleForm,
   });
-  
+
 
 
   return (
     <>
+    <SamplesDilutionsSection/>
+
       <BulkInputTextArea
         name="bulkTextAreaInputForMultiSubmit"
         placeholder="copy/paste from excel"
@@ -61,6 +65,7 @@ export default function SamplesMultiInputForm() {
         onChange={(e) => setBulkTextAreaInput(e.target.value)}
       ></BulkInputTextArea>
 
+      {createError && <ErrorMessage error={createError} />}
       {isPending && <h1>Submitting cellbank(s) in progress...</h1>}
       <StyledForm
         onSubmit={(e) => {
@@ -83,10 +88,10 @@ export default function SamplesMultiInputForm() {
                       required
                       autoFocus
                       value={bulkForm[i].flask_id || ''}
-                      />
-                      {i == 0 && (
-                        <FormLabel htmlFor="flask_id">flask_id</FormLabel>
-                      )}
+                    />
+                    {i == 0 && (
+                      <FormLabel htmlFor="flask_id">flask_id</FormLabel>
+                    )}
                   </FormInputCell>
 
                   <FormInputCell>
@@ -97,8 +102,8 @@ export default function SamplesMultiInputForm() {
                       placeholder="od600 (e.g. 3.4)"
                       required
                       value={bulkForm[i].od600 || ''}
-                      />
-                      {i == 0 && <FormLabel htmlFor="od600">od600</FormLabel>}
+                    />
+                    {i == 0 && <FormLabel htmlFor="od600">od600</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>
@@ -109,10 +114,10 @@ export default function SamplesMultiInputForm() {
                       placeholder="completed"
                       required
                       value={bulkForm[i].completed ? 'true' : 'false'}
-                      />
-                      {i == 0 && (
-                        <FormLabel htmlFor="completed">completed</FormLabel>
-                      )}
+                    />
+                    {i == 0 && (
+                      <FormLabel htmlFor="completed">completed</FormLabel>
+                    )}
                   </FormInputCell>
                 </CreateEntryTableRow>
               ))}
@@ -131,20 +136,3 @@ export default function SamplesMultiInputForm() {
   );
 }
 
-// const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-//   try {
-//     e.preventDefault();
-//     console.log('submitting', 'form', form, 'bulkform', bulkForm);
-//     await fetch(`${baseUrl}/api/cellbanks`, {
-//       method: 'POST',
-//       headers: {
-//         'content-type': 'application/json',
-//       },
-
-//       body: JSON.stringify(form),
-//     });
-//     setForm((prev) => initialUpdateCellbankForm);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };

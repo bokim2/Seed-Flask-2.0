@@ -29,6 +29,8 @@ export default function SamplesRow({
     completed,
     end_date,
     human_readable_date,
+    username, 
+    user_id
   } = rowData;
 
   const editing = editingId === sample_id;
@@ -48,7 +50,7 @@ export default function SamplesRow({
         <TableDataCell data-cell="completed">
           {completed ? 'completed' : 'in-progress'}
         </TableDataCell>
-        <TableDataCell data-cell="user">username</TableDataCell>
+        <TableDataCell data-cell="user">{username}</TableDataCell>
         <TableDataCell
           data-cell="edit"
           onClick={(e) => {
