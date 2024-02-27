@@ -43,7 +43,7 @@ const DilutionButton = styled(Button)`
     color: var(--clr-text-2);
   }
 `;
-const dilutionTotaluLOptions = [200, 500, 1000, 1500];
+const dilutionTotaluLOptions = [200, 500, 750, 1000, 1500];
 const sampleuLOptions = [25, 50, 100, 200, 250, 500];
 const diluentuLOptions = [180, 200, 500, 750, 800, 900, 950, 980, 1000];
 const dilutionFactorOptions = [2, 5, 10, 12.5, 15, 20];
