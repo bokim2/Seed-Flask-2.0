@@ -457,9 +457,13 @@ export const TableDataCell = styled.td`
 
 export const EditTextArea = styled(FormTextArea)`
 /* padding-top: 0rem !important; */
+
   text-align: center;
   width: 100%;
-  height: auto;
+  height: 2rem;
+  box-sizing: content-box;
+  /* background-color: red; */
+  /* vertical-align: bottom; */
 `;
 
 export const PreviousDataRow = styled(TableRow)<TTableRow>`
@@ -473,7 +477,8 @@ export const PreviousDataRow = styled(TableRow)<TTableRow>`
 `;
 
 export const EditRow = styled.tr`
-  background-color: rgba(var(--clr-accent-0), 1);
+  /* background-color: rgba(var(--clr-accent-0), 1); */
+  background-color: yellow;
   color: turquoise;
 `;
 
@@ -554,6 +559,9 @@ export const MultiInputFormCell = styled(FormInputCell)``; // td
 
 export const MultiInput = styled(MultiFormInput)`
 /* padding: 0rem; */
+height: 2rem;
+/* background-color: yellow; */
+/* vertical-align: bottom; */
 `; // input
 
 // buttons container
