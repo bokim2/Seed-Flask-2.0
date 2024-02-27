@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../../ui/Button';
 import styled from 'styled-components';
 
@@ -60,6 +60,7 @@ const relationshipMap = {
 const calcRelationshipMap = {
   dilutionFactor: { options: dilutionFactorOptions, defaultVal: 5 },
   estimate: { options: estimatedOD600Options, defaultVal: 3 },
+  sample: { options: sampleuLOptions, defaultVal: 100 },
 };
 
 function dilutionInstructions(
@@ -136,21 +137,6 @@ export default function SamplesDilutionCalculator({
   // const [dilutionFactor, setDilutionFactor] = useState(5);
   const [OD600Reading, setOD600Reading] = useState<string>('0.');
 
-  // // selected option for first row - total, diluent
-  // const [selected, setSelected] = useState<string>('total');
-
-  // // diluent, total uL
-  // const [selectedValue, setSelectedValue] = useState<number>(1000);
-
-  // // for second row - dilution factor, estimate
-  // const [selectedCalc, setSelectedCalc] = useState<string>('dilutionFactor');
-  // const [selectedCalcValue, setSelectedCalcValue] = useState<number>(
-  //   calcRelationshipMap[selectedCalc].defaultVal
-  // );
-
-  // const [rawOD600Target, setRawOD600Target] = useState<number>(0.3);
-  // const [serialDilutions, setSerialDilutions] = useState<number>(1)
-
   return (
     <div>
       <SamplesDilutionSingleSelector
@@ -174,16 +160,7 @@ export default function SamplesDilutionCalculator({
         selectedCalcValue,
         rawOD600Target
       )}
-      <InnerContainer>
-        {/* {selectedCalc == 'dilutionFactor'
-          ? `${(
-              selectedValue -
-              selectedValue / Number(selectedCalcValue)
-            ).toFixed(3)}uL diluent + ${(
-              selectedValue / Number(selectedCalcValue)
-            ).toFixed(3)}uL sample for a ${selectedCalcValue}x dilution`
-          : ''} */}
-      </InnerContainer>
+
       <CalculationContainer>
         Raw OD600:{' '}
         <OD600ReadingInput
@@ -232,12 +209,32 @@ function SamplesDilutionSingleSelector({
   //   'selectedValue',
   //   selectedValue
   // );
+
+
+  // update default when sample and sample is selected
+useEffect(()=> {
+if (selected == 'sample' && selectedCalc == 'sample'){
+ setDilutionSettings((prev) =>{
+  return prev.map((el) => {
+    if (el.rowNumber === row){
+      return {
+        ...el, 
+        selectedCalc: 'dilutionFactor',
+        selectedCalcValue: 10,
+      }
+    } else {
+      return el
+    }
+  })
+ })
+}
+}, [selected, selectedCalc, row])
+
   return (
     <>
       <OuterContainer>
         {/* total ul */}
         <InnerContainer>
-          <InnerContainer>
             selected: {selected}
             {relationshipMap &&
               Object.keys(relationshipMap)?.map((option) => (
@@ -267,22 +264,7 @@ function SamplesDilutionSingleSelector({
               ))}
           </InnerContainer>
 
-          {/* {selected == 'estimate' ? (
-            <>
-              raw OD600 target:
-              <DilutionsInput
-                type="number"
-                placeholder="total uL"
-                value={rawOD600Target}
-                onChange={(e) => {
-                  // setRawOD600Target(Number(e.target.value));
-                }}
-              />
-            </>
-          ) : (
-            ''
-          )} */}
-        </InnerContainer>
+    
         <InnerContainer>
           {selected &&
             relationshipMap?.[selected]?.options?.map((option, i) => (
@@ -341,8 +323,24 @@ function SamplesDilutionSingleSelector({
           <InnerContainer>
             selected: {selectedCalc}
             {relationshipMap &&
-              Object.keys(calcRelationshipMap)?.map((option) => (
-                <DilutionButton
+              Object.keys(calcRelationshipMap)?.map((option) =>{
+                if (selected === 'sample' && option === 'sample') {
+                  // setDilutionSettings((prev) =>
+                  // prev.map((e) => {
+                  //   if (e.rowNumber === row) {
+                  //     return {
+                  //       ...e,
+                  //       selectedCalcValue:
+                  //         10,
+                  //       selectedCalc: 'dilutionFactor',
+                  //     };
+                  //   } else {
+                  //     return e;
+                  //   }
+                  // })
+                // );
+
+                return (null) } else { return ( <DilutionButton
                   key={option}
                   onClick={() => {
                     console.log('option', option, row);
@@ -366,7 +364,8 @@ function SamplesDilutionSingleSelector({
                 >
                   {option}
                 </DilutionButton>
-              ))}
+              )}}
+              )}
           </InnerContainer>
 
           {selectedCalc == 'estimate' ? (
