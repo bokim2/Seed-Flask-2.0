@@ -145,4 +145,6 @@ export const StyledSingleDilution = styled.div`
 padding: .5rem;
 background-color: #332626;
 border-radius: 15px;
+
+
 `
