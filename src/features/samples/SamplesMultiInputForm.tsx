@@ -25,8 +25,8 @@ import {
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import ErrorMessage from '../../ui/ErrorMessage';
-import SamplesDilutionCalculator from './SamplesDilutionCalculator';
-import SamplesDilutionsSection from './SamplesDilutionsSection';
+import SamplesDilutionCalculator from './sample-dilutions/SamplesDilutionCalculator';
+import SamplesDilutionsSection from './sample-dilutions/SamplesDilutionsSection';
 
 export default function SamplesMultiInputForm() {
   // create a row
@@ -52,11 +52,9 @@ export default function SamplesMultiInputForm() {
     initialCreateRowForm: initialCreateSampleForm,
   });
 
-
-
   return (
     <>
-    <SamplesDilutionsSection/>
+      <SamplesDilutionsSection />
 
       <BulkInputTextArea
         name="bulkTextAreaInputForMultiSubmit"
@@ -135,4 +133,3 @@ export default function SamplesMultiInputForm() {
     </>
   );
 }
-
