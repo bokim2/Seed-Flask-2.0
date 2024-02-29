@@ -16,17 +16,14 @@ import Button from '../../ui/Button';
 
 import {
   TCreateSample,
-  TinitialEditSampleForm,
   createSampleColumnsArray,
   createSampleSchema,
   initialCreateSampleForm,
-  initialEditSampleForm,
 } from './samples-types';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import ErrorMessage from '../../ui/ErrorMessage';
-import SamplesDilutionCalculator from './sample-dilutions/SamplesDilutionCalculator';
-import SamplesDilutionsSection from './sample-dilutions/SamplesDilutionsSection';
+import SamplesDilutions from './sample-dilutions/SamplesDilutions';
 
 export default function SamplesMultiInputForm() {
   // create a row
@@ -54,7 +51,7 @@ export default function SamplesMultiInputForm() {
 
   return (
     <>
-      <SamplesDilutionsSection />
+      <SamplesDilutions />
 
       <BulkInputTextArea
         name="bulkTextAreaInputForMultiSubmit"
