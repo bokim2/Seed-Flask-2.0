@@ -180,7 +180,7 @@ export const FormInputCell = styled.td`
   // multi-form td
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   font-size: 1rem;
   flex-direction: column-reverse;
@@ -558,8 +558,8 @@ export const MultiInputFormBody = styled.tbody``;
 export const MultiInputFormCell = styled(FormInputCell)``; // td
 
 export const MultiInput = styled(MultiFormInput)`
-/* padding: 0rem; */
-height: 2rem;
+padding-top: 0.7rem;
+height: 2.5rem;
 /* background-color: yellow; */
 /* vertical-align: bottom; */
 `; // input

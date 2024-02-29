@@ -40,7 +40,7 @@ const variations = {
     }
   `,
     warning: css`
-    background-color: rgba(var(--clr-accent-3));
+    background-color: #ED5650;
 
     &:hover {
       background-color: rgba(var(--clr-accent-4));

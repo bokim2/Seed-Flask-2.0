@@ -1,6 +1,15 @@
-import { useState } from 'react';
+export const initialDilutionSettings = [
+  {
+    selected: 'total',
+    selectedValue: 1000,
+    selectedCalc: 'dilutionFactor',
+    selectedCalcValue: 5,
+    rawOD600Target: 0.3,
+    rowNumber: 0,
+  },
+];
 
-export const dilutionTotaluLOptions = [200, 500, 750, 1000, 1500];
+export const dilutionTotaluLOptions = [200, 500, 750, 800, 900,1000, 1500];
 export const sampleuLOptions = [25, 50, 100, 200, 250, 500];
 export const diluentuLOptions = [180, 200, 500, 750, 800, 900, 950, 980, 1000];
 export const dilutionFactorOptions = [2, 5, 10, 12.5, 15, 20];
@@ -19,53 +28,6 @@ export const calcRelationshipMap = {
   estimate: { options: estimatedOD600Options, defaultVal: 3 },
   sample: { options: sampleuLOptions, defaultVal: 100 },
 };
-
-// export function dilutionInstructions(
-//     selected: string,
-//     selectedValue: number,
-//     selectedCalc: string,
-//     selectedCalcValue: number,
-//     rawOD600Target: number
-//     // OD600Reading: string
-//   ) {
-//     if (selected === 'total' && selectedCalc === 'dilutionFactor') {
-//       return `${parseFloat(
-//         (selectedValue - selectedValue / Number(selectedCalcValue)).toFixed(1)
-//       )} uL diluent + ${parseFloat(
-//         (selectedValue / Number(selectedCalcValue)).toFixed(1)
-//       )}uL sample for a ${selectedCalcValue}x dilution`;
-//     }
-
-//     if (selected === 'diluent' && selectedCalc === 'dilutionFactor') {
-//       return `${parseFloat(selectedValue.toFixed(1))} uL diluent + ${parseFloat(
-//         (selectedValue / (Number(selectedCalcValue) - 1)).toFixed(1)
-//       )} uL sample for a ${selectedCalcValue}x dilution`;
-//     }
-
-//     if (selected === 'sample' && selectedCalc === 'dilutionFactor') {
-//       return `${parseFloat(
-//         (selectedValue * selectedCalcValue - selectedValue).toFixed(1)
-//       )} uL diluent + ${parseFloat(
-//         Number(selectedValue).toFixed(1)
-//       )} uL sample for a ${selectedCalcValue}x dilution`;
-//     }
-
-//     //estimate section
-//     if (selected === 'total' && selectedCalc === 'estimate') {
-//       return `${parseFloat(
-//         (
-//           selectedValue -
-//           (rawOD600Target / selectedCalcValue) * selectedValue
-//         ).toFixed(1)
-//       )} uL diluent + ${parseFloat(
-//         ((rawOD600Target / selectedCalcValue) * selectedValue).toFixed(1)
-//       )} uL sample to dilute a sample with an estimated OD600 of ${selectedCalcValue}.  The dilution factor is ${parseFloat(
-//         (selectedCalcValue / rawOD600Target).toFixed(1)
-//       )}`;
-//     }
-
-//     return null; // Add this line to handle the case when selectedCalc is not 'dilutionFactor'
-//   }
 
 export function dilutionsCalculator(
   selected: string,
