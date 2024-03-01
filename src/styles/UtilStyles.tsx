@@ -433,7 +433,7 @@ export const TableDataCell = styled.td`
   @media (max-width: 600px) {
     display: grid;
     &::before {
-      content: attr(data-cell) ': ';
+      content: attr(data-cell) ' ';
       font-weight: 700;
       color: rgba(var(--clr-accent-0), 1);
     }
@@ -447,7 +447,7 @@ export const TableDataCell = styled.td`
           display: none;
         } */
 
-    &[data-cell='cell bank id'] {
+    &:first-child {
       font-size: 1.5rem;
     }
   }

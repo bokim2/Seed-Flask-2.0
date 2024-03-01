@@ -18,7 +18,7 @@ export const SampleAmountContainer = styled.div`
   width: 5rem;
   position: relative;
   @media (min-width: 600px) {
-    width: 10rem;
+    width: 7rem;
 
   }
 `;

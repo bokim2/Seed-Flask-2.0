@@ -6,12 +6,12 @@ import {
   dilutionsCalculator,
   initialDilutionSettings,
 } from '../samples-helpers';
-import AllSerialDilutionsSummary from './DilutionsSummary';
+import AllSerialDilutionsSummary from './AllSerialDilutionsSummary';
 
 export const StyledSamplesDilution = styled.div`
   /* background-color: #829bda; */
   /* padding: 1rem; */
-  /* max-width: 400px; */
+  max-width: 450px;
 
   @media (min-width: 600px) {
     font-size: 1.5rem;
@@ -66,7 +66,7 @@ export default function SamplesDilutions() {
           />
         ))}
         {/* add and clear serial dilutions */}
-        <Button
+        {dilutionSettings.length > 0 && (<Button
           $size="xs"
           $variation="warning"
           onClick={() => {
@@ -74,7 +74,7 @@ export default function SamplesDilutions() {
           }}
         >
           erase this dilution
-        </Button>
+        </Button>)}
         <AllSerialDilutionsSummary
           dilutionsSummary={dilutionsSummary}
           dilutionSettings={dilutionSettings}

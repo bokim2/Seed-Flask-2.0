@@ -40,14 +40,14 @@ export default function FlasksRow({
     <>
       <PreviousDataRow $editing={editing}>
         {/* <TableRow> */}
-        <TableDataCell data-cell="flask id">{flask_id}</TableDataCell>
+        <TableDataCell data-cell="Flask ID">{flask_id}</TableDataCell>
         <TableDataCell data-cell="cell bank id">{cell_bank_id}</TableDataCell>
-        <TableDataCell data-cell="start date">{media}</TableDataCell>
+        <TableDataCell data-cell="media">{media}</TableDataCell>
         <TableDataCell data-cell="inoculum uL">{inoculum_ul}</TableDataCell>
         <TableDataCell data-cell="media mL">{media_ml}</TableDataCell>
 
-        <TableDataCell data-cell="strain">{temp_c}</TableDataCell>
-        <TableDataCell data-cell="target molecule">{rpm}</TableDataCell>
+        <TableDataCell data-cell="temp c">{temp_c}</TableDataCell>
+        <TableDataCell data-cell="rpm">{rpm}</TableDataCell>
         <TableDataCell data-cell="start date (user's timezone)">
           {displayLocalTime(start_date)}
         </TableDataCell>
@@ -119,9 +119,9 @@ function FlasksEditForm({
           {editedForm.flask_id}
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="cell_bank_id">
           <EditTextArea
-            data-cell="cell_bank_id"
+            
             name="cell_bank_id"
             onChange={handleChange}
             placeholder="cell_bank_id"
@@ -132,9 +132,9 @@ function FlasksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="media">
           <EditTextArea
-            data-cell="media"
+            
             name="media"
             onChange={handleChange}
             placeholder="media"
@@ -145,9 +145,9 @@ function FlasksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="inoculum_ul">
           <EditTextArea
-            data-cell="inoculum_ul"
+            
             name="inoculum_ul"
             onChange={handleChange}
             placeholder="inoculum_ul"
@@ -158,9 +158,9 @@ function FlasksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="media_ml">
           <EditTextArea
-            data-cell="media_ml"
+            
             name="media_ml"
             onChange={handleChange}
             placeholder="media_ml"
@@ -171,9 +171,9 @@ function FlasksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="temp_c">
           <EditTextArea
-            data-cell="temp_c"
+            
             name="temp_c"
             onChange={handleChange}
             placeholder="temp_c"
@@ -184,9 +184,9 @@ function FlasksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="rpm">
           <EditTextArea
-            data-cell="rpm"
+            
             name="rpm"
             onChange={handleChange}
             placeholder="rpm"
@@ -197,9 +197,9 @@ function FlasksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="human_readable_date">
           <EditTextArea
-            data-cell="human_readable_date"
+            
             name="human_readable_date"
             onChange={handleChange}
             placeholder="human_readable_date"
