@@ -34,6 +34,7 @@ export const SampleContainer = styled.div`
   @media (min-width: 600px) {
     /* height: 20vw; */
     /* width: 4vw; */
+    /* display: none; */
   }
 `;
 
@@ -86,7 +87,14 @@ export const SingleDilutionContainer = styled.div`
   /* background-color: lightblue; */
   /* border: 5px solid blue; */
   /* padding: 1rem; */
+  padding: .5rem;
+background-color: #332626;
+border-radius: 15px;
   margin-block: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: .5rem;
 `;
 
 export const CalculationContainer = styled.div`
@@ -145,9 +153,9 @@ color: white;
 `
 
 export const StyledSingleDilution = styled.div`
-padding: .5rem;
+/* padding: .5rem;
 background-color: #332626;
-border-radius: 15px;
+border-radius: 15px; */
 
 
 `

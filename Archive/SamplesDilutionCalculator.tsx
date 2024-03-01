@@ -30,7 +30,7 @@
 //   }
 // `;
 
-// export default function SamplesDilutionCalculator() {
+// export default function DilutionCalculator() {
 //   const [totaluL, setTotaluL] = useState<number>(1000);
 //   const [dilutionFactor, setDilutionFactor] = useState(5);
 //   const [OD600Reading, setOD600Reading] = useState<string>('0.');
@@ -66,7 +66,7 @@
 //             onChange={(e) => setTotaluL(Number(e.target.value))}
 //           />
 //         </InnerContainer>
-				
+
 //         {/* dilution factor */}
 //         <CalculationContainer>
 //           selected dilution factor: {dilutionFactor}

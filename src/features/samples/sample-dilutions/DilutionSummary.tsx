@@ -9,7 +9,7 @@ import {
   StyledSingleDilution,
 } from './dilutions-styles';
 
-export default function SamplesDilutionSummary({
+export default function DilutionSummary({
   diluentUL,
   sampleUL,
   dilutionFactor,

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import SamplesDilutionCalculator from './SamplesDilutionCalculator';
+import DilutionCalculator from './DilutionCalculator';
 import Button from '../../../ui/Button';
 import styled from 'styled-components';
 import {
   dilutionsCalculator,
   initialDilutionSettings,
 } from '../samples-helpers';
-import AllSerialDilutionsSummary from './AllSerialDilutionsSummary';
+import AllSerialDilutionsSummary from './DilutionsSummary';
 
 export const StyledSamplesDilution = styled.div`
   /* background-color: #829bda; */
@@ -14,7 +14,7 @@ export const StyledSamplesDilution = styled.div`
   /* max-width: 400px; */
 
   @media (min-width: 600px) {
-  font-size: 1.5rem;
+    font-size: 1.5rem;
   }
 `;
 
@@ -56,7 +56,7 @@ export default function SamplesDilutions() {
     <>
       <StyledSamplesDilution>
         {dilutionSettings.map((e, i) => (
-          <SamplesDilutionCalculator
+          <DilutionCalculator
             key={i}
             dilutionSetting={dilutionSettings[i]}
             dilutionSettings={dilutionSettings}

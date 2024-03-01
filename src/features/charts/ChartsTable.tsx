@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import FlasksRow from './FlasksRow';
+import FlasksRow from './ChartsRow';
 import {
   TCreateFlask,
   createFlaskSchema,
@@ -19,7 +19,7 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
-import ChartsRow from './FlasksRow';
+import ChartsRow from './ChartsRow';
 import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 

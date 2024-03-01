@@ -31,6 +31,7 @@ export default function ChartsRow({
     start_date,
     strain,
     target_molecule,
+    username,
   } = rowData;
   const editing = editingId === flask_id;
   console.log('rowData', rowData);
@@ -50,7 +51,7 @@ export default function ChartsRow({
         <TableDataCell data-cell="start date (user's timezone)">
           {displayLocalTime(start_date)}
         </TableDataCell>
-        <TableDataCell data-cell="user">{'userName'}</TableDataCell>
+        <TableDataCell data-cell="username">{username}</TableDataCell>
         <TableDataCell
           data-cell="edit"
           onClick={(e) => {
