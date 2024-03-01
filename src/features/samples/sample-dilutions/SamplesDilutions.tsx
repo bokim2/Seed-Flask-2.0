@@ -12,6 +12,10 @@ export const StyledSamplesDilution = styled.div`
   /* background-color: #829bda; */
   /* padding: 1rem; */
   /* max-width: 400px; */
+
+  @media (min-width: 600px) {
+  font-size: 1.5rem;
+  }
 `;
 
 export default function SamplesDilutions() {
