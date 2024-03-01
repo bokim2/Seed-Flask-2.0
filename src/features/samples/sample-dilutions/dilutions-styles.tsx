@@ -94,9 +94,12 @@ font-size: 1.2rem;
 padding: .5rem;
 `;
 
-export const DilutionsInput = styled.input`
+export const DilutionSelectorInput = styled.input`
   width: 6ch;
-  background-color: rgba(var(--clr-accent-5), 1);
+  border: none;
+  padding: .2rem;
+  border-radius: 5px;
+  /* background-color: grey; */
 `;
 
 export const OD600ReadingInput = styled.input`

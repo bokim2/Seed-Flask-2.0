@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { DilutionButton, InnerContainer, OD600ReadingInput, OuterContainer } from './dilutions-styles';
+import { DilutionButton, InnerContainer, DilutionSelectorInput, OuterContainer } from './dilutions-styles';
 import { calcRelationshipMap, relationshipMap } from '../samples-helpers';
 
 
@@ -47,10 +47,11 @@ function DilutionSelectors({
       <OuterContainer>
         {/* first row - total diluent sample */}
         <InnerContainer>
-          selected: {selected}
+          {/* selected: {selected} */}
           {relationshipMap &&
             Object.keys(relationshipMap)?.map((option) => (
               <DilutionButton
+           
                 key={option}
                 onClick={() => {
                   console.log('option', option, row);
@@ -69,7 +70,7 @@ function DilutionSelectors({
                   );
                 }}
                 $size="xs"
-                className={selected == option ? 'selected' : ''}
+                className={selected == option ? 'selected' : '' }
               >
                 {option}
               </DilutionButton>
@@ -81,6 +82,7 @@ function DilutionSelectors({
           {selected &&
             relationshipMap?.[selected]?.options?.map((option, i) => (
               <DilutionButton
+              
                 key={i}
                 $size="xs"
                 value={selected}
@@ -100,14 +102,14 @@ function DilutionSelectors({
                     })
                   );
                 }}
-                className={selectedValue == option ? 'selected' : ''}
+                className={`${selectedValue == option ? 'selected' : ''} ${selected}`}
               >
                 {option}
               </DilutionButton>
             ))}
 
           {/* input for first row - total, diluent */}
-          <OD600ReadingInput
+          <DilutionSelectorInput
             type="number"
             placeholder={selected == 'estimate' ? 'expected OD600' : selected}
             value={selectedValue}
@@ -133,7 +135,7 @@ function DilutionSelectors({
         {/* second row - dilutionFactor, estimate, sample */}
         <InnerContainer>
           <InnerContainer>
-            selected: {selectedCalc}
+            {/* selected: {selectedCalc} */}
             {relationshipMap &&
               Object.keys(calcRelationshipMap)?.map((option) => {
                 // dont show 'estimate' button if there is more than 1 dilution
@@ -178,7 +180,7 @@ function DilutionSelectors({
           {selectedCalc == 'estimate' ? (
             <>
               spec OD600 target:
-              <OD600ReadingInput
+              <DilutionSelectorInput
                 type="number"
                 placeholder="total uL"
                 value={rawOD600Target}
@@ -232,7 +234,7 @@ function DilutionSelectors({
                 </DilutionButton>
               ))}
          
-          <OD600ReadingInput
+          <DilutionSelectorInput
             type="number"
             placeholder={selectedCalcValue}
             value={selectedCalcValue}

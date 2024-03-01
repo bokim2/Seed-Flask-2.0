@@ -6,6 +6,7 @@ export const initialDilutionSettings = [
     selectedCalcValue: 5,
     rawOD600Target: 0.3,
     rowNumber: 0,
+    OD600Reading: '0.',
     // dilutionFactor: 5,
   },
 ];

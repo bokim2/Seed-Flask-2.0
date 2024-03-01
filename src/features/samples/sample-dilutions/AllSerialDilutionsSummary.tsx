@@ -6,7 +6,7 @@ export default function AllSerialDilutionsSummary({dilutionsSummary, dilutionSet
   return (
     <div>
     <p>totalDilutionFactor: {totalDilutionFactor}</p>
-    <p>OD600: {totalDilutionFactor * dilutionSettings[dilutionSettings.length-1]}</p>
+    <p>OD600: {totalDilutionFactor * dilutionSettings[dilutionSettings.length-1].OD600Reading}</p>
     </div>
   )
 }

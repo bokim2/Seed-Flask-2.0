@@ -41,7 +41,7 @@ export default function SamplesDilutionCalculator({
   const { diluentUL, sampleUL, dilutionFactor } = dilutionsSummary[row];
 
   return (
-    <SingleDilutionContainer id='dilution-calculator'>
+    // <SingleDilutionContainer id='dilution-calculator'>
       <StyledSingleDilution id='single-dilution'>
         <StyledH2>Serial Dilution {row + 1}</StyledH2>
         <SampleSummaryContainer id="SampleSummaryContainer">
@@ -74,9 +74,12 @@ export default function SamplesDilutionCalculator({
           selectedCalc={selectedCalc}
           selectedCalcValue=  {selectedCalcValue}
           rawOD600Target={rawOD600Target}
+          dilutionSettings={dilutionSettings}
+          dilutionSetting={dilutionSetting}setDilutionSettings={setDilutionSettings}
+          // OD600Reading={OD600Reading}
         />
         
       </StyledSingleDilution>
-    </SingleDilutionContainer>
+    // </SingleDilutionContainer>
   );
 }
