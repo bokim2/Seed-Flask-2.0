@@ -50,7 +50,7 @@ export default function CellbanksRow({
 
         <TableDataCell data-cell="strain">{strain}</TableDataCell>
 
-        <TableDataCell data-cell="target_molecule">
+        <TableDataCell data-cell="target molecule">
           {target_molecule}
         </TableDataCell>
 

@@ -1,9 +1,9 @@
 export const initialDilutionSettings = [
   {
-    selected: 'total',
-    selectedValue: 1000,
-    selectedCalc: 'dilutionFactor',
-    selectedCalcValue: 5,
+    selected: 'diluent',
+    selectedValue: 950,
+    selectedCalc: 'sample',
+    selectedCalcValue: 50,
     rawOD600Target: 0.3,
     rowNumber: 0,
     OD600Reading: '0.',
@@ -11,7 +11,7 @@ export const initialDilutionSettings = [
   },
 ];
 
-export const dilutionTotaluLOptions = [200, 500, 750, 800, 900,1000, 1500];
+export const dilutionTotaluLOptions = [200, 500, 750, 800, 900, 1000, 1500];
 export const sampleuLOptions = [25, 50, 100, 200, 250, 500];
 export const diluentuLOptions = [180, 200, 500, 750, 800, 900, 950, 980, 1000];
 export const dilutionFactorOptions = [2, 5, 10, 12.5, 15, 20];
@@ -119,7 +119,7 @@ export function dilutionsCalculator(
     sampleUL = parseFloat(selectedCalcValue.toFixed(1));
   }
 
-  const dilutionFactor = parseFloat( 
+  const dilutionFactor = parseFloat(
     ((diluentUL + sampleUL) / sampleUL).toFixed(2)
   );
 

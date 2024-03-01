@@ -4,11 +4,14 @@ export default function DilutionsSummary({
   dilutionsSummary,
   dilutionSettings,
 }) {
+  if (dilutionsSummary.length === 0) return;
+
   const totalDilutionFactor = dilutionsSummary
     .map((el) => el.dilutionFactor)
     .reduce((acc, curr) => acc * curr, 1);
   return (
     <div>
+      
       <p>totalDilutionFactor: {totalDilutionFactor}</p>
       <p>
         OD600:{' '}

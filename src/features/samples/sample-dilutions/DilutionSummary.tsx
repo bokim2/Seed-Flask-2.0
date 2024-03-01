@@ -43,6 +43,9 @@ export default function DilutionSummary({
     <CalculationContainer>
       {/* Summary / dilution footer */}
       <h4>{`${diluentUL} uL diluent + ${sampleUL} uL sample.  The dilution factor is ${dilutionFactor}.`}</h4>
+      
+      {dilutionSetting.rowNumber === dilutionSettings.length -1 &&
+      (<>
       Raw OD600: {/* single dilution spec reading input - raw OD600 .34 */}
       <OD600ReadingInput
         type="text"
@@ -61,6 +64,8 @@ export default function DilutionSummary({
         }
       />
       OD600 reading: {calculateOD600()}
+      </>)}
+
     </CalculationContainer>
   );
 }
