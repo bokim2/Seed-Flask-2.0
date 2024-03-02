@@ -18,6 +18,9 @@ import Button from '../ui/Button';
 
 const HomePageContainer = styled(PageContainer)`
   width: 80%;
+  align-self: center;
+  justify-content: center;
+  
 `;
 
 const InnerWrapper = styled.div`

@@ -50,8 +50,10 @@ const MainPageContainer = styled.main`
   position: relative;
   flex-grow: 1;
   width: 100%;
+  min-height: 75vh;
   /* width: 85%; */
   margin: 0 auto;
+  display: flex;
   /* height: 100%; */
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
 `;

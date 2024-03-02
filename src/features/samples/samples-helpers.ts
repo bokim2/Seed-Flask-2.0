@@ -31,6 +31,8 @@ export const calcRelationshipMap = {
   sample: { options: sampleuLOptions, defaultVal: 100 },
 };
 
+
+// if you want to limit the number of decimal points - not wanted for serial dilutions... error will add up
 export function dilutionsCalculator(
   selected: string,
   selectedValue: number,
@@ -50,7 +52,6 @@ export function dilutionsCalculator(
     sampleUL = parseFloat(
       (selectedValue / Number(selectedCalcValue)).toFixed(1)
     );
-    // return `${diluentUL} uL diluent + ${sampleUL}uL sample for a ${selectedCalcValue}x dilution`;
   }
 
   if (selected === 'diluent' && selectedCalc === 'dilutionFactor') {
@@ -58,7 +59,6 @@ export function dilutionsCalculator(
     sampleUL = parseFloat(
       (selectedValue / (Number(selectedCalcValue) - 1)).toFixed(1)
     );
-    // return `${diluentUL} uL diluent + ${sampleUL} uL sample for a ${selectedCalcValue}x dilution`;
   }
 
   if (selected === 'sample' && selectedCalc === 'dilutionFactor') {
@@ -66,7 +66,6 @@ export function dilutionsCalculator(
       (selectedValue * selectedCalcValue - selectedValue).toFixed(1)
     );
     sampleUL = parseFloat(Number(selectedValue).toFixed(1));
-    // return `${diluentUL} uL diluent + ${sampleUL} uL sample for a ${selectedCalcValue}x dilution`;
   }
 
   // estimate section
@@ -80,10 +79,6 @@ export function dilutionsCalculator(
     sampleUL = parseFloat(
       ((rawOD600Target / selectedCalcValue) * selectedValue).toFixed(1)
     );
-
-    // return `${diluentUL} uL diluent + ${sampleUL} uL sample to dilute a sample with an estimated OD600 of ${selectedCalcValue}.  The dilution factor is ${parseFloat(
-    //   (selectedCalcValue / rawOD600Target).toFixed(1)
-    // )}`;
   }
 
   if (selected === 'diluent' && selectedCalc === 'estimate') {
@@ -91,10 +86,6 @@ export function dilutionsCalculator(
     sampleUL = parseFloat(
       (selectedValue / (selectedCalcValue / rawOD600Target - 1)).toFixed(1)
     );
-
-    // return `${diluentUL} uL diluent + ${sampleUL} uL sample to dilute a sample with an estimated OD600 of ${selectedCalcValue}.  The dilution factor is ${parseFloat(
-    //   (selectedCalcValue / rawOD600Target).toFixed(1)
-    // )}`;
   }
 
   if (selected === 'sample' && selectedCalc === 'estimate') {
@@ -102,10 +93,6 @@ export function dilutionsCalculator(
       ((selectedCalcValue / rawOD600Target - 1) * selectedValue).toFixed(1)
     );
     sampleUL = parseFloat(selectedValue.toFixed(1));
-
-    // return `${diluentUL} uL diluent + ${sampleUL} uL sample to dilute a sample with an estimated OD600 of ${selectedCalcValue}.  The dilution factor is ${parseFloat(
-    //   (selectedCalcValue / rawOD600Target).toFixed(1)
-    // )}`;
   }
 
   // second row as 'sample'
@@ -119,10 +106,12 @@ export function dilutionsCalculator(
     sampleUL = parseFloat(selectedCalcValue.toFixed(1));
   }
 
-  const dilutionFactor = parseFloat(
-    ((diluentUL + sampleUL) / sampleUL).toFixed(2)
-  );
+
+  // do NOT round the dilution factor, it will accumulate error
+  const dilutionFactor = 
+    ((diluentUL + sampleUL) / sampleUL)
+  ;
 
   return { diluentUL, sampleUL, dilutionFactor };
-  // return null; // Add this line to handle the case when selectedCalc is not 'dilutionFactor'
 }
+

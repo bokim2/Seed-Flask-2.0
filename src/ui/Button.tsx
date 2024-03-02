@@ -60,7 +60,7 @@ const Button = styled.button<ButtonProps>`
   /* color: var(--clr-text-1); */
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
-  &:hover {
+  &:hover, &:focus {
       background-color: rgba(var(--clr-accent-5),.8);
     }
 
