@@ -100,7 +100,7 @@ const UserIconContainer = styled.div`
 const StyledLinkButton = styled(LinkButton)`
   display: none;
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     display: block;
   }
 `;

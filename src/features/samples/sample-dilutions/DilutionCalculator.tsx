@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { dilutionsCalculator } from '../samples-helpers';
-import DilutionAnimation from './DilutionAnimation';
 import { DilutionSelectors } from './DilutionSelectors';
 import {
   CalculationContainer,
@@ -51,7 +50,7 @@ export default function DilutionCalculator({
           dilutionFactor={dilutionFactor}
         /> */}
 
-        <SingleSelectorWrapper>
+        {/* <SingleSelectorWrapper> */}
           <DilutionSelectors
             selected={selected}
             selectedValue={selectedValue}
@@ -61,7 +60,7 @@ export default function DilutionCalculator({
             selectedCalcValue={selectedCalcValue}
             row={row}
           />
-        </SingleSelectorWrapper>
+        {/* </SingleSelectorWrapper> */}
       <DilutionAmountAnimation
           diluentUL={diluentUL}
           sampleUL={sampleUL}
@@ -74,14 +73,10 @@ export default function DilutionCalculator({
         diluentUL={diluentUL}
         sampleUL={sampleUL}
         dilutionFactor={dilutionFactor}
-        selected={selected}
-        selectedValue={selectedValue}
         selectedCalc={selectedCalc}
         selectedCalcValue={selectedCalcValue}
         rawOD600Target={rawOD600Target}
-        dilutionSettings={dilutionSettings}
         dilutionSetting={dilutionSetting}
-        setDilutionSettings={setDilutionSettings}
         // OD600Reading={OD600Reading}
       />
       

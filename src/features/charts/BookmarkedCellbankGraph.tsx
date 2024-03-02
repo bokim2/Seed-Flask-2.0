@@ -32,7 +32,7 @@ const StyledBookmarkedCellbankGraph = styled.div`
   width: auto;
   height: auto;
 
-  @media (min-width: 600px){
+  @media (min-width: 850px) {
     width: 80%;
   }
 `;
@@ -119,7 +119,7 @@ const BookmarkedCellbankGraph = memo(
             font: {
               size: 18,
             },
-          }
+          },
         },
         title: {
           display: true,
@@ -159,9 +159,11 @@ const BookmarkedCellbankGraph = memo(
                       bookmarkedCellbankId % LineGraphColors.length
                     ],
               backgroundColor:
-              selectedFlask == flaskData.flask_id
-              ? 'white'
-              : LineGraphColors[bookmarkedCellbankId % LineGraphColors.length],
+                selectedFlask == flaskData.flask_id
+                  ? 'white'
+                  : LineGraphColors[
+                      bookmarkedCellbankId % LineGraphColors.length
+                    ],
               tension: 0.1,
             };
           })
@@ -190,7 +192,7 @@ const BookmarkedCellbankGraph = memo(
         <StyledBookmarkedCellbankGraph>
           <Line ref={chartRef} options={options} data={data} />
         </StyledBookmarkedCellbankGraph>
-        <ChartsTable flasks={bookmarkedCellbankGraphData.flat()}/>
+        <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} />
       </>
     );
   }

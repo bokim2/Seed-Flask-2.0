@@ -2,24 +2,24 @@ import styled from 'styled-components';
 
 export const SampleAmountContainer = styled.div`
   /* display: none; */
-  font-size: 1.2rem;
-  line-height: normal;
-  /* flex-shrink: 4; */
-  /* width: 100%; */
-  /* flex-grow: 1; */
-  /* margin: 0.5rem; */
-
-  /* border-left: 1px solid black; */
-  /* border-right: 1px solid black; */
-
-  /* height: 100%; */
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.4;
+  max-height: 60vh;
   background-color: white;
   display: block;
-  width: 5rem;
+  width: 4rem;
   position: relative;
-  @media (min-width: 600px) {
-    width: 7rem;
+ 
+  strong {
+    font-family: var(--font-serif);
+    font-weight: 900;
+    /* color: grey; */
+  }
 
+  @media (min-width: 850px) {
+    width: 7rem;
+    font-size: 1.2rem;
   }
 `;
 
@@ -48,10 +48,10 @@ export const StyledP = styled.p`
 `;
 export const StyledSampleP = styled.p`
   position: absolute;
-  top: -1.6rem;
-  /* display: inline-block;
-  margin-inline: auto; */
+  /* top: -1.6rem; */
+
   left: 50%;
+  bottom: 100%;
   transform: translateX(-50%);
   text-align: center;
   color: var(--clr-text-2);
@@ -63,12 +63,20 @@ export const StyledCenteredP = styled.p`
   color: var(--clr-text-2);
 `;
 export const StyledTotalP = styled.p`
-/* position: absolute; */
+  /* position: absolute; */
   /* bottom: 0; */
   /* margin-top: auto;  */
   text-align: center;
   color: var(--clr-text-2);
 `;
+
+export const Container = styled.div`
+  height: 100%;
+    display: block;
+  width: 4rem;
+  position: relative;
+`;
+
 export default function DilutionAmountAnimation({
   diluentUL,
   sampleUL,
@@ -81,25 +89,27 @@ export default function DilutionAmountAnimation({
   const liquidHeight = 60;
   return (
     // <Container id="animation-container">
-    <SampleAmountContainer>
-      <CultureAmountContainer
-        style={{ height: `${(cultureHeight + diluentHeight) * liquidHeight}%` }}
-      >
-        <StyledSampleP>
-          {sampleUL} uL <br /> <strong>sample</strong>
-        </StyledSampleP>
-      </CultureAmountContainer>
-      <DiluentAmountContainer
-        style={{ height: `${diluentHeight * liquidHeight}%` }}
-      >
-        <StyledCenteredP>
-          {diluentUL} uL <br /> <strong>diluent</strong>
-        </StyledCenteredP>
-      </DiluentAmountContainer>
-      {/* <StyledTotalP>
+      <SampleAmountContainer>
+        <CultureAmountContainer
+          style={{
+            height: `${(cultureHeight + diluentHeight) * liquidHeight}%`,
+          }}
+        >
+          <StyledSampleP>
+            {sampleUL} uL <br /> <strong>sample</strong>
+          </StyledSampleP>
+        </CultureAmountContainer>
+        <DiluentAmountContainer
+          style={{ height: `${diluentHeight * liquidHeight}%` }}
+        >
+          <StyledCenteredP>
+            {diluentUL} uL <br /> <strong>diluent</strong>
+          </StyledCenteredP>
+        </DiluentAmountContainer>
+        {/* <StyledTotalP>
         {totalUL} uL <br /> <strong>total</strong>
       </StyledTotalP> */}
-    </SampleAmountContainer>
+      </SampleAmountContainer>
     // </Container>
   );
 }

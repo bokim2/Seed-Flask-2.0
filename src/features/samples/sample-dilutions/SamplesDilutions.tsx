@@ -11,11 +11,34 @@ import AllSerialDilutionsSummary from './AllSerialDilutionsSummary';
 export const StyledSamplesDilution = styled.div`
   /* background-color: #829bda; */
   /* padding: 1rem; */
-  max-width: 450px;
+  /* max-width: 450px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     font-size: 1.5rem;
   }
+`;
+
+export const DilutionCardsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+
+  @media (min-width: 850px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+`;
+
+export const DilutionsSummaryButtonsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  /* flex-direction: column; */
+  justify-content: center;
+  gap: 0.5rem;
 `;
 
 export default function SamplesDilutions() {
@@ -39,6 +62,8 @@ export default function SamplesDilutions() {
     });
     return { diluentUL, sampleUL, dilutionFactor };
   });
+
+  // const totalDilutionFactor = dilutionsSummary.reduce((acc, prev)=> acc * prev.dilutionFactor, 1);
   console.log('dilutionsSummary', dilutionsSummary);
 
   function addSerialDilution() {
@@ -55,34 +80,49 @@ export default function SamplesDilutions() {
   return (
     <>
       <StyledSamplesDilution>
-        {dilutionSettings.map((e, i) => (
-          <DilutionCalculator
-            key={i}
-            dilutionSetting={dilutionSettings[i]}
-            dilutionSettings={dilutionSettings}
-            setDilutionSettings={setDilutionSettings}
-            dilutionsSummary={dilutionsSummary}
-            row={i}
-          />
-        ))}
-        {/* add and clear serial dilutions */}
-        {dilutionSettings.length > 0 && (<Button
-          $size="xs"
-          $variation="warning"
-          onClick={() => {
-            setDilutionSettings((prev) => prev.slice(0, -1));
-          }}
-        >
-          erase this dilution
-        </Button>)}
+        <DilutionCardsContainer>
+          {dilutionSettings.map((e, i) => (
+            <DilutionCalculator
+              key={i}
+              dilutionSetting={dilutionSettings[i]}
+              dilutionSettings={dilutionSettings}
+              setDilutionSettings={setDilutionSettings}
+              dilutionsSummary={dilutionsSummary}
+              row={i}
+            />
+          ))}
+        </DilutionCardsContainer>
         <AllSerialDilutionsSummary
           dilutionsSummary={dilutionsSummary}
           dilutionSettings={dilutionSettings}
+          setDilutionSettings={setDilutionSettings}
+          // totalDilutionFactor={totalDilutionFactor}
         />
-        <Button onClick={addSerialDilution}>Add Dilution</Button>
-        <Button onClick={() => setDilutionSettings(initialDilutionSettings)}>
-          Clear Dilutions
-        </Button>
+        <DilutionsSummaryButtonsContainer>
+          {/* add and clear serial dilutions */}
+          <Button $size="small" onClick={addSerialDilution}>
+            Add Dilution
+          </Button>
+          {dilutionSettings.length > 0 && (
+            <Button
+              $size="small"
+              $variation="warning"
+              onClick={() => {
+                setDilutionSettings((prev) => prev.slice(0, -1));
+              }}
+            >
+              Clear last dilution
+            </Button>
+          )}
+
+          <Button
+            $size="small"
+            $variation="warning"
+            onClick={() => setDilutionSettings(initialDilutionSettings)}
+          >
+            Clear All Dilutions
+          </Button>
+        </DilutionsSummaryButtonsContainer>
       </StyledSamplesDilution>
     </>
   );

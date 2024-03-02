@@ -22,7 +22,7 @@ export const LinkButton = styled.a`
     background-color: rgba(var(--clr-accent-5), 0.8);
   }
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     padding: 0.5rem 1rem;
   }
 `;
@@ -42,7 +42,7 @@ export const UserButton = styled.button`
     transform: scale(1.05);
   }
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     padding: 0.5rem; /* Add padding if needed */
   }
 `;
@@ -80,6 +80,7 @@ export const PageContainer = styled.section`
 
 export const InnerPageContainer = styled.section`
   width: 90%;
+  max-width: 1700px;
 `;
 
 // loader styles
@@ -171,7 +172,7 @@ export const FormTableCell = styled.td`
     color: rgba(var(--clr-accent-0), 1);
   }
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     display: table-cell;
   }
 `;
@@ -189,7 +190,7 @@ export const FormInputCell = styled.td`
     color: rgba(var(--clr-accent-6), 1);
   }
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     /* display: table-cell; */
   }
 `;
@@ -202,7 +203,7 @@ export const FormLabel = styled.label`
   /* letter-spacing: .1rem; */
   font-size: 1.2rem;
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     font-size: 1.5rem;
   }
 `;
@@ -264,7 +265,6 @@ export const SingleFormInput = styled.input`
 `;
 
 export const FormTextArea = styled.textarea`
-
   resize: both;
   border: 0;
   font-family: inherit;
@@ -304,7 +304,7 @@ export const TableContainer = styled.div`
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch; */
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     width: auto;
   }
 `;
@@ -334,7 +334,7 @@ export const Caption = styled.caption`
   padding-block: 1vh;
   pointer-events: none;
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     top: 2vh;
     background-color: transparent;
   }
@@ -384,7 +384,7 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
     transition: color 100ms ease-in-out, transform 100ms ease-in-out;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 850px) {
     display: none;
   }
 `;
@@ -430,7 +430,7 @@ export const TableDataCell = styled.td`
     text-overflow: ellipsis;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 850px) {
     display: grid;
     &::before {
       content: attr(data-cell) ' ';
@@ -456,7 +456,7 @@ export const TableDataCell = styled.td`
 // EDIT FORM STYLES
 
 export const EditTextArea = styled(FormTextArea)`
-/* padding-top: 0rem !important; */
+  /* padding-top: 0rem !important; */
 
   text-align: center;
   width: 100%;
@@ -507,7 +507,7 @@ export const TextSearchInput = styled.input`
   padding: 0.5rem;
   width: 200px;
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     width: 400px;
   }
 `;
@@ -547,7 +547,7 @@ export const CreateEntryTableRow = styled.tr`
   padding: 1rem;
   border-radius: 20px;
 
-  @media (min-width: 600px) {
+  @media (min-width: 850px) {
     /* display: table-row; */
     flex-direction: row;
   }
@@ -558,10 +558,10 @@ export const MultiInputFormBody = styled.tbody``;
 export const MultiInputFormCell = styled(FormInputCell)``; // td
 
 export const MultiInput = styled(MultiFormInput)`
-padding-top: 0.7rem;
-height: 2.5rem;
-/* background-color: yellow; */
-/* vertical-align: bottom; */
+  padding-top: 0.7rem;
+  height: 2.5rem;
+  /* background-color: yellow; */
+  /* vertical-align: bottom; */
 `; // input
 
 // buttons container
