@@ -90,7 +90,7 @@ export const StyledUser = styled.img`
 `;
 
 const UserIconContainer = styled.div`
-  height: 100%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
