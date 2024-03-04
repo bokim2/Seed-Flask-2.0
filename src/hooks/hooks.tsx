@@ -8,7 +8,33 @@ import type { RootState, AppDispatch } from '../lib/store';
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-
+export function useMainFilter({selector}){
+  const {
+  data,
+  isLoading,
+  isError,
+} = useQuery({ 
+  queryKey: ['mainfilter'], 
+  queryFn: async () => {
+    try {
+    const response = await fetch(`${baseUrl}/api/uniques/${selector}`)
+    // const response = await fetch(`${baseUrl}/api/uniques/project`)
+    const {data} = await response.json();
+    if(!response.ok){
+      const errorMessage = data?.error ||
+      data?.message ||
+      `Failed to fetch unique values from ${selector}, status: ${response.status}`;
+      throw new Error(errorMessage);
+    }
+    console.log('data[0]?.array_agg in useQuery, fetching projects', data[0]?.array_agg);
+    return data[0]?.array_agg;
+  } catch (err) {
+    console.log(err, 'error in getting unique mainfilter values');
+    throw err;
+  }
+  } });
+return {data, isLoading, isError} as const;
+}
 
 // seting table to data (sorted and searched if any)
 
@@ -178,6 +204,7 @@ import {
   createCellbankSchema,
 } from '../features/cellbanks/cellbanks-types';
 import { ZodSchema, z } from 'zod';
+import { useQuery } from '@tanstack/react-query';
 
 // convert UTC timestamp to local time
 

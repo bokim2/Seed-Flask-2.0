@@ -378,12 +378,10 @@ app.post(
       });
     } catch (err) {
       // console.log(err.detail);
-      res
-        .status(500)
-        .json({
-          message: err?.detail || 'Internal server error',
-          error: err.message,
-        });
+      res.status(500).json({
+        message: err?.detail || 'Internal server error',
+        error: err.message,
+      });
     }
   }
 );
@@ -815,6 +813,21 @@ app.get('/api/cellbanks/search', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
+  }
+});
+
+// GET unique values for project and username
+
+app.get('/api/uniques/project', async (req, res) => {
+  try {
+    const results = await db.query(`SELECT ARRAY_Agg(DISTINCT project) from cell_banks;`);
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 

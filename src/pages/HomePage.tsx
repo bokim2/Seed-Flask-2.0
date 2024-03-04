@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 import MainMenuButton, { StyledImage } from '../ui/MainMenuButton';
 import styled from 'styled-components';
 import { MdHeight } from 'react-icons/md';
@@ -13,14 +13,14 @@ import {
   StyledMainMenuButtons,
   Wrapper,
 } from '../styles/UtilStyles';
-import {  baseUrl } from '../../configs';
+import { baseUrl } from '../../configs';
 import Button from '../ui/Button';
+import { useQuery } from '@tanstack/react-query';
 
 const HomePageContainer = styled(PageContainer)`
   width: 80%;
   align-self: center;
   justify-content: center;
-  
 `;
 
 const InnerWrapper = styled.div`
@@ -94,58 +94,15 @@ type TuserProfile = {
 
 export default function HomePage() {
   // const { user, isAuthenticated, isLoading } = useAuth0();
-  const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
-  const [env, setEnv] = useState<any>(null);
+  // const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
+  // const [env, setEnv] = useState<any>(null);
 
-  // useEffect(() => {
-  //   async function authProfile() {
-  //     try{
-  //       const response = await fetch(`${baseUrl}/profile`, {
-  //         credentials: 'include', // Include cookies for cross-origin requests
-  //       });
-  //       console.log(response)
-  //     const data = await response.json();
-  //     setUserProfile(data);
-  //     } catch(errr){
-  //       console.log('error', errr)
-  //     }
-  //   }
 
-  //   // getEnv()
-  //   authProfile();
-  // }, []);
 
-      // async function getEnv() {
-    //   try{
-    //     const response = await fetch(`${baseUrl}/env`, {
-    //       credentials: 'include', // Include cookies for cross-origin requests
-    //     });
-    //     console.log(response)
-    //   const data = await response.json();
-    //   setEnv(data);
-    //   } catch(errr){
-    //     console.log('error', errr)
-    //   }
-    // }
-
-  // async function login() {
-  //   try{
-  //     const response = await fetch(`${baseUrl}/login`, {
-  //       credentials: 'include', // Include cookies for cross-origin requests
-  //     });
-  //     // console.log(response)
-  //   const data = await response.json();
-  //   // setUserProfile(data);
-  //   } catch(errr){
-  //     console.log('error', errr)
-  //   }
-  // }
   return (
     <PageContainer id="HomePageContainer">
       <InnerPageContainer id="HomeInnerPageContainer">
-
         <InnerWrapper id="HomeInnerWrapper">
-
           {/* <LoginButton />
           <LogoutButton /> */}
           {/* <Profile/> */}
@@ -210,10 +167,9 @@ export default function HomePage() {
           </SecondaryMenuButtonContainer>
         </InnerWrapper>
 
-          {/* <p>{JSON.stringify(userProfile, null, 2)}</p>
+        {/* <p>{JSON.stringify(userProfile, null, 2)}</p>
           <p>{JSON.stringify(env, null, 2)}</p>
           {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />} */}
-
       </InnerPageContainer>
     </PageContainer>
   );
@@ -253,4 +209,3 @@ export default function HomePage() {
 //     )
 //   );
 // };
-
