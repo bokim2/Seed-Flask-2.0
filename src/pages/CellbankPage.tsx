@@ -15,6 +15,7 @@ import Button from '../ui/Button';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
+import { useMainFilter } from '../hooks/hooks';
 
 export default function CellbankPage() {
   const {
@@ -45,6 +46,7 @@ export default function CellbankPage() {
   // data from cellbanks table
   const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
   // console.log(cellbanksAll, 'cellbanksAll');
+
 
   return (
     <PageContainer id="CellbankPageContainer">

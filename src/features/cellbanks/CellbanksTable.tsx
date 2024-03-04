@@ -7,6 +7,7 @@ import {
   TableRow,
   TableHeaderCell,
   StyledForm,
+
 } from '../../styles/UtilStyles';
 import { useState } from 'react';
 import {
@@ -29,9 +30,7 @@ import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelect
 import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
 import SearchForm from '../../ui/SearchForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
-import {
-  useEditTableRowForm,
-} from '../../hooks/table-hooks/useEditTableRowForm';
+import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
 
 export default function CellbanksTable({
   cellbanks,
@@ -57,12 +56,12 @@ export default function CellbanksTable({
     dateColumnName: 'date_timestamptz',
   });
 
-    // delete cellbank
-    const {
-      mutate: deleteCellbank,
-      isPending: isPendingDelete,
-      error: deleteError,
-    } = useDeleteRowMutation({ tableName: 'cellbanks' });
+  // delete cellbank
+  const {
+    mutate: deleteCellbank,
+    isPending: isPendingDelete,
+    error: deleteError,
+  } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
   const [searchedData, setSearchedData] = useState<TCellbanks>([]);
@@ -70,7 +69,6 @@ export default function CellbanksTable({
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
     useState<TCellbanks>([]);
-
 
   // sort selected column
   const { sortColumn, handleSortColumn } =
@@ -91,6 +89,8 @@ export default function CellbanksTable({
     sortColumn,
     setFilteredAndSortedData,
   });
+
+  
 
   return (
     <>
@@ -122,10 +122,14 @@ export default function CellbanksTable({
           );
         }}
       >
+
+        <Caption>
+          Cell Banks Table
+          
+        </Caption>
         {/* Table Section */}
         <TableContainer id="CellbanksTableContainer">
           <StyledTable>
-            <Caption>Cell Banks Table</Caption>
             <TableHeader>
               {/* select column to search */}
               <TableRow>

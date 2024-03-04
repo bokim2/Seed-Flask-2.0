@@ -3,6 +3,7 @@ import timeZoneReducer from '../features/ui-state/settingsSlice';
 import bookmarksReducer from '../features/ui-state/bookmarksSlice';
 import userReducer from '../features/ui-state/userSlice';
 import pageLimitReducer from '../features/ui-state/pageSlice';
+import mainfilterReducer from '../features/ui-state/mainfilterSlice';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     bookmarks: bookmarksReducer,
     user: userReducer,
     page: pageLimitReducer,
+    mainFilter: mainfilterReducer,
   },
 });
 

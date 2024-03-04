@@ -5,9 +5,13 @@ import NavList from './NavList';
 import { NavLink } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../../lib/types';
-import { useOnClickOutside } from '../../hooks/hooks';
+import { useMainFilter, useOnClickOutside } from '../../hooks/hooks';
 import {
   LinkButton,
+  MainFilterContainer,
+  MainFilterSelector,
+  MainFilterSelectorOption,
+  MainFilterValue,
   NavMenuButton,
   NavSection,
   UserButton,
@@ -210,14 +214,28 @@ export default function MainNav({ userProfile }) {
   // }, [openUser]);
   const roleUrl = ProdUrl + '/role';
 
+  // select mainfilter
+  const [mainFilterSelector, setMainFilterSelector] = useState<string>('all');
+  const [mainFilterValue, setMainFilterValue] = useState<string>('null');
+  const {
+    data: mainfilterData,
+    isLoading: mainfilterLoading,
+    isError: mainfilterError,
+  } = useMainFilter({
+    selector: 'project',
+  });
+  const mainfilterselectorOptions = ['Main Filter', 'project', 'username', 'cellbank'];
+
   return (
     <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
       <StyledNav>
         <StyledNavLink to="/">
           <StyledTitle>Seed Flask</StyledTitle>
         </StyledNavLink>
+        
 
         <NavSection>
+          {/* login button */}
           {!userProfile?.name ? (
             <StyledLinkButton href={`${baseUrl}/login/`}>
               login
@@ -227,6 +245,34 @@ export default function MainNav({ userProfile }) {
               logout
             </StyledLinkButton>
           )}
+          {/* main filter - only show if user is logged in */}
+        {/* {userProfile?.name && (
+          <MainFilterContainer>
+            <MainFilterSelector
+              value={mainFilterSelector}
+              onChange={(e) => setMainFilterSelector(e.target.value)}
+            >
+              {mainfilterselectorOptions.map((option, i) => (
+                <MainFilterSelectorOption key={i} value={option}>
+                  {option}
+                </MainFilterSelectorOption>
+              ))}
+            </MainFilterSelector>
+            {mainfilterData && mainfilterData.length > 0 && (
+              <MainFilterSelector
+                value={mainFilterValue}
+                onChange={(e) => setMainFilterValue(e.target.value)}
+              >
+                {mainfilterData.map((option, i) => (
+                  <MainFilterSelectorOption key={i} value={option}>
+                    {option}
+                  </MainFilterSelectorOption>
+                ))}
+                ))
+              </MainFilterSelector>
+            )}
+          </MainFilterContainer>
+        )} */}
 
           {userProfile?.picture ? (
             <UserIconContainer

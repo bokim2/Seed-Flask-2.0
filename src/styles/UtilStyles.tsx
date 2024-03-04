@@ -340,6 +340,44 @@ export const Caption = styled.caption`
   }
 `;
 
+export const TableHeaderDiv = styled.div`
+  position: sticky;
+  z-index: 10;
+  top: 10vh;
+  font-family: var(--font-serif);
+  font-weight: 900;
+  letter-spacing: 0.2rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--clr-text-1);
+  /* background-color: #121118; */
+  /* background-color: rgba(var(--clr-table-100), 1); */
+  background-color: rgba(var(--clr-table-200), 1);
+  padding-block: 1vh;
+  pointer-events: none;
+
+  @media (min-width: 850px) {
+    top: 2vh;
+    background-color: transparent;
+  }
+`;
+
+export const MainFilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const MainFilterSelector = styled.select`
+font-family: var(--font-serif);
+/* background-color: transparent; */
+border-radius: 15px;
+padding-inline: 1rem;
+`;
+
+export const MainFilterSelectorOption = styled.option``;
+
+export const MainFilterValue = styled.select``;
+
 export const TableHeader = styled.thead`
   position: sticky;
   top: 9.7vh; // reference at NavBar styles
