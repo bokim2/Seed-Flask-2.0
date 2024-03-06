@@ -3,7 +3,6 @@ import { baseUrl } from '../configs';
 import {
   TCreateCellbank,
   cellbanksArraySchema,
-  createCellbankSchema,
   initialEditCellbankForm,
   updateCellbankSchema,
 } from '../src/features/cellbanks/cellbanks-types';
