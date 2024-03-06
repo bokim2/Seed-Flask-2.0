@@ -98,7 +98,7 @@ const config = {
   // redirect_uri: process.env.BASE_URL + '/callback',
   // redirectUrl: process.env.CLIENT_URL,
 };
-console.log('config for auth', config);
+// console.log('config for auth', config);
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
@@ -107,8 +107,16 @@ app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
 
-app.get('/profile', requiresAuth(), (req, res) => {
+app.get('/profile', (req, res) => {
+  try {
+    console.log('req.oidc.isAuthenticated()', req.oidc.isAuthenticated());
+    if(req.oidc.isAuthenticated()){
+      requiresAuth()
   res.json(req.oidc.user);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.get('/env', (req, res) => {
