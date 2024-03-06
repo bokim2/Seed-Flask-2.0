@@ -31,7 +31,12 @@ import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent
 import SearchForm from '../../ui/SearchForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
+import SearchFormRow from '../../ui/SearchFormRow';
 
+
+export type TError = {
+  message: string;
+}
 export default function CellbanksTable({
   cellbanks,
   handleAddBookmark,
@@ -90,12 +95,15 @@ export default function CellbanksTable({
     setFilteredAndSortedData,
   });
 
-  
+  //state for multisearch
 
+  const [searchMultiError, setSearchMultiError] = useState(null);
+console.log(searchMultiError, 'searchMultiError')
   return (
     <>
       {/* Search Section */}
       <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} />
+      
 
       {/* Page Limit Section */}
       <PageLimitDropDownSelector
@@ -109,6 +117,7 @@ export default function CellbanksTable({
       {isPendingDelete && <h1>edit is pending Delete...</h1>}
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
+      {searchMultiError && <ErrorMessage error={searchMultiError} />}
 
       {/* Edit row form */}
       <StyledForm
@@ -141,8 +150,15 @@ export default function CellbanksTable({
                     sortColumn={sortColumn}
                   />
                 ))}
+                
                 <TableHeaderCell>edit</TableHeaderCell>
               </TableRow>
+
+              <SearchFormRow setSearchedData={setSearchedData} tableName={'cellbanks'} 
+              tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
+              setSearchMultiError={setSearchMultiError}
+              />
+              
             </TableHeader>
             <tbody>
               {filteredAndSortedData &&

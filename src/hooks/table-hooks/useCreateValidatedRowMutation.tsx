@@ -36,7 +36,7 @@ export function useCreateValidatedRowMutation({
     if (!validationResult.success) {
       console.error('createRow validation error', validationResult.error);
       throw new Error(
-        `Failed to validate createRow form: ${validationResult.error.message}`
+        `Failed to validate createRow form: ${validationResult.error.message, JSON.stringify(validationResult.error)}`
       );
     }
     try {

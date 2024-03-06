@@ -53,26 +53,33 @@ export function filteredTableData(
   // );
   let filteredTableData = [...tableRowsData];
   // console.log('filteredTableData.cellbankid', filteredTableData.map(e => e.cell_bank_id));
+console.log('timestamp_column', timestamp_column, 'filteredTableData', filteredTableData)
+
+
+if (searchedData?.length > 0) {
+  filteredTableData = [...searchedData];
+}
 
   if (timestamp_column) {
-    filteredTableData = filteredTableData.map((tableRow) => {
+    filteredTableData = [...filteredTableData].map((tableRow) => {
       // console.log(
       //   'tableRow?.[timestamp_column]',
       //   tableRow?.[timestamp_column]
       // );
       if (tableRow?.[timestamp_column]) {
+        console.log('timestamp_column', Boolean(timestamp_column), 'tableRow?.[timestamp_column]', Boolean(tableRow?.[timestamp_column]))
         return {
           ...tableRow,
           human_readable_date: displayLocalTime(tableRow[timestamp_column]),
         };
       }
+      console.log('tableRow', tableRow)
+    
       return tableRow;
     });
   }
 
-  if (searchedData?.length > 0) {
-    filteredTableData = searchedData;
-  }
+
   // console.log('Object.values(sortColumn)[0]', Object.values(sortColumn)[0], Object.values(sortColumn))
   if (Object.values(sortColumn)[0]) {
     const sortDirection = Object.values(sortColumn)[0]; // asc or desc
@@ -107,7 +114,7 @@ export function filteredTableData(
       }
     });
   }
-  // console.log('FINAL filteredTableData', filteredTableData);
+  console.log('FINAL filteredTableData', filteredTableData);
   return filteredTableData;
 }
 
@@ -201,7 +208,6 @@ import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { isPending } from '@reduxjs/toolkit';
 import {
   cellbanksArraySchema,
-  createCellbankSchema,
 } from '../features/cellbanks/cellbanks-types';
 import { ZodSchema, z } from 'zod';
 import { useQuery } from '@tanstack/react-query';

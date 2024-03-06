@@ -22,7 +22,7 @@ async function updateRowEdit(
     if (!validatedData.success) {
       console.log('updateRowEdit validation error', validatedData.error);
       throw new Error(
-        `Failed to validate updateRowEdit form: ${validatedData.error.message}`
+        `Failed to validate updateRowEdit form on client: ${validatedData.error.message}`
       );
     }
     const res = await fetch(

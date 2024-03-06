@@ -1,8 +1,8 @@
-INSERT INTO flasks (vessel_type, inoculum_uL, media_mL, cell_bank_id, rpm, temp_c, media)
-VALUES ('flask', 11, 250, 2, 225, 37, 'YPD 3% glucose');
+-- INSERT INTO flasks (vessel_type, inoculum_uL, media_mL, cell_bank_id, rpm, temp_c, media)
+-- VALUES ('flask', 11, 250, 2, 225, 37, 'YPD 3% glucose');
 
-INSERT INTO flasks (vessel_type, inoculum_uL, media_mL, cell_bank_id, rpm, temp_c, media)
-VALUES ('flask', 22, 250, 3, 250, 34, 'YPD 2% sucrose');
+-- INSERT INTO flasks (vessel_type, inoculum_uL, media_mL, cell_bank_id, rpm, temp_c, media)
+-- VALUES ('flask', 22, 250, 3, 250, 34, 'YPD 2% sucrose');
 
 -- alter table flasks add column media varchar(255);
 
@@ -10,3 +10,6 @@ VALUES ('flask', 22, 250, 3, 250, 34, 'YPD 2% sucrose');
 
 -- alter table flasks 
 -- alter column media set not null;
+
+DELETE FROM cell_banks
+WHERE cell_bank_id = (SELECT MAX(cell_bank_id) FROM cell_banks);

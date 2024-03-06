@@ -15,7 +15,6 @@ import Button from '../ui/Button';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
-import { useMainFilter } from '../hooks/hooks';
 
 export default function CellbankPage() {
   const {

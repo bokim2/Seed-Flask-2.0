@@ -23,7 +23,13 @@ const __dirname = dirname(__filename);
 import { db } from './db/db.js';
 import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
 import { allowRolesAdminUser } from './middleware/allowRolesAdminUser.js';
+import { validateIdParam } from './middleware/validateIdParam.js';
 import { LIMIT } from '../src/lib/constants.js';
+import { create } from 'domain';
+import {
+  createCellbankSchema,
+  updateBackendCellbankSchema,
+} from '../src/lib/zodSchemas.js';
 
 // export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';
 export const prodUrl = 'https://www.seedflask.com';
@@ -180,14 +186,37 @@ app.post(
       const username = userObj.name;
       const user_id = userObj.sub;
       console.log(req.body, 'in post cell bank server');
+      // const results = await db.query(
+      //   'INSERT INTO cell_banks (strain, notes, target_molecule, project, description, username, user_id) values ($1, $2, $3, $4, $5, $6, $7) returning *',
+      //   [
+      //     req.body.strain,
+      //     req.body.notes,
+      //     req.body.target_molecule,
+      //     req.body.project,
+      //     req.body.description,
+      //     username,
+      //     user_id,
+      //   ]
+      // );
+      const validatedReqBody = createCellbankSchema.safeParse(req.body);
+      if (!validatedReqBody.success) {
+        return res.status(400).json({
+          message:
+            validatedReqBody.error.issues ||
+            'Zod validation error on the server for post cell bank',
+          serverError: 'Zod validation error on the server for post cell bank',
+        });
+      }
+      const { strain, target_molecule, description, notes, project } =
+        validatedReqBody.data;
       const results = await db.query(
         'INSERT INTO cell_banks (strain, notes, target_molecule, project, description, username, user_id) values ($1, $2, $3, $4, $5, $6, $7) returning *',
         [
-          req.body.strain,
-          req.body.notes,
-          req.body.target_molecule,
-          req.body.project,
-          req.body.description,
+          strain,
+          notes,
+          target_molecule,
+          project,
+          description,
           username,
           user_id,
         ]
@@ -206,8 +235,25 @@ app.post(
 
 // UPDATE one cell bank
 
-app.put('/api/cellbanks/:id', async (req, res) => {
+app.put('/api/cellbanks/:id', validateIdParam, async (req, res) => {
   try {
+    // const {
+    //   strain,
+    //   target_molecule,
+    //   description,
+    //   notes,
+    //   date_timestamptz,
+    //   project,
+    // } = req.body;
+    const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
+    if (!validatedReqBody.success) {
+      return res.status(400).json({
+        message:
+          validatedReqBody.error.issues ||
+          'Zod validation error on the server for update cell bank',
+        serverError: 'Zod validation error on the server for update cell bank',
+      });
+    }
     const {
       strain,
       target_molecule,
@@ -215,9 +261,10 @@ app.put('/api/cellbanks/:id', async (req, res) => {
       notes,
       date_timestamptz,
       project,
-    } = req.body;
-    const cellBankId = req.params.id;
+    } = validatedReqBody.data;
 
+    const cellBankId = req.params.id;
+    console.log('req.body', req.body, 'cellBankId', cellBankId);
     const query = `
       UPDATE cell_banks 
       SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 , project = $6
@@ -249,7 +296,7 @@ app.put('/api/cellbanks/:id', async (req, res) => {
 });
 
 // DELETE on cell bank
-app.delete('/api/cellbanks/:id', async (req, res) => {
+app.delete('/api/cellbanks/:id', validateIdParam, async (req, res) => {
   try {
     const result = await db.query(
       'DELETE FROM cell_banks WHERE cell_bank_id = $1',
@@ -782,10 +829,12 @@ app.get('/api/cellbanks/search', async (req, res) => {
         field,
         text: searchText[index] || '',
       }))
-      .filter((q) => validFields.includes(q.field));
+      .filter((q) => validFields.includes(q.field) && q.text !== '');
 
     if (queries.length === 0) {
-      return res.status(400).send('Invalid or missing search fields.');
+      return res
+        .status(400)
+        .json({ message: 'Invalid or missing search fields.' });
     }
 
     // Construct WHERE clause dynamically
@@ -809,10 +858,11 @@ app.get('/api/cellbanks/search', async (req, res) => {
     };
 
     const result = await db.query(query);
+
     res.status(200).json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error');
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -820,7 +870,9 @@ app.get('/api/cellbanks/search', async (req, res) => {
 
 app.get('/api/uniques/project', async (req, res) => {
   try {
-    const results = await db.query(`SELECT ARRAY_Agg(DISTINCT project) from cell_banks;`);
+    const results = await db.query(
+      `SELECT ARRAY_Agg(DISTINCT project) from cell_banks;`
+    );
     res.status(200).json({
       status: 'success',
       data: results.rows,

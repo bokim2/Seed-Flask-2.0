@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { createCellbankSchema } from '../../lib/zodSchemas';
 
 // zod and typescript types
 
@@ -29,13 +30,13 @@ export type TCellbanks = z.infer<typeof cellbanksArraySchema>;
 // create a cellbank
 export const createCellbankColumnsArray = ['strain', 'target_molecule', 'project', 'description', 'notes']
 
-export const createCellbankSchema = z.object({
-  strain: z.string().trim(),
-  notes: z.string().trim(),
-  target_molecule: z.string().trim(),
-  project: z.string().trim(),
-  description: z.string().trim(),
-});
+// export const createCellbankSchema = z.object({
+//   strain: z.string().trim(),
+//   notes: z.string().trim(),
+//   target_molecule: z.string().trim(),
+//   project: z.string().trim(),
+//   description: z.string().trim(),
+// });
 
 export type TCreateCellbank = z.infer<typeof createCellbankSchema>;
 
