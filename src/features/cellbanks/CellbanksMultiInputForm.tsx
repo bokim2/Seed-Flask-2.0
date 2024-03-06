@@ -15,13 +15,13 @@ import Button from '../../ui/Button';
 import {
   TCreateCellbank,
   createCellbankColumnsArray,
-  createCellbankSchema,
   initialCreateCellbankForm,
 } from './cellbanks-types';
 
 import ErrorMessage from '../../ui/ErrorMessage';
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
+import { createCellbankSchema } from '../../lib/zodSchemas';
 
 export default function CellbanksMultiInputForm() {
   // create a row

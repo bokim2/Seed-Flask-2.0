@@ -455,6 +455,18 @@ export const TableRow = styled.tr`
   }
 `;
 
+export const TableSearchInput = styled.input`
+width: 100%;
+  /* margin: 0.5rem; */
+  /* border-radius: 5px; */
+  /* padding: 0.5rem; */
+  /* width: 200px; */
+
+  @media (min-width: 850px) {
+    /* width: 400px; */
+  }
+`;
+
 export const TableDataCell = styled.td`
   text-align: center;
   padding: 0.5rem;
