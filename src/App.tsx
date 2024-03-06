@@ -45,8 +45,16 @@ function App() {
           credentials: 'include', // Include cookies for cross-origin requests
         });
         console.log(response);
+        if(response.ok){
         const data = await response.json();
         setUserProfile(data);
+        } 
+        if (response.status === 401){
+          console.log('Error: Not authenticated.  Please sign in.');
+        }
+        if (response.status === 403){
+          console.log('Error: Not authorized to access this resource.');
+        }
       } catch (errr) {
         console.log('error', errr);
       }
