@@ -29,7 +29,7 @@ import { create } from 'domain';
 import {
   createCellbankSchema,
   updateBackendCellbankSchema,
-} from '../src/lib/zodSchemas.js';
+} from './zodSchemas.js';
 
 // export const prodUrl = 'https://seed-flask-2-c1d8d446416a.herokuapp.com';
 export const prodUrl = 'https://www.seedflask.com';
@@ -110,9 +110,9 @@ app.get('/', (req, res) => {
 app.get('/profile', (req, res) => {
   try {
     console.log('req.oidc.isAuthenticated()', req.oidc.isAuthenticated());
-    if(req.oidc.isAuthenticated()){
-      requiresAuth()
-  res.json(req.oidc.user);
+    if (req.oidc.isAuthenticated()) {
+      requiresAuth();
+      res.json(req.oidc.user);
     }
   } catch (error) {
     console.log(error);

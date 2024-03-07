@@ -21,7 +21,7 @@ import {
 import ErrorMessage from '../../ui/ErrorMessage';
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
-import { createCellbankSchema } from '../../lib/zodSchemas';
+import { createCellbankSchema } from '../../../server/zodSchemas';
 
 export default function CellbanksMultiInputForm() {
   // create a row
@@ -134,8 +134,8 @@ export default function CellbanksMultiInputForm() {
                       placeholder="notes"
                       required
                       value={bulkForm[i].notes}
-                      />
-                      {i == 0 && <FormLabel htmlFor="notes">notes</FormLabel>}
+                    />
+                    {i == 0 && <FormLabel htmlFor="notes">notes</FormLabel>}
                   </FormInputCell>
                 </CreateEntryTableRow>
               ))}
