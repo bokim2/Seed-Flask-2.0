@@ -107,6 +107,13 @@ app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
 
+app.get('/api/auth/status', (req, res) => {
+  res.json({
+    isAuthenticated: req.oidc.isAuthenticated(),
+    user: req.oidc.isAuthenticated() ? req.oidc.user : null,
+  });
+});
+
 app.get('/profile', (req, res) => {
   try {
     console.log('req.oidc.isAuthenticated()', req.oidc.isAuthenticated());
@@ -168,18 +175,13 @@ app.get('/api/cellbanks', async (req, res) => {
     );
     // console.log('results of getting all cell banks', results.rows[0]);
 
-    // const popularOptions = getPopularOptions(results.rows);
-
     res.status(200).json({
       status: 'success',
-      // data: results.rows,
       data: results.rows,
-      // popularOptions: popularOptions,
-      // user: req.oidc.user,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Failed to fetch cell banks' });
   }
 });
 

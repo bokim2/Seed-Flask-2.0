@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
 import NavList from './NavList';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../../lib/types';
 import { useMainFilter, useOnClickOutside } from '../../hooks/hooks';
 import {
   LinkButton,
+  LoginButton,
   MainFilterContainer,
   MainFilterSelector,
   MainFilterSelectorOption,
@@ -18,6 +19,7 @@ import {
 } from '../../styles/UtilStyles';
 import { ProdUrl, baseUrl } from '../../../configs';
 import { RolesUrl } from '../../lib/constants';
+import Button from '../Button';
 
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
@@ -128,7 +130,7 @@ type StyledMainNav = {
   $isScrolled?: boolean;
 };
 
-export default function MainNav({ userProfile }) {
+export default function MainNav({ userProfile, setUserProfile }) {
   const mainNavRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -224,7 +226,33 @@ export default function MainNav({ userProfile }) {
   } = useMainFilter({
     selector: 'project',
   });
-  const mainfilterselectorOptions = ['Main Filter', 'project', 'username', 'cellbank'];
+  const mainfilterselectorOptions = [
+    'Main Filter',
+    'project',
+    'username',
+    'cellbank',
+  ];
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    window.location.href = `${baseUrl}/login`;
+    navigate('/');
+  };
+
+  const handleLogout = async () => {
+    // try {
+    //   await fetch(`${baseUrl}/logout/`, {
+    //     credentials: 'include',
+    //   });
+    //   setUserProfile(null);
+    //   // navigate('/');
+    // } catch (err) {
+    //   console.error('Logout failed:', err);
+    // }
+    setUserProfile(null);
+    window.location.href = `${baseUrl}/logout`;
+    navigate('/');
+  };
 
   return (
     <StyledMainNav $isScrolled={isScrolled} ref={mainNavRef}>
@@ -232,21 +260,23 @@ export default function MainNav({ userProfile }) {
         <StyledNavLink to="/">
           <StyledTitle>Seed Flask</StyledTitle>
         </StyledNavLink>
-        
 
         <NavSection>
           {/* login button */}
-          {!userProfile?.name ? (
+          {!userProfile?.user?.name ? (
             <StyledLinkButton href={`${baseUrl}/login/`}>
               login
             </StyledLinkButton>
           ) : (
-            <StyledLinkButton href={`${baseUrl}/logout/`}>
+            <LoginButton
+              // `${baseUrl}/logout/`
+              onClick={handleLogout}
+            >
               logout
-            </StyledLinkButton>
+            </LoginButton>
           )}
           {/* main filter - only show if user is logged in */}
-        {/* {userProfile?.name && (
+          {/* {userProfile?.name && (
           <MainFilterContainer>
             <MainFilterSelector
               value={mainFilterSelector}
@@ -274,18 +304,24 @@ export default function MainNav({ userProfile }) {
           </MainFilterContainer>
         )} */}
 
-          {userProfile?.picture ? (
+          {userProfile?.user?.picture ? (
             <UserIconContainer
               onClick={(e) => handleToggle(e, 'user')}
               aria-label="user and settings menu"
             >
-              <StyledUser src={userProfile.picture}></StyledUser>
+              <StyledUser src={userProfile?.user?.picture}></StyledUser>
               {/* <p>{JSON.stringify(userProfile)}</p> */}
-              <small>{userProfile?.[RolesUrl]}</small>
+              <small>{userProfile?.user?.[RolesUrl]}</small>
             </UserIconContainer>
           ) : (
             <UserButton
-              onClick={(e) => handleToggle(e, 'user')}
+              onClick={(e) => {
+                console.log('userProfile in userbutton click', userProfile, userProfile)
+                if(userProfile?.isAuthenticated){
+                handleToggle(e, 'user')} else {
+                  handleLogin()
+                }
+              }}
               aria-label="user and settings menu"
             >
               <StyledFaUser>
@@ -293,36 +329,42 @@ export default function MainNav({ userProfile }) {
               </StyledFaUser>
             </UserButton>
           )}
-
-          {openNav ? (
-            <NavMenuButton aria-label="navigation menu">
-              <FaCaretUp
-                style={style}
-                onClick={(e) => handleToggle(e, 'nav')}
-                // onKeyPress={e=> handleToggle(e,'nav')}
-              />
-            </NavMenuButton>
-          ) : (
-            <NavMenuButton
-              aria-label="navigation menu"
-              ref={navButtonRef}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleToggle(e, 'nav');
-                }
-              }}
-            >
-              <FaCaretDown
-                style={style}
-                onClick={(e) => handleToggle(e, 'nav')}
-              />
-            </NavMenuButton>
+          {userProfile?.user?.name && (
+            <>
+              {openNav ? (
+                <NavMenuButton aria-label="navigation menu">
+                  <FaCaretUp
+                    style={style}
+                    onClick={(e) => handleToggle(e, 'nav')}
+                    // onKeyPress={e=> handleToggle(e,'nav')}
+                  />
+                </NavMenuButton>
+              ) : (
+                <NavMenuButton
+                  aria-label="navigation menu"
+                  ref={navButtonRef}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleToggle(e, 'nav');
+                    }
+                  }}
+                >
+                  <FaCaretDown
+                    style={style}
+                    onClick={(e) => handleToggle(e, 'nav')}
+                  />
+                </NavMenuButton>
+              )}
+            </>
           )}
         </NavSection>
       </StyledNav>
 
       {openNav && <NavList ref={navListRef} />}
-      {openUser && <UserNavList ref={userListRef} />}
+
+      {userProfile?.user?.name && (
+        <> {openUser && <UserNavList ref={userListRef} />} </>
+      )}
     </StyledMainNav>
   );
 }
