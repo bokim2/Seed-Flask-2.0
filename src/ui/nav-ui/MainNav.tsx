@@ -240,15 +240,6 @@ export default function MainNav({ userProfile, setUserProfile }) {
   };
 
   const handleLogout = async () => {
-    // try {
-    //   await fetch(`${baseUrl}/logout/`, {
-    //     credentials: 'include',
-    //   });
-    //   setUserProfile(null);
-    //   // navigate('/');
-    // } catch (err) {
-    //   console.error('Logout failed:', err);
-    // }
     setUserProfile(null);
     window.location.href = `${baseUrl}/logout`;
     navigate('/');
@@ -262,6 +253,35 @@ export default function MainNav({ userProfile, setUserProfile }) {
         </StyledNavLink>
 
         <NavSection>
+          {/* main filter - only show if user is logged in */}
+          {userProfile.isAuthenticated && (
+            <MainFilterContainer>
+              <MainFilterSelector
+                value={mainFilterSelector}
+                onChange={(e) => setMainFilterSelector(e.target.value)}
+              >
+                {mainfilterselectorOptions.map((option, i) => (
+                  <MainFilterSelectorOption key={i} value={option}>
+                    {option}
+                  </MainFilterSelectorOption>
+                ))}
+              </MainFilterSelector>
+              {mainfilterData && mainfilterData.length > 0 && (
+                <MainFilterSelector
+                  value={mainFilterValue}
+                  onChange={(e) => setMainFilterValue(e.target.value)}
+                >
+                  {mainfilterData.map((option, i) => (
+                    <MainFilterSelectorOption key={i} value={option}>
+                      {option}
+                    </MainFilterSelectorOption>
+                  ))}
+                  ))
+                </MainFilterSelector>
+              )}
+            </MainFilterContainer>
+          )}
+
           {/* login button */}
           {!userProfile?.user?.name ? (
             <StyledLinkButton href={`${baseUrl}/login/`}>
@@ -275,34 +295,6 @@ export default function MainNav({ userProfile, setUserProfile }) {
               logout
             </LoginButton>
           )}
-          {/* main filter - only show if user is logged in */}
-          {/* {userProfile?.name && (
-          <MainFilterContainer>
-            <MainFilterSelector
-              value={mainFilterSelector}
-              onChange={(e) => setMainFilterSelector(e.target.value)}
-            >
-              {mainfilterselectorOptions.map((option, i) => (
-                <MainFilterSelectorOption key={i} value={option}>
-                  {option}
-                </MainFilterSelectorOption>
-              ))}
-            </MainFilterSelector>
-            {mainfilterData && mainfilterData.length > 0 && (
-              <MainFilterSelector
-                value={mainFilterValue}
-                onChange={(e) => setMainFilterValue(e.target.value)}
-              >
-                {mainfilterData.map((option, i) => (
-                  <MainFilterSelectorOption key={i} value={option}>
-                    {option}
-                  </MainFilterSelectorOption>
-                ))}
-                ))
-              </MainFilterSelector>
-            )}
-          </MainFilterContainer>
-        )} */}
 
           {userProfile?.user?.picture ? (
             <UserIconContainer
@@ -316,10 +308,15 @@ export default function MainNav({ userProfile, setUserProfile }) {
           ) : (
             <UserButton
               onClick={(e) => {
-                console.log('userProfile in userbutton click', userProfile, userProfile)
-                if(userProfile?.isAuthenticated){
-                handleToggle(e, 'user')} else {
-                  handleLogin()
+                console.log(
+                  'userProfile in userbutton click',
+                  userProfile,
+                  userProfile
+                );
+                if (userProfile?.isAuthenticated) {
+                  handleToggle(e, 'user');
+                } else {
+                  handleLogin();
                 }
               }}
               aria-label="user and settings menu"
