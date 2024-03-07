@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createCellbankSchema } from '../../lib/zodSchemas';
+import { createCellbankSchema } from '../../../server/zodSchemas';
 
 // zod and typescript types
 
@@ -9,7 +9,7 @@ export const cellbankSchema = z.object({
   strain: z.string() || null,
   target_molecule: z.string() || null,
   project: z.string() || null,
-  description: z.string()  || null,
+  description: z.string() || null,
   notes: z.string() || null,
   date_timestamptz: z.string() || null,
   username: z.string() || null,
@@ -19,7 +19,7 @@ export const cellbankSchema = z.object({
 // export const cellbankDataSchema = z.object({
 //   status: z.string(),
 //   data: z.array(cellbankSchema),
-//   // popularOptions: 
+//   // popularOptions:
 // })
 
 export const cellbanksArraySchema = z.array(cellbankSchema);
@@ -28,7 +28,13 @@ export type TCellbank = z.infer<typeof cellbankSchema>;
 export type TCellbanks = z.infer<typeof cellbanksArraySchema>;
 
 // create a cellbank
-export const createCellbankColumnsArray = ['strain', 'target_molecule', 'project', 'description', 'notes']
+export const createCellbankColumnsArray = [
+  'strain',
+  'target_molecule',
+  'project',
+  'description',
+  'notes',
+];
 
 // export const createCellbankSchema = z.object({
 //   strain: z.string().trim(),
@@ -77,7 +83,7 @@ export const CellbankSearchParamsSchema = z.object({
     'description',
     'notes',
     'date_timestampz',
-    'username'
+    'username',
   ]),
   searchText: z.string(),
 });
@@ -109,13 +115,13 @@ export type TCellbanksColumns =
   | 'human_readable_date'
   | 'username';
 
-  export const cellbanksTableHeaderCellsArray = [
-    'cell_bank_id',
-    'strain',
-    'target_molecule',
-    'project',
-    'description',
-    'notes',
-    'human_readable_date',
-    'username',
-  ];
+export const cellbanksTableHeaderCellsArray = [
+  'cell_bank_id',
+  'strain',
+  'target_molecule',
+  'project',
+  'description',
+  'notes',
+  'human_readable_date',
+  'username',
+];

@@ -55,8 +55,8 @@ function App() {
         if (response.status === 403){
           console.log('Error: Not authorized to access this resource.');
         }
-      } catch (errr) {
-        console.log('error', errr);
+      } catch (err) {
+        console.log('error', err);
       }
     }
 
