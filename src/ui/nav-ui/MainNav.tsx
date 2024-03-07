@@ -254,7 +254,7 @@ export default function MainNav({ userProfile, setUserProfile }) {
 
         <NavSection>
           {/* main filter - only show if user is logged in */}
-          {userProfile.isAuthenticated && (
+          {/* {userProfile.isAuthenticated && (
             <MainFilterContainer>
               <MainFilterSelector
                 value={mainFilterSelector}
@@ -280,7 +280,7 @@ export default function MainNav({ userProfile, setUserProfile }) {
                 </MainFilterSelector>
               )}
             </MainFilterContainer>
-          )}
+          )} */}
 
           {/* login button */}
           {!userProfile?.user?.name ? (
