@@ -1,9 +1,52 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { TTableHeaderCell, TTableRow } from '../lib/types';
+// wrappers
+
+export const InnerWrapper = styled.div`
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  /* height: 70%; */
+  /* margin-top: auto; */
+
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* height: 70%; */
+
+  @media (min-width: 800px) {
+    flex-direction: row;
+    /* height: revert; */
+  }
+`;
 
 // a tag buttons
 export const LinkButton = styled.a`
+  box-sizing: border-box;
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  /* margin: 1rem; */
+  color: var(--clr-text-1);
+  letter-spacing: 0.1rem;
+  text-align: center;
+  background-color: rgba(var(--clr-accent-5), 0.8);
+  text-align: center;
+  border: none;
+  border-radius: 0.5em;
+  /* color: var(--clr-text-1); */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  &:hover {
+    background-color: rgba(var(--clr-accent-5), 0.8);
+  }
+
+  @media (min-width: 850px) {
+    padding: 0.5rem 1rem;
+  }
+`;
+
+export const LoginButton = styled.button`
   box-sizing: border-box;
   display: inline-block;
   padding: 0.25rem 0.5rem;

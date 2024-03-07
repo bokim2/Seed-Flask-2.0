@@ -5,6 +5,7 @@ import NavList from './ui/nav-ui/NavList';
 import LoaderBar from './ui/LoaderBar';
 import { THandleNavToggle, TNavOrUser } from './lib/types';
 import Footer from './ui/Footer';
+import { set } from 'date-fns';
 
 const StyledAppLayout = styled.div`
   flex: 1;
@@ -58,7 +59,7 @@ const MainPageContainer = styled.main`
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
 `;
 
-export default function AppLayout({ userProfile }) {
+export default function AppLayout({ userProfile, setUserProfile }) {
   // const handleNavToggle: THandleNavToggle = (e, navOrUser) => {
   //   // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
   //   e.stopPropagation();
@@ -82,6 +83,7 @@ export default function AppLayout({ userProfile }) {
           // handleToggle={handleNavToggle}
           // openUser={openUser}
           userProfile={userProfile}
+          setUserProfile={setUserProfile}
         />
       </NavBar>
       {/* <LoaderBar /> */}

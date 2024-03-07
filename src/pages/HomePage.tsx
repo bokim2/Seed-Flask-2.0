@@ -8,6 +8,7 @@ import FlasksRow from '../features/flasks/FlasksRow';
 import Settings from './SettingsPage';
 import {
   InnerPageContainer,
+  InnerWrapper,
   LinkButton,
   PageContainer,
   StyledMainMenuButtons,
@@ -23,23 +24,6 @@ const HomePageContainer = styled(PageContainer)`
   justify-content: center;
 `;
 
-const InnerWrapper = styled.div`
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  /* height: 70%; */
-  /* margin-top: auto; */
-
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* height: 70%; */
-
-  @media (min-width: 800px) {
-    flex-direction: row;
-    /* height: revert; */
-  }
-`;
 
 const MenuButtonContainer = styled.div`
   flex: 2;
