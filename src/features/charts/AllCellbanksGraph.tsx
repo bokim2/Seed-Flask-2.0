@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Line } from 'react-chartjs-2';
+import React, { useRef, useState } from 'react';
+import { Line, getElementAtEvent } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,16 +22,28 @@ ChartJS.register(
 );
 
 export const options: any = {
+
   responsive: true,
-//   plugins: {
-//     tooltip: callbacks: 
-//   },
+  animation: false,
+  aspectRatio: 1.5,
   scales: {
     x: {
       type: 'linear',
+      ticks: {
+        font: {
+          size: 18,
+        },
+        color: '#dadada',
+      },
     },
     y: {
       type: 'linear',
+      ticks: {
+        font: {
+          size: 20,
+        },
+        color: '#dadada',
+      },
     },
   },
   plugins: {
@@ -45,8 +57,8 @@ export const options: any = {
   },
 };
 
-export default function AllCellbanksGraph({ allCellbankGraphData }) {
-// console.log(allCellbankGraphData, 'allCellbankGraphData')
+export default function AllCellbanksGraph({ allCellbankGraphData, setBookmarkedFlasks }) {
+console.log(allCellbankGraphData, 'allCellbankGraphData')
   const datasets = allCellbankGraphData.map(flaskData => ({
     label: `Flask ${flaskData.flask_id}`,
     data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
@@ -59,11 +71,37 @@ export default function AllCellbanksGraph({ allCellbankGraphData }) {
   }));
 
   const data = { datasets };
+  const lineChartRef = useRef<any | null>(null);
 
+  function clickHandler(e) {
+    console.log(e)
+    if(lineChartRef?.current){
+      const chart = lineChartRef?.current;
+    const elements = getElementAtEvent(chart, e)
+    if (elements.length > 0) {
+      const firstElementIndex = elements[0].index;
+      const datasetIndex = elements[0].datasetIndex;
+      const datasetLabel = chart.data.datasets[datasetIndex].label;
+      // Assuming the label is in the format "Flask <flask_id>"
+      const flaskId = datasetLabel.replace('Flask ', '');
+  
+      console.log(`Clicked on flask ID: ${flaskId}`);
+      // Now you have the flask ID and can use it as needed
+    
+    console.log('flaskId', flaskId, parseInt(flaskId))
+      setBookmarkedFlasks((prev)=> [...prev, parseInt(flaskId)])
+    }
+    }
+    // const chart = lineChartRef?.current;
+  //   if(chart){
+  //   const points = chart?.getElementsAtEventForMode(e.nativeEvent, 'nearest', { intersect: true }, true);
+  //   console.log('points', points)
+  // }
+  }
   return (
     <>
 
-      <Line options={options} data={data} />
+      <Line options={options} data={data} onClick={clickHandler} ref={lineChartRef}/>
     </>
   );
 }

@@ -29,7 +29,9 @@
     "src/styles/GlobalStyles.js",
     "server/*",
     "custom.d.ts",
-    "Archive/cellbanks-hooks.ts"
+    "Archive/cellbanks-hooks.ts",
+    "Archive/AllCellbanksGraph-old1.tsx",
+    "Archive/ChartsPage-old1.tsx"
   ], // "server/*" and "custom.d.ts" added by BK
   "references": [{ "path": "./tsconfig.node.json" }]
 }

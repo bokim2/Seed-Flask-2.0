@@ -658,7 +658,7 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
   }
 });
 
-// get all flask and sample associated with all cellbanks
+// get - GRAPH all flask and sample associated with all cellbanks
 app.get('/api/chart/cellbanks', async (req, res) => {
   try {
     const results = await db.query(
@@ -687,7 +687,7 @@ app.get('/api/chart/cellbanks', async (req, res) => {
   }
 });
 
-// get all flask and sample associated with one cellbank
+// get  - GRAPH all flask and sample associated with one cellbank
 app.get('/api/chart/cellbank/:id', async (req, res) => {
   try {
     const results = await db.query(
@@ -719,6 +719,44 @@ app.get('/api/chart/cellbank/:id', async (req, res) => {
     console.log(err);
   }
 });
+
+// get - GRAPH get flasks with od data for a list of bookmarked flasks
+
+app.get('/api/chart/flasks', async (req, res)=> {
+  try {
+    const flaskIds = req.query.flaskIds ? req.query.flaskIds.split(',') : [];
+    if(!flaskIds.length){
+      res.status(400).json({message: 'No bookmarked flask ids'})
+    } 
+const query =  `SELECT 
+flasks.*,
+cell_banks.*,
+ARRAY_AGG(samples.od600 ORDER BY samples.time_since_inoc_hr) AS od600_values,
+ARRAY_AGG(samples.time_since_inoc_hr ORDER BY samples.time_since_inoc_hr) AS time_since_inoc_hr_values
+FROM 
+flasks
+JOIN 
+cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id
+LEFT JOIN 
+samples ON flasks.flask_id = samples.flask_id
+WHERE 
+flasks.flask_id = ANY ($1)
+GROUP BY 
+flasks.flask_id, cell_banks.cell_bank_id;`
+const values = flaskIds
+
+
+const results = await db.query(query, [values]);
+res.status(200).json({
+  status: 'success',
+  data: results.rows,
+});
+
+  }catch (err){
+      console.error(err)
+      res.status(500).json({message:  'Internal server error'})
+    }
+})
 
 // search cell banks -original
 // app.get('/api/cellbanks/search', async (req, res) => {
@@ -875,6 +913,9 @@ app.get('/api/cellbanks/search', async (req, res) => {
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
+
+
+
 
 // GET unique values for project and username
 

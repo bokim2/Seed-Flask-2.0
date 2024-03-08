@@ -22,9 +22,13 @@ import { initialCreateFlasksForm } from '../flasks/flasks-types';
 import ChartsRow from './ChartsRow';
 import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
+import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
+import { useAppSelector } from '../../hooks/hooks';
+import { useDispatch } from 'react-redux';
+import { changePageLimit } from '../ui-state/pageSlice';
 
-export default function ChartsTable({ flasks }) {
-  console.log('flaks in flaskstable', flasks);
+export default function ChartsTable({ flasks, chartTitle }) {
+  // console.log('flaks in charts table', flasks);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editedForm, setEditedForm] = useState(initialEditFlasksForm);
 
@@ -54,6 +58,14 @@ export default function ChartsTable({ flasks }) {
     setEditingId(null);
   };
 
+  // page limit - how many rows to display per fetch  ex: 10, 20, 50
+  const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
+
+  const dispatch = useDispatch();
+  const handleChoosePageLimit = (limit: number) => {
+    dispatch(changePageLimit(limit));
+  };
+
   return (
     <>
       <Button onClick={() => setToggleCellbankData((prev) => !prev)}>
@@ -79,12 +91,19 @@ export default function ChartsTable({ flasks }) {
         }}
       >
         <TableContainer>
+          {/* Page Limit Section */}
+          <PageLimitDropDownSelector
+            handleChoosePageLimit={handleChoosePageLimit}
+            pageLimitSetting={pageLimitSetting}
+            tableName={'cellbanks'}
+          />
           <StyledTable>
-            <Caption>Graphs Table</Caption>
+            <Caption>{chartTitle}</Caption>
             <TableHeader>
               <TableRow>
                 <TableHeaderCell>Flask ID</TableHeaderCell>
                 <TableHeaderCell>Cell Bank ID</TableHeaderCell>
+                <TableHeaderCell>Project</TableHeaderCell>
                 <TableHeaderCell>media</TableHeaderCell>
                 <TableHeaderCell>inoculum uL</TableHeaderCell>
                 <TableHeaderCell>media mL</TableHeaderCell>

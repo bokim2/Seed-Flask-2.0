@@ -32,9 +32,10 @@ export default function ChartsRow({
     strain,
     target_molecule,
     username,
+    project,
   } = rowData;
   const editing = editingId === flask_id;
-  console.log('rowData', rowData);
+  // console.log('rowData', rowData);
 
   return (
     <>
@@ -42,6 +43,7 @@ export default function ChartsRow({
         {/* <TableRow> */}
         <TableDataCell data-cell="flask id">{flask_id}</TableDataCell>
         <TableDataCell data-cell="cell bank id">{cell_bank_id}</TableDataCell>
+        <TableDataCell data-cell="project">{project}</TableDataCell>
         <TableDataCell data-cell="start date">{media}</TableDataCell>
         <TableDataCell data-cell="inoculum uL">{inoculum_ul}</TableDataCell>
         <TableDataCell data-cell="media mL">{media_ml}</TableDataCell>
