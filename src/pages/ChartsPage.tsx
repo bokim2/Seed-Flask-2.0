@@ -16,47 +16,62 @@ import SingleCellbankGraph from '../features/charts/SingleCellbankGraph';
 import AllCellbanksGraph from '../features/charts/AllCellbanksGraph';
 import BookmarkedCellbankGraph from '../features/charts/BookmarkedCellbankGraph';
 import { flasksInfoArraySchema } from '../features/flasks/flasks-types';
+import { useAppSelector } from '../hooks/hooks';
+import { useDispatch } from 'react-redux';
+import { changePageLimit } from '../features/ui-state/pageSlice';
+import PageLimitDropDownSelector from '../ui/table-ui/PageLimitDropDownSelector';
+import Button from '../ui/Button';
 
 export default function ChartsPage() {
   const {
     data: flasks,
     isLoading,
     error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useFetchValidatedTableQuery({
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });
+
+  const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
+  console.log(flasksAll, 'flasksAll');
+
   // const [flasks, isLoading, error] = useFlasks();
   // const [flask] = useFlask(1);
   const [bookmarkedCellbanks, setBookmarkedCellbanks] = useState<number[]>([
     1, 2, 3, 6,
   ]);
 
-  const [chartData, setChartData] = useState<any>([]);
-  const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
-    []
-  );
+  const [bookmarkedFlasks, setBookmarkedFlasks] = useState<number[]>([42, 41]);
+  const [bookmarkedFlasksGraphData, setBookmarkedFlasksGraphData] = useState([]);
+
+  // const [chartData, setChartData] = useState<any>([]);
+  // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
+  //   []
+  // );
   const [allCellbankGraphData, setAllCellbankGraphData] = useState<any[]>([]);
   const [bookmarkedCellbankGraphData, setBookmarkedCellbankGraphData] =
     useState<any[][]>([]);
 
-  const getGraphData = async () => {
-    // console.log('data in graphs page, before fetch');
-    const res = await fetch(`${baseUrl}/api/graphs`);
-    const { data } = await res.json();
-    setChartData(data);
-    // console.log('data in graphs page', data);
-    return data;
-  };
+  // const getGraphData = async () => {
+  //   // console.log('data in graphs page, before fetch');
+  //   const res = await fetch(`${baseUrl}/api/graphs`);
+  //   const { data } = await res.json();
+  //   setChartData(data);
+  //   // console.log('data in graphs page', data);
+  //   return data;
+  // };
 
-  const getSingleCellbankGraphData = async (id) => {
-    // console.log('data in graphs page, before fetch');
-    const res = await fetch(`${baseUrl}/api/chart/cellbank/${id}`);
-    const { data } = await res.json();
-    setSingleCellbankGraphData(data);
-    // console.log('data in setDataSingleCellbank page', data);
-    return data;
-  };
+  // const getSingleCellbankGraphData = async (id) => {
+  //   // console.log('data in graphs page, before fetch');
+  //   const res = await fetch(`${baseUrl}/api/chart/cellbank/${id}`);
+  //   const { data } = await res.json();
+  //   setSingleCellbankGraphData(data);
+  //   // console.log('data in setDataSingleCellbank page', data);
+  //   return data;
+  // };
 
   const getBookmarkedCellbankGraphData = async (bookmarkedCellbanks) => {
     // console.log('data in graphs page, before fetch');
@@ -74,32 +89,40 @@ export default function ChartsPage() {
     return results;
   };
 
-  // const getBookmarkedCellbankGraphData = async (bookmarkedCellbanks) => {
-  //   const results = await Promise.all(bookmarkedCellbanks.map(async (cellbank) => {
-  //     const response = await fetch(`${baseUrl}/api/chart/cellbank/${cellbank}`);
-  //     const { data } = await response.json();
-  //     setSingleCellbankGraphData(data);
-  //     return data;
-  //   }));
-
-  //   return results;
-  // };
-
   const getAllCellbankGraphData = async () => {
     // console.log('data in graphs page, before fetch');
     const res = await fetch(`${baseUrl}/api/chart/cellbanks`);
     const { data } = await res.json();
-    // console.log(data, 'in getallcellbankgraphdata');
+    console.log(data, 'in getallcellbankgraphdata');
     setAllCellbankGraphData(data);
     return data;
   };
 
+  const getBookmarkedFlasksGraphData = async () => {
+    try {
+      console.log(bookmarkedFlasks.join(','), (bookmarkedFlasks.join(',')))
+      const response = await fetch(`${baseUrl}/api/chart/flasks?flaskIds=${bookmarkedFlasks.join(',')}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const { data } = await response.json();
+      console.log(data, 'in getBookmarkedFlasksGraphData');
+      setBookmarkedFlasksGraphData(data);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('Fetching error:', err.message);
+      } else {
+        console.log('Unknown error:', err);
+      }
+      // Handle the error according to your application's needs
+    }
+  };
+
   useEffect(() => {
     // getGraphData();
-    getSingleCellbankGraphData(1);
+    // getSingleCellbankGraphData(1);
     getAllCellbankGraphData();
     getBookmarkedCellbankGraphData(bookmarkedCellbanks);
-  }, [bookmarkedCellbanks]);
+    getBookmarkedFlasksGraphData();
+  }, [bookmarkedCellbanks, bookmarkedFlasks]);
 
   return (
     <PageContainer id="ChartsPage">
@@ -107,27 +130,54 @@ export default function ChartsPage() {
         {isLoading && <LoaderBar />}
         {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
       </LoaderWrapper>
-      {JSON.stringify(setChartData)}
+      {/* {JSON.stringify(setChartData)} */}
       <InnerPageContainer id="ChartsPage">
         {/* <LoaderBar /> */}
+        {/* {allCellbankGraphData?.length > 0 && (
+          <BookmarkedCellbankGraph
+            bookmarkedCellbankGraphData={allCellbankGraphData}
+          />
+        )} */}
 
+        {/* ALL flasks */}
+        {allCellbankGraphData?.length && (
+          <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} setBookmarkedFlasks={setBookmarkedFlasks}/>
+        )}
+        <ChartsTable chartTitle="All Flasks" flasks={flasksAll} />
+
+
+        {/* BOOKMARKED flasks */}
+        {allCellbankGraphData?.length && (
+          <AllCellbanksGraph allCellbankGraphData={bookmarkedFlasksGraphData} setBookmarkedFlasks={setBookmarkedFlasks}/>
+        )}
+        <ChartsTable chartTitle="Bookmarked Flasks" flasks={bookmarkedFlasksGraphData} />
+
+        <Button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {hasNextPage && !isFetchingNextPage && 'Load More'}
+          {!hasNextPage && 'No More Data'}
+        </Button>
+
+        {/* BOOKMARKED Cellbanks */}
         {bookmarkedCellbankGraphData?.length > 0 && (
           <BookmarkedCellbankGraph
             bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
           />
         )}
-
-        {allCellbankGraphData?.length && (
-          <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} />
-        )}
-        {singleCellbankGraphData?.length && (
+        <ChartsTable
+          chartTitle="Bookmarked Charts"
+          flasks={bookmarkedCellbankGraphData.flat()}
+        />
+        
+        {/* {singleCellbankGraphData?.length && (
           <SingleCellbankGraph
             singleCellbankGraphData={singleCellbankGraphData}
           />
-        )}
+        )} */}
         {/* <LineGraph chartData={chartData} /> */}
-        <TimeLineGraph />
-
+        {/* <TimeLineGraph /> */}
         {/* <FlasksTable flasks={flasks} /> */}
       </InnerPageContainer>
     </PageContainer>

@@ -39,7 +39,7 @@ const StyledBookmarkedCellbankGraph = styled.div`
 
 const BookmarkedCellbankGraph = memo(
   ({ bookmarkedCellbankGraphData }: TBookmarkedCellbankGraph) => {
-    // console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData')
+    console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData')
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
     const [selectedFlask, setSelectedFlask] = useState<number | null>(1);
@@ -47,7 +47,7 @@ const BookmarkedCellbankGraph = memo(
     const options: any = {
       responsive: true,
       animation: false,
-      aspectRatio: 1.8,
+      aspectRatio: 1.5,
       scales: {
         x: {
           type: 'linear',
@@ -183,8 +183,8 @@ const BookmarkedCellbankGraph = memo(
           {clickedXY &&
             `Bookmarked Cellbank Graph
         clicked x: time ${clickedXY[0]?.toFixed(2)}  y: od600 ${
-              clickedXY[1]
-            }?.toFixed(2)`}
+              clickedXY[1]?.toFixed(2)
+            }`}
         </h3>
         {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
         {/* <ChartsTable flasks={datasets}/> */}
@@ -192,7 +192,7 @@ const BookmarkedCellbankGraph = memo(
         <StyledBookmarkedCellbankGraph>
           <Line ref={chartRef} options={options} data={data} />
         </StyledBookmarkedCellbankGraph>
-        <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} />
+        {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
       </>
     );
   }

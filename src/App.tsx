@@ -18,6 +18,7 @@ import BioreactorPage from './pages/BioreactorPage';
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../configs';
 import GetStarted from './pages/GetStarted';
+import LoaderBar from './ui/LoaderBar';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -43,6 +44,7 @@ type TuserProfile = {
 
 function App() {
   const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
+  const [userLoading, setUserLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function authProfile() {
@@ -63,6 +65,8 @@ function App() {
         }
       } catch (err) {
         console.log('error', err);
+      } finally {
+        setUserLoading(false);
       }
     }
 
@@ -70,6 +74,10 @@ function App() {
     authProfile();
   }, []);
   console.log('userProfile in APP', userProfile);
+
+  if (userLoading) {
+    return <LoaderBar />;
+  }
 
   return (
     <>

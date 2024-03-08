@@ -1,6 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-
+import styled from 'styled-components';
+const StyledPageLimitDropDownSelector = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+`
 export default function PageLimitDropDownSelector({
   handleChoosePageLimit,
   pageLimitSetting,
@@ -12,6 +17,7 @@ export default function PageLimitDropDownSelector({
 
 
   return (
+    <StyledPageLimitDropDownSelector>
     <select
       value={pageLimitSetting}
       onChange={(e) => {
@@ -23,5 +29,6 @@ export default function PageLimitDropDownSelector({
         <option key={pageLimitOption} value={pageLimitOption}>{pageLimitOption}</option>
       ))}
     </select>
+    </StyledPageLimitDropDownSelector>
   );
 }
