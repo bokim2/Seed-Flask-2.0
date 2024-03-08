@@ -92,11 +92,7 @@ console.log(allCellbankGraphData, 'allCellbankGraphData')
       setBookmarkedFlasks((prev)=> [...prev, parseInt(flaskId)])
     }
     }
-    // const chart = lineChartRef?.current;
-  //   if(chart){
-  //   const points = chart?.getElementsAtEventForMode(e.nativeEvent, 'nearest', { intersect: true }, true);
-  //   console.log('points', points)
-  // }
+
   }
   return (
     <>
