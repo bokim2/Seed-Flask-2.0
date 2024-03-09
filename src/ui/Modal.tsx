@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useOnClickOutside } from '../hooks/hooks';

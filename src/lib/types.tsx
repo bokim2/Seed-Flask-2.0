@@ -18,7 +18,8 @@ export type THandleNavToggle = (
 // };
 
 export type TTableRow = {
-  $editing: boolean;
+  $editing?: boolean;
+  $bookmarked?: boolean;
 };
 
 // export type TCellbank = {

@@ -567,6 +567,15 @@ export const PreviousDataRow = styled(TableRow)<TTableRow>`
   &:hover {
     background-color: ${(props) => props.$editing && 'red'};
   }
+
+  /* bookmarked */
+    background-color: ${(props) => props.$bookmarked && 'blue'};
+  &:nth-of-type(2n) {
+    background-color: ${(props) => props.$bookmarked && 'blue'};
+  }
+  &:hover {
+    background-color: ${(props) => props.$bookmarked && 'blue'};
+  }
 `;
 
 export const EditRow = styled.tr`
