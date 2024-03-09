@@ -100,6 +100,7 @@ export default function ChartsPage() {
 
   const getBookmarkedFlasksGraphData = async () => {
     try {
+      console.log(bookmarkedFlasks, 'in getBookmarkedFlasksGraphData')
       console.log(bookmarkedFlasks.join(','), (bookmarkedFlasks.join(',')))
       const response = await fetch(`${baseUrl}/api/chart/flasks?flaskIds=${bookmarkedFlasks.join(',')}`);
       if (!response.ok) throw new Error('Network response was not ok');
@@ -141,16 +142,25 @@ export default function ChartsPage() {
 
         {/* ALL flasks */}
         {allCellbankGraphData?.length && (
-          <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} setBookmarkedFlasks={setBookmarkedFlasks}/>
+          <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} 
+          bookmarkedFlasks={bookmarkedFlasks} 
+          setBookmarkedFlasks={setBookmarkedFlasks}/>
         )}
-        <ChartsTable chartTitle="All Flasks" flasks={flasksAll} />
+        <ChartsTable chartTitle="All Flasks" flasks={flasksAll} 
+        bookmarkedFlasks={bookmarkedFlasks}
+        setBookmarkedFlasks={setBookmarkedFlasks}/>
 
 
         {/* BOOKMARKED flasks */}
         {allCellbankGraphData?.length && (
-          <AllCellbanksGraph allCellbankGraphData={bookmarkedFlasksGraphData} setBookmarkedFlasks={setBookmarkedFlasks}/>
+          <AllCellbanksGraph allCellbankGraphData={bookmarkedFlasksGraphData}
+          bookmarkedFlasks={bookmarkedFlasks}
+           setBookmarkedFlasks={setBookmarkedFlasks}/>
         )}
-        <ChartsTable chartTitle="Bookmarked Flasks" flasks={bookmarkedFlasksGraphData} />
+        <ChartsTable chartTitle="Bookmarked Flasks" 
+        flasks={bookmarkedFlasksGraphData} 
+        bookmarkedFlasks={bookmarkedFlasks}
+        setBookmarkedFlasks={setBookmarkedFlasks}/>
 
         <Button
           onClick={() => fetchNextPage()}
@@ -169,6 +179,8 @@ export default function ChartsPage() {
         <ChartsTable
           chartTitle="Bookmarked Charts"
           flasks={bookmarkedCellbankGraphData.flat()}
+            bookmarkedFlasks={bookmarkedFlasks}
+            setBookmarkedFlasks={setBookmarkedFlasks}
         />
         
         {/* {singleCellbankGraphData?.length && (

@@ -33,6 +33,7 @@ export const StyledFaUser = styled.img`
 `;
 
 
+
 export default function InfoButtonForModal({children, imgSrc, alt}) {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);

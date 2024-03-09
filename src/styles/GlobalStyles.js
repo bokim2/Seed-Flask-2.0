@@ -211,7 +211,7 @@ ${
      ${'' /* outline: 4px auto -webkit-focus-ring-color; */}
    }
   
-   @media (prefers-color-scheme: light) {
+   ${'' /* @media (prefers-color-scheme: light) {
      :root {
        color: #213547;
        background-color: #ffffff;
@@ -222,7 +222,7 @@ ${
      button {
        background-color: #f9f9f9;
      }
-   }
+   } */}
   
 
   

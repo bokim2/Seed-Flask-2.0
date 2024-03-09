@@ -13,12 +13,15 @@ import { initialCreateFlasksForm } from '../flasks/flasks-types';
 export default function ChartsRow({
   rowData,
   toggleCellbankData,
-  editedForm,
-  setEditedForm,
-  setEditingId,
-  editingId,
-  deleteFlask,
-  isPendingDelete,
+  // editedForm,
+  // setEditedForm,
+  // setEditingId,
+  // editingId,
+  // deleteFlask,
+  // isPendingDelete,
+  bookmarkedFlasks,
+  setBookmarkedFlasks,
+  bookmarked,
 }) {
   const {
     flask_id,
@@ -34,12 +37,12 @@ export default function ChartsRow({
     username,
     project,
   } = rowData;
-  const editing = editingId === flask_id;
+  // const editing = editingId === flask_id;
   // console.log('rowData', rowData);
 
   return (
     <>
-      <PreviousDataRow $editing={editing}>
+      <PreviousDataRow $bookmarked={bookmarked}>
         {/* <TableRow> */}
         <TableDataCell data-cell="flask id">{flask_id}</TableDataCell>
         <TableDataCell data-cell="cell bank id">{cell_bank_id}</TableDataCell>
@@ -55,24 +58,21 @@ export default function ChartsRow({
         </TableDataCell>
         <TableDataCell data-cell="username">{username}</TableDataCell>
         <TableDataCell
-          data-cell="edit"
+          data-cell="bookmark"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (editing) {
-              setEditingId(null);
-              setEditedForm(initialCreateFlasksForm);
-            } else {
-              setEditingId(flask_id);
-              setEditedForm({
-                ...rowData,
-                human_readable_date: displayLocalTime(start_date),
-              });
-              setEditingId(flask_id);
-            }
+            // console.log('e in clicked table cell', flask_id)
+            setBookmarkedFlasks((prev) => {
+              if (!prev.includes(parseInt(flask_id))) {
+                return [...prev, parseInt(flask_id)];
+              } else {
+                return prev;
+              }
+            });
           }}
         >
-          <Button $size={'small'}>Edit</Button>
+          <Button $size={'small'}>bookmark</Button>
         </TableDataCell>
 
         {toggleCellbankData && (
