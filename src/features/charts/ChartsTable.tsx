@@ -26,6 +26,7 @@ import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelect
 import { useAppSelector } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../ui-state/pageSlice';
+import Scheduler from './Scheduler';
 
 export default function ChartsTable({
   flasks,
