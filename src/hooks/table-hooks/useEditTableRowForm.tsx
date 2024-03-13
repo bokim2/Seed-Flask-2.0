@@ -53,12 +53,12 @@ async function updateRowEdit(
 }
 
 export function useUpdateRowMutation({
-  tableName,
-  zodSchema,
+  tableName, // ex: 'cellbanks', 'flasks'
+  zodSchema, // ex: updateCellbankSchema, updateFlaskSchema
   initialEditForm,
   setEditedForm,
-  idColumnName,
-  dateColumnName,
+  idColumnName,  // ex: 'cell_bank_id', 'flask_id'
+  dateColumnName, // ex: 'date_timestamptz', 'start_date'
 }) {
   const queryClient = useQueryClient();
   const { mutate, isPending, error, reset } = useMutation({

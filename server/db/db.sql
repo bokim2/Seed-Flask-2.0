@@ -149,3 +149,50 @@ INSERT INTO samples (flask_id, od600) VALUES (1, 9.1);
 INSERT INTO samples (flask_id, od600) VALUES (2, 10.1);
 
 
+-- SCHEDULES
+
+-- CREATE TABLE IF NOT EXISTS schedules (
+--     schedule_id BIGSERIAL NOT NULL PRIMARY KEY,
+--     start_date TIMESTAMP NOT NULL,
+--     time_since_inoc_hr REAL NOT NULL,
+--     notes VARCHAR(500),
+--     username VARCHAR(250) NOT NULL,
+--     flask_bookmark INT[],
+--     flask_id INT,
+--     CONSTRAINT fk_flask_id FOREIGN KEY (flask_id) REFERENCES flasks (flask_id)
+-- );
+
+
+INSERT INTO schedules (
+    start_date,
+    time_since_inoc_hr,
+    notes,
+    username,
+    flask_bookmark,
+    flask_id
+  )
+VALUES (
+    '2023-03-14 10:00:00',
+    5,
+    'testing bk notes',
+    'Bo Kim',
+    '{1,42}',
+    null
+  );
+
+  INSERT INTO schedules (
+    start_date,
+    time_since_inoc_hr,
+    notes,
+    username,
+    flask_bookmark,
+    flask_id
+  )
+VALUES (
+    '2023-03-14 11:00:00',
+    24,
+    'testing2 bk notes',
+    'Bo Kim',
+    '{1,42,2}',
+    42
+  );

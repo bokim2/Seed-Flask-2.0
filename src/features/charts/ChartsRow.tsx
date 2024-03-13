@@ -42,7 +42,20 @@ export default function ChartsRow({
 
   return (
     <>
-      <PreviousDataRow $bookmarked={bookmarked}>
+      <PreviousDataRow $bookmarked={bookmarked}
+      onClick={(e: React.MouseEvent<HTMLTableRowElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setBookmarkedFlasks((prev) => {
+          if (!prev.includes(parseInt(flask_id))) {
+            return [...prev, parseInt(flask_id)];
+          } else {
+            return prev.filter((id) => id !== parseInt(flask_id));
+          }
+        });
+        e.currentTarget.blur();
+      }}
+      >
         {/* <TableRow> */}
         <TableDataCell data-cell="flask id">{flask_id}</TableDataCell>
         <TableDataCell data-cell="cell bank id">{cell_bank_id}</TableDataCell>
@@ -57,22 +70,13 @@ export default function ChartsRow({
           {displayLocalTime(start_date)}
         </TableDataCell>
         <TableDataCell data-cell="username">{username}</TableDataCell>
-        <TableDataCell
-          data-cell="bookmark"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // console.log('e in clicked table cell', flask_id)
-            setBookmarkedFlasks((prev) => {
-              if (!prev.includes(parseInt(flask_id))) {
-                return [...prev, parseInt(flask_id)];
-              } else {
-                return prev;
-              }
-            });
-          }}
-        >
-          <Button $size={'small'}>bookmark</Button>
+        <TableDataCell data-cell="bookmark">
+          <Button
+            $size={'small'}
+            
+          >
+            bookmark
+          </Button>
         </TableDataCell>
 
         {toggleCellbankData && (
