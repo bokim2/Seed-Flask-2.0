@@ -14,7 +14,7 @@ import HomePage from './pages/HomePage';
 import FlaskPage from './pages/FlaskPage';
 import CellbankPage from './pages/CellbankPage';
 import ChartsPage from './pages/ChartsPage';
-import BioreactorPage from './pages/BioreactorPage';
+import BioreactorPage from './pages/SchedulesPage';
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../configs';
 import GetStarted from './pages/GetStarted';

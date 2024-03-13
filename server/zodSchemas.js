@@ -11,3 +11,12 @@ export const createCellbankSchema = z.object({
 export const updateBackendCellbankSchema = createCellbankSchema.extend({
   date_timestamptz: z.string().trim(),
 });
+
+export const createScheduleSchema = z.object({
+  start_date: z.string().trim(),
+  time_since_inoc_hr: z.number(),
+  notes: z.string().trim(),
+  username: z.string().trim(),
+  flask_bookmark: z.array(z.number()).optional(),
+  flask_id: z.number().optional(),
+})

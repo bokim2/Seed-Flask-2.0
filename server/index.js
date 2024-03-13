@@ -626,6 +626,39 @@ app.put('/api/samples/:id', async (req, res) => {
   }
 });
 
+
+// GET schedules - INFINITE SCROLL
+app.get('/api/schedules', async (req, res) => {
+  try {
+    console.log(
+      'req.query',
+      req.query,
+      'req.query.limit',
+      req.query.limit,
+      'req.query.offset',
+      req.query.offset
+    );
+    const limit = parseInt(req.query.limit, 10) || LIMIT; // Default to 50 if not specified
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
+    const results = await db.query(
+      `SELECT * FROM schedules
+    ORDER BY schedule_id DESC 
+    LIMIT $1 OFFSET $2;`,
+      [limit, offset]
+    );
+    // console.log('results of getting all cell banks', results.rows[0]);
+
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Failed to fetch schedules' });
+  }
+});
+
 // GET aggregate samples by flask_id for graphing
 // for LineGraph component.  NOT being used.  this is a draft
 app.get('/api/graphs', async (req, res) => {

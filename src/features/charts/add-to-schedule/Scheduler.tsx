@@ -7,12 +7,10 @@ export default function Scheduler({ clickedXY }) {
     <>
       {clickedXY && (
         <>
-          <p>{clickedXY[0]?.toFixed(2)}</p>
-          <h3>{clickedXY[1]?.toFixed(2)}</h3>
+          {/* <p>{clickedXY[0]?.toFixed(2)}</p>
+          <h3>{clickedXY[1]?.toFixed(2)}</h3> */}
         </>
       )}
-
-     
     </>
   );
 }

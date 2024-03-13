@@ -5,15 +5,15 @@ import { createCellbankSchema } from '../../../server/zodSchemas';
 
 // cellbanks GET request
 export const cellbankSchema = z.object({
-  cell_bank_id: z.coerce.number() || null, // force a number type
-  strain: z.string() || null,
-  target_molecule: z.string() || null,
-  project: z.string() || null,
-  description: z.string() || null,
-  notes: z.string() || null,
-  date_timestamptz: z.string() || null,
-  username: z.string() || null,
-  user_id: z.string() || null,
+  cell_bank_id: z.coerce.number().nullable(), // force a number type
+  strain: z.string().nullable(),
+  target_molecule: z.string().nullable(),
+  project: z.string().nullable(),
+  description: z.string().nullable(),
+  notes: z.string().nullable(),
+  date_timestamptz: z.string().nullable(),
+  username: z.string().nullable(),
+  user_id: z.string().nullable(),
 });
 
 // export const cellbankDataSchema = z.object({

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import FlasksRow from './ChartsRow';
 import {
   TCreateFlask,
   createFlaskSchema,
@@ -19,20 +18,20 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
-import ChartsRow from './ChartsRow';
 import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import { useAppSelector } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../ui-state/pageSlice';
-import Scheduler from './add-to-schedule/Scheduler';
+import SchedulesRow from './SchedulesRow';
+// import Scheduler from './add-to-schedule/Scheduler';
 
-export default function ChartsTable({
-  flasks,
-  chartTitle,
-  bookmarkedFlasks,
-  setBookmarkedFlasks,
+export default function SchedulesTable({
+  schedules,
+  // chartTitle,
+  // bookmarkedFlasks,
+  // setBookmarkedFlasks,
 }) {
   // console.log('flaks in charts table', flasks);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -48,11 +47,11 @@ export default function ChartsTable({
       dateColumnName: 'start_date',
     });
 
-  // const {
-  //   mutate: deleteFlask,
-  //   isPending: isPendingDelete,
-  //   error,
-  // } = useDeleteRowMutation({ tableName: 'flasks' });
+  const {
+    mutate: deleteSchedule,
+    isPending: isPendingDelete,
+    error,
+  } = useDeleteRowMutation({ tableName: 'schedule' });
 
   const [toggleCellbankData, setToggleCellbankData] = useState(false);
 
@@ -72,12 +71,12 @@ export default function ChartsTable({
     dispatch(changePageLimit(limit));
   };
 
-  console.log(
-    'chartTitle, bookmarkedFlasks, flasks',
-    chartTitle,
-    bookmarkedFlasks,
-    flasks
-  );
+  // console.log(
+  //   'chartTitle, bookmarkedFlasks, flasks',
+  //   chartTitle,
+  //   bookmarkedFlasks,
+  //   flasks
+  // );
 
   return (
     <>
@@ -111,7 +110,7 @@ export default function ChartsTable({
             tableName={'cellbanks'}
           />
           <StyledTable>
-            <Caption>{chartTitle}</Caption>
+            {/* <Caption>{chartTitle}</Caption> */}
             <TableHeader>
               <TableRow>
                 <TableHeaderCell>Flask ID</TableHeaderCell>
@@ -135,24 +134,25 @@ export default function ChartsTable({
               </TableRow>
             </TableHeader>
             <tbody>
-              {Array.isArray(flasks) &&
-                flasks?.map((rowData) => {
+              {Array.isArray(schedules) &&
+                schedules?.map((rowData) => {
                   return (
-                    <ChartsRow
-                      key={rowData.flask_id}
+                    <SchedulesRow
+                      key={rowData.schedule_id}
                       rowData={rowData}
-                      bookmarked={bookmarkedFlasks.includes(
-                        parseInt(rowData?.flask_id)
-                      )}
-                      toggleCellbankData={toggleCellbankData}
-                      // editedForm={editedForm}
-                      // setEditedForm={setEditedForm}
-                      // setEditingId={setEditingId}
-                      // editingId={editingId}
-                      // deleteFlask={deleteFlask}
-                      // isPendingDelete={isPendingDelete}
-                      bookmarkedFlasks={bookmarkedFlasks}
-                      setBookmarkedFlasks={setBookmarkedFlasks}
+                      // bookmarked={bookmarkedFlasks.includes(
+                      //   parseInt(rowData?.flask_id)
+                      // )}
+                      // toggleCellbankData={toggleCellbankData}
+                      editedForm={editedForm}
+                      setEditedForm={setEditedForm}
+                      editingId={editingId}
+                      setEditingId={setEditingId}
+                      deleteSchedule={deleteSchedule}
+                      isPendingDelete={isPendingDelete}
+                      isPendingUpdate={isPendingUpdate}
+                      // bookmarkedFlasks={bookmarkedFlasks}
+                      // setBookmarkedFlasks={setBookmarkedFlasks}
                     />
                   );
                 })}

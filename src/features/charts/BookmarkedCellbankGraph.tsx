@@ -13,8 +13,8 @@ import {
 import { LineGraphColors } from '../../lib/constants';
 import styled from 'styled-components';
 import ChartsTable from './ChartsTable';
-import Scheduler from './Scheduler';
-import DateTimePicker from './DateTimePicker';
+import Scheduler from './add-to-schedule/Scheduler';
+import DateTimePicker from './add-to-schedule/DateTimePicker';
 
 ChartJS.register(
   CategoryScale,
@@ -41,7 +41,7 @@ const StyledBookmarkedCellbankGraph = styled.div`
 
 const BookmarkedCellbankGraph = memo(
   ({ bookmarkedCellbankGraphData }: TBookmarkedCellbankGraph) => {
-    console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData')
+    console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData');
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
     const [selectedFlask, setSelectedFlask] = useState<number | null>(1);
@@ -184,9 +184,9 @@ const BookmarkedCellbankGraph = memo(
         <h3>
           {clickedXY &&
             `Bookmarked Cellbank Graph
-        clicked x: time ${clickedXY[0]?.toFixed(2)}  y: od600 ${
-              clickedXY[1]?.toFixed(2)
-            }`}
+        clicked x: time ${clickedXY[0]?.toFixed(
+          2
+        )}  y: od600 ${clickedXY[1]?.toFixed(2)}`}
         </h3>
         {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
         {/* <ChartsTable flasks={datasets}/> */}
@@ -195,12 +195,11 @@ const BookmarkedCellbankGraph = memo(
           <Line ref={chartRef} options={options} data={data} />
         </StyledBookmarkedCellbankGraph>
         {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
-        <Scheduler clickedXY={clickedXY}/>
+        <Scheduler clickedXY={clickedXY} />
         <DateTimePicker clickedXY={clickedXY} />
       </>
     );
   }
 );
-
 
 export default BookmarkedCellbankGraph;
