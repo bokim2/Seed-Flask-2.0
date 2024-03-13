@@ -23,6 +23,10 @@ const InfoButton = styled.button`
   justify-content: center;
   transition: transform 100ms ease-in-out;
 
+  &.light {
+    background-color: rgba(var(--clr-accent-0), 1);
+  }
+
   &:hover {
     transform: scale(1.1);
   }
@@ -34,13 +38,13 @@ export const StyledFaUser = styled.img`
 
 
 
-export default function InfoButtonForModal({children, imgSrc, alt}) {
+export default function InfoButtonForModal({children, imgSrc, alt, buttonBackgroundColor}) {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
   return (
     <div>
-      <InfoButton
+      <InfoButton className={buttonBackgroundColor}
         onClick={(e) => {
         //   console.log('clicked', isOpenModal);
           e.stopPropagation();

@@ -13,6 +13,8 @@ import {
 import { LineGraphColors } from '../../lib/constants';
 import styled from 'styled-components';
 import ChartsTable from './ChartsTable';
+import Scheduler from './Scheduler';
+import DateTimePicker from './DateTimePicker';
 
 ChartJS.register(
   CategoryScale,
@@ -193,9 +195,12 @@ const BookmarkedCellbankGraph = memo(
           <Line ref={chartRef} options={options} data={data} />
         </StyledBookmarkedCellbankGraph>
         {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
+        <Scheduler clickedXY={clickedXY}/>
+        <DateTimePicker clickedXY={clickedXY} />
       </>
     );
   }
 );
+
 
 export default BookmarkedCellbankGraph;
