@@ -11,6 +11,7 @@ import styled, { css } from 'styled-components';
 import { TTableRow } from '../../lib/types';
 import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditFlasksForm } from '../flasks/flasks-types';
+import { initialEditScheduleForm } from './schedules-types';
 // import { initialEditCellbankForm } from './schedules-types';
 
 export default function SchedulesRow({
@@ -26,53 +27,49 @@ export default function SchedulesRow({
   setEditingId,
 }) {
   const {
-    cell_bank_id,
-    target_molecule,
-    strain,
-    description,
+    schedule_id,
+    start_date,
+    time_since_inoc_hr,
     notes,
-    date_timestamptz,
     username,
-    project,
-    human_readable_date,
+    flask_bookmark,
+    flask_id,
   } = rowData;
 
-  const editing = editingId === cell_bank_id;
+  const editing = editingId === schedule_id;
+  console.log('schedule row data', rowData);
   return (
     <>
       <PreviousDataRow $editing={editing}>
         <TableDataCell
-          data-cell="cell bank id"
+          data-cell="schedule id"
           // onClick={() => handleAddBookmark(cell_bank_id)}
         >
-          {cell_bank_id}
+          {schedule_id}
         </TableDataCell>
 
-        <TableDataCell data-cell="strain">{strain}</TableDataCell>
-
-        <TableDataCell data-cell="target molecule">
-          {target_molecule}
+        <TableDataCell data-cell="start date/time">
+          {displayLocalTime(start_date)}
         </TableDataCell>
 
-        <TableDataCell data-cell="project">{project}</TableDataCell>
+        <TableDataCell data-cell="time since inoc hr">
+          {time_since_inoc_hr}
+        </TableDataCell>
+
+        <TableDataCell data-cell="notes">{notes}</TableDataCell>
+
+        <TableDataCell data-cell="flask_bookmark">
+          {Array.isArray(flask_bookmark) && flask_bookmark?.join(', ')}
+        </TableDataCell>
+
+        <TableDataCell data-cell="flask id">{flask_id}</TableDataCell>
 
         <TableDataCell
-          data-cell="description"
+          data-cell="username"
           // className={toggleTextTruncation ? '' : 'ellipsis'}
         >
-          {description}
+          {username}
         </TableDataCell>
-
-        <TableDataCell
-          data-cell="notes"
-          // className={toggleTextTruncation ? '' : 'ellipsis'}
-        >
-          {notes}
-        </TableDataCell>
-
-        <TableDataCell data-cell="date">{human_readable_date}</TableDataCell>
-
-        <TableDataCell data-cell="user">{username}</TableDataCell>
 
         <TableDataCell
           data-cell="edit"
@@ -84,14 +81,14 @@ export default function SchedulesRow({
             e.stopPropagation();
             if (editing) {
               setEditingId(null);
-              // setEditedForm(initialEditCellbankForm);
+              setEditedForm(initialEditScheduleForm);
               return;
             } else {
               setEditedForm({
                 ...rowData,
-                human_readable_date: displayLocalTime(date_timestamptz),
+                human_readable_date: displayLocalTime(start_date),
               });
-              setEditingId(cell_bank_id);
+              setEditingId(schedule_id);
             }
           }}
         >
@@ -100,8 +97,8 @@ export default function SchedulesRow({
       </PreviousDataRow>
 
       {editing && (
-        <CellbanksEditForm
-          key={cell_bank_id}
+        <ScheduleEditForm
+          key={schedule_id}
           // rowData={rowData}
           editedForm={editedForm}
           setEditedForm={setEditedForm}
@@ -116,7 +113,7 @@ export default function SchedulesRow({
   );
 }
 
-function CellbanksEditForm({
+function ScheduleEditForm({
   setEditedForm,
   editedForm,
   isPendingUpdate,
@@ -124,6 +121,7 @@ function CellbanksEditForm({
   // rowData,
   isPendingDelete,
 }) {
+  console.log('ScheduleeditedForm', editedForm);
   const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -134,82 +132,82 @@ function CellbanksEditForm({
   return (
     <>
       <EditRow>
-        <TableDataCell data-cell="cell bank id">
-          {editedForm.cell_bank_id}
+        <TableDataCell data-cell="schedule id">
+          {editedForm.schedule_id}
         </TableDataCell>
 
-        <TableDataCell data-cell="strain">
+        <TableDataCell data-cell="start date">
           <EditTextArea
-            data-cell="strain"
-            id="strain"
-            name="strain"
+            data-cell="start_date"
+            id="start_date"
+            name="start_date"
             onChange={handleChange}
-            placeholder="strain"
+            placeholder="start_date"
             required
-            value={editedForm.strain}
+            value={displayLocalTime(editedForm?.start_date)}
           >
-            {editedForm.strain}
+            {editedForm.start_date}
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell data-cell="target_molecule">
+        <TableDataCell data-cell="time_since_inoc_hr">
           <EditTextArea
-            data-cell="target_molecule"
-            id="target_molecule"
-            name="target_molecule"
+            data-cell="time_since_inoc_hr"
+            id="time_since_inoc_hr"
+            name="time_since_inoc_hr"
             onChange={handleChange}
-            placeholder="target_molecule"
+            placeholder="time_since_inoc_hr"
             required
-            value={editedForm.target_molecule}
+            value={editedForm.time_since_inoc_hr}
           >
-            {editedForm.target_molecule}
+            {editedForm.time_since_inoc_hr}
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell data-cell="project">
+        <TableDataCell data-cell="notes">
           <EditTextArea
-            data-cell="project"
-            id="project"
-            name="project"
-            onChange={handleChange}
-            placeholder="project"
-            required
-            value={editedForm.project}
-          >
-            {editedForm.project}
-          </EditTextArea>
-        </TableDataCell>
-
-        <TableDataCell>
-          <EditTextArea
-            id="description"
-            name="description"
-            onChange={handleChange}
-            placeholder="description"
-            required
-            value={editedForm.description}
-          />
-        </TableDataCell>
-
-        <TableDataCell>
-          <EditTextArea
+            data-cell="notes"
             id="notes"
             name="notes"
             onChange={handleChange}
             placeholder="notes"
+            required
             value={editedForm.notes}
+          >
+            {editedForm.notes}
+          </EditTextArea>
+        </TableDataCell>
+
+        {/* <TableDataCell>
+          <EditTextArea
+            id="username"
+            name="username"
+            onChange={handleChange}
+            placeholder="username"
+            required
+            value={editedForm.username}
+          />
+        </TableDataCell> */}
+
+        <TableDataCell>
+          <EditTextArea
+            id="flask_bookmark"
+            name="flask_bookmark"
+            onChange={handleChange}
+            placeholder="flask_bookmark"
+            value={editedForm.flask_bookmark}
             required
           />
         </TableDataCell>
 
         <TableDataCell>
           <EditTextArea
-            id="human_readable_date"
-            name="human_readable_date"
+            id="flask_id"
+            name="flask"
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
             onChange={handleChange}
             required
-            value={editedForm.human_readable_date}
+            value={editedForm.flask_id}
           />
         </TableDataCell>
 

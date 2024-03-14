@@ -10,20 +10,53 @@ export const schedulesSchema = z.object({
   time_since_inoc_hr: z.number().nullable(),
   notes: z.string().nullable(),
   username: z.string().nullable(),
-  flask_bookmark: z.array(z.number()).nullable(),
+  flask_bookmark: z.array(z.number()).optional().nullable(),
   flask_id: z.number().optional().nullable(),
 });
 
-// export const cellbankDataSchema = z.object({
-//   status: z.string(),
-//   data: z.array(cellbankSchema),
-//   // popularOptions:
-// })
 
 export const schedulesArraySchema = z.array(schedulesSchema);
 
 export type TSchedule = z.infer<typeof schedulesSchema>;
 export type TSchedules = z.infer<typeof schedulesArraySchema>;
+
+export const initialEditScheduleForm = {
+  start_date: '',
+  notes: '',
+  username: '',
+  flask_bookmark: '',
+  flask_id: '',
+  human_readable_date: '',
+  // time_since_inoc_hr: '',
+};
+
+// create a schedule
+
+export const createScheduleSchema = z.object({
+  start_date: z.string().nullable(),
+  time_since_inoc_hr: z.number().nullable(),
+  notes: z.string().nullable(),
+  username: z.string().nullable(),
+  flask_bookmark: z.array(z.number()).optional().nullable(),
+  flask_id: z.number().optional().nullable(),
+});
+
+export const initialCreateSchedulesForm = {
+  start_date: '',
+  notes: '',
+  username: '',
+  flask_bookmark: '',
+  flask_id: '',
+  human_readable_date: '',
+  // time_since_inoc_hr: '',
+};
+
+export const updateScheduleSchema = createScheduleSchema.extend({
+  human_readable_date: z.string(),
+});
+
+export type TUpdateScheduleForm = z.infer<typeof updateScheduleSchema>;
+
 
 // // create a cellbank
 // export const createCellbankColumnsArray = [
@@ -94,25 +127,25 @@ export type TSchedules = z.infer<typeof schedulesArraySchema>;
 //   'date_timestampz',
 // ];
 
-// // for searchForm
-// export type TCellbanksColumns =
-//   | 'cell_bank_id'
-//   | 'strain'
-//   | 'target_molecule'
-//   | 'project'
-//   | 'description'
-//   | 'notes'
-//   | 'date_timestampz'
-//   | 'human_readable_date'
-//   | 'username';
+// for searchForm
+export type TSchedulesColumns =
+  'schedule_id'
+  | 'start_date'
+  | 'time_since_inoc_hr'
+  | 'notes'
+  | 'username'
+  | 'flask_bookmark'
+  | 'flask_id'
+  | 'human_readable_date';
 
-// export const cellbanksTableHeaderCellsArray = [
-//   'cell_bank_id',
-//   'strain',
-//   'target_molecule',
-//   'project',
-//   'description',
-//   'notes',
-//   'human_readable_date',
-//   'username',
-// ];
+
+export const schedulesTableHeaderCellsArray = [
+  'schedule_id',
+  'start_date',
+  'time_since_inoc_hr',
+  'notes',
+  'flask_bookmark',
+  'flask_id',
+  // 'human_readable_date',
+  'username',
+];

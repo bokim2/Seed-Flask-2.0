@@ -18,13 +18,18 @@ import {
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
-import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
+import { useEditTableRowForm, useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
-import { useAppSelector } from '../../hooks/hooks';
+import { useAppSelector, useFilterSortTableData, useSetSortColumn } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../ui-state/pageSlice';
 import SchedulesRow from './SchedulesRow';
+import { TSchedule, TSchedules, TSchedulesColumns, TUpdateScheduleForm, initialCreateSchedulesForm, initialEditScheduleForm, schedulesTableHeaderCellsArray, updateScheduleSchema } from './schedules-types';
+import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
+import SearchFormRow from '../../ui/SearchFormRow';
+import ErrorMessage from '../../ui/ErrorMessage';
+import SearchForm from '../../ui/SearchForm';
 // import Scheduler from './add-to-schedule/Scheduler';
 
 export default function SchedulesTable({
@@ -33,35 +38,63 @@ export default function SchedulesTable({
   // bookmarkedFlasks,
   // setBookmarkedFlasks,
 }) {
-  // console.log('flaks in charts table', flasks);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editedForm, setEditedForm] = useState(initialEditFlasksForm);
+  console.log('schedules in schedules table', schedules);
+  // const [editingId, setEditingId] = useState<number | null>(null);
+  // const [editedForm, setEditedForm] = useState(initialEditScheduleForm);
 
-  const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } =
-    useUpdateRowMutation({
-      tableName: 'flasks',
-      zodSchema: updateFlaskSchema,
-      initialEditForm: initialCreateFlasksForm,
-      setEditedForm,
-      idColumnName: 'flask_id',
-      dateColumnName: 'start_date',
-    });
+  // const { mutate: submitEditedScheduleForm, isPending: isPendingUpdate } =
+  //   useUpdateRowMutation({
+  //     tableName: 'schedules',
+  //     zodSchema: updateScheduleSchema,
+  //     initialEditForm: initialCreateSchedulesForm,
+  //     setEditedForm,
+  //     idColumnName: 'schedule_id',
+  //     dateColumnName: 'start_date',
+  //   });
 
+  // const {
+  //   mutate: deleteSchedule,
+  //   isPending: isPendingDelete,
+  //   error,
+  // } = useDeleteRowMutation({ tableName: 'schedule' });
+
+
+  // console.log('cellbanks in cellbanks table', cellbanks);
+
+  const {
+    editedForm,
+    setEditedForm,
+    editingId,
+    setEditingId,
+    submitEditedRowForm,
+    isPendingUpdate,
+    updateError,
+    handleEditFormSubmit,
+  } = useEditTableRowForm<TUpdateScheduleForm>({
+    tableName: 'schedules',
+    zodSchema: updateScheduleSchema,
+    initialEditForm: initialEditScheduleForm,
+    idColumnName: 'schedule_id',
+    dateColumnName: 'start_date',
+  });
+
+  // delete cellbank
   const {
     mutate: deleteSchedule,
     isPending: isPendingDelete,
-    error,
-  } = useDeleteRowMutation({ tableName: 'schedule' });
+    error: deleteError,
+  } = useDeleteRowMutation({ tableName: 'schedules' });
 
-  const [toggleCellbankData, setToggleCellbankData] = useState(false);
+  // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
+  const [searchedData, setSearchedData] = useState<TSchedules>([]);
 
-  // const handleEditFormSubmit = (e, editedForm) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
+  // filtered and sorted data that will be passed to child components
+  const [filteredAndSortedData, setFilteredAndSortedData] =
+    useState<TSchedules>([]);
 
-  //   submitEditedFlaskForm(editedForm);
-  //   setEditingId(null);
-  // };
+  // sort selected column
+  const { sortColumn, handleSortColumn } =
+    useSetSortColumn<TSchedulesColumns>();
 
   // page limit - how many rows to display per fetch  ex: 10, 20, 50
   const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
@@ -71,96 +104,100 @@ export default function SchedulesTable({
     dispatch(changePageLimit(limit));
   };
 
-  // console.log(
-  //   'chartTitle, bookmarkedFlasks, flasks',
-  //   chartTitle,
-  //   bookmarkedFlasks,
-  //   flasks
-  // );
+  // useEffect call to filter and sort data and keep it in sync
+  useFilterSortTableData({
+    cellbanks : schedules,
+    searchedData,
+    sortColumn,
+    setFilteredAndSortedData,
+  });
+
+  //state for multisearch
+
+  const [searchMultiError, setSearchMultiError] = useState(null);
+console.log(searchMultiError, 'searchMultiError')
 
   return (
     <>
-      <Button onClick={() => setToggleCellbankData((prev) => !prev)}>
-        cellbank data
-      </Button>
+    {/* Search Section */}
+    <SearchForm setSearchedData={setSearchedData} tableName={'schedules'} />
+    
 
-      <StyledForm
-        onSubmit={(e) => {
-          e.preventDefault();
-          // const formattedEditedForm = {
-          //   flask_id: Number(editedForm.flask_id),
-          //   cell_bank_id: Number(editedForm.cell_bank_id),
-          //   vessel_type: 'flask',
-          //   media: String(editedForm.media),
-          //   media_ml: Number(editedForm.media_ml),
-          //   inoculum_ul: Number(editedForm.inoculum_ul),
-          //   temp_c: Number(editedForm.temp_c),
-          //   rpm: Number(editedForm.rpm),
-          //   // start_date: String(editedForm.start_date),
-          //   // human_readable_date: String(editedForm.human_readable_date),
-          // };
-          // handleEditFormSubmit(e, formattedEditedForm);
-        }}
-      >
-        <TableContainer>
-          {/* Page Limit Section */}
-          <PageLimitDropDownSelector
-            handleChoosePageLimit={handleChoosePageLimit}
-            pageLimitSetting={pageLimitSetting}
-            tableName={'cellbanks'}
-          />
-          <StyledTable>
-            {/* <Caption>{chartTitle}</Caption> */}
-            <TableHeader>
-              <TableRow>
-                <TableHeaderCell>Flask ID</TableHeaderCell>
-                <TableHeaderCell>Cell Bank ID</TableHeaderCell>
-                <TableHeaderCell>Project</TableHeaderCell>
-                <TableHeaderCell>media</TableHeaderCell>
-                <TableHeaderCell>inoculum uL</TableHeaderCell>
-                <TableHeaderCell>media mL</TableHeaderCell>
-                <TableHeaderCell>temperature C</TableHeaderCell>
-                <TableHeaderCell>RPM</TableHeaderCell>
-                <TableHeaderCell>Start date/time</TableHeaderCell>
-                <TableHeaderCell>User</TableHeaderCell>
-                <TableHeaderCell>bookmark</TableHeaderCell>
+    {/* Page Limit Section */}
+    <PageLimitDropDownSelector
+      handleChoosePageLimit={handleChoosePageLimit}
+      pageLimitSetting={pageLimitSetting}
+      tableName={'cellbanks'}
+    />
 
-                {toggleCellbankData && (
-                  <>
-                    <TableHeaderCell>strain</TableHeaderCell>
-                    <TableHeaderCell>target molecule</TableHeaderCell>
-                  </>
-                )}
-              </TableRow>
-            </TableHeader>
-            <tbody>
-              {Array.isArray(schedules) &&
-                schedules?.map((rowData) => {
-                  return (
-                    <SchedulesRow
-                      key={rowData.schedule_id}
-                      rowData={rowData}
-                      // bookmarked={bookmarkedFlasks.includes(
-                      //   parseInt(rowData?.flask_id)
-                      // )}
-                      // toggleCellbankData={toggleCellbankData}
-                      editedForm={editedForm}
-                      setEditedForm={setEditedForm}
-                      editingId={editingId}
-                      setEditingId={setEditingId}
-                      deleteSchedule={deleteSchedule}
-                      isPendingDelete={isPendingDelete}
-                      isPendingUpdate={isPendingUpdate}
-                      // bookmarkedFlasks={bookmarkedFlasks}
-                      // setBookmarkedFlasks={setBookmarkedFlasks}
-                    />
-                  );
-                })}
-            </tbody>
-          </StyledTable>
-        </TableContainer>
-      </StyledForm>
-      {/* </Wrapper> */}
-    </>
-  );
-}
+    {/* loading and error messages */}
+    {isPendingUpdate && <h1>edit is pending Update...</h1>}
+    {isPendingDelete && <h1>edit is pending Delete...</h1>}
+    {updateError?.message && <ErrorMessage error={updateError} />}
+    {deleteError?.message && <ErrorMessage error={deleteError} />}
+    {searchMultiError && <ErrorMessage error={searchMultiError} />}
+
+    {/* Edit row form */}
+    <StyledForm
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleEditFormSubmit(
+          e,
+          editedForm,
+          submitEditedRowForm,
+          setEditingId
+        );
+      }}
+    >
+
+      <Caption>
+        Cell Banks Table
+        
+      </Caption>
+      {/* Table Section */}
+      <TableContainer id="CellbanksTableContainer">
+        <StyledTable>
+          <TableHeader>
+            {/* select column to search */}
+            <TableRow>
+              {schedulesTableHeaderCellsArray.map((headerCell, i) => (
+                <TableHeaderCellComponent
+                  key={headerCell}
+                  columnName={headerCell}
+                  handleSortColumn={handleSortColumn}
+                  sortColumn={sortColumn}
+                />
+              ))}
+              
+              <TableHeaderCell>edit</TableHeaderCell>
+            </TableRow>
+
+            {/* <SearchFormRow setSearchedData={setSearchedData} tableName={'schedules'} 
+            tableColumnsHeaderCellsArray={schedulesTableHeaderCellsArray}
+            setSearchMultiError={setSearchMultiError}
+            /> */}
+            
+          </TableHeader>
+          <tbody>
+            {filteredAndSortedData &&
+              filteredAndSortedData.length > 0 &&
+              filteredAndSortedData?.map((rowData) => (
+                <SchedulesRow
+                  key={rowData.schedule_id}
+                  rowData={rowData}
+                  // toggleTextTruncation={toggleTextTruncation}
+                  editedForm={editedForm}
+                  setEditedForm={setEditedForm}
+                  setEditingId={setEditingId}
+                  editingId={editingId}
+                  deleteSchedule={deleteSchedule}
+                  isPendingUpdate={isPendingUpdate}
+                  isPendingDelete={isPendingDelete}
+                  // handleAddBookmark={handleAddBookmark}
+                />
+              ))}
+          </tbody>
+        </StyledTable>
+      </TableContainer>
+    </StyledForm>
+  </>)}
