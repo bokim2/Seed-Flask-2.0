@@ -101,7 +101,7 @@ function App() {
                 <Route path="cellbank" element={<CellbankPage />} />
                 <Route path="flask" element={<FlaskPage />} />
                 <Route path="sample" element={<SamplePage />} />
-                <Route path="bioreactor" element={<BioreactorPage />} />
+                <Route path="schedule" element={<BioreactorPage />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="charts" element={<ChartsPage />} />
                 {/* <Route path="signin" element={<SignInPage />} /> */}

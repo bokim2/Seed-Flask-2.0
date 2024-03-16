@@ -121,10 +121,10 @@ export default function HomePage() {
               positionElement={{ left: '20%' }}
             />
             <MainMenuButton
-              toPath="/bioreactor"
-              text={'start bioreactor'}
+              toPath="/schedule"
+              text={'view schedule'}
               backgroundColor="rgba(var(--clr-accent-4), .8)"
-              imgUrl="images/bioreactor-1.png"
+              imgUrl="images/schedule.png"
               imgAlt="bioreactor"
               positionElement={{ left: '30%' }}
             />

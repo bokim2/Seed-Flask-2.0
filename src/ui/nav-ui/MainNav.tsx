@@ -106,6 +106,7 @@ const UserIconContainer = styled.div`
 
 const StyledLinkButton = styled(LinkButton)`
   display: none;
+  border: none;
 
   @media (min-width: 850px) {
     display: block;
@@ -132,6 +133,7 @@ type StyledMainNav = {
 
 export default function MainNav({ userProfile, setUserProfile }) {
   const mainNavRef = useRef(null);
+  const userButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Use useEffect to add event listener for scroll
@@ -235,6 +237,10 @@ export default function MainNav({ userProfile, setUserProfile }) {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    console.log('userButtonRef', userButtonRef.current);
+    if (userButtonRef?.current) {
+      userButtonRef.current.classList.add('loggingIn');
+    }
     window.location.href = `${baseUrl}/login`;
     navigate('/');
   };
@@ -284,7 +290,10 @@ export default function MainNav({ userProfile, setUserProfile }) {
 
           {/* login button */}
           {!userProfile?.user?.name ? (
-            <StyledLinkButton href={`${baseUrl}/login/`}>
+            <StyledLinkButton
+              // href={`${baseUrl}/login/`}
+              onClick={handleLogin}
+            >
               login
             </StyledLinkButton>
           ) : (
@@ -298,6 +307,7 @@ export default function MainNav({ userProfile, setUserProfile }) {
 
           {userProfile?.user?.picture ? (
             <UserIconContainer
+              id="userIconContainer"
               onClick={(e) => handleToggle(e, 'user')}
               aria-label="user and settings menu"
             >
@@ -307,12 +317,9 @@ export default function MainNav({ userProfile, setUserProfile }) {
             </UserIconContainer>
           ) : (
             <UserButton
+              ref={userButtonRef}
               onClick={(e) => {
-                console.log(
-                  'userProfile in userbutton click',
-                  userProfile,
-                  userProfile
-                );
+                console.log('userProfile in userbutton click', userProfile);
                 if (userProfile?.isAuthenticated) {
                   handleToggle(e, 'user');
                 } else {
