@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { TTableHeaderCell, TTableRow } from '../lib/types';
 // wrappers
 
@@ -72,6 +72,22 @@ export const LoginButton = styled.button`
 
 // Nav
 
+
+const pulseAnimation = keyframes`
+  0%, 100% {
+    border-width: 2px;
+    border-color: blue;
+  }
+  25% {
+    border-width: 14px;
+    border-color: yellow;
+  }
+  10% { 
+    border-width: 10px;
+    border-color: red;
+  }
+`;
+
 export const UserButton = styled.button`
   border-radius: 50%; /* Use 50% for a circular shape */
   aspect-ratio: 1/1;
@@ -84,6 +100,12 @@ export const UserButton = styled.button`
   &:hover {
     transform: scale(1.05);
   }
+
+  &.loggingIn {
+    /* border: 4px solid red; */
+    animation: ${pulseAnimation} 1s infinite;
+  }
+
 
   @media (min-width: 850px) {
     padding: 0.5rem; /* Add padding if needed */

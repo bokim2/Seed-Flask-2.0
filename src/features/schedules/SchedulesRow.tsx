@@ -9,7 +9,7 @@ import {
 import Button from '../../ui/Button';
 import styled, { css } from 'styled-components';
 import { TTableRow } from '../../lib/types';
-import { displayLocalTime } from '../../hooks/hooks';
+import { addHoursToTimestamp, displayLocalTime } from '../../hooks/hooks';
 import { initialEditFlasksForm } from '../flasks/flasks-types';
 import { initialEditScheduleForm } from './schedules-types';
 // import { initialEditCellbankForm } from './schedules-types';
@@ -53,7 +53,11 @@ export default function SchedulesRow({
         </TableDataCell>
 
         <TableDataCell data-cell="time since inoc hr">
-          {time_since_inoc_hr}
+        {time_since_inoc_hr}
+        </TableDataCell>
+
+        <TableDataCell data-cell="sample date/time">
+          {displayLocalTime(addHoursToTimestamp(start_date, time_since_inoc_hr))}
         </TableDataCell>
 
         <TableDataCell data-cell="notes">{notes}</TableDataCell>
@@ -162,6 +166,10 @@ function ScheduleEditForm({
           >
             {editedForm.time_since_inoc_hr}
           </EditTextArea>
+        </TableDataCell>
+
+        <TableDataCell data-cell="sample date/time">
+          {displayLocalTime(addHoursToTimestamp(editedForm.start_date, editedForm.time_since_inoc_hr))}
         </TableDataCell>
 
         <TableDataCell data-cell="notes">

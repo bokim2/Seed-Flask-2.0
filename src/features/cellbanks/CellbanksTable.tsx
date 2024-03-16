@@ -89,7 +89,7 @@ export default function CellbanksTable({
 
   // useEffect call to filter and sort data and keep it in sync
   useFilterSortTableData({
-    cellbanks,
+    dataName: cellbanks,
     searchedData,
     sortColumn,
     setFilteredAndSortedData,

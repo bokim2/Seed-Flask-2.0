@@ -143,6 +143,7 @@ export const schedulesTableHeaderCellsArray = [
   'schedule_id',
   'start_date',
   'time_since_inoc_hr',
+  'sample date/time',
   'notes',
   'flask_bookmark',
   'flask_id',

@@ -160,23 +160,23 @@ export function useSetSortColumn<TTableColumns extends string>() {
 
 // update table data based on filter and sort settings
 export function useFilterSortTableData({
-  cellbanks,
+  dataName, // ex: cellbanks, flasks, samples, schedules
   searchedData,
   sortColumn,
   setFilteredAndSortedData,
 }) {
   // update selected data based on filter and sort settings
   useEffect(() => {
-    // console.log('in useEffect', cellbanks, searchedData, sortColumn);
+    // console.log('in useEffect', dataName, searchedData, sortColumn);
     const updatedData = filteredTableData(
-      cellbanks,
+      dataName,
       searchedData,
       sortColumn,
       'date_timestamptz'
     );
     setFilteredAndSortedData(updatedData);
-    // console.log('useEffect in cellbanks table', cellbanks);
-  }, [cellbanks, searchedData, sortColumn, setFilteredAndSortedData]);
+    // console.log('useEffect in dataName table', dataName);
+  }, [dataName, searchedData, sortColumn, setFilteredAndSortedData]);
 }
 
 // toggle nav menus off when clicking outside of them
@@ -245,6 +245,17 @@ export function getUtcTimestampFromLocalTime(
   const utcDate = zonedTimeToUtc(DateObject, localTimeZone);
 
   return utcDate.toISOString();
+}
+
+// for schedules table - add time_since_inoc_hr to get sample_date timestamp
+
+export function addHoursToTimestamp(timestamp, hrsToAdd){
+  const startDate = new Date(timestamp);
+  const milisecondsToAdd = hrsToAdd * 60 * 60 * 1000;
+  const newTimestamp = startDate.getTime() + milisecondsToAdd;
+
+  const newDate = new Date(newTimestamp);
+  return newDate.toISOString();
 }
 
 // // fetch all rows in table

@@ -106,7 +106,7 @@ export default function SchedulesTable({
 
   // useEffect call to filter and sort data and keep it in sync
   useFilterSortTableData({
-    cellbanks : schedules,
+    dataName : schedules,
     searchedData,
     sortColumn,
     setFilteredAndSortedData,
