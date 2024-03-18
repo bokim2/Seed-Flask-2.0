@@ -8,32 +8,33 @@ import type { RootState, AppDispatch } from '../lib/store';
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export function useMainFilter({selector}){
-  const {
-  data,
-  isLoading,
-  isError,
-} = useQuery({ 
-  queryKey: ['mainfilter'], 
-  queryFn: async () => {
-    try {
-    const response = await fetch(`${baseUrl}/api/uniques/${selector}`)
-    // const response = await fetch(`${baseUrl}/api/uniques/project`)
-    const {data} = await response.json();
-    if(!response.ok){
-      const errorMessage = data?.error ||
-      data?.message ||
-      `Failed to fetch unique values from ${selector}, status: ${response.status}`;
-      throw new Error(errorMessage);
-    }
-    console.log('data[0]?.array_agg in useQuery, fetching projects', data[0]?.array_agg);
-    return data[0]?.array_agg;
-  } catch (err) {
-    console.log(err, 'error in getting unique mainfilter values');
-    throw err;
-  }
-  } });
-return {data, isLoading, isError} as const;
+export function useMainFilter({ selector }) {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['mainfilter'],
+    queryFn: async () => {
+      try {
+        const response = await fetch(`${baseUrl}/api/uniques/${selector}`);
+        // const response = await fetch(`${baseUrl}/api/uniques/project`)
+        const { data } = await response.json();
+        if (!response.ok) {
+          const errorMessage =
+            data?.error ||
+            data?.message ||
+            `Failed to fetch unique values from ${selector}, status: ${response.status}`;
+          throw new Error(errorMessage);
+        }
+        console.log(
+          'data[0]?.array_agg in useQuery, fetching projects',
+          data[0]?.array_agg
+        );
+        return data[0]?.array_agg;
+      } catch (err) {
+        console.log(err, 'error in getting unique mainfilter values');
+        throw err;
+      }
+    },
+  });
+  return { data, isLoading, isError } as const;
 }
 
 // seting table to data (sorted and searched if any)
@@ -53,12 +54,16 @@ export function filteredTableData(
   // );
   let filteredTableData = [...tableRowsData];
   // console.log('filteredTableData.cellbankid', filteredTableData.map(e => e.cell_bank_id));
-console.log('timestamp_column', timestamp_column, 'filteredTableData', filteredTableData)
+  console.log(
+    'timestamp_column',
+    timestamp_column,
+    'filteredTableData',
+    filteredTableData
+  );
 
-
-if (searchedData?.length > 0) {
-  filteredTableData = [...searchedData];
-}
+  if (searchedData?.length > 0) {
+    filteredTableData = [...searchedData];
+  }
 
   if (timestamp_column) {
     filteredTableData = [...filteredTableData].map((tableRow) => {
@@ -67,18 +72,22 @@ if (searchedData?.length > 0) {
       //   tableRow?.[timestamp_column]
       // );
       if (tableRow?.[timestamp_column]) {
-        console.log('timestamp_column', Boolean(timestamp_column), 'tableRow?.[timestamp_column]', Boolean(tableRow?.[timestamp_column]))
+        console.log(
+          'timestamp_column',
+          Boolean(timestamp_column),
+          'tableRow?.[timestamp_column]',
+          Boolean(tableRow?.[timestamp_column])
+        );
         return {
           ...tableRow,
           human_readable_date: displayLocalTime(tableRow[timestamp_column]),
         };
       }
-      console.log('tableRow', tableRow)
-    
+      console.log('tableRow', tableRow);
+
       return tableRow;
     });
   }
-
 
   // console.log('Object.values(sortColumn)[0]', Object.values(sortColumn)[0], Object.values(sortColumn))
   if (Object.values(sortColumn)[0]) {
@@ -96,7 +105,7 @@ if (searchedData?.length > 0) {
       // );
       const numericColumns = new Set(['cell_bank_id', 'flask_id', 'sample_id']);
       if (!numericColumns.has(sortColumnKey)) {
-        if (sortDirection === 'asc'){
+        if (sortDirection === 'asc') {
           // console.log(
           //   'a[sortColumnKey].localeCompare(b[sortColumnKey])', a[sortColumnKey], b[sortColumnKey], a[sortColumnKey].localeCompare(b[sortColumnKey])
           // )
@@ -199,18 +208,15 @@ export function useOnClickOutside(refs, handlerFn) {
   }, [refs, handlerFn]);
 }
 
-
-
 // TIMEZONE CONVERSION FUNCTION
 
 import { format, parse } from 'date-fns';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { isPending } from '@reduxjs/toolkit';
-import {
-  cellbanksArraySchema,
-} from '../features/cellbanks/cellbanks-types';
+import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import { ZodSchema, z } from 'zod';
 import { useQuery } from '@tanstack/react-query';
+import { type } from 'os';
 
 // convert UTC timestamp to local time
 
@@ -249,13 +255,64 @@ export function getUtcTimestampFromLocalTime(
 
 // for schedules table - add time_since_inoc_hr to get sample_date timestamp
 
-export function addHoursToTimestamp(timestamp, hrsToAdd){
+export function addHoursToTimestamp(timestamp, hrsToAdd) {
   const startDate = new Date(timestamp);
   const milisecondsToAdd = hrsToAdd * 60 * 60 * 1000;
   const newTimestamp = startDate.getTime() + milisecondsToAdd;
 
   const newDate = new Date(newTimestamp);
   return newDate.toISOString();
+}
+
+export function formatDateTime(date) {
+  return format(new Date(date), 'yyyy-MM-dd hh:mm a');
+}
+
+export function combineDateAndTime(dateString, timeString) {
+  const dateTimeString = `${dateString}T${timeString}`;
+  const resultDate = parse(dateTimeString, "yyyy-MM-dd'T'HH:mm", new Date());
+  return resultDate;
+}
+
+// check if current flask list is valid
+export function validateCurrentFlasks(currentFlasksString) {
+  if (currentFlasksString.length == 0) return true;
+
+  const regex = /^[0-9, \s-]+$/;
+  return regex.test(currentFlasksString);
+}
+
+export function transformListStringToArray(listString) {
+  if (!validateCurrentFlasks(listString)) return [];
+
+  const commaSplitArray = listString.split(',').map((e) => e.trim());
+
+  const resultArray: number[] = [];
+  // if (listString.includes('-')) {
+  commaSplitArray.forEach((rangePortion) => {
+    if (rangePortion.includes('-')) {
+      const [start, end] = rangePortion
+        .split('-')
+        .map((rangeSegment) => Number(rangeSegment.trim()));
+
+      if (!isNaN(start) && !isNaN(end)) {
+        for (let i = start; i <= end; i++) {
+          resultArray.push(i);
+        }
+      }
+    } else {
+      const unprocessedRangePortion = Number(rangePortion);
+      if (!isNaN(unprocessedRangePortion)) {
+        resultArray.push(Number(rangePortion.trim()));
+      }
+    }
+  });
+  return resultArray;
+  // const filteredResultArray = resultArray.filter((e) => typeof e !== 'number');
+  // return filteredResultArray;
+  // } else {
+  //   return commaSplitArray.map((e) => Number(e));
+  // }
 }
 
 // // fetch all rows in table

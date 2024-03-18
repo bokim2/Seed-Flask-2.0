@@ -157,7 +157,9 @@ INSERT INTO samples (flask_id, od600) VALUES (2, 10.1);
 --     time_since_inoc_hr REAL NOT NULL,
 --     notes VARCHAR(500),
 --     username VARCHAR(250) NOT NULL,
+--     user_id VARCHAR(250) NOT NULL,
 --     flask_bookmark INT[],
+--     current_flasks INT[],
 --     flask_id INT,
 --     CONSTRAINT fk_flask_id FOREIGN KEY (flask_id) REFERENCES flasks (flask_id)
 -- );

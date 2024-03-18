@@ -28,6 +28,8 @@ ChartJS.register(
 
 export type TBookmarkedCellbankGraph = {
   bookmarkedCellbankGraphData: any[][];
+  bookmarkedFlasks: any;
+  setBookmarkedFlasks: any;
 };
 
 const StyledBookmarkedCellbankGraph = styled.div`
@@ -40,7 +42,7 @@ const StyledBookmarkedCellbankGraph = styled.div`
 `;
 
 const BookmarkedCellbankGraph = memo(
-  ({ bookmarkedCellbankGraphData }: TBookmarkedCellbankGraph) => {
+  ({ bookmarkedCellbankGraphData, bookmarkedFlasks, setBookmarkedFlasks }: TBookmarkedCellbankGraph) => {
     console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData');
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
@@ -196,7 +198,11 @@ const BookmarkedCellbankGraph = memo(
         </StyledBookmarkedCellbankGraph>
         {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
         <Scheduler clickedXY={clickedXY} />
-        <DateTimePicker clickedXY={clickedXY} />
+        <DateTimePicker
+          clickedXY={clickedXY}
+          bookmarkedFlasks={bookmarkedFlasks}
+          setBookmarkedFlasks={setBookmarkedFlasks}
+        />
       </>
     );
   }

@@ -25,11 +25,12 @@ import { useAppSelector, useFilterSortTableData, useSetSortColumn } from '../../
 import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../ui-state/pageSlice';
 import SchedulesRow from './SchedulesRow';
-import { TSchedule, TSchedules, TSchedulesColumns, TUpdateScheduleForm, initialCreateSchedulesForm, initialEditScheduleForm, schedulesTableHeaderCellsArray, updateScheduleSchema } from './schedules-types';
+import { TSchedule, TSchedules, TSchedulesColumns, TUpdateScheduleForm, initialCreateSchedulesForm, initialEditScheduleForm, schedulesTableHeaderCellsArray } from './schedules-types';
 import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
 import SearchFormRow from '../../ui/SearchFormRow';
 import ErrorMessage from '../../ui/ErrorMessage';
 import SearchForm from '../../ui/SearchForm';
+import { updateScheduleSchema } from '../../../server/zodSchemas';
 // import Scheduler from './add-to-schedule/Scheduler';
 
 export default function SchedulesTable({
@@ -155,7 +156,7 @@ console.log(searchMultiError, 'searchMultiError')
         
       </Caption>
       {/* Table Section */}
-      <TableContainer id="CellbanksTableContainer">
+      <TableContainer id="SchedulesTableContainer">
         <StyledTable>
           <TableHeader>
             {/* select column to search */}

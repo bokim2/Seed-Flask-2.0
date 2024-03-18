@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createCellbankSchema } from '../../../server/zodSchemas';
+import { createCellbankSchema, updateScheduleSchema } from '../../../server/zodSchemas';
 
 // zod and typescript types
 
@@ -11,6 +11,7 @@ export const schedulesSchema = z.object({
   notes: z.string().nullable(),
   username: z.string().nullable(),
   flask_bookmark: z.array(z.number()).optional().nullable(),
+  current_flasks: z.array(z.number()).optional().nullable(),
   flask_id: z.number().optional().nullable(),
 });
 
@@ -32,15 +33,6 @@ export const initialEditScheduleForm = {
 
 // create a schedule
 
-export const createScheduleSchema = z.object({
-  start_date: z.string().nullable(),
-  time_since_inoc_hr: z.number().nullable(),
-  notes: z.string().nullable(),
-  username: z.string().nullable(),
-  flask_bookmark: z.array(z.number()).optional().nullable(),
-  flask_id: z.number().optional().nullable(),
-});
-
 export const initialCreateSchedulesForm = {
   start_date: '',
   notes: '',
@@ -51,21 +43,19 @@ export const initialCreateSchedulesForm = {
   // time_since_inoc_hr: '',
 };
 
-export const updateScheduleSchema = createScheduleSchema.extend({
-  human_readable_date: z.string(),
-});
-
 export type TUpdateScheduleForm = z.infer<typeof updateScheduleSchema>;
 
 
-// // create a cellbank
-// export const createCellbankColumnsArray = [
-//   'strain',
-//   'target_molecule',
-//   'project',
-//   'description',
-//   'notes',
-// ];
+// create a schedule
+export const createCellbankColumnsArray = [
+  'start_date',
+  'notes',
+  'username',
+  'flask_bookmark',
+  'flask_id',
+  'human_readable_date'
+  // time_since_inoc_hr,
+];
 
 
 // export type TCreateCellbank = z.infer<typeof createCellbankSchema>;
@@ -146,6 +136,7 @@ export const schedulesTableHeaderCellsArray = [
   'sample date/time',
   'notes',
   'flask_bookmark',
+  'current_flasks',
   'flask_id',
   // 'human_readable_date',
   'username',
