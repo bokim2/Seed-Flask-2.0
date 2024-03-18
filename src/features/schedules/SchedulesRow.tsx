@@ -34,6 +34,7 @@ export default function SchedulesRow({
     username,
     flask_bookmark,
     flask_id,
+    current_flasks,
   } = rowData;
 
   const editing = editingId === schedule_id;
@@ -53,17 +54,23 @@ export default function SchedulesRow({
         </TableDataCell>
 
         <TableDataCell data-cell="time since inoc hr">
-        {time_since_inoc_hr}
+          {time_since_inoc_hr && parseFloat(time_since_inoc_hr).toFixed(2)}
         </TableDataCell>
 
         <TableDataCell data-cell="sample date/time">
-          {displayLocalTime(addHoursToTimestamp(start_date, time_since_inoc_hr))}
+          {displayLocalTime(
+            addHoursToTimestamp(start_date, time_since_inoc_hr)
+          )}
         </TableDataCell>
 
         <TableDataCell data-cell="notes">{notes}</TableDataCell>
 
         <TableDataCell data-cell="flask_bookmark">
           {Array.isArray(flask_bookmark) && flask_bookmark?.join(', ')}
+        </TableDataCell>
+
+        <TableDataCell data-cell="current flasks">
+          {Array.isArray(current_flasks) && current_flasks?.join(', ')}
         </TableDataCell>
 
         <TableDataCell data-cell="flask id">{flask_id}</TableDataCell>
@@ -162,14 +169,22 @@ function ScheduleEditForm({
             onChange={handleChange}
             placeholder="time_since_inoc_hr"
             required
-            value={editedForm.time_since_inoc_hr}
+            value={
+              editedForm?.time_since_inoc_hr &&
+              parseFloat(editedForm?.time_since_inoc_hr).toFixed(2)
+            }
           >
             {editedForm.time_since_inoc_hr}
           </EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="sample date/time">
-          {displayLocalTime(addHoursToTimestamp(editedForm.start_date, editedForm.time_since_inoc_hr))}
+          {displayLocalTime(
+            addHoursToTimestamp(
+              editedForm.start_date,
+              editedForm.time_since_inoc_hr
+            )
+          )}
         </TableDataCell>
 
         <TableDataCell data-cell="notes">

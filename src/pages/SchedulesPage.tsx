@@ -1,12 +1,17 @@
-import React from 'react'
-import { InnerPageContainer, PageContainer } from '../styles/UtilStyles'
-import LoaderCircular from '../ui/LoaderCircular'
-import SchedulesTable from '../features/schedules/SchedulesTable'
+import React from 'react';
+import {
+  InnerPageContainer,
+  LoaderWrapper,
+  PageContainer,
+} from '../styles/UtilStyles';
+import LoaderCircular from '../ui/LoaderCircular';
+import SchedulesTable from '../features/schedules/SchedulesTable';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import { schedulesArraySchema } from '../features/schedules/schedules-types';
+import LoaderBar from '../ui/LoaderBar';
+import ErrorMessage from '../ui/ErrorMessage';
 
 export default function SchedulesPage() {
-
   const {
     data: schedules,
     isLoading,
@@ -20,16 +25,16 @@ export default function SchedulesPage() {
   });
   console.log('schedules in schedules page', schedules);
 
-const schedulesAll = schedules?.pages.map((data) => data.data).flat() || [];
+  const schedulesAll = schedules?.pages.map((data) => data.data).flat() || [];
 
   return (
-  <PageContainer>
-    <InnerPageContainer>
-    {/* <LoaderCircular/> three flasks bobbing */}
-    <SchedulesTable 
-    schedules={schedulesAll}
-    />
-    </InnerPageContainer>
-  </PageContainer>
-  )
+    <PageContainer>
+      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
+      <InnerPageContainer>
+        {/* <LoaderCircular/> three flasks bobbing */}
+        {error && <ErrorMessage error={error} />}
+        <SchedulesTable schedules={schedulesAll} />
+      </InnerPageContainer>
+    </PageContainer>
+  );
 }

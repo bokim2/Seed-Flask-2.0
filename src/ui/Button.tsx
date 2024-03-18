@@ -64,6 +64,10 @@ const Button = styled.button<ButtonProps>`
       background-color: rgba(var(--clr-accent-5),.8);
     }
 
+  &:disabled {
+    background-color: darkred;
+  }
+
   ${({ $size }) => ($size ? sizes[$size] : Button.defaultProps.$size)};
   ${({ $variation }) =>
     $variation ? variations[$variation] : Button.defaultProps.$variation};

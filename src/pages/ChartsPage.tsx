@@ -174,6 +174,8 @@ export default function ChartsPage() {
         {bookmarkedCellbankGraphData?.length > 0 && (
           <BookmarkedCellbankGraph
             bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
+            bookmarkedFlasks={bookmarkedFlasks}
+            setBookmarkedFlasks={setBookmarkedFlasks}
           />
         )}
         <ChartsTable
