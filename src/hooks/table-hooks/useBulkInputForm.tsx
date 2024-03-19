@@ -35,9 +35,9 @@ export function useBulkInputForm<TCreateTableRowSchema>({
 
         return rowData as TCreateTableRowSchema;
       });
-    console.log('pastedInputsArray', pastedInputsArray, 'bulkForm', bulkForm);
+    // console.log('pastedInputsArray', pastedInputsArray, 'bulkForm', bulkForm);
     setBulkForm((prev) => {
-      console.log('prev', prev, 'pastedInputsArray', pastedInputsArray);
+      // console.log('prev', prev, 'pastedInputsArray', pastedInputsArray);
       return pastedInputsArray;
     });
   }, [bulkTextAreaInput]);

@@ -10,9 +10,10 @@ import {
 } from '../../../hooks/hooks';
 import { addHours, format, set } from 'date-fns';
 import Button from '../../../ui/Button';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { baseUrl } from '../../../../configs';
 import { validate } from 'json-schema';
+import ErrorMessage from '../../../ui/ErrorMessage';
 
 const StyledDateTimePicker = styled.div`
   display: flex;
@@ -65,6 +66,7 @@ export default function DateTimePicker({
   const [notes, setNotes] = useState('');
   const [flask_id, setFlask_id] = useState('');
   const [current_flasks, setCurrent_flasks] = useState('');
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     function adjustDateTime(originalDate, hoursToAdd) {
@@ -93,35 +95,51 @@ export default function DateTimePicker({
           ...createEntry,
         }),
       });
+  
+      const data = await response.json();
       if (!response.ok) {
-        throw new Error('Server error. Could not create schedule.');
+        console.log('response is NOT ok', response, 'data', data)
+      throw new Error(data.message);
       }
       setClickedXY(null);
       setNotes('');
       setFlask_id('');
       setCurrent_flasks('');
       setAdjustedTime(null);
+      
+      return data;
       // setBookmarkedFlasks([]);
-      return response.json();
+      // console.log(response.json(), 'response in createSchedule')
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Error in createSchedule', error.message);
+        // console.error('Error in createSchedule', error.message);
+        throw error;
       } else {
-        console.error('An unexpected error happened', error);
+        // console.error('An unexpected error happened', error);
       }
     }
   }
 
   const {
     mutate: createScheduleMutation,
-    isPending,
-    isError,
+    isPending: isPendingCreate,
+    error: createError,
     isSuccess,
+    reset,
   } = useMutation({
     mutationFn: (createEntry: any) => createSchedule(createEntry),
+    onSuccess: ()=> {
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey.includes('schedules')
+      })
+      reset();
+    },
+    onError: (err)=> {
+      console.error('error in createScheduleMutation ONERROR!!!', err);
+      throw err},
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the form from being submitted
     console.log('date time', scheduleStartDate);
     console.log(
@@ -137,11 +155,16 @@ export default function DateTimePicker({
       flask_id: flask_id == '' ? null : flask_id,
       current_flasks: transformListStringToArray(current_flasks),
     };
-
-    createScheduleMutation(createScheduleObject);
-
+try {
+    await createScheduleMutation(createScheduleObject);
+} catch (error) {
+  console.error('error in createScheduleMutation', error);
+  throw error;
+}
     // alert(`Selected Date: ${date}\nSelected Time: ${time}`);
   };
+
+  console.log('createError', createError);
 
   return (
     <StyledDateTimePicker>
@@ -212,6 +235,9 @@ export default function DateTimePicker({
               {`${formatDateTime(adjustedTime)} ${format(adjustedTime, 'EEE')}`}
             </p>
           )}
+
+          {isPendingCreate && <h1>edit is pending Create...</h1>}
+          {createError && <ErrorMessage error={createError} />}
           <Button type="submit" disabled={!clickedXY}>
             {!clickedXY
               ? 'click on graph to choose sample time'

@@ -98,7 +98,7 @@ scheduleRouter
         data: results.rows,
       });
     } catch (err) {
-      console.log(err);
+      console.error(err, { message: err?.detail || 'Internal server error' });
       res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   });
@@ -135,7 +135,7 @@ scheduleRouter.route('/:id').put(validateIdParam, async (req, res) => {
     //   } = validatedReqBody.data;
 
     const schedule_id = req.params.id;
-    console.log('req.body', req.body, 'cellBankId', schedule_id);
+    console.log('req.body', req.body, 'schedule_id', schedule_id);
     const query = `
         UPDATE schedules 
         SET start_date = $1, time_since_inoc_hr = $2, notes = $3, flask_bookmark = $4, flask_id = $5 , current_flasks = $6
@@ -149,13 +149,13 @@ scheduleRouter.route('/:id').put(validateIdParam, async (req, res) => {
       flask_bookmark,
       flask_id,
       current_flasks,
-      schedule_id
+      schedule_id,
     ];
     const results = await db.query(query, updateValues);
 
     // Check if any rows were updated
     if (results.rowCount === 0) {
-      return res.status(404).json({ message: 'Schedule id not found' });
+      return res.status(404).json({ message: 'Schedule not updated.' });
     }
 
     // Sending back the updated data
@@ -170,24 +170,24 @@ scheduleRouter.route('/:id').put(validateIdParam, async (req, res) => {
 scheduleRouter.route('/:id').delete(validateIdParam, async (req, res) => {
   try {
     const result = await db.query(
-      'DELETE FROM cell_banks WHERE cell_bank_id = $1',
+      'DELETE FROM schedules WHERE schedule_id = $1',
       [req.params.id]
     );
     if (result.rowCount === 0) {
       return res.status(404).json({
         status: 'fail',
-        message: 'Cell bank not found',
+        message: 'Schedule not found',
       });
     }
     res.status(200).json({
       status: 'success',
-      message: `cellbank ${req.params.id} deleted successfully`,
+      message: `Schedule id ${req.params.id} deleted successfully`,
     });
   } catch (err) {
-    console.error(`Error deleting cellbank ${req.params.id}`, err);
+    console.error(`Error deleting schedule ${req.params.id}`, err);
     res.status(500).json({
       status: 'error',
-      message: 'Internal server error',
+      message: err?.detail || 'Internal server error',
     });
   }
 });

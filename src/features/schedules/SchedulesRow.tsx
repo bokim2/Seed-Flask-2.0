@@ -137,7 +137,7 @@ function ScheduleEditForm({
     e.preventDefault();
     e.stopPropagation();
     setEditedForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    console.log('edit cellbank', e.target.value);
+    // console.log('edit cellbank', e.target.value);
   };
 
   return (
@@ -257,16 +257,22 @@ function ScheduleEditForm({
             $size={'small'}
             type="button"
             disabled={isPendingDelete}
-            onClick={() => {
-              const isConfirmed = window.confirm(
-                'Are you sure you want to delete this item?'
-              );
-              if (isConfirmed) {
-                // console.log(
-                //   'cellbank delete button clicked',
-                //   editedForm.cell_bank_id
-                // );
-                deleteSchedule(editedForm.cell_bank_id);
+            onClick={async () => {
+              try {
+                const isConfirmed = window.confirm(
+                  'Are you sure you want to delete this item?'
+                );
+                if (isConfirmed) {
+                  // console.log(
+                  //   'cellbank delete button clicked',
+                  //   editedForm.cell_bank_id
+                  // );
+                  // console.log('deleteSchedule', editedForm.schedule_id);
+                  await deleteSchedule(editedForm.schedule_id);
+                }
+              } catch (error) {
+                console.error('error in deleteSchedule', error);
+                throw error;
               }
             }}
           >

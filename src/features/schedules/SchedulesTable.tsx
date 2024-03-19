@@ -95,7 +95,7 @@ export default function SchedulesTable({
     dateColumnName: 'start_date',
   });
 
-  // delete cellbank
+  // delete schedule
   const {
     mutate: deleteSchedule,
     isPending: isPendingDelete,
