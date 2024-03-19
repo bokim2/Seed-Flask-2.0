@@ -20,6 +20,8 @@ import {
   useEditTableRowForm,
 } from '../../hooks/table-hooks/useEditTableRowForm';
 import ErrorMessage from '../../ui/ErrorMessage';
+import { flushSync } from 'react-dom';
+import { set } from 'date-fns';
 
 export default function SamplesTable({ samples }) {
   console.log('samples in samplestable', samples);
@@ -60,6 +62,9 @@ export default function SamplesTable({ samples }) {
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
+//           flushSync(()=> {
+// setEditedForm(prev => ({...prev,completed: prev.completed === 'true' ? false : true}))
+//           }))
           handleEditFormSubmit(
             e,
             editedForm,

@@ -115,3 +115,12 @@ export const initialEditFlasksForm = {
   vessel_type: '',
   human_readable_date: '',
 };
+
+// flask vessel-types options
+
+export const flaskVesselTypes = [
+  'flask',
+  'test_tube',
+  '96_well_plate',
+  '24_well_plate',
+];
