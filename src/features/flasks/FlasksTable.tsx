@@ -99,15 +99,22 @@ export default function FlasksTable({ flasks }) {
         //     human_readable_date: String(editedForm.human_readable_date),
         //   };
         //   handleEditFormSubmit(e, formattedEditedForm);
+        // handleEditFormSubmit(
+        //   e,
+        //   editedForm,
+        //   submitEditedRowForm,
+        //   setEditingId
+        // );
+      
         // }}
         onSubmit={(e) => {
           e.preventDefault();
-          // handleEditFormSubmit(
-          //   e,
-          //   editedForm,
-          //   submitEditedRowForm,
-          //   setEditingId
-          // );
+          handleEditFormSubmit(
+            e,
+            editedForm,
+            submitEditedRowForm,
+            setEditingId
+          );
         }}
       >
         <TableContainer>

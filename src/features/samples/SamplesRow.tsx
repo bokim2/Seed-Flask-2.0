@@ -95,12 +95,14 @@ function SamplesEditForm({
 }) {
   function handleChange(e) {
     const { name, value } = e.target;
-
-    let updatedValue = name;
-    if (name === 'completed' && value === 'true') {
-      updatedValue = true;
-    } else {
-      updatedValue = false;
+    console.log(name, value, 'name and value');
+    let updatedValue = value;
+    if (name === 'completed') {
+      if (value === 'completed') {
+        updatedValue = true;
+      } else {
+        updatedValue = false;
+      }
     }
     setEditedForm((prev) => {
       return { ...prev, [e.target.name]: updatedValue };
