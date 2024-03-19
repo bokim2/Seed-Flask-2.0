@@ -24,7 +24,7 @@ import { flushSync } from 'react-dom';
 import { set } from 'date-fns';
 
 export default function SamplesTable({ samples }) {
-  console.log('samples in samplestable', samples);
+  // console.log('samples in samplestable', samples);
 
   // update row
   const {

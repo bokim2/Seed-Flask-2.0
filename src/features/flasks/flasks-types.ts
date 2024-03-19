@@ -120,7 +120,7 @@ export const initialEditFlasksForm = {
 
 export const flaskVesselTypes = [
   'flask',
-  'test_tube',
-  '96_well_plate',
-  '24_well_plate',
+  'test tube',
+  '96_well plate',
+  '24 well plate',
 ];

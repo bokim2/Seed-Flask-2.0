@@ -102,12 +102,12 @@ export default function FlasksTable({ flasks }) {
         // }}
         onSubmit={(e) => {
           e.preventDefault();
-          handleEditFormSubmit(
-            e,
-            editedForm,
-            submitEditedRowForm,
-            setEditingId
-          );
+          // handleEditFormSubmit(
+          //   e,
+          //   editedForm,
+          //   submitEditedRowForm,
+          //   setEditingId
+          // );
         }}
       >
         <TableContainer>

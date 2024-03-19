@@ -42,12 +42,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: [
-      // 'http://localhost:5173',
-      // 'https://localhost:5173',
-      // 'https://seed-flask-2-c1d8d446416a.herokuapp.com',
-      // 'https://seedflask.com',
-      // 'https://dev-1gk5wccsooddgtgs.us.auth0.com',
-      // 'https://localhost:3000',
+      'http://localhost:5173',
+      'https://localhost:5173',
+      'https://seed-flask-2-c1d8d446416a.herokuapp.com',
+      'https://seedflask.com',
+      'https://dev-1gk5wccsooddgtgs.us.auth0.com',
+      'https://localhost:3000',
     ],
     credentials: true, // Allow cookies to be sent
     allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
@@ -406,6 +406,7 @@ app.post(
   badWordsMiddleware,
   async (req, res) => {
     try {
+      console.log('in post flask server', req.body, req.body)
       const userObj = req.oidc.user;
       const username = userObj.name;
       const user_id = userObj.sub;
@@ -439,7 +440,7 @@ app.post(
         data: results.rows,
       });
     } catch (err) {
-      // console.log(err.detail);
+      console.log(err, err?.detail);
       res.status(500).json({
         message: err?.detail || 'Internal server error',
         error: err.message,

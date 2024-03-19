@@ -55,16 +55,16 @@ export default function SamplesDilutions() {
       singleDilution.selectedCalcValue,
       singleDilution.rawOD600Target
     );
-    console.log('inside dilutionSummary', {
-      diluentUL,
-      sampleUL,
-      dilutionFactor,
-    });
+    // console.log('inside dilutionSummary', {
+    //   diluentUL,
+    //   sampleUL,
+    //   dilutionFactor,
+    // });
     return { diluentUL, sampleUL, dilutionFactor };
   });
 
   // const totalDilutionFactor = dilutionsSummary.reduce((acc, prev)=> acc * prev.dilutionFactor, 1);
-  console.log('dilutionsSummary', dilutionsSummary);
+  // console.log('dilutionsSummary', dilutionsSummary);
 
   function addSerialDilution() {
     setDilutionSettings((prev) => {
@@ -75,7 +75,7 @@ export default function SamplesDilutions() {
     });
   }
 
-  console.log('dilutionSettings', dilutionSettings);
+  // console.log('dilutionSettings', dilutionSettings);
 
   return (
     <>

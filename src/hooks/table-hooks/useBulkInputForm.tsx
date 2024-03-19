@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react';
+import { ZodSchema, z } from 'zod';
 
 // bulk form submit - for submitting multiple rows at once, or just one row
 export function useBulkInputForm<TCreateTableRowSchema>({
   createTableColumnsArray,
   createTableRowMutation,
   initialCreateRowForm,
+  zodSchema,
+}: {
+  createTableColumnsArray: string[];
+  createTableRowMutation: any;
+  initialCreateRowForm: any;
+  zodSchema?: ZodSchema<any> | undefined;
 }) {
   const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
   const [bulkForm, setBulkForm] = useState<TCreateTableRowSchema[]>([
     initialCreateRowForm,
   ]); // data for submitting cellbank(s)
-  // console.log(bulkForm, 'bulkForm')
+  console.log('bulkForm in useBulkinputform', bulkForm);
 
   // update bulkForm when bulkTextAreaInput changes
   useEffect(() => {
@@ -19,8 +26,9 @@ export function useBulkInputForm<TCreateTableRowSchema>({
       .split('\n')
       .map((row) => {
         const singleRow = row.split('\t');
+
         console.log('singleRow', singleRow);
-        const rowData = {
+        let rowData = {
           // strain: singleRow[0],
           // target_molecule: singleRow[1],
           // project: singleRow[2],
@@ -32,6 +40,23 @@ export function useBulkInputForm<TCreateTableRowSchema>({
             (rowData[createTableColumnsArray[i]] = singleRow?.[i] ?? '')
         );
         console.log('rowData', rowData);
+
+        if ('completed' in rowData) {
+          rowData['completed'] = rowData['completed'] === 'completed';
+        }
+        // let rowData: any = {}
+        if (zodSchema ) {
+          try {
+            const parseResult = zodSchema.safeParse(rowData);
+            if (parseResult.success) {
+              console.log('parseResult.data', parseResult.data);
+              rowData = parseResult.data;
+            }
+          } catch (err) {
+            console.log(err, 'error in bulkForm mutation submit');
+            throw err;
+          }
+        }
 
         return rowData as TCreateTableRowSchema;
       });
