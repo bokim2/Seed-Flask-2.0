@@ -8,7 +8,7 @@ import {
   transformListStringToArray,
   validateCurrentFlasks,
 } from '../../../hooks/hooks';
-import { addHours } from 'date-fns';
+import { addHours, format, set } from 'date-fns';
 import Button from '../../../ui/Button';
 import { useMutation } from '@tanstack/react-query';
 import { baseUrl } from '../../../../configs';
@@ -44,6 +44,7 @@ const ColumnContainer = styled.div`
 
 export default function DateTimePicker({
   clickedXY,
+  setClickedXY,
   bookmarkedFlasks,
   setBookmarkedFlasks,
 }) {
@@ -59,6 +60,7 @@ export default function DateTimePicker({
 
   const scheduleStartDate = `${date} ${time}`;
   const [adjustedTime, setAdjustedTime] = useState<Date | null>(null);
+  console.log('adjustedTime', adjustedTime);
 
   const [notes, setNotes] = useState('');
   const [flask_id, setFlask_id] = useState('');
@@ -80,16 +82,34 @@ export default function DateTimePicker({
   }, [clickedXY, date, time]);
 
   async function createSchedule(createEntry) {
-    const response = await fetch(`${baseUrl}/api/schedules`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...createEntry,
-      }),
-    });
+    try {
+      const response = await fetch(`${baseUrl}/api/schedules`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...createEntry,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Server error. Could not create schedule.');
+      }
+      setClickedXY(null);
+      setNotes('');
+      setFlask_id('');
+      setCurrent_flasks('');
+      setAdjustedTime(null);
+      // setBookmarkedFlasks([]);
+      return response.json();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Error in createSchedule', error.message);
+      } else {
+        console.error('An unexpected error happened', error);
+      }
+    }
   }
 
   const {
@@ -186,8 +206,17 @@ export default function DateTimePicker({
 
         <ColumnContainer>
           {/* {adjustedTime?.toString()} */}
-          {adjustedTime && <p>Sample at {formatDateTime(adjustedTime)}</p>}
-          <Button type="submit" disabled={!clickedXY}>{!clickedXY ? 'click on graph to choose sample time' : 'Add to Schedule' }</Button>
+          {adjustedTime && (
+            <p>
+              Sample at{' '}
+              {`${formatDateTime(adjustedTime)} ${format(adjustedTime, 'EEE')}`}
+            </p>
+          )}
+          <Button type="submit" disabled={!clickedXY}>
+            {!clickedXY
+              ? 'click on graph to choose sample time'
+              : 'Add to Schedule'}
+          </Button>
         </ColumnContainer>
       </form>
     </StyledDateTimePicker>

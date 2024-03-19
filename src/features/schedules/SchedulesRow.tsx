@@ -38,7 +38,7 @@ export default function SchedulesRow({
   } = rowData;
 
   const editing = editingId === schedule_id;
-  console.log('schedule row data', rowData);
+  // console.log('schedule row data', rowData);
   return (
     <>
       <PreviousDataRow $editing={editing}>
@@ -151,11 +151,12 @@ function ScheduleEditForm({
           <EditTextArea
             data-cell="start_date"
             id="start_date"
-            name="start_date"
+            name="human_readable_date"
             onChange={handleChange}
             placeholder="start_date"
             required
-            value={displayLocalTime(editedForm?.start_date)}
+            // value={displayLocalTime(editedForm?.start_date)}
+            value={editedForm?.human_readable_date}
           >
             {editedForm.start_date}
           </EditTextArea>
@@ -225,8 +226,19 @@ function ScheduleEditForm({
 
         <TableDataCell>
           <EditTextArea
+            id="current_flasks"
+            name="current_flasks"
+            onChange={handleChange}
+            placeholder="current_flasks"
+            value={editedForm.current_flasks}
+            required
+          />
+        </TableDataCell>
+
+        <TableDataCell>
+          <EditTextArea
             id="flask_id"
-            name="flask"
+            name="flask_id"
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
             onChange={handleChange}
             required
@@ -250,10 +262,10 @@ function ScheduleEditForm({
                 'Are you sure you want to delete this item?'
               );
               if (isConfirmed) {
-                console.log(
-                  'cellbank delete button clicked',
-                  editedForm.cell_bank_id
-                );
+                // console.log(
+                //   'cellbank delete button clicked',
+                //   editedForm.cell_bank_id
+                // );
                 deleteSchedule(editedForm.cell_bank_id);
               }
             }}

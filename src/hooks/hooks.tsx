@@ -287,8 +287,8 @@ export function transformListStringToArray(listString) {
 
   const commaSplitArray = listString.split(',').map((e) => e.trim());
 
-  const resultArray: number[] = [];
-  // if (listString.includes('-')) {
+  const resultSet: Set<number> = new Set();
+  
   commaSplitArray.forEach((rangePortion) => {
     if (rangePortion.includes('-')) {
       const [start, end] = rangePortion
@@ -297,22 +297,18 @@ export function transformListStringToArray(listString) {
 
       if (!isNaN(start) && !isNaN(end)) {
         for (let i = start; i <= end; i++) {
-          resultArray.push(i);
+          resultSet.add(i);
         }
       }
     } else {
       const unprocessedRangePortion = Number(rangePortion);
       if (!isNaN(unprocessedRangePortion)) {
-        resultArray.push(Number(rangePortion.trim()));
+        resultSet.add(Number(rangePortion.trim()));
       }
     }
   });
+  const resultArray = Array.from(resultSet).sort((a, b)=> a - b);
   return resultArray;
-  // const filteredResultArray = resultArray.filter((e) => typeof e !== 'number');
-  // return filteredResultArray;
-  // } else {
-  //   return commaSplitArray.map((e) => Number(e));
-  // }
 }
 
 // // fetch all rows in table

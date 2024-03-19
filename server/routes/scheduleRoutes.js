@@ -50,7 +50,7 @@ scheduleRouter
         notes,
         flask_bookmark,
         flask_id,
-        current_flasks
+        current_flasks,
       } = req.body;
       const userObj = req.oidc.user;
       const username = userObj.name;
@@ -58,7 +58,16 @@ scheduleRouter
       console.log(req.body, 'in post cell bank server');
       const results = await db.query(
         'INSERT INTO schedules (start_date, time_since_inoc_hr, notes, username, user_id, flask_bookmark, flask_id, current_flasks) values ($1, $2, $3, $4, $5, $6, $7, $8) returning *',
-        [start_date, time_since_inoc_hr, notes, username, user_id, flask_bookmark, flask_id, current_flasks]
+        [
+          start_date,
+          time_since_inoc_hr,
+          notes,
+          username,
+          user_id,
+          flask_bookmark,
+          flask_id,
+          current_flasks,
+        ]
       );
       // const validatedReqBody = createCellbankSchema.safeParse(req.body);
       // if (!validatedReqBody.success) {
@@ -96,16 +105,17 @@ scheduleRouter
 
 // UPDATE one cell bank
 
-scheduleRouter.route('/').put(validateIdParam, async (req, res) => {
+scheduleRouter.route('/:id').put(validateIdParam, async (req, res) => {
   try {
     const {
-      strain,
-      target_molecule,
-      description,
+      start_date,
+      time_since_inoc_hr,
       notes,
-      date_timestamptz,
-      project,
+      flask_bookmark,
+      flask_id,
+      current_flasks,
     } = req.body;
+    console.log('in update schedule server', req.body, req.params.id);
     //   const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
     //   if (!validatedReqBody.success) {
     //     return res.status(400).json({
@@ -124,35 +134,35 @@ scheduleRouter.route('/').put(validateIdParam, async (req, res) => {
     //     project,
     //   } = validatedReqBody.data;
 
-    const cellBankId = req.params.id;
-    console.log('req.body', req.body, 'cellBankId', cellBankId);
+    const schedule_id = req.params.id;
+    console.log('req.body', req.body, 'cellBankId', schedule_id);
     const query = `
-        UPDATE cell_banks 
-        SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 , project = $6
-        WHERE cell_bank_id = $7 
+        UPDATE schedules 
+        SET start_date = $1, time_since_inoc_hr = $2, notes = $3, flask_bookmark = $4, flask_id = $5 , current_flasks = $6
+        WHERE schedule_id = $7 
         RETURNING *;
       `;
     const updateValues = [
-      strain,
+      start_date,
+      time_since_inoc_hr,
       notes,
-      target_molecule,
-      description,
-      date_timestamptz,
-      project,
-      cellBankId,
+      flask_bookmark,
+      flask_id,
+      current_flasks,
+      schedule_id
     ];
     const results = await db.query(query, updateValues);
 
     // Check if any rows were updated
     if (results.rowCount === 0) {
-      return res.status(404).json({ message: 'Cell bank not found' });
+      return res.status(404).json({ message: 'Schedule id not found' });
     }
 
     // Sending back the updated data
     res.json({ message: 'Update successful', data: results.rows });
   } catch (err) {
     console.error('Error in server PUT request:', err);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
