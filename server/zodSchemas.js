@@ -21,7 +21,7 @@ export const createScheduleSchema = z.object({
   username: z.string().trim(),
   flask_bookmark: z.array(z.number()).optional(),
   current_flasks: z.array(z.number()).optional(),
-  flask_id: z.number().optional(),
+  flask_id: z.coerce.number().optional(),
 })
 
 export const updateScheduleSchema = createScheduleSchema.extend({

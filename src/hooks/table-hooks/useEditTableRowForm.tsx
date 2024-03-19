@@ -34,7 +34,7 @@ async function updateRowEdit(
         },
         body: JSON.stringify({
           ...editedForm,
-          [dateColumnName]: getUtcTimestampFromLocalTime(
+          [dateColumnName]: tableName === 'schedules' ? editedForm.human_readable_date : getUtcTimestampFromLocalTime(
             editedForm.human_readable_date
           ),
         }),

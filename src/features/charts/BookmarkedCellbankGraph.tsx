@@ -200,6 +200,7 @@ const BookmarkedCellbankGraph = memo(
         <Scheduler clickedXY={clickedXY} />
         <DateTimePicker
           clickedXY={clickedXY}
+          setClickedXY={setClickedXY}
           bookmarkedFlasks={bookmarkedFlasks}
           setBookmarkedFlasks={setBookmarkedFlasks}
         />
