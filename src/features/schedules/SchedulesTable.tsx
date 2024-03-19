@@ -180,7 +180,7 @@ export default function SchedulesTable({
           );
         }}
       >
-        <Caption>Cell Banks Table</Caption>
+        <Caption>Schedules Table</Caption>
         {/* Table Section */}
         <TableContainer id="SchedulesTableContainer">
           <StyledTable>

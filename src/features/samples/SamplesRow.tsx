@@ -29,8 +29,8 @@ export default function SamplesRow({
     completed,
     end_date,
     human_readable_date,
-    username, 
-    user_id
+    username,
+    user_id,
   } = rowData;
 
   const editing = editingId === sample_id;
@@ -94,8 +94,16 @@ function SamplesEditForm({
   isPendingDelete,
 }) {
   function handleChange(e) {
+    const { name, value } = e.target;
+
+    let updatedValue = name;
+    if (name === 'completed' && value === 'true') {
+      updatedValue = true;
+    } else {
+      updatedValue = false;
+    }
     setEditedForm((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
+      return { ...prev, [e.target.name]: updatedValue };
     });
   }
 

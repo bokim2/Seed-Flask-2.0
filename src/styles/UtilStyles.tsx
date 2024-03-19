@@ -304,6 +304,13 @@ export const MultiFormInput = styled.textarea`
   }
 `;
 
+export const FormSelect = styled.select`
+background-color: transparent;
+border: none;
+color: inherit;
+border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
+`
+
 // CellbanksSingleInput form.  NOT used currently
 export const SingleFormInput = styled.input`
   border: 0;

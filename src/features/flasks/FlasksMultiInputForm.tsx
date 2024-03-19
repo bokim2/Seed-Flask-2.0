@@ -14,12 +14,14 @@ import {
   ButtonsContainer,
   CreateEntryTableRow,
   CreateEntryTable,
+  FormSelect,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
   TCreateFlask,
   createFlaskColumnsArray,
   createFlaskSchema,
+  flaskVesselTypes,
   initialCreateFlaskForm,
 } from './flasks-types';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
@@ -83,14 +85,14 @@ export default function FlasksMultiInputForm() {
                       required
                       autoFocus
                       value={bulkForm[i].cell_bank_id || ''}
-                      />
-                      {i == 0 && (
-                        <FormLabel htmlFor="cell_bank_id">cell bank id</FormLabel>
-                      )}
+                    />
+                    {i == 0 && (
+                      <FormLabel htmlFor="cell_bank_id">cell bank id</FormLabel>
+                    )}
                   </FormInputCell>
 
                   <FormInputCell>
-                    <MultiInput
+                    {/* <MultiInput
                       id="vessel_type"
                       name="vessel_type"
                       placeholder="vessel_type (e.g. flask)"
@@ -98,10 +100,22 @@ export default function FlasksMultiInputForm() {
                       required
                       autoFocus
                       value={bulkForm[i].vessel_type || ''}
-                    />
-                      {i == 0 && (
-                        <FormLabel htmlFor="vessel_type">vessel type</FormLabel>
-                      )}
+                    /> */}
+
+                    <FormSelect
+                      name="vessel_type"
+                      id="vessel_type"
+                      onChange={(e) => handleChange(e, i)}
+                    >
+                      {flaskVesselTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </FormSelect>
+                    {i == 0 && (
+                      <FormLabel htmlFor="vessel_type">vessel type</FormLabel>
+                    )}
                   </FormInputCell>
 
                   <FormInputCell>
@@ -112,8 +126,8 @@ export default function FlasksMultiInputForm() {
                       placeholder="media (e.g. farnesane)"
                       required
                       value={bulkForm[i].media || ''}
-                      />
-                      {i == 0 && <FormLabel htmlFor="media">media</FormLabel>}
+                    />
+                    {i == 0 && <FormLabel htmlFor="media">media</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>
@@ -124,10 +138,10 @@ export default function FlasksMultiInputForm() {
                       placeholder="media_ml"
                       required
                       value={bulkForm[i].media_ml || ''}
-                      />
-                      {i == 0 && (
-                        <FormLabel htmlFor="media_ml">media mL</FormLabel>
-                      )}
+                    />
+                    {i == 0 && (
+                      <FormLabel htmlFor="media_ml">media mL</FormLabel>
+                    )}
                   </FormInputCell>
 
                   <FormInputCell>
@@ -138,10 +152,10 @@ export default function FlasksMultiInputForm() {
                       placeholder="inoculum_ul"
                       required
                       value={bulkForm[i].inoculum_ul || ''}
-                      />
-                      {i == 0 && (
-                        <FormLabel htmlFor="inoculum_ul">inoculum uL</FormLabel>
-                      )}
+                    />
+                    {i == 0 && (
+                      <FormLabel htmlFor="inoculum_ul">inoculum uL</FormLabel>
+                    )}
                   </FormInputCell>
 
                   <FormInputCell>
@@ -152,8 +166,8 @@ export default function FlasksMultiInputForm() {
                       placeholder="temp_c"
                       required
                       value={bulkForm[i].temp_c || ''}
-                      />
-                      {i == 0 && <FormLabel htmlFor="temp_c">temp c</FormLabel>}
+                    />
+                    {i == 0 && <FormLabel htmlFor="temp_c">temp c</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>
@@ -164,8 +178,8 @@ export default function FlasksMultiInputForm() {
                       placeholder="rpm"
                       required
                       value={bulkForm[i].rpm || ''}
-                      />
-                      {i == 0 && <FormLabel htmlFor="rpm">RPM</FormLabel>}
+                    />
+                    {i == 0 && <FormLabel htmlFor="rpm">RPM</FormLabel>}
                   </FormInputCell>
                 </CreateEntryTableRow>
               ))}
