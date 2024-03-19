@@ -211,7 +211,7 @@ function FlasksEditForm({
         </TableDataCell>
 
         <TableDataCell data-cell="update">
-          <Button $size={'small'}>update</Button>
+          <Button type="submit" $size={'small'}>update</Button>
         </TableDataCell>
 
         <TableDataCell data-cell="delete">
