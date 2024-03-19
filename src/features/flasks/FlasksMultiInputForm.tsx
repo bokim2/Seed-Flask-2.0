@@ -46,10 +46,12 @@ export default function FlasksMultiInputForm() {
     handleSubmit,
     handleChange,
     handleClearForm,
+    
   } = useBulkInputForm<TCreateFlask>({
     createTableColumnsArray: createFlaskColumnsArray,
     createTableRowMutation: createFlaskMutation,
     initialCreateRowForm: initialCreateFlaskForm,
+    zodSchema: createFlaskSchema,
   });
 
   return (
@@ -106,9 +108,11 @@ export default function FlasksMultiInputForm() {
                       name="vessel_type"
                       id="vessel_type"
                       onChange={(e) => handleChange(e, i)}
+                      value={bulkForm[i].vessel_type || ''}
+                      
                     >
                       {flaskVesselTypes.map((type) => (
-                        <option key={type} value={type}>
+                        <option key={type} value={type} >
                           {type}
                         </option>
                       ))}

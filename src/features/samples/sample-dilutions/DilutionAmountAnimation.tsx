@@ -85,7 +85,7 @@ export default function DilutionAmountAnimation({
   const totalUL = diluentUL + sampleUL;
   const diluentHeight = diluentUL / (diluentUL + sampleUL);
   const cultureHeight = sampleUL / (diluentUL + sampleUL);
-  console.log('mediaHeight', diluentHeight, cultureHeight);
+  // console.log('mediaHeight', diluentHeight, cultureHeight);
   const liquidHeight = 60;
   return (
     // <Container id="animation-container">

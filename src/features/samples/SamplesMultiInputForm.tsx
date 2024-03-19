@@ -11,6 +11,7 @@ import {
   ButtonsContainer,
   CreateEntryTable,
   CreateEntryTableRow,
+  FormSelect,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 
@@ -24,6 +25,8 @@ import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreate
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import ErrorMessage from '../../ui/ErrorMessage';
 import SamplesDilutions from './sample-dilutions/SamplesDilutions';
+import { flushSync } from 'react-dom';
+import { set } from 'date-fns';
 
 export default function SamplesMultiInputForm() {
   // create a row
@@ -43,10 +46,12 @@ export default function SamplesMultiInputForm() {
     handleSubmit,
     handleChange,
     handleClearForm,
+    setBulkForm,
   } = useBulkInputForm<TCreateSample>({
     createTableColumnsArray: createSampleColumnsArray,
     createTableRowMutation: createSampleMutation,
     initialCreateRowForm: initialCreateSampleForm,
+    zodSchema: createSampleSchema,
   });
 
   return (
@@ -74,6 +79,7 @@ export default function SamplesMultiInputForm() {
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
                 <CreateEntryTableRow key={i}>
+
                   <FormInputCell>
                     <MultiInput
                       id="flask_id"
@@ -102,14 +108,37 @@ export default function SamplesMultiInputForm() {
                   </FormInputCell>
 
                   <FormInputCell>
-                    <MultiInput
+                    {/* <MultiInput
                       id="completed"
                       name="completed"
                       onChange={(e) => handleChange(e, i)}
                       placeholder="completed"
                       required
-                      value={bulkForm[i].completed ? 'true' : 'false'}
-                    />
+                      value={bulkForm[i].completed ? 'in-progress' : 'completed'}
+                    /> */}
+                    <FormSelect
+                      name="completed"
+                      id="completed"
+                      onChange={(e) => {
+                     
+                        const updatedValue = e.target.value === 'completed'; 
+                        setBulkForm((prev) => 
+                          prev.map((row, index) => {
+                            if (index === i) {
+                              return { ...row, completed: updatedValue }; // Apply the boolean value directly
+                            }
+                            return row;
+                          })
+                        );
+                        // handleChange(e, i)
+
+                      }}
+                      
+                      value={bulkForm[i]?.completed ? 'completed' : 'in-progress'}
+                    >
+                      <option value={'in-progress'}>in-progress</option>
+                      <option value={'completed'}>completed</option>
+                    </FormSelect>
                     {i == 0 && (
                       <FormLabel htmlFor="completed">completed</FormLabel>
                     )}

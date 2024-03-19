@@ -27,7 +27,7 @@
 
 
 -- Create the enum type for vessel_type
-CREATE TYPE vessel_type AS ENUM ('flask', 'test_tube', '96_well_plate', '24_well_plate');
+CREATE TYPE vessel_type AS ENUM ('flask', 'test tube', '96_well plate', '24 well plate');
 
 
 CREATE TABLE flasks (

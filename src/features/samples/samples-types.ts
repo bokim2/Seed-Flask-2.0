@@ -27,7 +27,7 @@ export const createSampleColumnsArray = ['flask_id', 'od600', 'completed']
 export const createSampleSchema = z.object({
   flask_id: z.coerce.number().nullable(),
   od600: z.coerce.number().nullable(),
-  completed: z.boolean().nullable(),
+  completed: z.coerce.boolean().nullable(),
   // end_date: z.string(),
 })
 
