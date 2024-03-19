@@ -42,12 +42,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: [
-      'http://localhost:5173',
-      'https://localhost:5173',
-      'https://seed-flask-2-c1d8d446416a.herokuapp.com',
-      'https://seedflask.com',
-      'https://dev-1gk5wccsooddgtgs.us.auth0.com',
-      'https://localhost:3000',
+      // 'http://localhost:5173',
+      // 'https://localhost:5173',
+      // 'https://seed-flask-2-c1d8d446416a.herokuapp.com',
+      // 'https://seedflask.com',
+      // 'https://dev-1gk5wccsooddgtgs.us.auth0.com',
+      // 'https://localhost:3000',
     ],
     credentials: true, // Allow cookies to be sent
     allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
