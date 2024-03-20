@@ -33,6 +33,7 @@ const MenuButtonContainer = styled.div`
   /* height: 60vh; */
   gap: clamp(1rem, 2vw, 2rem);
   justify-content: space-around;
+  align-items: center;
   /* max-width: 100%; */
 
   @media (min-width: 800px) {
@@ -98,7 +99,7 @@ export default function HomePage() {
               backgroundColor={'rgba(var(--clr-accent-1), .8)'}
               imgUrl="images/yeast-21.png"
               imgAlt="microbe"
-              positionElement={{ left: '0%' }}
+              positionElement={{ left: '-15%' }}
             />
             <MainMenuButton
               toPath="/flask"
@@ -106,7 +107,7 @@ export default function HomePage() {
               backgroundColor="rgba(var(--clr-accent-2), .8)"
               imgUrl="images/leaf-flask.png"
               imgAlt="flask"
-              positionElement={{ left: '10%' }}
+              positionElement={{ left: '-5%' }}
             />
             <MainMenuButton
               toPath="/sample"
@@ -118,7 +119,7 @@ export default function HomePage() {
                 height: 'clamp(1.8rem, 6vw, 6.6rem)',
                 scale: '1.1',
               }}
-              positionElement={{ left: '20%' }}
+              positionElement={{ left: '5%' }}
             />
             <MainMenuButton
               toPath="/schedule"
@@ -126,7 +127,7 @@ export default function HomePage() {
               backgroundColor="rgba(var(--clr-accent-4), .8)"
               imgUrl="images/schedule.png"
               imgAlt="bioreactor"
-              positionElement={{ left: '30%' }}
+              positionElement={{ left: '15%' }}
             />
           </MenuButtonContainer>
           <SecondaryMenuButtonContainer>

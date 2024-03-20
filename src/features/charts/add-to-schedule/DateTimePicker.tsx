@@ -26,8 +26,13 @@ const StyledDateTimePicker = styled.div`
 
 const SelectorOuterContainer = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 3rem;
   align-items: center;
+
+  @media(min-width: 600px) {
+flex-direction: row;
+  }
 `;
 
 const SelectorInnerContainer = styled.div`
