@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../features/ui-state/pageSlice';
 import PageLimitDropDownSelector from '../ui/table-ui/PageLimitDropDownSelector';
 import Button from '../ui/Button';
+import MainNav from '../ui/MainFilter';
 
 export default function ChartsPage() {
   const {
@@ -45,7 +46,9 @@ export default function ChartsPage() {
   ]);
 
   const [bookmarkedFlasks, setBookmarkedFlasks] = useState<number[]>([42, 41]);
-  const [bookmarkedFlasksGraphData, setBookmarkedFlasksGraphData] = useState([]);
+  const [bookmarkedFlasksGraphData, setBookmarkedFlasksGraphData] = useState(
+    []
+  );
 
   // const [chartData, setChartData] = useState<any>([]);
   // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
@@ -100,9 +103,11 @@ export default function ChartsPage() {
 
   const getBookmarkedFlasksGraphData = async () => {
     try {
-      console.log(bookmarkedFlasks, 'in getBookmarkedFlasksGraphData')
-      console.log(bookmarkedFlasks.join(','), (bookmarkedFlasks.join(',')))
-      const response = await fetch(`${baseUrl}/api/chart/flasks?flaskIds=${bookmarkedFlasks.join(',')}`);
+      console.log(bookmarkedFlasks, 'in getBookmarkedFlasksGraphData');
+      console.log(bookmarkedFlasks.join(','), bookmarkedFlasks.join(','));
+      const response = await fetch(
+        `${baseUrl}/api/chart/flasks?flaskIds=${bookmarkedFlasks.join(',')}`
+      );
       if (!response.ok) throw new Error('Network response was not ok');
       const { data } = await response.json();
       console.log(data, 'in getBookmarkedFlasksGraphData');
@@ -140,27 +145,39 @@ export default function ChartsPage() {
           />
         )} */}
 
+        {/* main filter - only show if user is logged in */}
+
+        {/* <MainNav /> */}
+
         {/* ALL flasks */}
         {allCellbankGraphData?.length && (
-          <AllCellbanksGraph allCellbankGraphData={allCellbankGraphData} 
-          bookmarkedFlasks={bookmarkedFlasks} 
-          setBookmarkedFlasks={setBookmarkedFlasks}/>
+          <AllCellbanksGraph
+            allCellbankGraphData={allCellbankGraphData}
+            bookmarkedFlasks={bookmarkedFlasks}
+            setBookmarkedFlasks={setBookmarkedFlasks}
+          />
         )}
-        <ChartsTable chartTitle="All Flasks" flasks={flasksAll} 
-        bookmarkedFlasks={bookmarkedFlasks}
-        setBookmarkedFlasks={setBookmarkedFlasks}/>
-
+        <ChartsTable
+          chartTitle="All Flasks"
+          flasks={flasksAll}
+          bookmarkedFlasks={bookmarkedFlasks}
+          setBookmarkedFlasks={setBookmarkedFlasks}
+        />
 
         {/* BOOKMARKED flasks */}
         {allCellbankGraphData?.length && (
-          <AllCellbanksGraph allCellbankGraphData={bookmarkedFlasksGraphData}
-          bookmarkedFlasks={bookmarkedFlasks}
-           setBookmarkedFlasks={setBookmarkedFlasks}/>
+          <AllCellbanksGraph
+            allCellbankGraphData={bookmarkedFlasksGraphData}
+            bookmarkedFlasks={bookmarkedFlasks}
+            setBookmarkedFlasks={setBookmarkedFlasks}
+          />
         )}
-        <ChartsTable chartTitle="Bookmarked Flasks" 
-        flasks={bookmarkedFlasksGraphData} 
-        bookmarkedFlasks={bookmarkedFlasks}
-        setBookmarkedFlasks={setBookmarkedFlasks}/>
+        <ChartsTable
+          chartTitle="Bookmarked Flasks"
+          flasks={bookmarkedFlasksGraphData}
+          bookmarkedFlasks={bookmarkedFlasks}
+          setBookmarkedFlasks={setBookmarkedFlasks}
+        />
 
         <Button
           onClick={() => fetchNextPage()}
@@ -181,10 +198,10 @@ export default function ChartsPage() {
         <ChartsTable
           chartTitle="Bookmarked Charts"
           flasks={bookmarkedCellbankGraphData.flat()}
-            bookmarkedFlasks={bookmarkedFlasks}
-            setBookmarkedFlasks={setBookmarkedFlasks}
+          bookmarkedFlasks={bookmarkedFlasks}
+          setBookmarkedFlasks={setBookmarkedFlasks}
         />
-        
+
         {/* {singleCellbankGraphData?.length && (
           <SingleCellbankGraph
             singleCellbankGraphData={singleCellbankGraphData}

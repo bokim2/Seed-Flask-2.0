@@ -5,7 +5,7 @@ import NavList from './NavList';
 import { NavLink, useNavigate } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../../lib/types';
-import { useMainFilter, useOnClickOutside } from '../../hooks/hooks';
+import { useAppDispatch, useMainFilter, useOnClickOutside } from '../../hooks/hooks';
 import {
   LinkButton,
   LoginButton,
@@ -20,6 +20,7 @@ import {
 import { ProdUrl, baseUrl } from '../../../configs';
 import { RolesUrl } from '../../lib/constants';
 import Button from '../Button';
+import { updateUserProfile } from '../../features/ui-state/userProfileSlice';
 
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
@@ -136,7 +137,9 @@ type StyledMainNav = {
   $isScrolled?: boolean;
 };
 
-export default function MainNav({ userProfile, setUserProfile }) {
+export default function MainNav({ userProfile }) {
+  const dispatch = useAppDispatch();
+
   const mainNavRef = useRef(null);
   const userButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -251,7 +254,10 @@ export default function MainNav({ userProfile, setUserProfile }) {
   };
 
   const handleLogout = async () => {
-    setUserProfile(null);
+    // setUserProfile(null);
+
+    dispatch(updateUserProfile({ isAuthenticated: false, user: null }));
+
     window.location.href = `${baseUrl}/logout`;
     navigate('/');
   };

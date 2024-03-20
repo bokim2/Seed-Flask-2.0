@@ -19,6 +19,9 @@ import { useEffect, useState } from 'react';
 import { baseUrl } from '../configs';
 import GetStarted from './pages/GetStarted';
 import LoaderBar from './ui/LoaderBar';
+import { useAppDispatch, useAppSelector } from './hooks/hooks';
+import { updateUserProfile } from './features/ui-state/userProfileSlice';
+import { TuserProfile } from './features/ui-state/userSlice';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -31,21 +34,12 @@ import LoaderBar from './ui/LoaderBar';
 //   },
 // });
 
-type Tuser = {
-  picture: string;
-  name: string;
-  email: string;
-};
-
-type TuserProfile = {
-  isAuthenticated: boolean;
-  user: Tuser | null;
-};
-
 function App() {
-  const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
-  const [userLoading, setUserLoading] = useState<boolean>(true);
+  const userProfile = useAppSelector((state) => state.userProfile.userProfile) as TuserProfile | null;
+  const dispatch = useAppDispatch();
 
+  const [userLoading, setUserLoading] = useState<boolean>(true);
+  console.log('userProfile in APP console log before useEffect', userProfile);
   useEffect(() => {
     async function authProfile() {
       try {
@@ -55,7 +49,10 @@ function App() {
         console.log(response);
         if (response.ok) {
           const data = await response.json();
-          setUserProfile(data);
+
+          // setUserProfile(data);
+          console.log('userProfile in APP first useEffect', data);
+          dispatch(updateUserProfile(data));
         }
         if (response.status === 401) {
           console.log('Error: Not authenticated.  Please sign in.');
@@ -73,11 +70,12 @@ function App() {
     // getEnv()
     authProfile();
   }, []);
-  console.log('userProfile in APP', userProfile);
+  console.log('userProfile in APP console log after useEffect', userProfile);
 
   if (userLoading) {
     return <LoaderBar />;
   }
+
 
   return (
     <>
@@ -93,7 +91,7 @@ function App() {
                 element={
                   <AppLayout
                     userProfile={userProfile}
-                    setUserProfile={setUserProfile}
+                    // setUserProfile={setUserProfile}
                   />
                 }
               >
@@ -113,7 +111,7 @@ function App() {
                 element={
                   <AppLayout
                     userProfile={userProfile}
-                    setUserProfile={setUserProfile}
+                    // setUserProfile={setUserProfile}
                   />
                 }
               >
