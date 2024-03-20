@@ -18,14 +18,14 @@ import { baseUrl } from '../../configs';
 import Button from '../ui/Button';
 import { useQuery } from '@tanstack/react-query';
 
-const HomePageContainer = styled(PageContainer)`
+const HomeInnerPageContainer = styled.section`
   width: 80%;
-  align-self: center;
-  justify-content: center;
+  max-width: 1700px;
 `;
 
 
 const MenuButtonContainer = styled.div`
+
   flex: 2;
   padding-block: 5vh;
   display: flex;
@@ -45,7 +45,7 @@ export const CircularButton = styled(MainMenuButton)`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: clamp(8rem, 10vw, 15rem);
+  width: clamp(8rem, 12vw, 15rem);
   height: auto;
   aspect-ratio: 1/1;
   border-radius: 50%;
@@ -62,7 +62,7 @@ const SecondaryMenuButtonContainer = styled.div`
   flex-grow: 1;
   display: flex;
   align-items: flex-end;
-  /* gap: clamp(1rem, 2vw, 2rem); */
+  gap: clamp(1rem, 2vw, 2rem);
   justify-content: space-evenly;
 
   @media (min-width: 800px) {
@@ -86,13 +86,13 @@ export default function HomePage() {
 
   return (
     <PageContainer id="HomePageContainer">
-      <InnerPageContainer id="HomeInnerPageContainer">
+      <HomeInnerPageContainer id="HomeInnerPageContainer">
         <InnerWrapper id="HomeInnerWrapper">
           {/* <LoginButton />
           <LogoutButton /> */}
           {/* <Profile/> */}
 
-          <MenuButtonContainer>
+          <MenuButtonContainer id="MenuButtonContainer">
             <MainMenuButton
               toPath="/cellbank"
               text={'register cell bank'}
@@ -155,7 +155,7 @@ export default function HomePage() {
         {/* <p>{JSON.stringify(userProfile, null, 2)}</p>
           <p>{JSON.stringify(env, null, 2)}</p>
           {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />} */}
-      </InnerPageContainer>
+      </HomeInnerPageContainer>
     </PageContainer>
   );
 }

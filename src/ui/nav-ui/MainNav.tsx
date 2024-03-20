@@ -52,8 +52,9 @@ const StyledNav = styled.nav`
 const StyledTitle = styled.h1`
   font-family: var(--font-serif);
   font-weight: 800;
+  padding-left: 0.2rem;
   color: rgba(var(--clr-accent-0));
-  font-size: clamp(2rem, 3vw, 3rem);
+  font-size: clamp(1.5rem, 3.5vw, 3rem);
   letter-spacing: 0.08rem;
   cursor: pointer;
   transition: transform 100ms ease-in-out, color 100ms ease-in-out,
@@ -75,6 +76,10 @@ const StyledTitle = styled.h1`
   &:focus {
     color:#b6c7f1;
   } */
+
+  @media (min-width: 800px) {
+    font-size: clamp(2rem, 3vw, 3rem);
+  }
 `;
 
 export const StyledFaUser = styled(FaUser)`

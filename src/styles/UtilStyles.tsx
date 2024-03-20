@@ -189,11 +189,11 @@ export const StyledMainMenuButtons = styled(NavLink)`
   align-items: center;
   justify-content: space-around;
   position: relative;
-  width: clamp(12rem, 40vw, 30rem);
+  width: clamp(15rem, 40vw, 30rem);
   aspect-ratio: 4.5/1;
   border-radius: clamp(1rem, 2vw, 2rem);
   border: 0.341px solid #000;
-  font-size: clamp(1rem, 2vw, 2rem);
+  font-size: clamp(1.1rem, 2vw, 2rem);
   font-weight: 600;
   letter-spacing: 0.01794rem;
   color: var(--clr-text-2);
