@@ -2,7 +2,11 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
 
-
+const StyledInfoButtonForModal = styled.div`
+position: absolute;
+left: 0.25rem;
+bottom: 0.25rem;
+`
 
 const StyledImg = styled.img`
   height: 30px;
@@ -43,7 +47,7 @@ export default function InfoButtonForModal({children, imgSrc, alt, buttonBackgro
     const modalRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div>
+    <StyledInfoButtonForModal>
       <InfoButton className={buttonBackgroundColor}
         onClick={(e) => {
         //   console.log('clicked', isOpenModal);
@@ -59,6 +63,6 @@ export default function InfoButtonForModal({children, imgSrc, alt, buttonBackgro
             {children}
         </Modal>
       )}
-    </div>
+    </StyledInfoButtonForModal>
   );
 }

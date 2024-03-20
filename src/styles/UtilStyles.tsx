@@ -130,6 +130,32 @@ export const NavSection = styled.div`
   gap: 1.5rem;
 `;
 
+// Nav List
+
+export const StyledNavList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  background-color: rgba(var(--clr-primary-900), 0.7);
+  z-index: 10;
+  list-style-type: none;
+`;
+
+export const StyledNavLink = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding-right: 2rem;
+
+  &:active {
+    color: red;
+  }
+`;
+
+// Side Menu
+
+
 // Main page styles
 
 export const PageContainer = styled.section`
@@ -144,7 +170,7 @@ export const PageContainer = styled.section`
 `;
 
 export const InnerPageContainer = styled.section`
-  width: 90%;
+  width: 80%;
   max-width: 1700px;
 `;
 
@@ -163,7 +189,7 @@ export const StyledMainMenuButtons = styled(NavLink)`
   align-items: center;
   justify-content: space-around;
   position: relative;
-  width: clamp(7rem, 60vw, 30rem);
+  width: clamp(12rem, 40vw, 30rem);
   aspect-ratio: 4.5/1;
   border-radius: clamp(1rem, 2vw, 2rem);
   border: 0.341px solid #000;

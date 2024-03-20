@@ -6,6 +6,7 @@ import LoaderBar from './ui/LoaderBar';
 import { THandleNavToggle, TNavOrUser } from './lib/types';
 import Footer from './ui/Footer';
 import { set } from 'date-fns';
+import SideMenu from './ui/nav-ui/SideMenu';
 
 const StyledAppLayout = styled.div`
   flex: 1;
@@ -91,6 +92,7 @@ export default function AppLayout({ userProfile, setUserProfile }) {
       {/* <span>testing app layout</span> */}
       <MainPageContainer id="MainPageContainer">
         <Outlet />
+        
         <Footer />
       </MainPageContainer>
       {/* </StyledAppLayout> */}

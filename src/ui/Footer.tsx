@@ -2,11 +2,14 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import InfoButtonForModal from './InfoButtonForModal';
+import SideMenu from './nav-ui/SideMenu';
 
 const StyledFooter = styled.footer`
   position: fixed;
-  bottom: 1.5rem;
-  left: 1.5rem;
+  z-index: 99999;
+  width: 100%;
+  bottom: 0;
+  left: 0;
 `;
 
 export default function Footer() {
@@ -14,9 +17,7 @@ export default function Footer() {
     <StyledFooter>
       {/* <StyledImg src="images/info/info.png" alt="info button" /> */}
 
-      <InfoButtonForModal buttonBackgroundColor="light" imgSrc="images/info/about.png" alt="info button">
-        <div>'hello test'</div>
-      </InfoButtonForModal>
+      <SideMenu />
     </StyledFooter>
   );
 }
