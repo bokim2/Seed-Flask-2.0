@@ -60,7 +60,7 @@ const MainPageContainer = styled.main`
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
 `;
 
-export default function AppLayout({ userProfile, setUserProfile }) {
+export default function AppLayout({ userProfile }) {
   // const handleNavToggle: THandleNavToggle = (e, navOrUser) => {
   //   // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
   //   e.stopPropagation();
@@ -84,7 +84,7 @@ export default function AppLayout({ userProfile, setUserProfile }) {
           // handleToggle={handleNavToggle}
           // openUser={openUser}
           userProfile={userProfile}
-          setUserProfile={setUserProfile}
+          // setUserProfile={setUserProfile}
         />
       </NavBar>
       {/* <LoaderBar /> */}

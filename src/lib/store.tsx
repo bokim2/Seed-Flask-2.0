@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import timeZoneReducer from '../features/ui-state/settingsSlice';
 import bookmarksReducer from '../features/ui-state/bookmarksSlice';
-import userReducer from '../features/ui-state/userSlice';
+import userProfileReducer from '../features/ui-state/userProfileSlice';
 import pageLimitReducer from '../features/ui-state/pageSlice';
 import mainfilterReducer from '../features/ui-state/mainfilterSlice';
 
@@ -10,7 +10,7 @@ const store = configureStore({
     // animation: animationReducer,
     timeZone: timeZoneReducer,
     bookmarks: bookmarksReducer,
-    user: userReducer,
+    userProfile: userProfileReducer,
     page: pageLimitReducer,
     mainFilter: mainfilterReducer,
   },
