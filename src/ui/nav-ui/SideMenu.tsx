@@ -10,7 +10,7 @@ const StyledSideMenu = styled.div`
   /* height: 20px; */
   flex-direction: row;
   position: fixed;
- 
+
   /* height: 70vh; */
   width: 100vw;
   right: 0;
@@ -111,16 +111,19 @@ const sideMenuInfo = [
 
 export default function SideMenu() {
   return (
-      <StyledSideMenu id="side-menu">
-                <InfoButtonForModal
-          buttonBackgroundColor="light"
-          imgSrc="images/info/about.png"
-          alt="info button"
-        >
-          <div>'hello test'</div>
-        </InfoButtonForModal>
-        <SideMenuContainer>
-      <StyledInfoButtonContainer></StyledInfoButtonContainer>
+    <StyledSideMenu id="side-menu">
+      {/* info button */}
+      <InfoButtonForModal
+        buttonBackgroundColor="light"
+        imgSrc="images/info/about.png"
+        alt="info button"
+      >
+        <div>'hello test'</div>
+      </InfoButtonForModal>
+
+      {/* side menu */}
+      <SideMenuContainer>
+        {/* <StyledInfoButtonContainer></StyledInfoButtonContainer> */}
         {sideMenuInfo.map((singleMenu, index) => {
           return (
             <StyledSideMenuButtons to={singleMenu.to}>
