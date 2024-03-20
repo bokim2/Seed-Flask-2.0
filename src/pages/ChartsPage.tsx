@@ -22,6 +22,7 @@ import { changePageLimit } from '../features/ui-state/pageSlice';
 import PageLimitDropDownSelector from '../ui/table-ui/PageLimitDropDownSelector';
 import Button from '../ui/Button';
 import MainNav from '../ui/MainFilter';
+import TabSelectorContainer from '../ui/TabSelectorContainer';
 
 export default function ChartsPage() {
   const {
@@ -138,6 +139,7 @@ export default function ChartsPage() {
       </LoaderWrapper>
       {/* {JSON.stringify(setChartData)} */}
       <InnerPageContainer id="ChartsPage">
+        <TabSelectorContainer>
         {/* <LoaderBar /> */}
         {/* {allCellbankGraphData?.length > 0 && (
           <BookmarkedCellbankGraph
@@ -210,6 +212,7 @@ export default function ChartsPage() {
         {/* <LineGraph chartData={chartData} /> */}
         {/* <TimeLineGraph /> */}
         {/* <FlasksTable flasks={flasks} /> */}
+        </TabSelectorContainer>
       </InnerPageContainer>
     </PageContainer>
   );
