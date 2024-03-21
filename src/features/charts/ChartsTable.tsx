@@ -72,12 +72,12 @@ export default function ChartsTable({
     dispatch(changePageLimit(limit));
   };
 
-  console.log(
-    'chartTitle, bookmarkedFlasks, flasks',
-    chartTitle,
-    bookmarkedFlasks,
-    flasks
-  );
+  // console.log(
+  //   'chartTitle, bookmarkedFlasks, flasks',
+  //   chartTitle,
+  //   bookmarkedFlasks,
+  //   flasks
+  // );
 
   return (
     <>
