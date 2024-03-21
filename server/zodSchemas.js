@@ -16,7 +16,7 @@ export const updateBackendCellbankSchema = createCellbankSchema.extend({
 // SCHEDULE SCHEMAS
 export const createScheduleSchema = z.object({
   start_date: z.string().trim(),
-  time_since_inoc_hr: z.number(),
+  time_since_inoc_hr: z.coerce.number(),
   notes: z.string().trim(),
   username: z.string().trim(),
   flask_bookmark: z.array(z.number()).optional(),

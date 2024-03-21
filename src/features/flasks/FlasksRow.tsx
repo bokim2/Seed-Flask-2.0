@@ -217,6 +217,8 @@ function FlasksEditForm({
         <TableDataCell data-cell="delete">
           <Button
             $size={'small'}
+            type="button"
+            disabled={isPendingDelete}
             onClick={() => {
               deleteFlask(editedForm.flask_id);
             }}

@@ -136,6 +136,7 @@ function ScheduleEditForm({
   const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
     setEditedForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     // console.log('edit cellbank', e.target.value);
   };
@@ -172,7 +173,7 @@ function ScheduleEditForm({
             required
             value={
               editedForm?.time_since_inoc_hr &&
-              parseFloat(editedForm?.time_since_inoc_hr).toFixed(2)
+              editedForm?.time_since_inoc_hr
             }
           >
             {editedForm.time_since_inoc_hr}

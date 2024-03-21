@@ -1,3 +1,5 @@
+// archive, before refactoring cellbanks into routes.  
+
 import express, { Router } from 'express';
 // import dotenv from 'dotenv';
 import 'dotenv/config';
@@ -153,15 +155,485 @@ app.get('/api', (req, res) => {
 });
 
 // Define routers
-import cellbankRouter from './routes/cellbankRoutes.js';
-import flaskRouter from './routes/flaskRoutes.js';
-import sampleRouter from './routes/sampleRoutes.js';
 import scheduleRouter from './routes/scheduleRoutes.js';
+import cellbankRouter from './routes/cellbankRoutes.js';
 
-app.use('/api/cellbanks', cellbankRouter);
-app.use('/api/flasks', flaskRouter);
-app.use('/api/samples', sampleRouter);
 app.use('/api/schedules', scheduleRouter);
+app.use('/api/cellbanks', cellbankRouter);
+
+// GET cell banks - INFINITE SCROLL
+app.get('/api/cellbanks', async (req, res) => {
+  try {
+    console.log(
+      'req.query',
+      req.query,
+      'req.query.limit',
+      req.query.limit,
+      'req.query.offset',
+      req.query.offset
+    );
+    const limit = parseInt(req.query.limit, 10) || LIMIT; // Default to 50 if not specified
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
+    const results = await db.query(
+      `SELECT * FROM cell_banks
+    ORDER BY cell_bank_id DESC 
+    LIMIT $1 OFFSET $2;`,
+      [limit, offset]
+    );
+    // console.log('results of getting all cell banks', results.rows[0]);
+
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Failed to fetch cell banks' });
+  }
+});
+
+// post one cell bank
+app.post(
+  '/api/cellbanks',
+  allowRolesAdminUser,
+  badWordsMiddleware,
+  async (req, res) => {
+    try {
+      const userObj = req.oidc.user;
+      const username = userObj.name;
+      const user_id = userObj.sub;
+      console.log(req.body, 'in post cell bank server');
+      // const results = await db.query(
+      //   'INSERT INTO cell_banks (strain, notes, target_molecule, project, description, username, user_id) values ($1, $2, $3, $4, $5, $6, $7) returning *',
+      //   [
+      //     req.body.strain,
+      //     req.body.notes,
+      //     req.body.target_molecule,
+      //     req.body.project,
+      //     req.body.description,
+      //     username,
+      //     user_id,
+      //   ]
+      // );
+      const validatedReqBody = createCellbankSchema.safeParse(req.body);
+      if (!validatedReqBody.success) {
+        return res.status(400).json({
+          message:
+            validatedReqBody.error.issues ||
+            'Zod validation error on the server for post cell bank',
+          serverError: 'Zod validation error on the server for post cell bank',
+        });
+      }
+      const { strain, target_molecule, description, notes, project } =
+        validatedReqBody.data;
+      const results = await db.query(
+        'INSERT INTO cell_banks (strain, notes, target_molecule, project, description, username, user_id) values ($1, $2, $3, $4, $5, $6, $7) returning *',
+        [
+          strain,
+          notes,
+          target_molecule,
+          project,
+          description,
+          username,
+          user_id,
+        ]
+      );
+      console.log(results.rows);
+      res.status(200).json({
+        status: 'success',
+        data: results.rows,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: err?.detail || 'Internal server error' });
+    }
+  }
+);
+
+// UPDATE one cell bank
+
+app.put('/api/cellbanks/:id', validateIdParam, async (req, res) => {
+  try {
+    // const {
+    //   strain,
+    //   target_molecule,
+    //   description,
+    //   notes,
+    //   date_timestamptz,
+    //   project,
+    // } = req.body;
+    const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
+    if (!validatedReqBody.success) {
+      return res.status(400).json({
+        message:
+          validatedReqBody.error.issues ||
+          'Zod validation error on the server for update cell bank',
+        serverError: 'Zod validation error on the server for update cell bank',
+      });
+    }
+    const {
+      strain,
+      target_molecule,
+      description,
+      notes,
+      date_timestamptz,
+      project,
+    } = validatedReqBody.data;
+
+    const cellBankId = req.params.id;
+    console.log('req.body', req.body, 'cellBankId', cellBankId);
+    const query = `
+      UPDATE cell_banks 
+      SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 , project = $6
+      WHERE cell_bank_id = $7 
+      RETURNING *;
+    `;
+    const updateValues = [
+      strain,
+      notes,
+      target_molecule,
+      description,
+      date_timestamptz,
+      project,
+      cellBankId,
+    ];
+    const results = await db.query(query, updateValues);
+
+    // Check if any rows were updated
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Cell bank not found' });
+    }
+
+    // Sending back the updated data
+    res.json({ message: 'Update successful', data: results.rows });
+  } catch (err) {
+    console.error('Error in server PUT request:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// DELETE on cell bank
+app.delete('/api/cellbanks/:id', validateIdParam, async (req, res) => {
+  try {
+    const result = await db.query(
+      'DELETE FROM cell_banks WHERE cell_bank_id = $1',
+      [req.params.id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Cell bank not found',
+      });
+    }
+    res.status(200).json({
+      status: 'success',
+      message: `cellbank ${req.params.id} deleted successfully`,
+    });
+  } catch (err) {
+    console.error(`Error deleting cellbank ${req.params.id}`, err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+});
+
+// get ALL flasks - infinite scroll
+app.get('/api/flasks', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit, 10 || LIMIT);
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
+    const results = await db.query(
+      `SELECT
+      *
+      FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
+      ORDER BY flask_id DESC
+      LIMIT $1 OFFSET $2;`,
+      [limit, offset]
+    );
+    // console.log('trying to get timezone to work', results);
+    res.status(200).json({
+      status: 'success',
+      // results: results.rows.length,
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// get ALL flasks
+// app.get('/api/flasks', async (req, res) => {
+//   try {
+//     const results = await db.query(
+//       `SELECT
+//       *
+//       FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
+//       ORDER BY flask_id DESC;`
+//     );
+//     // console.log('trying to get timezone to work', results);
+//     res.status(200).json({
+//       status: 'success',
+//       // results: results.rows.length,
+//       data: results.rows,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
+//GET one flask
+app.get('/api/flasks/:id', async (req, res) => {
+  try {
+    const results = await db.query('select * from flasks WHERE flask_id = $1', [
+      req.params.id,
+    ]);
+    // console.log('results of getting one flask', results.rows[0]);
+    res.status(200).json({
+      status: 'success',
+      results: results.rows.length,
+      data: results.rows[0],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// post one flask
+
+app.post(
+  '/api/flasks',
+  allowRolesAdminUser,
+  badWordsMiddleware,
+  async (req, res) => {
+    try {
+      console.log('in post flask server', req.body, req.body)
+      const userObj = req.oidc.user;
+      const username = userObj.name;
+      const user_id = userObj.sub;
+      const {
+        cell_bank_id,
+        temp_c,
+        media,
+        inoculum_ul,
+        media_ml,
+        vessel_type,
+        rpm,
+      } = req.body;
+      const values = [
+        cell_bank_id,
+        temp_c,
+        media,
+        inoculum_ul,
+        media_ml,
+        vessel_type,
+        rpm,
+        username,
+        user_id,
+      ];
+      const query = `INSERT INTO flasks (cell_bank_id, temp_c, media, inoculum_ul, media_ml, vessel_type, rpm, username, user_id) values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *`;
+      const results = await db.query(query, values);
+      if (!results.rows.length) {
+        return res.status(404).json({ message: 'Post not successful' });
+      }
+      res.status(200).json({
+        status: 'success',
+        data: results.rows,
+      });
+    } catch (err) {
+      console.log(err, err?.detail);
+      res.status(500).json({
+        message: err?.detail || 'Internal server error',
+        error: err.message,
+      });
+    }
+  }
+);
+
+// update a flask
+
+app.put('/api/flasks/:id', async (req, res) => {
+  console.log('req.body in server', req.body, 'req.params.id', req.params.id);
+  const {
+    inoculum_ul,
+    media,
+    media_ml,
+    rpm,
+    start_date,
+    temp_c,
+    vessel_type,
+    cell_bank_id,
+  } = req.body;
+
+  //   const validatedData = editFlaskSchema.validate({
+  //   inoculum_ul,
+  //   media,
+  //   media_ml,
+  //   rpm,
+  //   start_date,
+  //   temp_c,
+  //   vessel_type,
+  //   cell_bank_id,
+  // });
+
+  // console.log('validatedData.success', validatedData.success);
+
+  const flaskId = req.params.id;
+
+  const query = `
+    UPDATE flasks
+    SET inoculum_ul = $1, media = $2, media_ml = $3, rpm = $4, start_date = $5, temp_c = $6, vessel_type = $7,  cell_bank_id = $8
+    WHERE flask_id = $9 `;
+
+  const values = [
+    inoculum_ul,
+    media,
+    media_ml,
+    rpm,
+    start_date,
+    temp_c,
+    vessel_type,
+    cell_bank_id,
+    flaskId,
+  ];
+  try {
+    const results = await db.query(query, values);
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Flask not found' });
+    }
+    res.status(200).json({ message: 'Update successful', data: results.rows });
+  } catch (err) {
+    console.error('Error in server PUT request:', err);
+    return res
+      .status(500)
+      .json({ message: 'Internal server error', error: err.message });
+  }
+});
+
+app.delete('/api/flasks/:id', async (req, res) => {
+  const query = 'DELETE FROM flasks WHERE flask_id = $1';
+  const value = [req.params.id];
+
+  try {
+    const result = await db.query(query, value);
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Flask not found',
+      });
+    }
+    res.status(200).json({
+      status: 'success',
+      message: `flask ${req.params.id} deleted successfully`,
+    });
+  } catch (err) {
+    console.error(`Error deleting flask ${req.params.id}`, err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+});
+
+// GET all samples
+
+app.get('/api/samples', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit, 10 || LIMIT);
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
+    const query = `SELECT
+      s.*,
+      f.flask_id,
+      f.temp_c,
+      c.strain,
+      c.target_molecule
+      FROM samples as s 
+      LEFT JOIN flasks as f on s.flask_id = f.flask_id
+      LEFT JOIN cell_banks as c on f.cell_bank_id = c.cell_bank_id
+      ORDER BY s.sample_id DESC
+      LIMIT $1
+      OFFSET $2;`;
+    const results = await db.query(query, [limit, offset]);
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
+// post one sample
+app.post(
+  '/api/samples',
+  allowRolesAdminUser,
+  badWordsMiddleware,
+  async (req, res) => {
+    try {
+      const userObj = req.oidc.user;
+      const username = userObj.name;
+      const user_id = userObj.sub;
+
+      console.log(req.body, 'in post sample server');
+      const { flask_id, od600, completed } = req.body;
+      const query = `INSERT INTO samples (flask_id, od600, completed, username, user_id) values ($1, $2, $3, $4, $5) returning *`;
+      const values = [flask_id, od600, completed, username, user_id];
+
+      const results = await db.query(query, values);
+      console.log('results.success', results, 'results.rows', results.rows);
+      if (!results.rowCount) {
+        return res.status(404).json({ message: 'Post not successful' });
+      }
+      res.status(200).json({
+        status: 'success',
+        data: results.rows,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: err?.detail || 'Internal server error' });
+    }
+  }
+);
+
+app.delete('/api/samples/:id', async (req, res) => {
+  try {
+    const sampleId = req.params.id;
+    const query = `DELETE FROM samples WHERE sample_id = $1`;
+    const value = [sampleId];
+    const result = await db.query(query, value);
+    console.log(result.rowCount);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Sample not found' });
+    }
+    res
+      .status(200)
+      .json({ message: `Sample ${sampleId} deleted successfully` });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
+app.put('/api/samples/:id', async (req, res) => {
+  try {
+    const { flask_id, end_date, od600, completed } = req.body;
+    const sampleId = req.params.id;
+    const query = `UPDATE samples SET flask_id = $1, end_date = $2, od600 = $3, completed = $4 WHERE sample_id = $5 RETURNING *`;
+    const values = [flask_id, end_date, od600, completed, sampleId];
+    const results = await db.query(query, values);
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Sample not found' });
+    }
+    res.status(200).json({ message: 'Update successful', data: results.rows });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
 
 
 // GET aggregate samples by flask_id for graphing

@@ -68,6 +68,7 @@ export default function FlasksMultiInputForm() {
 
       <StyledForm
         onSubmit={(e) => {
+          e.preventDefault();
           handleSubmit(e, bulkForm);
 
           console.log('bulkForm in submit', bulkForm);

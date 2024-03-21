@@ -171,7 +171,15 @@ export default function SchedulesTable({
           //     };
           //   });
           // });
-          console.log('AFTER FLUSHSYNC editedForm', editedForm);
+          // flushSync(()=>{
+          //        setEditedForm((prev) => {
+          //   return {
+          //     ...prev,
+          //     time_since_inoc_hr: Number(prev.time_since_inoc_hr),
+          //   };
+          // });
+          // })
+
           handleEditFormSubmit(
             e,
             editedForm,
