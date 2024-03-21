@@ -102,9 +102,11 @@ export default function MainFilter() {
         />
         {mainfilterData && mainfilterData.length > 0 && (
           <MainFilterSelector
+          key={mainFilterSelected}
             options={filterOptionsData}
             defaultValue={filterOptionsData[0]}
             onChange={handleChangeOption}
+
       
 
             //   onChange={(e) => setMainFilterValue(e.target.value)}
