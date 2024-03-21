@@ -16,9 +16,7 @@ import {
   updateSampleSchema,
 } from './samples-types';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
-import {
-  useEditTableRowForm,
-} from '../../hooks/table-hooks/useEditTableRowForm';
+import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
 import ErrorMessage from '../../ui/ErrorMessage';
 import { flushSync } from 'react-dom';
 import { set } from 'date-fns';
@@ -41,7 +39,7 @@ export default function SamplesTable({ samples }) {
     zodSchema: updateSampleSchema,
     initialEditForm: initialEditSampleForm,
     idColumnName: 'sample_id',
-    dateColumnName: 'end_date_time',
+    dateColumnName: 'end_date',
   });
 
   // delete a row
@@ -62,9 +60,10 @@ export default function SamplesTable({ samples }) {
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
-//           flushSync(()=> {
-// setEditedForm(prev => ({...prev,completed: prev.completed === 'true' ? false : true}))
-//           }))
+          //           flushSync(()=> {
+          // setEditedForm(prev => ({...prev,completed: prev.completed === 'true' ? false : true}))
+          //           }))
+          console.log('editedForm in samples onsubmit', editedForm);
           handleEditFormSubmit(
             e,
             editedForm,

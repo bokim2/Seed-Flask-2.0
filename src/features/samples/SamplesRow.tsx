@@ -96,16 +96,9 @@ function SamplesEditForm({
   function handleChange(e) {
     const { name, value } = e.target;
     console.log(name, value, 'name and value');
-    let updatedValue = value;
-    if (name === 'completed') {
-      if (value === 'completed') {
-        updatedValue = true;
-      } else {
-        updatedValue = false;
-      }
-    }
+
     setEditedForm((prev) => {
-      return { ...prev, [e.target.name]: updatedValue };
+      return { ...prev, [e.target.name]: value };
     });
   }
 
@@ -149,7 +142,7 @@ function SamplesEditForm({
             placeholder="YYYY-MM-DD HH:MM AM/PM"
             required
             value={editedForm.human_readable_date}
-          ></EditTextArea>
+          >{editedForm.human_readable_date}</EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="completed">

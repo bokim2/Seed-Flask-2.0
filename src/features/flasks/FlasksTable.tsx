@@ -109,6 +109,8 @@ export default function FlasksTable({ flasks }) {
         // }}
         onSubmit={(e) => {
           e.preventDefault();
+          console.log('editedForm in flasks onsubmit',editedForm)
+
           handleEditFormSubmit(
             e,
             editedForm,
