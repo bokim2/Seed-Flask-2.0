@@ -13,11 +13,11 @@ export function useMainFilter({ selector }) {
     queryKey: ['mainfilter', selector],
     queryFn: async () => {
       try {
-        console.log('running useMainFilter', selector);
+        // console.log('running useMainFilter', selector);
         const response = await fetch(`${baseUrl}/api/uniques/${selector}`);
         // const response = await fetch(`${baseUrl}/api/uniques/project`)
         const { data } = await response.json();
-        console.log(data, 'data in useMainFilter');
+        // console.log(data, 'data in useMainFilter');
         if (!response.ok) {
           const errorMessage =
             data?.error ||
@@ -57,12 +57,12 @@ export function filteredTableData(
   // );
   let filteredTableData = [...tableRowsData];
   // console.log('filteredTableData.cellbankid', filteredTableData.map(e => e.cell_bank_id));
-  console.log(
-    'timestamp_column',
-    timestamp_column,
-    'filteredTableData',
-    filteredTableData
-  );
+  // console.log(
+  //   'timestamp_column',
+  //   timestamp_column,
+  //   'filteredTableData',
+  //   filteredTableData
+  // );
 
   if (searchedData?.length > 0) {
     filteredTableData = [...searchedData];
@@ -86,7 +86,7 @@ export function filteredTableData(
           human_readable_date: displayLocalTime(tableRow[timestamp_column]),
         };
       }
-      console.log('tableRow', tableRow);
+      // console.log('tableRow', tableRow);
 
       return tableRow;
     });
@@ -126,7 +126,7 @@ export function filteredTableData(
       }
     });
   }
-  console.log('FINAL filteredTableData', filteredTableData);
+  // console.log('FINAL filteredTableData', filteredTableData);
   return filteredTableData;
 }
 
@@ -146,7 +146,7 @@ export function useSetSortColumn<TTableColumns extends string>() {
   type TSortColumn = { [key in TTableColumns]?: TSortOrder };
 
   const [sortColumn, setSortColumn] = useState<TSortColumn>({});
-  console.log(sortColumn, 'sortColumn');
+  // console.log(sortColumn, 'sortColumn');
 
   const handleSortColumn = (e, columnName, sortOrder) => {
     e.stopPropagation();
@@ -286,6 +286,13 @@ export function validateCurrentFlasks(currentFlasksString) {
 }
 
 export function transformListStringToArray(listString) {
+
+  if(Array.isArray(listString)){
+    console.log("liststring is an array", listString, String(listString))
+    
+    return listString;
+  }
+
   if (!validateCurrentFlasks(listString)) return [];
 
   const commaSplitArray = listString.split(',').map((e) => e.trim());

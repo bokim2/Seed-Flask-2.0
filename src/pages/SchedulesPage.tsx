@@ -23,7 +23,7 @@ export default function SchedulesPage() {
     tableName: 'schedules',
     zodSchema: schedulesArraySchema,
   });
-  console.log('schedules in schedules page', schedules);
+  // console.log('schedules in schedules page', schedules);
 
   const schedulesAll = schedules?.pages.map((data) => data.data).flat() || [];
 

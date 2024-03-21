@@ -132,7 +132,7 @@ function ScheduleEditForm({
   // rowData,
   isPendingDelete,
 }) {
-  console.log('ScheduleeditedForm', editedForm);
+  // console.log('ScheduleeditedForm', editedForm);
   const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -172,8 +172,7 @@ function ScheduleEditForm({
             placeholder="time_since_inoc_hr"
             required
             value={
-              editedForm?.time_since_inoc_hr &&
-              editedForm?.time_since_inoc_hr
+              editedForm?.time_since_inoc_hr && editedForm?.time_since_inoc_hr
             }
           >
             {editedForm.time_since_inoc_hr}

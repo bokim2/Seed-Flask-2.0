@@ -56,7 +56,7 @@ export default function SchedulesTable({
   // bookmarkedFlasks,
   // setBookmarkedFlasks,
 }) {
-  console.log('schedules in schedules table', schedules);
+  // console.log('schedules in schedules table', schedules);
   // const [editingId, setEditingId] = useState<number | null>(null);
   // const [editedForm, setEditedForm] = useState(initialEditScheduleForm);
 
@@ -131,8 +131,8 @@ export default function SchedulesTable({
 
   //state for multisearch
 
-  const [searchMultiError, setSearchMultiError] = useState(null);
-  console.log(searchMultiError, 'searchMultiError');
+  // const [searchMultiError, setSearchMultiError] = useState(null);
+  // console.log(searchMultiError, 'searchMultiError');
 
   return (
     <>
@@ -151,7 +151,7 @@ export default function SchedulesTable({
       {isPendingDelete && <h1>edit is pending Delete...</h1>}
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
-      {searchMultiError && <ErrorMessage error={searchMultiError} />}
+      {/* {searchMultiError && <ErrorMessage error={searchMultiError} />} */}
 
       {/* Edit row form */}
       <StyledForm
@@ -171,18 +171,29 @@ export default function SchedulesTable({
           //     };
           //   });
           // });
-          // flushSync(()=>{
-          //        setEditedForm((prev) => {
-          //   return {
-          //     ...prev,
-          //     time_since_inoc_hr: Number(prev.time_since_inoc_hr),
-          //   };
+          // flushSync(() => {
+          //   console.log('is flushSync working?');
+          //   setEditedForm((prev) => {
+          //     return {
+          //       ...prev,
+          //       flask_bookmark: [3, 6, 9],
+          //     };
+          //   });
           // });
-          // })
+          console.log('editedForm', editedForm);
+          const updatedEditedForm = {
+            ...editedForm,
+            flask_bookmark: transformListStringToArray(
+              editedForm.flask_bookmark
+            ),
+            current_flasks: transformListStringToArray(
+              editedForm.current_flasks
+            ),
+          };
 
           handleEditFormSubmit(
             e,
-            editedForm,
+            updatedEditedForm,
             submitEditedRowForm,
             setEditingId
           );

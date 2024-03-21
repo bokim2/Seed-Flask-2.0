@@ -39,19 +39,19 @@ function App() {
   const dispatch = useAppDispatch();
 
   const [userLoading, setUserLoading] = useState<boolean>(true);
-  console.log('userProfile in APP console log before useEffect', userProfile);
+  // console.log('userProfile in APP console log before useEffect', userProfile);
   useEffect(() => {
     async function authProfile() {
       try {
         const response = await fetch(`${baseUrl}/api/auth/status`, {
           credentials: 'include', // Include cookies for cross-origin requests
         });
-        console.log(response);
+        // console.log(response);
         if (response.ok) {
           const data = await response.json();
 
           // setUserProfile(data);
-          console.log('userProfile in APP first useEffect', data);
+          // console.log('userProfile in APP first useEffect', data);
           dispatch(updateUserProfile(data));
         }
         if (response.status === 401) {
@@ -70,7 +70,7 @@ function App() {
     // getEnv()
     authProfile();
   }, []);
-  console.log('userProfile in APP console log after useEffect', userProfile);
+  // console.log('userProfile in APP console log after useEffect', userProfile);
 
   if (userLoading) {
     return <LoaderBar />;

@@ -47,7 +47,7 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
         );
         throw new Error(`Data validation in ${tableName} table failed`);
       }
-      console.log('validatedData.data', validatedData.data);
+      // console.log('validatedData.data', validatedData.data);
       return validatedData.data;
       // return dbData;
 
