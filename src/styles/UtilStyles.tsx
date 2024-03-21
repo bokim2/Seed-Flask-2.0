@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import Select from 'react-select';
 import styled, { keyframes } from 'styled-components';
 import { TTableHeaderCell, TTableRow } from '../lib/types';
 // wrappers
@@ -465,7 +466,7 @@ export const MainFilterContainer = styled.div`
   flex-direction: column;
 `;
 
-export const MainFilterSelector = styled.select`
+export const MainFilterSelector = styled(Select)`
 font-family: var(--font-serif);
 /* background-color: transparent; */
 border-radius: 15px;

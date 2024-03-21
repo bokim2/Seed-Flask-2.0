@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   InnerPageContainer,
   LoaderWrapper,
+  MainFilterSelector,
   PageContainer,
   Wrapper,
 } from '../styles/UtilStyles';
@@ -23,6 +24,7 @@ import PageLimitDropDownSelector from '../ui/table-ui/PageLimitDropDownSelector'
 import Button from '../ui/Button';
 import MainNav from '../ui/MainFilter';
 import TabSelectorContainer from '../ui/TabSelectorContainer';
+import MainFilter from '../ui/MainFilter';
 
 export default function ChartsPage() {
   const {
@@ -148,6 +150,8 @@ export default function ChartsPage() {
         )} */}
 
         {/* main filter - only show if user is logged in */}
+        <MainFilter />
+
 
         {/* <MainNav /> */}
 

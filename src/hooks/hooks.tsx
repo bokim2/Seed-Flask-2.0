@@ -10,12 +10,14 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export function useMainFilter({ selector }) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['mainfilter'],
+    queryKey: ['mainfilter', selector],
     queryFn: async () => {
       try {
+        console.log('running useMainFilter', selector);
         const response = await fetch(`${baseUrl}/api/uniques/${selector}`);
         // const response = await fetch(`${baseUrl}/api/uniques/project`)
         const { data } = await response.json();
+        console.log(data, 'data in useMainFilter');
         if (!response.ok) {
           const errorMessage =
             data?.error ||
@@ -23,11 +25,12 @@ export function useMainFilter({ selector }) {
             `Failed to fetch unique values from ${selector}, status: ${response.status}`;
           throw new Error(errorMessage);
         }
-        console.log(
-          'data[0]?.array_agg in useQuery, fetching projects',
-          data[0]?.array_agg
-        );
-        return data[0]?.array_agg;
+        return data;
+        // console.log(
+        //   'data[0]?.array_agg in useQuery, fetching projects',
+        //   data[0]?.array_agg
+        // );
+        // return data[0]?.array_agg;
       } catch (err) {
         console.log(err, 'error in getting unique mainfilter values');
         throw err;

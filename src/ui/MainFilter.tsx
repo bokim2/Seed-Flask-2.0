@@ -1,169 +1,119 @@
 import styled from 'styled-components';
+import Select from 'react-select';
 import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LinkButton, MainFilterContainer, MainFilterSelector, MainFilterSelectorOption } from '../styles/UtilStyles';
+import {
+  LinkButton,
+  MainFilterContainer,
+  MainFilterSelector,
+  MainFilterSelectorOption,
+} from '../styles/UtilStyles';
 import { useAppDispatch, useMainFilter } from '../hooks/hooks';
-
-const StyledMainNav = styled.div<StyledMainNav>`
-  position: relative;
-  z-index: 10;
-  background-color: rgba(var(--clr-primary-950), 0.9);
-  padding-block: 0.5rem;
-  flex-grow: 1;
-  height: 100%;
-  /* height: 10vh; */
-
-  opacity: ${(props) => (props.$isScrolled ? 1 : 0.8)};
-`;
-
-const StyledNavLink = styled(NavLink)`
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: end;
-`;
-
-const StyledNav = styled.nav`
-  display: flex;
-  align-items: center;
-  height: 100%;
-  justify-content: space-between;
-
-  padding: clamp(0.2rem, 1vw, 0.4rem) clamp(0.5rem, 4vw, 5rem);
-`;
-
-const StyledTitle = styled.h1`
-  font-family: var(--font-serif);
-  font-weight: 800;
-  padding-left: 0.2rem;
-  color: rgba(var(--clr-accent-0));
-  font-size: clamp(1.5rem, 3.5vw, 3rem);
-  letter-spacing: 0.08rem;
-  cursor: pointer;
-  transition: transform 100ms ease-in-out, color 100ms ease-in-out,
-    filter 100ms ease-in-out;
-
-  &:hover {
-    color: #ffe390;
-    transform: scale(1.015);
-  }
-
-  &:active {
-    transform: scale(0.99);
-    filter: brightness(90%);
-  }
-
-  /* &:active {
-    color:#b6c7f1;
-  }
-  &:focus {
-    color:#b6c7f1;
-  } */
-
-  @media (min-width: 800px) {
-    font-size: clamp(2rem, 3vw, 3rem);
-  }
-`;
-
-export const StyledFaUser = styled(FaUser)`
-  font-size: 1.75rem;
-  fill: var(--clr-accent-0);
-`;
-
-export const StyledUser = styled.img`
-  font-size: 1.75rem;
-  fill: var(--clr-accent-0);
-  opacity: 1;
-  z-index: 100;
-  /* max-width: 50%; */
-  padding: 0;
-  margin: 0;
-  height: 70%;
-  /* width: clamp(2rem, 4vw, 4rem); */
-  border-radius: 50%;
-`;
-
-const UserIconContainer = styled.div`
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-transform: uppercase;
-`;
-
-const StyledLinkButton = styled(LinkButton)`
-  display: none;
-  border: none;
-
-  @media (min-width: 850px) {
-    display: block;
-  }
-`;
-
-const style = {
-  color: '#F2D17C',
-  fontSize: '3rem',
-  height: 'auto',
-  width: 'auto',
-  cursor: 'pointer',
-};
-
-type MainNavProps = {
-  // openNav: boolean;
-  // openUser: boolean;
-  // handleToggle: THandleNavToggle;
-};
-
-type StyledMainNav = {
-  $isScrolled?: boolean;
-};
+import { set } from 'date-fns';
 
 // main filter
 
-export const StyledMainFilter = styled.div`
-`
+export const StyledMainFilter = styled.div``;
 
-export default function MainNav() {
-//   const dispatch = useAppDispatch();
+export default function MainFilter() {
+  //   const dispatch = useAppDispatch();
 
-//   const mainNavRef = useRef(null);
-//   const userButtonRef = useRef<HTMLButtonElement | null>(null);
+  //   const mainNavRef = useRef(null);
+  //   const userButtonRef = useRef<HTMLButtonElement | null>(null);
 
-
-//   // handle toggle of user and nav menu
-//   const [openNav, setOpenNav] = useState(false);
-//   const [openUser, setOpenUser] = useState(false);
-//   const userListRef = useRef<HTMLUListElement | null>(null);
-//   const navListRef = useRef<HTMLUListElement | null>(null);
-//   const navButtonRef = useRef<HTMLButtonElement | null>(null);
-
+  //   // handle toggle of user and nav menu
+  //   const [openNav, setOpenNav] = useState(false);
+  //   const [openUser, setOpenUser] = useState(false);
+  //   const userListRef = useRef<HTMLUListElement | null>(null);
+  //   const navListRef = useRef<HTMLUListElement | null>(null);
+  //   const navButtonRef = useRef<HTMLButtonElement | null>(null);
+  const mainfilterselectorOptions = [
+    { value: 'all', label: 'All Flasks' },
+    { value: 'project', label: 'Project' },
+    { value: 'user_id', label: 'user_id' },
+    { value: 'username', label: 'username' },
+    // { value: 'cell_bank_id', label: 'cell_bank' },
+  ];
 
   // select mainfilter
-  const [mainFilterSelector, setMainFilterSelector] = useState<string>('all');
-  const [mainFilterValue, setMainFilterValue] = useState<string>('null');
+
+  type TOptionType = {
+    value: string;
+    label: string;
+  };
+
+  const [mainFilterSelected, setMainFilterSelected] = useState<string>(
+    mainfilterselectorOptions[0].value
+  );
+
+  const [mainFilterOption, setMainFilterOption] = useState<string>('all');
+
   const {
     data: mainfilterData,
     isLoading: mainfilterLoading,
     isError: mainfilterError,
   } = useMainFilter({
-    selector: 'project',
+    selector: mainFilterSelected,
+    
   });
-  const mainfilterselectorOptions = [
-    'Main Filter',
-    'project',
-    'username',
-    'cellbank',
-  ];
-  
+  console.log(mainfilterData, 'mainfilterData');
+  const filterOptionsData = mainfilterData
+    ? mainfilterData.map((option, i) => ({ value: option, label: option }))
+    : [];
+  //   console.log(filterOptionsData, 'filterOptionsData');
+
+  const handleChangeSelected = (selected) => {
+    // console.log('selected', selected);
+    setMainFilterSelected(selected.value);
+    // setMainFilterOption('null');
+  };
+
+  const handleChangeOption = (selected) => {
+    console.log('in handlechangeoption', selected.value);
+    setMainFilterOption(selected.value);
+  };
+
+//     useEffect(() => {
+//       if (mainFilterSelected == 'all') return;
+//       // console.log(
+//       //   'filterOptionsData right before handlechangeoption',
+//       //   filterOptionsData
+//       // );
+
+//       console.log('filterOptionsData in useeffect', filterOptionsData)
+//       if (filterOptionsData?.length > 0) {
+//           console.log('filterOptionsData?.[0].value', filterOptionsData?.[0].value)
+//         handleChangeOption(filterOptionsData?.[0].value);
+//       }
+//     }, [filterOptionsData]);
+//   //   console.log('mainFilterSelected', mainFilterSelected);
 
   return (
     <StyledMainFilter>
+      {/* main filter - only show if user is logged in */}
+      {/* {userProfile?.isAuthenticated && ( */}
+      <MainFilterContainer>
+        <MainFilterSelector
+          options={mainfilterselectorOptions}
+          defaultValue={mainfilterselectorOptions[0]}
+          onChange={handleChangeSelected}
+          // onChange={(e) => setMainFilterSelector(e.target.value)}
+        />
+        {mainfilterData && mainfilterData.length > 0 && (
+          <MainFilterSelector
+            options={filterOptionsData}
+            defaultValue={filterOptionsData[0]}
+            onChange={handleChangeOption}
+      
 
-          {/* main filter - only show if user is logged in */}
-          {/* {userProfile?.isAuthenticated && ( */}
-            <MainFilterContainer>
+            //   onChange={(e) => setMainFilterValue(e.target.value)}
+          />
+        )}
+      </MainFilterContainer>
+
+      {/* old version */}
+      {/* <MainFilterContainer>
               <MainFilterSelector
                 value={mainFilterSelector}
                 onChange={(e) => setMainFilterSelector(e.target.value)}
@@ -187,9 +137,8 @@ export default function MainNav() {
                   ))
                 </MainFilterSelector>
               )}
-            </MainFilterContainer>
-          {/* )} */}
-
+            </MainFilterContainer> */}
+      {/* )} */}
     </StyledMainFilter>
   );
 }

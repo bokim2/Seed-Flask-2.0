@@ -926,14 +926,23 @@ app.get('/api/cellbanks/search', async (req, res) => {
 
 // GET unique values for project and username
 
-app.get('/api/uniques/project', async (req, res) => {
+app.get('/api/uniques/:value', async (req, res) => {
   try {
+    const value = req.params.value;
+if(value === 'all') return;
+    console.log('value', value);
     const results = await db.query(
-      `SELECT ARRAY_Agg(DISTINCT project) from cell_banks;`
+      `SELECT ARRAY_Agg(DISTINCT ${value}) from cell_banks;`
     );
+    const reversedResultsArray = results.rows[0].array_agg.reverse();
+    console.log('results right after db query',results)
+    if(!results?.rows?.[0]?.array_agg){
+      return res.status(404).json({message: 'No unique values found'})
+    }
+    console.log('results.rows[0].array_agg in server right before sending data back', reversedResultsArray);
     res.status(200).json({
       status: 'success',
-      data: results.rows,
+      data: results.rows[0].array_agg,
     });
   } catch (err) {
     console.log(err);

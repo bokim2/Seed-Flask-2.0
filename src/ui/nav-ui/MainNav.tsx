@@ -235,6 +235,7 @@ export default function MainNav({ userProfile }) {
     isError: mainfilterError,
   } = useMainFilter({
     selector: 'project',
+    // setMainFilterOption: setMainFilterValue,
   });
   const mainfilterselectorOptions = [
     'Main Filter',
