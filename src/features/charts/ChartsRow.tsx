@@ -9,7 +9,7 @@ import {
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
-import { addFlaskBookmark } from '../ui-state/bookmarksSlice';
+import { toggleFlaskBookmark } from '../ui-state/bookmarksSlice';
 import { useDispatch } from 'react-redux';
 
 export default function ChartsRow({
@@ -41,25 +41,26 @@ export default function ChartsRow({
   } = rowData;
   // const editing = editingId === flask_id;
   // console.log('rowData', rowData);
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <>
-      <PreviousDataRow $bookmarked={bookmarked}
-      onClick={(e: React.MouseEvent<HTMLTableRowElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // setBookmarkedFlasks((prev) => {
-        //   if (!prev.includes(parseInt(flask_id))) {
-        //     return [...prev, parseInt(flask_id)];
-        //   } else {
-        //     return prev.filter((id) => id !== parseInt(flask_id));
-        //   }
-        // });
+      <PreviousDataRow
+        $bookmarked={bookmarked}
+        onClick={(e: React.MouseEvent<HTMLTableRowElement>) => {
+          e.preventDefault();
+          e.stopPropagation();
+          // setBookmarkedFlasks((prev) => {
+          //   if (!prev.includes(parseInt(flask_id))) {
+          //     return [...prev, parseInt(flask_id)];
+          //   } else {
+          //     return prev.filter((id) => id !== parseInt(flask_id));
+          //   }
+          // });
 
-        dispatch(addFlaskBookmark(parseInt(flask_id)));
-        e.currentTarget.blur();
-      }}
+          dispatch(toggleFlaskBookmark(parseInt(flask_id)));
+          e.currentTarget.blur();
+        }}
       >
         {/* <TableRow> */}
         <TableDataCell data-cell="flask id">{flask_id}</TableDataCell>
@@ -76,12 +77,7 @@ const dispatch = useDispatch()
         </TableDataCell>
         <TableDataCell data-cell="username">{username}</TableDataCell>
         <TableDataCell data-cell="bookmark">
-          <Button
-            $size={'small'}
-            
-          >
-            bookmark
-          </Button>
+          <Button $size={'small'}>bookmark</Button>
         </TableDataCell>
 
         {toggleCellbankData && (

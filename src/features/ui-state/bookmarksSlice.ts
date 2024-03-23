@@ -18,7 +18,7 @@ const bookmarksSlice = createSlice({
   name: 'bookmarks',
   initialState,
   reducers: {
-    addCellbankBookmark(state, action: PayloadAction<number>) {
+    toggleCellbankBookmark(state, action: PayloadAction<number>) {
       if (!state.cellbank_bookmark.includes(action.payload)) {
         state.cellbank_bookmark.push(action.payload);
       } else {
@@ -27,16 +27,30 @@ const bookmarksSlice = createSlice({
         );
       }
     },
-    addFlaskBookmark(state, action: PayloadAction<number>) {
+    clearCellbankBookmark(state) {
+      console.log('Clearing cellbank bookmarks');
+      state.cellbank_bookmark = [];
+    },
+    toggleFlaskBookmark(state, action: PayloadAction<number>) {
       if (!state.flask_bookmark.includes(action.payload)) {
         state.flask_bookmark.push(action.payload);
       } else {
-        state.flask_bookmark = state.flask_bookmark.filter(id=> id !== action.payload)
+        state.flask_bookmark = state.flask_bookmark.filter(
+          (id) => id !== action.payload
+        );
       }
-    }
+    },
+    clearFlaskBookmark(state) {
+      state.flask_bookmark = [];
+    },
   },
 });
 
-export const { addCellbankBookmark, addFlaskBookmark } = bookmarksSlice.actions;
+export const {
+  toggleCellbankBookmark,
+  clearCellbankBookmark,
+  toggleFlaskBookmark,
+  clearFlaskBookmark,
+} = bookmarksSlice.actions;
 
 export default bookmarksSlice.reducer;

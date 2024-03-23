@@ -26,6 +26,7 @@ import MainNav from '../ui/MainFilter';
 import TabSelectorContainer from '../ui/TabSelectorContainer';
 import MainFilter from '../ui/MainFilter';
 import { RootState } from '../lib/store';
+import { clearCellbankBookmark, clearFlaskBookmark } from '../features/ui-state/bookmarksSlice';
 
 export default function ChartsPage() {
   const {
@@ -40,6 +41,7 @@ export default function ChartsPage() {
     zodSchema: flasksInfoArraySchema,
   });
 
+  const dispatch = useDispatch();
   const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
   console.log(flasksAll, 'flasksAll');
 
@@ -114,7 +116,7 @@ export default function ChartsPage() {
     // console.log('data in graphs page, before fetch');
     const res = await fetch(`${baseUrl}/api/chart/cellbanks`);
     const { data } = await res.json();
-    console.log(data, 'in getallcellbankgraphdata');
+    // console.log(data, 'in getallcellbankgraphdata');
     setAllCellbankGraphData(data);
     return data;
   };
@@ -169,10 +171,14 @@ export default function ChartsPage() {
             bookmarkedCellbankGraphData={allCellbankGraphData}
           />
         )} */}
-
+/
 {/* display cellbank bookmarks and flask bookmarks */}
         <p>cellbank bookmarks:  {JSON.stringify(bookmarkedCellbanks)}</p>
         <p>flasks bookmarks:  {JSON.stringify(bookmarkedFlasks)}</p>
+        <Button onClick={()=> dispatch(clearCellbankBookmark())}>Clear Cell bank bookmarks</Button>
+        <Button onClick={()=> dispatch(clearFlaskBookmark())}>Clear Flask bookmarks</Button>
+        <p>bookmarkedFlasksGraphData: {JSON.stringify(bookmarkedFlasksGraphData)}</p>
+        <p>bookmarkedCellbankGraphData: {JSON.stringify(bookmarkedCellbankGraphData)}</p>
 
         {/* main filter - only show if user is logged in */}
         <MainFilter />

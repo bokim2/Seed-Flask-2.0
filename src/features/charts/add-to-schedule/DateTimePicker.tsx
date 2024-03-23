@@ -3,16 +3,14 @@ import styled from 'styled-components';
 import { MultiInput } from '../../../styles/UtilStyles';
 import {
   combineDateAndTime,
-  displayLocalTime,
   formatDateTime,
   transformListStringToArray,
   validateCurrentFlasks,
 } from '../../../hooks/hooks';
-import { addHours, format, set } from 'date-fns';
+import { format } from 'date-fns';
 import Button from '../../../ui/Button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { baseUrl } from '../../../../configs';
-import { validate } from 'json-schema';
 import ErrorMessage from '../../../ui/ErrorMessage';
 
 const StyledDateTimePicker = styled.div`
@@ -30,8 +28,8 @@ const SelectorOuterContainer = styled.div`
   gap: 3rem;
   align-items: center;
 
-  @media(min-width: 600px) {
-flex-direction: row;
+  @media (min-width: 600px) {
+    flex-direction: row;
   }
 `;
 
@@ -100,18 +98,18 @@ export default function DateTimePicker({
           ...createEntry,
         }),
       });
-  
+
       const data = await response.json();
       if (!response.ok) {
-        console.log('response is NOT ok', response, 'data', data)
-      throw new Error(data.message);
+        console.log('response is NOT ok', response, 'data', data);
+        throw new Error(data.message);
       }
       setClickedXY(null);
       setNotes('');
       setFlask_id('');
       setCurrent_flasks('');
       setAdjustedTime(null);
-      
+
       return data;
       // setBookmarkedFlasks([]);
       // console.log(response.json(), 'response in createSchedule')
@@ -133,15 +131,16 @@ export default function DateTimePicker({
     reset,
   } = useMutation({
     mutationFn: (createEntry: any) => createSchedule(createEntry),
-    onSuccess: ()=> {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey.includes('schedules')
-      })
+        predicate: (query) => query.queryKey.includes('schedules'),
+      });
       reset();
     },
-    onError: (err)=> {
+    onError: (err) => {
       console.error('error in createScheduleMutation ONERROR!!!', err);
-      throw err},
+      throw err;
+    },
   });
 
   const handleSubmit = async (event) => {
@@ -160,12 +159,12 @@ export default function DateTimePicker({
       flask_id: flask_id == '' ? null : flask_id,
       current_flasks: transformListStringToArray(current_flasks),
     };
-try {
-    await createScheduleMutation(createScheduleObject);
-} catch (error) {
-  console.error('error in createScheduleMutation', error);
-  throw error;
-}
+    try {
+      await createScheduleMutation(createScheduleObject);
+    } catch (error) {
+      console.error('error in createScheduleMutation', error);
+      throw error;
+    }
     // alert(`Selected Date: ${date}\nSelected Time: ${time}`);
   };
 
