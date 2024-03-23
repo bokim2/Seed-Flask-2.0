@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import ChartsTable from './ChartsTable';
 import Scheduler from './add-to-schedule/Scheduler';
 import DateTimePicker from './add-to-schedule/DateTimePicker';
+import { useDispatch } from 'react-redux';
 
 ChartJS.register(
   CategoryScale,
@@ -29,7 +30,7 @@ ChartJS.register(
 export type TBookmarkedCellbankGraph = {
   bookmarkedCellbankGraphData: any[][];
   bookmarkedFlasks: any;
-  setBookmarkedFlasks: any;
+  // setBookmarkedFlasks: any;
 };
 
 const StyledBookmarkedCellbankGraph = styled.div`
@@ -42,11 +43,14 @@ const StyledBookmarkedCellbankGraph = styled.div`
 `;
 
 const BookmarkedCellbankGraph = memo(
-  ({ bookmarkedCellbankGraphData, bookmarkedFlasks, setBookmarkedFlasks }: TBookmarkedCellbankGraph) => {
+  ({ bookmarkedCellbankGraphData, bookmarkedFlasks }: TBookmarkedCellbankGraph) => {
     console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData');
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
     const [selectedFlask, setSelectedFlask] = useState<number | null>(1);
+
+  
+
 
     const options: any = {
       responsive: true,
@@ -202,7 +206,7 @@ const BookmarkedCellbankGraph = memo(
           clickedXY={clickedXY}
           setClickedXY={setClickedXY}
           bookmarkedFlasks={bookmarkedFlasks}
-          setBookmarkedFlasks={setBookmarkedFlasks}
+          // setBookmarkedFlasks={setBookmarkedFlasks}
         />
       </>
     );

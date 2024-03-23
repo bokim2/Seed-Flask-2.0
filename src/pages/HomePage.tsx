@@ -23,9 +23,7 @@ const HomeInnerPageContainer = styled.section`
   max-width: 1700px;
 `;
 
-
 const MenuButtonContainer = styled.div`
-
   flex: 2;
   padding-block: 5vh;
   display: flex;
@@ -82,8 +80,6 @@ export default function HomePage() {
   // const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
   // const [env, setEnv] = useState<any>(null);
 
-
-
   return (
     <PageContainer id="HomePageContainer">
       <HomeInnerPageContainer id="HomeInnerPageContainer">
@@ -101,13 +97,29 @@ export default function HomePage() {
               imgAlt="microbe"
               positionElement={{ left: '-15%' }}
             />
-            <MainMenuButton
+            {/* <MainMenuButton
               toPath="/flask"
               text={'start flask'}
               backgroundColor="rgba(var(--clr-accent-2), .8)"
               imgUrl="images/leaf-flask.png"
               imgAlt="flask"
               positionElement={{ left: '-5%' }}
+            /> */}
+            <MainMenuButton
+              toPath="/charts"
+              text={'plan flask'}
+              backgroundColor="rgba(var(--clr-accent-2), .8)"
+              imgUrl="images/curve.png"
+              imgAlt="wave graph"
+              positionElement={{ left: '-5%' }}
+            />
+            <MainMenuButton
+              toPath="/flask"
+              text={'start flask'}
+              backgroundColor="rgba(var(--clr-accent-2), .8)"
+              imgUrl="images/leaf-flask.png"
+              imgAlt="flask"
+              positionElement={{ left: '5%' }}
             />
             <MainMenuButton
               toPath="/sample"
@@ -119,24 +131,24 @@ export default function HomePage() {
                 height: 'clamp(1.8rem, 6vw, 6.6rem)',
                 scale: '1.1',
               }}
-              positionElement={{ left: '5%' }}
+              positionElement={{ left: '15%' }}
             />
-            <MainMenuButton
+            {/* <MainMenuButton
               toPath="/schedule"
               text={'view schedule'}
               backgroundColor="rgba(var(--clr-accent-4), .8)"
               imgUrl="images/schedule.png"
-              imgAlt="bioreactor"
+              imgAlt="schedule"
               positionElement={{ left: '15%' }}
-            />
+            /> */}
           </MenuButtonContainer>
           <SecondaryMenuButtonContainer>
             <CircularButton
-              toPath="/charts"
-              // text={''}
+               toPath="/schedule"
+              //  text={'view schedule'}
               backgroundColor="#EAE0DA"
-              imgUrl="images/wave-graph-1.png"
-              imgAlt="wave graph"
+              imgUrl="images/schedule.png"
+              imgAlt="calendar"
               // positionElement={{ left: '30%' }}
               imgStyleOverride={{ borderRadius: '0', width: '60%' }}
             />

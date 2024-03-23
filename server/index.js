@@ -262,9 +262,10 @@ app.get('/api/chart/cellbank/:id', async (req, res) => {
 
 app.get('/api/chart/flasks', async (req, res)=> {
   try {
+    console.log('req.query.flaskIds', req.query.flaskIds)
     const flaskIds = req.query.flaskIds ? req.query.flaskIds.split(',') : [];
-    if(!flaskIds.length){
-      res.status(400).json({message: 'No bookmarked flask ids'})
+    if(!flaskIds?.length){
+      return res.status(400).json({message: 'No bookmarked flask ids'})
     } 
 const query =  `SELECT 
 flasks.*,
@@ -466,11 +467,11 @@ if(value === 'all') return;
       `SELECT ARRAY_Agg(DISTINCT ${value}) from cell_banks;`
     );
     const reversedResultsArray = results.rows[0].array_agg.reverse();
-    console.log('results right after db query',results)
+    // console.log('results right after db query',results)
     if(!results?.rows?.[0]?.array_agg){
       return res.status(404).json({message: 'No unique values found'})
     }
-    console.log('results.rows[0].array_agg in server right before sending data back', reversedResultsArray);
+    // console.log('results.rows[0].array_agg in server right before sending data back', reversedResultsArray);
     res.status(200).json({
       status: 'success',
       data: results.rows[0].array_agg,

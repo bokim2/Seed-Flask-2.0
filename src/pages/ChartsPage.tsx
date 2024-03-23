@@ -18,13 +18,14 @@ import AllCellbanksGraph from '../features/charts/AllCellbanksGraph';
 import BookmarkedCellbankGraph from '../features/charts/BookmarkedCellbankGraph';
 import { flasksInfoArraySchema } from '../features/flasks/flasks-types';
 import { useAppSelector } from '../hooks/hooks';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { changePageLimit } from '../features/ui-state/pageSlice';
 import PageLimitDropDownSelector from '../ui/table-ui/PageLimitDropDownSelector';
 import Button from '../ui/Button';
 import MainNav from '../ui/MainFilter';
 import TabSelectorContainer from '../ui/TabSelectorContainer';
 import MainFilter from '../ui/MainFilter';
+import { RootState } from '../lib/store';
 
 export default function ChartsPage() {
   const {
@@ -44,14 +45,28 @@ export default function ChartsPage() {
 
   // const [flasks, isLoading, error] = useFlasks();
   // const [flask] = useFlask(1);
-  const [bookmarkedCellbanks, setBookmarkedCellbanks] = useState<number[]>([
-    1, 2, 3, 6,
-  ]);
+  // const [bookmarkedCellbanks, setBookmarkedCellbanks] = useState<number[]>([
+  //   1, 2, 3, 6,
+  // ]);
 
-  const [bookmarkedFlasks, setBookmarkedFlasks] = useState<number[]>([42, 41]);
+  // const [bookmarkedFlasks, setBookmarkedFlasks] = useState<number[]>([42, 41]);
   const [bookmarkedFlasksGraphData, setBookmarkedFlasksGraphData] = useState(
     []
   );
+
+  const chartsTabNamesAndValues = {
+    all: 'All Flasks',
+    bookmarkedFlasks: 'Bookmarked Flasks',
+    bookmarkedCellbanks: 'Bookmarked Cellbanks',
+    cellbank: 'Single Cellbank',
+    user: 'User',
+    project: 'Project',
+    schedule: 'Schedule List',
+  };
+
+  const bookmarkedCellbanks = useSelector((state: RootState)=> state.bookmarks.cellbank_bookmark)
+
+  const bookmarkedFlasks = useSelector((state: RootState)=> state.bookmarks.flask_bookmark)
 
   // const [chartData, setChartData] = useState<any>([]);
   // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
@@ -106,6 +121,7 @@ export default function ChartsPage() {
 
   const getBookmarkedFlasksGraphData = async () => {
     try {
+      if (bookmarkedFlasks.length === 0) return;
       console.log(bookmarkedFlasks, 'in getBookmarkedFlasksGraphData');
       console.log(bookmarkedFlasks.join(','), bookmarkedFlasks.join(','));
       const response = await fetch(
@@ -133,6 +149,10 @@ export default function ChartsPage() {
     getBookmarkedFlasksGraphData();
   }, [bookmarkedCellbanks, bookmarkedFlasks]);
 
+  // or... 'Filters'
+  
+
+
   return (
     <PageContainer id="ChartsPage">
       <LoaderWrapper>
@@ -141,13 +161,18 @@ export default function ChartsPage() {
       </LoaderWrapper>
       {/* {JSON.stringify(setChartData)} */}
       <InnerPageContainer id="ChartsPage">
-        <TabSelectorContainer>
+        <TabSelectorContainer 
+        chartsTabNamesAndValues={chartsTabNamesAndValues}>
         {/* <LoaderBar /> */}
         {/* {allCellbankGraphData?.length > 0 && (
           <BookmarkedCellbankGraph
             bookmarkedCellbankGraphData={allCellbankGraphData}
           />
         )} */}
+
+{/* display cellbank bookmarks and flask bookmarks */}
+        <p>cellbank bookmarks:  {JSON.stringify(bookmarkedCellbanks)}</p>
+        <p>flasks bookmarks:  {JSON.stringify(bookmarkedFlasks)}</p>
 
         {/* main filter - only show if user is logged in */}
         <MainFilter />
@@ -160,14 +185,14 @@ export default function ChartsPage() {
           <AllCellbanksGraph
             allCellbankGraphData={allCellbankGraphData}
             bookmarkedFlasks={bookmarkedFlasks}
-            setBookmarkedFlasks={setBookmarkedFlasks}
+            // setBookmarkedFlasks={setBookmarkedFlasks}
           />
         )}
         <ChartsTable
           chartTitle="All Flasks"
           flasks={flasksAll}
           bookmarkedFlasks={bookmarkedFlasks}
-          setBookmarkedFlasks={setBookmarkedFlasks}
+          // setBookmarkedFlasks={setBookmarkedFlasks}
         />
 
         {/* BOOKMARKED flasks */}
@@ -175,14 +200,14 @@ export default function ChartsPage() {
           <AllCellbanksGraph
             allCellbankGraphData={bookmarkedFlasksGraphData}
             bookmarkedFlasks={bookmarkedFlasks}
-            setBookmarkedFlasks={setBookmarkedFlasks}
+            // setBookmarkedFlasks={setBookmarkedFlasks}
           />
         )}
         <ChartsTable
           chartTitle="Bookmarked Flasks"
           flasks={bookmarkedFlasksGraphData}
           bookmarkedFlasks={bookmarkedFlasks}
-          setBookmarkedFlasks={setBookmarkedFlasks}
+          // setBookmarkedFlasks={setBookmarkedFlasks}
         />
 
         <Button
@@ -198,14 +223,14 @@ export default function ChartsPage() {
           <BookmarkedCellbankGraph
             bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
             bookmarkedFlasks={bookmarkedFlasks}
-            setBookmarkedFlasks={setBookmarkedFlasks}
+            // setBookmarkedFlasks={setBookmarkedFlasks}
           />
         )}
         <ChartsTable
           chartTitle="Bookmarked Charts"
           flasks={bookmarkedCellbankGraphData.flat()}
           bookmarkedFlasks={bookmarkedFlasks}
-          setBookmarkedFlasks={setBookmarkedFlasks}
+          // setBookmarkedFlasks={setBookmarkedFlasks}
         />
 
         {/* {singleCellbankGraphData?.length && (
