@@ -116,7 +116,7 @@ export default function HomePage() {
             <MainMenuButton
               toPath="/flask"
               text={'start flask'}
-              backgroundColor="rgba(var(--clr-accent-2), .8)"
+              backgroundColor="rgba(var(--clr-accent-3), .8)"
               imgUrl="images/leaf-flask.png"
               imgAlt="flask"
               positionElement={{ left: '5%' }}
@@ -124,7 +124,7 @@ export default function HomePage() {
             <MainMenuButton
               toPath="/sample"
               text={'sample flask'}
-              backgroundColor="rgba(var(--clr-accent-3), .8)"
+              backgroundColor="rgba(var(--clr-accent-4), .8)"
               imgUrl="images/clock-testtube.png"
               imgAlt="clock and test tube"
               imgStyleOverride={{

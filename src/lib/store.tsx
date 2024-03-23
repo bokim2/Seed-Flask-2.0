@@ -5,6 +5,33 @@ import userProfileReducer from '../features/ui-state/userProfileSlice';
 import pageLimitReducer from '../features/ui-state/pageSlice';
 import mainfilterReducer from '../features/ui-state/mainfilterSlice';
 
+// store bookmarks in local storage
+
+function loadFromLocalStorage() {
+  try {
+    const serializedState = localStorage.getItem('bookmarks');
+    if (serializedState === null) return 
+    return JSON.parse(serializedState);
+  } catch (err) {
+    console.error(err, 'Error loading bookmarks from local storage');
+  }
+}
+
+function saveStateToLocalStorage(state){
+  try {
+    console.log('state.bookmarks in saveStateTolocalstorage', state.bookmarks)
+    const serializedState = JSON.stringify(state.bookmarks);
+    localStorage.setItem('bookmarks', serializedState);
+
+  } catch (err){
+    console.error(err, 'Error saving bookmarks to local storage');
+}
+}
+
+const preloadedState = {
+  bookmarks: loadFromLocalStorage(),
+};
+
 const store = configureStore({
   reducer: {
     // animation: animationReducer,
@@ -14,7 +41,14 @@ const store = configureStore({
     page: pageLimitReducer,
     mainFilter: mainfilterReducer,
   },
+  preloadedState,
 });
+
+store.subscribe(()=> {
+  saveStateToLocalStorage({
+    bookmarks: store.getState().bookmarks,
+  })
+})
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

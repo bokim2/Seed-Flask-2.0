@@ -9,7 +9,7 @@ import {
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCellbankBookmark } from '../features/ui-state/bookmarksSlice';
+import { toggleCellbankBookmark } from '../features/ui-state/bookmarksSlice';
 import { RootState } from '../lib/store';
 import Button from '../ui/Button';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
@@ -35,7 +35,7 @@ export default function CellbankPage() {
   // bookmarked cellbanks
   const dispatch = useDispatch();
   const handleAddBookmark = (id) => {
-    dispatch(addCellbankBookmark(id));
+    dispatch(toggleCellbankBookmark(parseInt(id)));
   };
 
   const cellbankBookmarks = useSelector(
@@ -45,7 +45,6 @@ export default function CellbankPage() {
   // data from cellbanks table
   const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
   // console.log(cellbanksAll, 'cellbanksAll');
-
 
   return (
     <PageContainer id="CellbankPageContainer">

@@ -13,7 +13,7 @@ import {
   ChartData,
 } from 'chart.js';
 import { useDispatch } from 'react-redux';
-import { addFlaskBookmark } from '../ui-state/bookmarksSlice';
+import { toggleFlaskBookmark } from '../ui-state/bookmarksSlice';
 
 ChartJS.register(
   CategoryScale,
@@ -65,7 +65,7 @@ export default function AllCellbanksGraph({
   bookmarkedFlasks,
   // setBookmarkedFlasks,
 }) {
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   console.log(allCellbankGraphData, 'allCellbankGraphData');
   const datasets = allCellbankGraphData.map((flaskData) => ({
@@ -104,7 +104,7 @@ const dispatch = useDispatch();
           //   return prev
           //   }
           // });
-          dispatch(addFlaskBookmark(Number(flaskId)));
+          dispatch(toggleFlaskBookmark(Number(flaskId)));
         }
       }
     }
