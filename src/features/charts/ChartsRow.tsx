@@ -9,6 +9,8 @@ import {
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
+import { addFlaskBookmark } from '../ui-state/bookmarksSlice';
+import { useDispatch } from 'react-redux';
 
 export default function ChartsRow({
   rowData,
@@ -20,7 +22,7 @@ export default function ChartsRow({
   // deleteFlask,
   // isPendingDelete,
   bookmarkedFlasks,
-  setBookmarkedFlasks,
+  // setBookmarkedFlasks,
   bookmarked,
 }) {
   const {
@@ -39,6 +41,7 @@ export default function ChartsRow({
   } = rowData;
   // const editing = editingId === flask_id;
   // console.log('rowData', rowData);
+const dispatch = useDispatch()
 
   return (
     <>
@@ -46,13 +49,15 @@ export default function ChartsRow({
       onClick={(e: React.MouseEvent<HTMLTableRowElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        setBookmarkedFlasks((prev) => {
-          if (!prev.includes(parseInt(flask_id))) {
-            return [...prev, parseInt(flask_id)];
-          } else {
-            return prev.filter((id) => id !== parseInt(flask_id));
-          }
-        });
+        // setBookmarkedFlasks((prev) => {
+        //   if (!prev.includes(parseInt(flask_id))) {
+        //     return [...prev, parseInt(flask_id)];
+        //   } else {
+        //     return prev.filter((id) => id !== parseInt(flask_id));
+        //   }
+        // });
+
+        dispatch(addFlaskBookmark(parseInt(flask_id)));
         e.currentTarget.blur();
       }}
       >

@@ -32,7 +32,7 @@ export default function ChartsTable({
   flasks,
   chartTitle,
   bookmarkedFlasks,
-  setBookmarkedFlasks,
+  // setBookmarkedFlasks,
 }) {
   // console.log('flaks in charts table', flasks);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -153,7 +153,7 @@ export default function ChartsTable({
                       // deleteFlask={deleteFlask}
                       // isPendingDelete={isPendingDelete}
                       bookmarkedFlasks={bookmarkedFlasks}
-                      setBookmarkedFlasks={setBookmarkedFlasks}
+                      // setBookmarkedFlasks={setBookmarkedFlasks}
                     />
                   );
                 })}

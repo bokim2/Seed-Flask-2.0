@@ -52,7 +52,7 @@ export default function DateTimePicker({
   clickedXY,
   setClickedXY,
   bookmarkedFlasks,
-  setBookmarkedFlasks,
+  // setBookmarkedFlasks,
 }) {
   console.log(clickedXY, 'clickedXY');
   const now = new Date();

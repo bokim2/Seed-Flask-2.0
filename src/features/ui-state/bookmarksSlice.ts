@@ -21,11 +21,22 @@ const bookmarksSlice = createSlice({
     addCellbankBookmark(state, action: PayloadAction<number>) {
       if (!state.cellbank_bookmark.includes(action.payload)) {
         state.cellbank_bookmark.push(action.payload);
+      } else {
+        state.cellbank_bookmark = state.cellbank_bookmark.filter(
+          (id) => id !== action.payload
+        );
       }
     },
+    addFlaskBookmark(state, action: PayloadAction<number>) {
+      if (!state.flask_bookmark.includes(action.payload)) {
+        state.flask_bookmark.push(action.payload);
+      } else {
+        state.flask_bookmark = state.flask_bookmark.filter(id=> id !== action.payload)
+      }
+    }
   },
 });
 
-export const { addCellbankBookmark } = bookmarksSlice.actions;
+export const { addCellbankBookmark, addFlaskBookmark } = bookmarksSlice.actions;
 
 export default bookmarksSlice.reducer;

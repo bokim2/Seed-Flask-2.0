@@ -12,6 +12,8 @@ import {
   ChartOptions,
   ChartData,
 } from 'chart.js';
+import { useDispatch } from 'react-redux';
+import { addFlaskBookmark } from '../ui-state/bookmarksSlice';
 
 ChartJS.register(
   CategoryScale,
@@ -61,8 +63,10 @@ export const options: ChartOptions<'line'> = {
 export default function AllCellbanksGraph({
   allCellbankGraphData,
   bookmarkedFlasks,
-  setBookmarkedFlasks,
+  // setBookmarkedFlasks,
 }) {
+const dispatch = useDispatch();
+
   console.log(allCellbankGraphData, 'allCellbankGraphData');
   const datasets = allCellbankGraphData.map((flaskData) => ({
     label: `Flask ${flaskData.flask_id}`,
@@ -93,13 +97,14 @@ export default function AllCellbanksGraph({
           // console.log(`Clicked on flask ID: ${flaskId}`);
           // Now you have the flask ID and can use it as needed
           // console.log('flaskId', flaskId, parseInt(flaskId));
-          setBookmarkedFlasks((prev) => {
-            if (!prev.includes(parseInt(flaskId))) {
-             return [...prev, parseInt(flaskId)];
-            } else {
-            return prev
-            }
-          });
+          // setBookmarkedFlasks((prev) => {
+          //   if (!prev.includes(parseInt(flaskId))) {
+          //    return [...prev, parseInt(flaskId)];
+          //   } else {
+          //   return prev
+          //   }
+          // });
+          dispatch(addFlaskBookmark(Number(flaskId)));
         }
       }
     }

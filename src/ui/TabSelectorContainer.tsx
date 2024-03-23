@@ -1,26 +1,6 @@
-import { set } from 'date-fns';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-const chartsTabOptions = [
-  'All Flasks',
-  'Bookmarked Flasks',
-  'Bookmarked Cellbanks',
-  'Single Cellbank',
-  'User',
-  'Project',
-  'Shedule List',
-];
-// or... 'Filters'
 
-const chartsTabNamesAndValues = {
-  all: 'All Flasks',
-  bookmarkedFlasks: 'Bookmarked Flasks',
-  bookmarkedCellbanks: 'Bookmarked Cellbanks',
-  cellbank: 'Single Cellbank',
-  user: 'User',
-  project: 'Project',
-  schedule: 'Schedule List',
-};
 
 export const StyledTabSelectorContainer = styled.div`
   display: flex;
@@ -98,7 +78,12 @@ display: block;
 }
 `;
 
-export default function TabSelectorContainer({ children }) {
+type TTabSelectorContainer = {
+  children: React.ReactNode;
+  chartsTabNamesAndValues: Record<string, string>;
+}
+
+export default function TabSelectorContainer({ children, chartsTabNamesAndValues }: TTabSelectorContainer) {
   const [selectedTabName, setSelectedTabName] = useState('all');
 
   return (
