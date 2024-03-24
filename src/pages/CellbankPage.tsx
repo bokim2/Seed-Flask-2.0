@@ -9,8 +9,8 @@ import {
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleCellbankBookmark } from '../features/ui-state/bookmarksSlice';
-import { RootState } from '../lib/store';
+import { toggleCellbankBookmark } from '../redux/slices/bookmarksSlice';
+import { RootState } from '../redux/store';
 import Button from '../ui/Button';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';

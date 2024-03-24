@@ -9,7 +9,7 @@ import {
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
-import { toggleFlaskBookmark } from '../ui-state/bookmarksSlice';
+import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
 import { useDispatch } from 'react-redux';
 
 export default function ChartsRow({

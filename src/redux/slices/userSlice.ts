@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../../lib/store';
+import type { RootState } from '../store';
 import { useAuth0 } from '@auth0/auth0-react';
 
 // type user = 'pacific' | 'eastern' | 'central' | 'mountain';

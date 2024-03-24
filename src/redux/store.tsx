@@ -1,31 +1,30 @@
 import { configureStore } from '@reduxjs/toolkit';
-import timeZoneReducer from '../features/ui-state/settingsSlice';
-import bookmarksReducer from '../features/ui-state/bookmarksSlice';
-import userProfileReducer from '../features/ui-state/userProfileSlice';
-import pageLimitReducer from '../features/ui-state/pageSlice';
-import mainfilterReducer from '../features/ui-state/mainfilterSlice';
+import timeZoneReducer from './slices/settingsSlice';
+import bookmarksReducer from './slices/bookmarksSlice';
+import userProfileReducer from './slices/userProfileSlice';
+import pageLimitReducer from './slices/pageSlice';
+import mainfilterReducer from './slices/mainfilterSlice';
 
 // store bookmarks in local storage
 
 function loadFromLocalStorage() {
   try {
     const serializedState = localStorage.getItem('bookmarks');
-    if (serializedState === null) return 
+    if (serializedState === null) return;
     return JSON.parse(serializedState);
   } catch (err) {
     console.error(err, 'Error loading bookmarks from local storage');
   }
 }
 
-function saveStateToLocalStorage(state){
+function saveStateToLocalStorage(state) {
   try {
-    console.log('state.bookmarks in saveStateTolocalstorage', state.bookmarks)
+    console.log('state.bookmarks in saveStateTolocalstorage', state.bookmarks);
     const serializedState = JSON.stringify(state.bookmarks);
     localStorage.setItem('bookmarks', serializedState);
-
-  } catch (err){
+  } catch (err) {
     console.error(err, 'Error saving bookmarks to local storage');
-}
+  }
 }
 
 const preloadedState = {
@@ -44,11 +43,11 @@ const store = configureStore({
   preloadedState,
 });
 
-store.subscribe(()=> {
+store.subscribe(() => {
   saveStateToLocalStorage({
     bookmarks: store.getState().bookmarks,
-  })
-})
+  });
+});
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

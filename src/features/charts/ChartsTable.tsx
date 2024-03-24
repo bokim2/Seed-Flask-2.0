@@ -21,12 +21,10 @@ import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
 import ChartsRow from './ChartsRow';
 import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
-import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import { useAppSelector } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
-import { changePageLimit } from '../ui-state/pageSlice';
-import Scheduler from './add-to-schedule/Scheduler';
+import { changePageLimit } from '../../redux/slices/pageSlice';
 
 export default function ChartsTable({
   flasks,
@@ -35,18 +33,18 @@ export default function ChartsTable({
   // setBookmarkedFlasks,
 }) {
   // console.log('flaks in charts table', flasks);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editedForm, setEditedForm] = useState(initialEditFlasksForm);
+  // const [editingId, setEditingId] = useState<number | null>(null);
+  // const [editedForm, setEditedForm] = useState(initialEditFlasksForm);
 
-  const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } =
-    useUpdateRowMutation({
-      tableName: 'flasks',
-      zodSchema: updateFlaskSchema,
-      initialEditForm: initialCreateFlasksForm,
-      setEditedForm,
-      idColumnName: 'flask_id',
-      dateColumnName: 'start_date',
-    });
+  // const { mutate: submitEditedFlaskForm, isPending: isPendingUpdate } =
+  //   useUpdateRowMutation({
+  //     tableName: 'flasks',
+  //     zodSchema: updateFlaskSchema,
+  //     initialEditForm: initialCreateFlasksForm,
+  //     setEditedForm,
+  //     idColumnName: 'flask_id',
+  //     dateColumnName: 'start_date',
+  //   });
 
   // const {
   //   mutate: deleteFlask,
@@ -101,7 +99,6 @@ export default function ChartsTable({
           //   // human_readable_date: String(editedForm.human_readable_date),
           // };
           // handleEditFormSubmit(e, formattedEditedForm);
-          
         }}
       >
         <TableContainer>
