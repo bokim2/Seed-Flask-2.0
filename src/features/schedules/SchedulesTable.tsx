@@ -31,7 +31,7 @@ import {
   useSetSortColumn,
 } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
-import { changePageLimit } from '../ui-state/pageSlice';
+import { changePageLimit } from '../../redux/slices/pageSlice';
 import SchedulesRow from './SchedulesRow';
 import {
   TSchedule,

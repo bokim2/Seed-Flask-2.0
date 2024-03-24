@@ -13,7 +13,7 @@ import {
   ChartData,
 } from 'chart.js';
 import { useDispatch } from 'react-redux';
-import { toggleFlaskBookmark } from '../ui-state/bookmarksSlice';
+import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
 
 ChartJS.register(
   CategoryScale,

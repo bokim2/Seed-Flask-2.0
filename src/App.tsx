@@ -20,8 +20,8 @@ import { baseUrl } from '../configs';
 import GetStarted from './pages/GetStarted';
 import LoaderBar from './ui/LoaderBar';
 import { useAppDispatch, useAppSelector } from './hooks/hooks';
-import { updateUserProfile } from './features/ui-state/userProfileSlice';
-import { TuserProfile } from './features/ui-state/userSlice';
+import { updateUserProfile } from './redux/slices/userProfileSlice';
+import { TuserProfile } from './redux/slices/userSlice';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -35,7 +35,9 @@ import { TuserProfile } from './features/ui-state/userSlice';
 // });
 
 function App() {
-  const userProfile = useAppSelector((state) => state.userProfile.userProfile) as TuserProfile | null;
+  const userProfile = useAppSelector(
+    (state) => state.userProfile.userProfile
+  ) as TuserProfile | null;
   const dispatch = useAppDispatch();
 
   const [userLoading, setUserLoading] = useState<boolean>(true);
@@ -75,7 +77,6 @@ function App() {
   if (userLoading) {
     return <LoaderBar />;
   }
-
 
   return (
     <>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { baseUrl } from '../../configs';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
-import type { RootState, AppDispatch } from '../lib/store';
+import type { RootState, AppDispatch } from '../redux/store';
 
 // ReduxToolkit - for typescript - Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -286,10 +286,9 @@ export function validateCurrentFlasks(currentFlasksString) {
 }
 
 export function transformListStringToArray(listString) {
+  if (Array.isArray(listString)) {
+    console.log('liststring is an array', listString, String(listString));
 
-  if(Array.isArray(listString)){
-    console.log("liststring is an array", listString, String(listString))
-    
     return listString;
   }
 
@@ -298,7 +297,7 @@ export function transformListStringToArray(listString) {
   const commaSplitArray = listString.split(',').map((e) => e.trim());
 
   const resultSet: Set<number> = new Set();
-  
+
   commaSplitArray.forEach((rangePortion) => {
     if (rangePortion.includes('-')) {
       const [start, end] = rangePortion
@@ -317,7 +316,7 @@ export function transformListStringToArray(listString) {
       }
     }
   });
-  const resultArray = Array.from(resultSet).sort((a, b)=> a - b);
+  const resultArray = Array.from(resultSet).sort((a, b) => a - b);
   return resultArray;
 }
 

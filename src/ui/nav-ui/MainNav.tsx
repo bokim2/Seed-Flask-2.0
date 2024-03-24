@@ -5,7 +5,11 @@ import NavList from './NavList';
 import { NavLink, useNavigate } from 'react-router-dom';
 import UserNavList from './UserNavList';
 import { THandleNavToggle, TNavOrUser } from '../../lib/types';
-import { useAppDispatch, useMainFilter, useOnClickOutside } from '../../hooks/hooks';
+import {
+  useAppDispatch,
+  useMainFilter,
+  useOnClickOutside,
+} from '../../hooks/hooks';
 import {
   LinkButton,
   LoginButton,
@@ -20,7 +24,7 @@ import {
 import { ProdUrl, baseUrl } from '../../../configs';
 import { RolesUrl } from '../../lib/constants';
 import Button from '../Button';
-import { updateUserProfile } from '../../features/ui-state/userProfileSlice';
+import { updateUserProfile } from '../../redux/slices/userProfileSlice';
 
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
@@ -271,7 +275,6 @@ export default function MainNav({ userProfile }) {
         </StyledNavLink>
 
         <NavSection>
-
           {/* main filter - only show if user is logged in */}
           {/* {userProfile?.isAuthenticated && (
             <MainFilterContainer>

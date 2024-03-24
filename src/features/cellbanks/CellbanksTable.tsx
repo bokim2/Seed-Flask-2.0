@@ -7,7 +7,6 @@ import {
   TableRow,
   TableHeaderCell,
   StyledForm,
-
 } from '../../styles/UtilStyles';
 import { useState } from 'react';
 import {
@@ -24,7 +23,7 @@ import {
   updateCellbankSchema,
 } from './cellbanks-types';
 import ErrorMessage from '../../ui/ErrorMessage';
-import { changePageLimit } from '../ui-state/pageSlice';
+import { changePageLimit } from '../../redux/slices/pageSlice';
 import { useDispatch } from 'react-redux';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
@@ -33,10 +32,9 @@ import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutati
 import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
 import SearchFormRow from '../../ui/SearchFormRow';
 
-
 export type TError = {
   message: string;
-}
+};
 export default function CellbanksTable({
   cellbanks,
   handleAddBookmark,
@@ -98,12 +96,11 @@ export default function CellbanksTable({
   //state for multisearch
 
   const [searchMultiError, setSearchMultiError] = useState(null);
-console.log(searchMultiError, 'searchMultiError')
+  console.log(searchMultiError, 'searchMultiError');
   return (
     <>
       {/* Search Section */}
       <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} />
-      
 
       {/* Page Limit Section */}
       <PageLimitDropDownSelector
@@ -131,11 +128,7 @@ console.log(searchMultiError, 'searchMultiError')
           );
         }}
       >
-
-        <Caption>
-          Cell Banks Table
-          
-        </Caption>
+        <Caption>Cell Banks Table</Caption>
         {/* Table Section */}
         <TableContainer id="CellbanksTableContainer">
           <StyledTable>
@@ -150,15 +143,16 @@ console.log(searchMultiError, 'searchMultiError')
                     sortColumn={sortColumn}
                   />
                 ))}
-                
+
                 <TableHeaderCell>edit</TableHeaderCell>
               </TableRow>
 
-              <SearchFormRow setSearchedData={setSearchedData} tableName={'cellbanks'} 
-              tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
-              setSearchMultiError={setSearchMultiError}
+              <SearchFormRow
+                setSearchedData={setSearchedData}
+                tableName={'cellbanks'}
+                tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
+                setSearchMultiError={setSearchMultiError}
               />
-              
             </TableHeader>
             <tbody>
               {filteredAndSortedData &&

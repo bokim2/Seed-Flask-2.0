@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../../lib/store';
+import type { RootState } from '../store';
 
 type TBookmarks = {
   cellbank_bookmark: number[];

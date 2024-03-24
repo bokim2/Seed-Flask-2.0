@@ -81,10 +81,12 @@ display: block;
 type TTabSelectorContainer = {
   children: React.ReactNode;
   chartsTabNamesAndValues: Record<string, string>;
+  selectedTabName: string;
+  setSelectedTabName: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function TabSelectorContainer({ children, chartsTabNamesAndValues }: TTabSelectorContainer) {
-  const [selectedTabName, setSelectedTabName] = useState('all');
+export default function TabSelectorContainer({ children, chartsTabNamesAndValues, selectedTabName, setSelectedTabName }: TTabSelectorContainer) {
+
 
   return (
     <StyledTabSelectorContainer>
