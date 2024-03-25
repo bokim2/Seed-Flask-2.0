@@ -219,7 +219,6 @@ import { isPending } from '@reduxjs/toolkit';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import { ZodSchema, z } from 'zod';
 import { useQuery } from '@tanstack/react-query';
-import { type } from 'os';
 
 // convert UTC timestamp to local time
 

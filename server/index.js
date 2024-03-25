@@ -157,6 +157,7 @@ import cellbankRouter from './routes/cellbankRoutes.js';
 import flaskRouter from './routes/flaskRoutes.js';
 import sampleRouter from './routes/sampleRoutes.js';
 import scheduleRouter from './routes/scheduleRoutes.js';
+import { getUtcTimestampFromLocalTime } from './helperFunctions.js';
 
 app.use('/api/cellbanks', cellbankRouter);
 app.use('/api/flasks', flaskRouter);
@@ -386,7 +387,6 @@ app.get('/api/cellbanks/search', async (req, res) => {
   try {
     // Assuming all queries come in as `searchField[]=field&searchText[]=text`
     let { searchField, searchText } = req.query;
-    console.log('searchField', searchField, 'searchText', searchText);
 
     // Ensure searchField and searchText are arrays (single query param or none will not be arrays)
     searchField = Array.isArray(searchField)
@@ -408,7 +408,8 @@ app.get('/api/cellbanks/search', async (req, res) => {
       'details',
       'notes',
       'username',
-      'date_timestampz',
+      // 'date_timestampz',
+      'human_readable_date',
     ];
 
     // Filter out invalid fields
@@ -429,6 +430,10 @@ app.get('/api/cellbanks/search', async (req, res) => {
     const whereClauses = queries.map((q, index) => {
       const fieldForQuery =
         q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
+       if( q.field === 'human_readable_date' ){ 
+        q.field = 'date_timestampz' 
+       q.text = getUtcTimestampFromLocalTime(q.text)
+      }
       if (q.field === 'date_timestampz') {
         return `cell_banks.date_timestamptz > $${index + 1}`;
       } else {
@@ -448,7 +453,7 @@ app.get('/api/cellbanks/search', async (req, res) => {
     const result = await db.query(query);
 
     if(result.rows.length === 0){
-      return res.status(404).json({message: `No cell banks found with that criteria ${JSON.stringify(searchText)}`})
+      return res.status(404).json({message: 'No cell banks found'})
     }
 
     res.status(200).json(result.rows);
