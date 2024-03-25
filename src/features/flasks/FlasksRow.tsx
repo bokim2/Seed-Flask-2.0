@@ -19,10 +19,12 @@ export default function FlasksRow({
   editingId,
   deleteFlask,
   isPendingDelete,
+  isPendingUpdate,
 }) {
   const {
     flask_id,
     cell_bank_id,
+    vessel_type,
     media,
     inoculum_ul,
     media_ml,
@@ -42,9 +44,10 @@ export default function FlasksRow({
         {/* <TableRow> */}
         <TableDataCell data-cell="Flask ID">{flask_id}</TableDataCell>
         <TableDataCell data-cell="cell bank id">{cell_bank_id}</TableDataCell>
+        <TableDataCell data-cell="vessel type">{vessel_type}</TableDataCell>
         <TableDataCell data-cell="media">{media}</TableDataCell>
-        <TableDataCell data-cell="inoculum uL">{inoculum_ul}</TableDataCell>
         <TableDataCell data-cell="media mL">{media_ml}</TableDataCell>
+        <TableDataCell data-cell="inoculum uL">{inoculum_ul}</TableDataCell>
 
         <TableDataCell data-cell="temp c">{temp_c}</TableDataCell>
         <TableDataCell data-cell="rpm">{rpm}</TableDataCell>

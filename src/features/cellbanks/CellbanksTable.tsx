@@ -99,8 +99,9 @@ export default function CellbanksTable({
   console.log(searchMultiError, 'searchMultiError');
   return (
     <>
+    {searchMultiError && <p>{searchMultiError}</p>}
       {/* Search Section */}
-      <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} />
+      {/* <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} /> */}
 
       {/* Page Limit Section */}
       <PageLimitDropDownSelector
@@ -149,7 +150,7 @@ export default function CellbanksTable({
 
               <SearchFormRow
                 setSearchedData={setSearchedData}
-                tableName={'cellbanks'}
+                tablePathName={'cellbanks'}
                 tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
                 setSearchMultiError={setSearchMultiError}
               />

@@ -124,3 +124,34 @@ export const flaskVesselTypes = [
   '96_well plate',
   '24 well plate',
 ];
+
+// for multi search 
+
+
+export type TFlasksColumns = 
+  'flask_id' |
+  'cell_bank_id' |
+  'vessel_type' |
+  'media' |
+  'media_ml' |
+  'inoculum_ul' |
+  'temp_c' |
+  'rpm' |
+  'start_date' |
+  'human_readable_date' |
+  'username';
+
+
+export const flasksTableHeaderCellsArray = [
+  'flask_id' ,
+  'cell_bank_id',
+  'vessel_type',
+  'media',
+  'media_ml',
+  'inoculum_ul',
+  'temp_c',
+  'rpm',
+  // 'start_date',
+  'human_readable_date',
+  'username'
+]
