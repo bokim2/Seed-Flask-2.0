@@ -22,6 +22,7 @@ import AllFlasks from '../features/charts/chart-tabs/AllFlasks';
 import BookmarkedFlasks from '../features/charts/chart-tabs/BookmarkedFlasks';
 import BookmarkedCellbanks from '../features/charts/chart-tabs/BookmarkedCellbanks';
 import SingleCellbank from '../features/charts/chart-tabs/SingleCellbank';
+import FilteredFlasks from '../features/charts/chart-tabs/FilteredFlasks';
 
 export default function ChartsPage() {
   const {
@@ -54,9 +55,10 @@ export default function ChartsPage() {
     all: 'All Flasks',
     bookmarkedFlasks: 'Bookmarked Flasks',
     bookmarkedCellbanks: 'Bookmarked Cellbanks',
-    cellbank: 'Single Cellbank',
-    user: 'User',
-    project: 'Project',
+    // cellbank: 'Single Cellbank',
+    // user: 'User',
+    // project: 'Project',
+    search: 'Search Flasks',
     schedule: 'Schedule List',
   };
 
@@ -278,6 +280,8 @@ export default function ChartsPage() {
               singleCellbankGraphData={singleCellbankGraphData}
             />
           )} */}
+
+          {selectedTabName === 'search' && <FilteredFlasks flasks={flasksAll} />}
           {/* <LineGraph chartData={chartData} /> */}
           {/* <TimeLineGraph /> */}
           {/* <FlasksTable flasks={flasks} />*/}

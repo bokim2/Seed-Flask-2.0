@@ -386,6 +386,7 @@ app.get('/api/cellbanks/search', async (req, res) => {
   try {
     // Assuming all queries come in as `searchField[]=field&searchText[]=text`
     let { searchField, searchText } = req.query;
+    console.log('searchField', searchField, 'searchText', searchText);
 
     // Ensure searchField and searchText are arrays (single query param or none will not be arrays)
     searchField = Array.isArray(searchField)
@@ -445,6 +446,10 @@ app.get('/api/cellbanks/search', async (req, res) => {
     };
 
     const result = await db.query(query);
+
+    if(result.rows.length === 0){
+      return res.status(404).json({message: `No cell banks found with that criteria ${JSON.stringify(searchText)}`})
+    }
 
     res.status(200).json(result.rows);
   } catch (err) {
