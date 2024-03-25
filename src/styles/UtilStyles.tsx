@@ -556,6 +556,11 @@ export const TableRow = styled.tr`
 
 export const TableSearchInput = styled.input`
 width: 100%;
+background-color: transparent;
+color: inherit;
+outline: none;
+border: none;
+border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
   /* margin: 0.5rem; */
   /* border-radius: 5px; */
   /* padding: 0.5rem; */
@@ -669,6 +674,12 @@ export const TextSearchInput = styled.input`
     width: 400px;
   }
 `;
+
+export const SearchInputAndButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  `
 
 // multi-input form
 

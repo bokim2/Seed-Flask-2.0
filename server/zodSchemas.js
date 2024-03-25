@@ -13,6 +13,17 @@ export const updateBackendCellbankSchema = createCellbankSchema.extend({
   date_timestamptz: z.string().trim(),
 });
 
+// cellbank search schema - make all keys optional
+
+export const cellbankSearchSchema = createCellbankSchema
+  .extend({
+    cell_bank_id: z.string(),
+    human_readable_date: z.string(),
+  })
+  .partial();
+
+export const cellbanksSearchSchemaArray = z.array(cellbankSearchSchema);
+
 // SCHEDULE SCHEMAS
 export const createScheduleSchema = z.object({
   start_date: z.string().trim(),
@@ -22,7 +33,7 @@ export const createScheduleSchema = z.object({
   flask_bookmark: z.array(z.number()).optional(),
   current_flasks: z.array(z.number()).optional(),
   flask_id: z.coerce.number().optional(),
-})
+});
 
 export const updateScheduleSchema = createScheduleSchema.extend({
   human_readable_date: z.string(),

@@ -26,6 +26,7 @@ import { allowRolesAdminUser } from './middleware/allowRolesAdminUser.js';
 import { validateIdParam } from './middleware/validateIdParam.js';
 import { LIMIT } from '../src/lib/constants.js';
 import {
+  cellbanksSearchSchemaArray,
   createCellbankSchema,
   updateBackendCellbankSchema,
 } from './zodSchemas.js';
@@ -164,7 +165,6 @@ app.use('/api/flasks', flaskRouter);
 app.use('/api/samples', sampleRouter);
 app.use('/api/schedules', scheduleRouter);
 
-
 // GET aggregate samples by flask_id for graphing
 // for LineGraph component.  NOT being used.  this is a draft
 app.get('/api/graphs', async (req, res) => {
@@ -261,14 +261,14 @@ app.get('/api/chart/cellbank/:id', async (req, res) => {
 
 // get - GRAPH get flasks with od data for a list of bookmarked flasks
 
-app.get('/api/chart/flasks', async (req, res)=> {
+app.get('/api/chart/flasks', async (req, res) => {
   try {
-    console.log('req.query.flaskIds', req.query.flaskIds)
+    console.log('req.query.flaskIds', req.query.flaskIds);
     const flaskIds = req.query.flaskIds ? req.query.flaskIds.split(',') : [];
-    if(!flaskIds?.length){
-      return res.status(400).json({message: 'No bookmarked flask ids'})
-    } 
-const query =  `SELECT 
+    if (!flaskIds?.length) {
+      return res.status(400).json({ message: 'No bookmarked flask ids' });
+    }
+    const query = `SELECT 
 flasks.*,
 cell_banks.*,
 ARRAY_AGG(samples.od600 ORDER BY samples.time_since_inoc_hr) AS od600_values,
@@ -282,21 +282,19 @@ samples ON flasks.flask_id = samples.flask_id
 WHERE 
 flasks.flask_id = ANY ($1)
 GROUP BY 
-flasks.flask_id, cell_banks.cell_bank_id;`
-const values = flaskIds
+flasks.flask_id, cell_banks.cell_bank_id;`;
+    const values = flaskIds;
 
-
-const results = await db.query(query, [values]);
-res.status(200).json({
-  status: 'success',
-  data: results.rows,
+    const results = await db.query(query, [values]);
+    res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
-
-  }catch (err){
-      console.error(err)
-      res.status(500).json({message:  'Internal server error'})
-    }
-})
 
 // search cell banks -original
 // app.get('/api/cellbanks/search', async (req, res) => {
@@ -383,103 +381,111 @@ res.status(200).json({
 //   JOIN flasks f ON s.flask_id = f.flask_id
 //   GROUP BY f.flask_id;
 
-app.get('/api/cellbanks/search', async (req, res) => {
-  try {
-    // Assuming all queries come in as `searchField[]=field&searchText[]=text`
-    let { searchField, searchText } = req.query;
+// app.get('/api/cellbanks/search', async (req, res) => {
+//   try {
+//     // Assuming all queries come in as `searchField[]=field&searchText[]=text`
+//     console.log('req.query in cellbanks/search', req.query);
+//     let { searchField, searchText } = req.query;
 
-    // Ensure searchField and searchText are arrays (single query param or none will not be arrays)
-    searchField = Array.isArray(searchField)
-      ? searchField
-      : searchField
-      ? [searchField]
-      : [];
-    searchText = Array.isArray(searchText)
-      ? searchText
-      : searchText
-      ? [searchText]
-      : [];
+//     // Ensure searchField and searchText are arrays (single query param or none will not be arrays)
+//     searchField = Array.isArray(searchField)
+//       ? searchField
+//       : searchField
+//       ? [searchField]
+//       : [];
+//     searchText = Array.isArray(searchText)
+//       ? searchText
+//       : searchText
+//       ? [searchText]
+//       : [];
 
-    const validFields = [
-      'cell_bank_id',
-      'strain',
-      'project',
-      'target_molecule',
-      'details',
-      'notes',
-      'username',
-      // 'date_timestampz',
-      'human_readable_date',
-    ];
+//     const validFields = [
+//       'cell_bank_id',
+//       'strain',
+//       'project',
+//       'target_molecule',
+//       'description',
+//       'notes',
+//       'username',
+//       // 'date_timestampz',
+//       'human_readable_date',
+//     ];
 
-    // Filter out invalid fields
-    const queries = searchField
-      .map((field, index) => ({
-        field,
-        text: searchText[index] || '',
-      }))
-      .filter((q) => validFields.includes(q.field) && q.text !== '');
+//     // Filter out invalid fields
+//     const queries = searchField
+//       .map((field, index) => ({
+//         field,
+//         text: searchText?.[index] || '',
+//       }))
+//       .filter((q) => validFields.includes(q.field) && q.text !== '');
+//       console.log('is console working after queries');
+//       console.log('queries', queries);
 
-    if (queries.length === 0) {
-      return res
-        .status(400)
-        .json({ message: 'Invalid or missing search fields.' });
-    }
+//       const zodValidatedData = cellbanksSearchSchemaArray.safeParse(queries);
+//       if (!zodValidatedData.success) {
+//         return res.status(400).json({
+//           message: zodValidatedData.error.issues,
+//           serverError: 'Zod validation error on the server for search cell banks',
+//         });  
+//       }
 
-    // Construct WHERE clause dynamically
-    const whereClauses = queries.map((q, index) => {
-      const fieldForQuery =
-        q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
-       if( q.field === 'human_readable_date' ){ 
-        q.field = 'date_timestampz' 
-       q.text = getUtcTimestampFromLocalTime(q.text)
-      }
-      if (q.field === 'date_timestampz') {
-        return `cell_banks.date_timestamptz > $${index + 1}`;
-      } else {
-        return `to_tsvector(${fieldForQuery}) @@ plainto_tsquery($${
-          index + 1
-        })`;
-      }
-    });
+//     if (queries.length === 0) {
+//       return res
+//         .status(400)
+//         .json({ message: 'Invalid or missing search fields.' });
+//     }
 
-    const whereClause = whereClauses.join(' AND ');
+//     // Construct WHERE clause dynamically
+//     const whereClauses = queries.map((q, index) => {
+//       const fieldForQuery =
+//         q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
+//       if (q.field === 'human_readable_date') {
+//         q.field = 'date_timestampz';
+//         q.text = getUtcTimestampFromLocalTime(q.text);
+//       }
+//       if (q.field === 'date_timestampz') {
+//         return `cell_banks.date_timestamptz > $${index + 1}`;
+//       } else {
+//         return `to_tsvector(${fieldForQuery}) @@ plainto_tsquery($${
+//           index + 1
+//         })`;
+//       }
+//     });
 
-    const query = {
-      text: `SELECT * FROM cell_banks WHERE ${whereClause} ORDER BY cell_bank_id DESC;`,
-      values: queries.map((q) => q.text),
-    };
+//     const whereClause = whereClauses.join(' AND ');
 
-    const result = await db.query(query);
+//     const query = {
+//       text: `SELECT * FROM cell_banks WHERE ${whereClause} ORDER BY cell_bank_id DESC;`,
+//       values: queries.map((q) => q.text),
+//     };
 
-    if(result.rows.length === 0){
-      return res.status(404).json({message: 'No cell banks found'})
-    }
+//     const result = await db.query(query);
 
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err?.detail || 'Internal server error' });
-  }
-});
+//     if (result.rows.length === 0) {
+//       return res.status(404).json({ message: 'No cell banks found' });
+//     }
 
-
-
+//     res.status(200).json(result.rows);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: err?.detail || 'Internal server error' });
+//   }
+// });
 
 // GET unique values for project and username
 
 app.get('/api/uniques/:value', async (req, res) => {
   try {
     const value = req.params.value;
-if(value === 'all') return;
+    if (value === 'all') return;
     console.log('value', value);
     const results = await db.query(
       `SELECT ARRAY_Agg(DISTINCT ${value}) from cell_banks;`
     );
     const reversedResultsArray = results.rows[0].array_agg.reverse();
     // console.log('results right after db query',results)
-    if(!results?.rows?.[0]?.array_agg){
-      return res.status(404).json({message: 'No unique values found'})
+    if (!results?.rows?.[0]?.array_agg) {
+      return res.status(404).json({ message: 'No unique values found' });
     }
     // console.log('results.rows[0].array_agg in server right before sending data back', reversedResultsArray);
     res.status(200).json({

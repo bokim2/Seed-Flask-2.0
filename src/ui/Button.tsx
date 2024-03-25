@@ -1,6 +1,15 @@
 import styled, { css } from 'styled-components';
 
 const sizes = {
+  xxs: css`
+  width: 2ch;
+  height: 2ch;
+  aspect-ratio: 1/1;
+  font-size: 1rem;
+  padding: 0rem;
+  font-weight: 600;
+  /* min-width: 4rem; */
+`,
   xs: css`
     font-size: 1rem;
     padding: 0.2rem 0.4rem;
@@ -46,6 +55,10 @@ const variations = {
       background-color: rgba(var(--clr-accent-4));
     }
   `,
+  round: css`
+    border-radius: 50%;
+  `,  
+  
 };
 
 type ButtonProps = {

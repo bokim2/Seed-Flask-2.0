@@ -1,16 +1,11 @@
 import {
-  TableRow,
   TableDataCell,
-  FormTextArea,
   PreviousDataRow,
   EditRow,
   EditTextArea,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
-import styled, { css } from 'styled-components';
-import { TTableRow } from '../../lib/types';
 import { displayLocalTime } from '../../hooks/hooks';
-import { initialEditFlasksForm } from '../flasks/flasks-types';
 import { initialEditCellbankForm } from './cellbanks-types';
 
 export default function CellbanksRow({
