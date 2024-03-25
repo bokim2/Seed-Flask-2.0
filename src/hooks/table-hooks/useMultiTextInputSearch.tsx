@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { baseUrl } from '../../../configs';
 import { TError } from '../../features/cellbanks/CellbanksTable';
+import { getUtcTimestampFromLocalTime } from '../hooks';
 
 export function useMultiTextInputSearch({
   tableColumnsHeaderCellsArray,
@@ -28,9 +29,17 @@ export function useMultiTextInputSearch({
     // Construct URLSearchParams with multiple searchField and searchText entries
     const params = new URLSearchParams();
     searchCriteria.forEach((criterion) => {
+      // if(criterion.field === 'date_timestampz') {
+      //   criterion.field = getUtcTimestampFromLocalTime(criterion['human_readable_date']);
+      // }
       params.append('searchField[]', criterion.field);
       params.append('searchText[]', criterion.text);
     });
+    // searchCriteria.forEach((criterion) => {
+    //   params.append('searchField[]', criterion.field);
+    //   params.append('searchText[]', criterion.text);
+    // });
+
 
     try {
       const response = await fetch(
@@ -64,11 +73,13 @@ export function useMultiTextInputSearch({
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
+    setSearchMultiError(null);
     const data = await performInputTextSearch(tablePathName);
     console.log('performInputTextSearch', data);
     setSearchedData(data);
     console.log(data); // Do something with the data
   };
+
   const handleSearchClear = (tableColumnsHeaderCellsArray) => {
     console.log(initialSearchCriteria, 'initialSearchCriteria');
     const resetSearch = tableColumnsHeaderCellsArray.map((criterion, i) => {
