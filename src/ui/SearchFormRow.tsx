@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import {
-  cellbanksTableHeaderCellsArray,
-} from '../features/cellbanks/cellbanks-types';
+import { cellbanksTableHeaderCellsArray } from '../features/cellbanks/cellbanks-types';
 import {
   ButtonsContainer,
+  SearchInputAndButtonContainer,
   TableHeaderCell,
   TableSearchInput,
 } from '../styles/UtilStyles';
@@ -29,7 +28,6 @@ export const SearchTableRow = styled.tr`
   }
 `;
 
-
 export default function SearchFormRow({
   setSearchedData,
   tablePathName,
@@ -41,7 +39,6 @@ export default function SearchFormRow({
     handleSearchTextChange,
     handleSearchSubmit,
     handleSearchClear,
-    error: searchError,
   } = useMultiTextInputSearch({
     tableColumnsHeaderCellsArray,
     tablePathName,
@@ -49,14 +46,14 @@ export default function SearchFormRow({
     setSearchMultiError,
   });
 
-  useEffect(() => {
-    console.log(searchError, 'searchError');
-    if (searchError) {
-      setSearchMultiError(
-        'searchError, no matching data found. Please try again.'
-      );
-    }
-  }, [searchError]);
+  // useEffect(() => {
+  //   console.log(searchError, 'searchError');
+  //   if (searchError) {
+  //     setSearchMultiError(
+  //       'searchError, no matching data found. Please try again.'
+  //     );
+  //   }
+  // }, [searchError]);
 
   return (
     // <StyledSearchFormRow>
@@ -64,17 +61,32 @@ export default function SearchFormRow({
       {/* <form onSubmit={handleSubmit}> */}
       {tableColumnsHeaderCellsArray.map((criterion, index) => (
         <TableHeaderCell>
+          <SearchInputAndButtonContainer>
           <TableSearchInput
             data-column={criterion}
             value={searchCriteria[index].text}
             onChange={(e) => handleSearchTextChange(e, index)}
-            placeholder="Search Text"
+            placeholder="search..."
           />
+          <Button
+            $size="xxs"
+            $variation="round"
+            type="button"
+            onClick={handleSearchSubmit}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                (e) => handleSearchSubmit(e);
+              }
+            }}
+          >
+            s
+          </Button>
+          </SearchInputAndButtonContainer>
         </TableHeaderCell>
       ))}
       <TableHeaderCell>
         <ButtonsContainer>
-          <Button
+          {/* <Button
             $size="xs"
             type="button"
             onClick={handleSearchSubmit}
@@ -85,7 +97,7 @@ export default function SearchFormRow({
             }}
           >
             Search
-          </Button>
+          </Button> */}
           <Button
             $size="xs"
             type="button"

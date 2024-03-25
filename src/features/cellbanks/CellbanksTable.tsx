@@ -31,6 +31,7 @@ import SearchForm from '../../ui/SearchForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
 import SearchFormRow from '../../ui/SearchFormRow';
+import Button from '../../ui/Button';
 
 export type TError = {
   message: string;
@@ -94,7 +95,7 @@ export default function CellbanksTable({
   });
 
   //state for multisearch
-
+const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
   console.log(searchMultiError, 'searchMultiError');
   return (
@@ -145,15 +146,15 @@ export default function CellbanksTable({
                   />
                 ))}
 
-                <TableHeaderCell>edit</TableHeaderCell>
+                <TableHeaderCell><Button type="button" onClick={()=>setShowSearchRow(prev => !prev)} $size={'small'}>Open Search</Button></TableHeaderCell>
               </TableRow>
 
-              <SearchFormRow
+              {showSearchRow && <SearchFormRow
                 setSearchedData={setSearchedData}
                 tablePathName={'cellbanks'}
                 tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
                 setSearchMultiError={setSearchMultiError}
-              />
+              />}
             </TableHeader>
             <tbody>
               {filteredAndSortedData &&

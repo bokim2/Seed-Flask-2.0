@@ -15,7 +15,6 @@ import {
   useSetSortColumn,
 } from '../../hooks/hooks';
 import {
-
   TUpdateCellbankForm,
   cellbanksTableHeaderCellsArray,
 } from '../cellbanks/cellbanks-types';
@@ -28,10 +27,15 @@ import SearchForm from '../../ui/SearchForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
 import SearchFormRow from '../../ui/SearchFormRow';
-import { TFlasksColumns, TFlasksInfo, initialEditFlasksForm, updateFlaskSchema, flasksTableHeaderCellsArray } from '../flasks/flasks-types';
+import {
+  TFlasksColumns,
+  TFlasksInfo,
+  initialEditFlasksForm,
+  updateFlaskSchema,
+  flasksTableHeaderCellsArray,
+} from '../flasks/flasks-types';
 import FlasksRow from './FlasksRow';
 import Button from '../../ui/Button';
-
 
 export type TError = {
   message: string;
@@ -39,7 +43,7 @@ export type TError = {
 export default function FlasksTable({
   flasks,
   // handleAddBookmark,
-//   toggleTextTruncation,
+  //   toggleTextTruncation,
 }) {
   // console.log('cellbanks in cellbanks table', cellbanks);
 
@@ -77,8 +81,7 @@ export default function FlasksTable({
     useState<TFlasksInfo>([]);
 
   // sort selected column
-  const { sortColumn, handleSortColumn } =
-    useSetSortColumn<TFlasksColumns>();
+  const { sortColumn, handleSortColumn } = useSetSortColumn<TFlasksColumns>();
 
   // page limit - how many rows to display per fetch  ex: 10, 20, 50
   const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
@@ -97,15 +100,15 @@ export default function FlasksTable({
   });
 
   //state for multisearch
-
+  const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
   console.log(searchMultiError, 'searchMultiError');
   return (
     <>
-       <Button onClick={() => setToggleCellbankData((prev) => !prev)}>
+      <Button onClick={() => setToggleCellbankData((prev) => !prev)}>
         cellbank data
       </Button>
-    {searchMultiError && <p>{searchMultiError}</p>}
+      {searchMultiError && <p>{searchMultiError}</p>}
       {/* Search Section */}
       <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} />
 
@@ -142,32 +145,45 @@ export default function FlasksTable({
             <TableHeader>
               {/* select column to search */}
               <TableRow>
-                {!toggleCellbankData ? flasksTableHeaderCellsArray.map((headerCell, i) => (
-                  <TableHeaderCellComponent
-                    key={headerCell}
-                    columnName={headerCell}
-                    handleSortColumn={handleSortColumn}
-                    sortColumn={sortColumn}
-                  />
-                )) : 
-                [...flasksTableHeaderCellsArray,  'strain', 'target molecule'].map((headerCell, i) => (
-                  <TableHeaderCellComponent
-                    key={headerCell}
-                    columnName={headerCell}
-                    handleSortColumn={handleSortColumn}
-                    sortColumn={sortColumn}
-                  />
-                ))}
+                {!toggleCellbankData
+                  ? flasksTableHeaderCellsArray.map((headerCell, i) => (
+                      <TableHeaderCellComponent
+                        key={headerCell}
+                        columnName={headerCell}
+                        handleSortColumn={handleSortColumn}
+                        sortColumn={sortColumn}
+                      />
+                    ))
+                  : [
+                      ...flasksTableHeaderCellsArray,
+                      'strain',
+                      'target molecule',
+                    ].map((headerCell, i) => (
+                      <TableHeaderCellComponent
+                        key={headerCell}
+                        columnName={headerCell}
+                        handleSortColumn={handleSortColumn}
+                        sortColumn={sortColumn}
+                      />
+                    ))}
 
-                <TableHeaderCell>edit</TableHeaderCell>
+                <TableHeaderCell>
+                  <Button
+                    type="button"
+                    onClick={() => setShowSearchRow((prev) => !prev)}
+                    $size={'small'}
+                  >
+                    Open Search
+                  </Button>
+                </TableHeaderCell>
               </TableRow>
 
-              <SearchFormRow
+             {showSearchRow && <SearchFormRow
                 setSearchedData={setSearchedData}
                 tablePathName={'flasks'}
                 tableColumnsHeaderCellsArray={flasksTableHeaderCellsArray}
                 setSearchMultiError={setSearchMultiError}
-              />
+              />}
             </TableHeader>
             <tbody>
               {filteredAndSortedData &&
@@ -268,7 +284,6 @@ export default function FlasksTable({
 
 //   const [toggleCellbankData, setToggleCellbankData] = useState(false);
 
-
 //   return (
 //     <>
 //       <Button onClick={() => setToggleCellbankData((prev) => !prev)}>
@@ -303,7 +318,7 @@ export default function FlasksTable({
 //         //   submitEditedRowForm,
 //         //   setEditingId
 //         // );
-      
+
 //         // }}
 //         onSubmit={(e) => {
 //           e.preventDefault();

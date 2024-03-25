@@ -23,7 +23,7 @@ export function useMultiTextInputSearch({
   // const updateSearchCriteria = (criteria) => {
   //   setSearchCriteria(criteria);
   // };
-  const [error, setError] = useState<string | null>(null);
+//   const [error, setError] = useState<string | null>(null);
 
   const performInputTextSearch = async (tablePathName) => {
     // Construct URLSearchParams with multiple searchField and searchText entries
@@ -40,7 +40,7 @@ export function useMultiTextInputSearch({
     //   params.append('searchText[]', criterion.text);
     // });
 
-
+console.log('cellbanks/search url that is sent for fetch call', `${baseUrl}/api/${tablePathName}/search?${params}`)
     try {
       const response = await fetch(
         `${baseUrl}/api/${tablePathName}/search?${params}`
@@ -51,7 +51,7 @@ export function useMultiTextInputSearch({
         const error: TError = {
           message: data?.message || 'Failed to perform input text search',
         };
-        setError(error.message);
+        setSearchMultiError(error.message);
         console.log(error, 'error in performInputTextSearch the error STATE');
         throw new Error(error.message);
       }
@@ -98,6 +98,6 @@ export function useMultiTextInputSearch({
     handleSearchTextChange,
     handleSearchSubmit,
     handleSearchClear,
-    error,
+    
   };
 }
