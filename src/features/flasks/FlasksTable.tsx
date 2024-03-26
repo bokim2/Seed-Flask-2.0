@@ -8,8 +8,9 @@ import {
   StyledForm,
   TableContainer,
 } from '../../styles/UtilStyles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  filteredTableData,
   useAppSelector,
   useFilterSortTableData,
   useSetSortColumn,
@@ -73,7 +74,7 @@ export default function FlasksTable({
   const [toggleCellbankData, setToggleCellbankData] = useState(false);
 
   // searched data - searching table through text input - the SearchForm component will use setSearchedData to update this state
-  const [searchedData, setSearchedData] = useState<TFlasksInfo>([]);
+  const [searchedData, setSearchedData] = useState<any>([]);
 
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
@@ -91,12 +92,33 @@ export default function FlasksTable({
   };
 
   // useEffect call to filter and sort data and keep it in sync
-  useFilterSortTableData({
-    dataName: flasks,
-    searchedData,
+
+  useEffect(() => {
+    console.log(
+      'USEEFFECT IN FLASKSSTABLE searchedData in flasks table',
+      searchedData, searchedData?.pages, searchedData?.pages?.length > 0
+    );
+    if (searchedData?.pages && searchedData?.pages?.[0]) {
+      const searchedDataAll =
+        searchedData?.pages.map((data) => data.data).flat() || [];
+
+      console.log(
+        'USEEFFECT IN FLASKSTABLE searchDataAll in flasks table',
+        searchedDataAll
+      );
+      setFilteredAndSortedData(searchedDataAll);
+    } else {
+      setFilteredAndSortedData(flasks);
+      // console.log('useEffect in dataName table', dataName);
+    }
+  }, [flasks, searchedData]);
+
+  const data = filteredTableData(
+    flasks,
+    filteredAndSortedData,
     sortColumn,
-    setFilteredAndSortedData,
-  });
+    'date_timestamptz'
+  );
 
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
@@ -185,9 +207,9 @@ export default function FlasksTable({
               />}
             </TableHeader>
             <tbody>
-              {filteredAndSortedData &&
-                filteredAndSortedData.length > 0 &&
-                filteredAndSortedData?.map((rowData) => (
+              {data &&
+                data?.length > 0 &&
+                data?.map((rowData) => (
                   <FlasksRow
                     key={rowData.cell_bank_id}
                     rowData={rowData}

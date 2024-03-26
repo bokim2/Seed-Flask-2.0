@@ -30,7 +30,8 @@ export function useInfiniteFetchMultiTextInputSearch({
     queryFn: ({ pageParam = 0 }) => performInputTextSearch({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => {
-      const nextPage = lastPage.data?.length ? allPages?.length + 1 : undefined;
+      
+      const nextPage = lastPage?.data?.length ? allPages?.length + 1 : undefined;
       return nextPage;
     },
     enabled: searchTrigger,
@@ -71,6 +72,7 @@ export function useInfiniteFetchMultiTextInputSearch({
       const  data  = await response.json();
       console.log(data, 'data in performInputTextSearch');
       if (!response.ok) {
+      
         const error: TError = {
           message: data?.message || 'Failed to perform input text search',
         };
@@ -78,12 +80,21 @@ export function useInfiniteFetchMultiTextInputSearch({
         console.log(error, 'error in performInputTextSearch the error STATE');
         throw new Error(error.message);
       }
-
+      console.log('data.ROWS in performInputTextSearch', data)
+      if (data.data.length === 0) {
+        const error: TError = {
+          message: data?.message || 'No matches with current filter criterias.  Try removing the last one that was added.',
+        };
+        setSearchMultiError(error.message);
+        console.log(error, 'error in performInputTextSearch the error STATE');
+        throw new Error(error.message);
+      }
       // setSearchedData(data);
       return data;
     } catch (err) {
-      console.error('Error in performInputTextSearch', err);
-      return [];
+      // throw err;
+      // console.error('Error in performInputTextSearch', err);
+      // return null;
     } finally {
       setSearchTrigger(false);
     }

@@ -10,6 +10,7 @@ import {
 } from '../../styles/UtilStyles';
 import { useEffect, useState } from 'react';
 import {
+  filteredTableData,
   useAppSelector,
   useFilterSortTableData,
   useSetSortColumn,
@@ -58,7 +59,7 @@ export default function CellbanksTable({
     initialEditForm: initialEditCellbankForm,
     idColumnName: 'cell_bank_id',
     dateColumnName: 'date_timestamptz',
-  });  
+  });
 
   // delete cellbank
   const {
@@ -69,7 +70,7 @@ export default function CellbanksTable({
 
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
   const [searchedData, setSearchedData] = useState<any>([]);
-console.log('searchedData in cellbankstable', searchedData)
+  console.log('searchedData in cellbankstable', searchedData);
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
     useState<TCellbanks>([]);
@@ -89,32 +90,46 @@ console.log('searchedData in cellbankstable', searchedData)
   // useEffect call to filter and sort data and keep it in sync
 
   useEffect(() => {
-    console.log('USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table', searchedData)
-   if(searchedData?.pages){
-    const searchedDataAll = searchedData?.pages.map((data) => data.data).flat() || [];
+    console.log(
+      'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
+      searchedData, searchedData?.pages, searchedData?.pages?.length > 0
+    );
+    if (searchedData?.pages && searchedData?.pages?.[0]) {
+      const searchedDataAll =
+        searchedData?.pages.map((data) => data.data).flat() || [];
 
-    console.log('USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table', searchedDataAll)
-    setFilteredAndSortedData(searchedDataAll);
-   } else {
-    setFilteredAndSortedData(cellbanks);
-    // console.log('useEffect in dataName table', dataName);
-   }
+      console.log(
+        'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
+        searchedDataAll
+      );
+      setFilteredAndSortedData(searchedDataAll);
+    } else {
+      setFilteredAndSortedData(cellbanks);
+      // console.log('useEffect in dataName table', dataName);
+    }
   }, [cellbanks, searchedData]);
 
-  const data = useFilterSortTableData({
-    dataName: cellbanks,
+  // const data = useFilterSortTableData({
+  //   dataName: cellbanks,
+  //   filteredAndSortedData,
+  //   sortColumn,
+  //   setFilteredAndSortedData,
+  // });
+
+  const data = filteredTableData(
+    cellbanks,
     filteredAndSortedData,
     sortColumn,
-    setFilteredAndSortedData,
-  });
+    'date_timestamptz'
+  );
 
   //state for multisearch
-const [showSearchRow, setShowSearchRow] = useState(false);
+  const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
   console.log(searchMultiError, 'searchMultiError');
   return (
     <>
-    {searchMultiError && <p>{searchMultiError}</p>}
+      {searchMultiError && <p>{searchMultiError}</p>}
       {/* Search Section */}
       {/* <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} /> */}
 
@@ -160,20 +175,30 @@ const [showSearchRow, setShowSearchRow] = useState(false);
                   />
                 ))}
 
-                <TableHeaderCell><Button type="button" onClick={()=>setShowSearchRow(prev => !prev)} $size={'small'}>Open Search</Button></TableHeaderCell>
+                <TableHeaderCell>
+                  <Button
+                    type="button"
+                    onClick={() => setShowSearchRow((prev) => !prev)}
+                    $size={'small'}
+                  >
+                    Open Search
+                  </Button>
+                </TableHeaderCell>
               </TableRow>
 
-              {showSearchRow && <SearchFormRow
-                setSearchedData={setSearchedData}
-                tablePathName={'cellbanks'}
-                tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
-                setSearchMultiError={setSearchMultiError}
-              />}
+              {showSearchRow && (
+                <SearchFormRow
+                  setSearchedData={setSearchedData}
+                  tablePathName={'cellbanks'}
+                  tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
+                  setSearchMultiError={setSearchMultiError}
+                />
+              )}
             </TableHeader>
             <tbody>
-              {filteredAndSortedData &&
-                filteredAndSortedData.length > 0 &&
-                filteredAndSortedData?.map((rowData) => (
+              {data &&
+                data?.length > 0 &&
+                data?.map((rowData) => (
                   <CellbanksRow
                     key={rowData.cell_bank_id}
                     rowData={rowData}
