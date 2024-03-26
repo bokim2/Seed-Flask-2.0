@@ -25,6 +25,7 @@ import {
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import {
+  filteredTableData,
   transformListStringToArray,
   useAppSelector,
   useFilterSortTableData,
@@ -103,7 +104,8 @@ export default function SchedulesTable({
   } = useDeleteRowMutation({ tableName: 'schedules' });
 
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
-  const [searchedData, setSearchedData] = useState<TSchedules>([]);
+  const [searchedData, setSearchedData] = useState<any>([]);
+  // const [searchedData, setSearchedData] = useState<TSchedules>([]);
 
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
@@ -122,12 +124,19 @@ export default function SchedulesTable({
   };
 
   // useEffect call to filter and sort data and keep it in sync
-  useFilterSortTableData({
-    dataName: schedules,
-    searchedData,
+  // useFilterSortTableData({
+  //   dataName: schedules,
+  //   searchedData,
+  //   sortColumn,
+  //   setFilteredAndSortedData,
+  // });
+
+  const data = filteredTableData(
+    schedules,
+    filteredAndSortedData,
     sortColumn,
-    setFilteredAndSortedData,
-  });
+    'start_date'
+  );
 
   //state for multisearch
 
@@ -224,9 +233,9 @@ export default function SchedulesTable({
             /> */}
             </TableHeader>
             <tbody>
-              {filteredAndSortedData &&
-                filteredAndSortedData.length > 0 &&
-                filteredAndSortedData?.map((rowData) => (
+              {data &&
+                data?.length > 0 &&
+                data?.map((rowData) => (
                   <SchedulesRow
                     key={rowData.schedule_id}
                     rowData={rowData}
