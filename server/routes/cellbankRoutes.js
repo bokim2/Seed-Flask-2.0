@@ -190,6 +190,17 @@ cellbankRouter.route('/:id').delete(validateIdParam, async (req, res) => {
 
 cellbankRouter.route('/search').get(async (req, res) => {
   try {
+    console.log(
+      'req.query',
+      req.query,
+      'req.query.limit',
+      req.query.limit,
+      'req.query.offset',
+      req.query.offset
+    );
+    const limit = parseInt(req.query.limit, 10) || LIMIT || 10; // Default to 50 if not specified
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
     // Assuming all queries come in as `searchField[]=field&searchText[]=text`
     console.log('req.query in cellbanks/search', req.query);
     let { searchField, searchText } = req.query;
@@ -228,6 +239,10 @@ cellbankRouter.route('/search').get(async (req, res) => {
     console.log('is console working after queries');
     console.log('queries', queries);
 
+    if (queries.length === 0) {
+      return;
+    }
+
     const zodValidatedData = cellbanksSearchSchemaArray.safeParse(queries);
     if (!zodValidatedData.success) {
       return res.status(400).json({
@@ -237,9 +252,10 @@ cellbankRouter.route('/search').get(async (req, res) => {
     }
 
     if (queries.length === 0) {
-      return res
-        .status(400)
-        .json({ message: 'Invalid or missing search fields.' });
+      return res.status(400).json({
+        message: zodValidatedData.error.issues,
+        serverError: 'Invalid or missing search fields',
+      });
     }
 
     // Construct WHERE clause dynamically
@@ -259,24 +275,126 @@ cellbankRouter.route('/search').get(async (req, res) => {
       }
     });
 
-    const whereClause = whereClauses.join(' AND ');
+    let queryText = `SELECT * FROM cell_banks`;
+    if (whereClauses.length > 0) {
+      queryText += ` WHERE ${whereClauses.join(' AND ')}`;
+    }
+    queryText += ` ORDER BY cell_bank_id DESC LIMIT $${
+      whereClauses.length + 1
+    } OFFSET $${whereClauses.length + 2}`;
 
     const query = {
-      text: `SELECT * FROM cell_banks WHERE ${whereClause} ORDER BY cell_bank_id DESC;`,
-      values: queries.map((q) => q.text),
+      text: queryText,
+      values: [...queries.map((q) => q.text), limit, offset],
     };
 
-    const result = await db.query(query);
+    console.log('QUERY!!!', query);
 
-    if (result.rows.length === 0) {
+    const results = await db.query(query);
+
+    if (results.rows.length === 0) {
       return res.status(404).json({ message: 'No cell banks found' });
     }
-
-    res.status(200).json(result.rows);
+    console.log('returned data', results.rows);
+    return res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
+
+// cellbankRouter.route('/search').get(async (req, res) => {
+//   try {
+//     // Assuming all queries come in as `searchField[]=field&searchText[]=text`
+//     console.log('req.query in cellbanks/search', req.query);
+//     let { searchField, searchText } = req.query;
+
+//     // Ensure searchField and searchText are arrays (single query param or none will not be arrays)
+//     searchField = Array.isArray(searchField)
+//       ? searchField
+//       : searchField
+//       ? [searchField]
+//       : [];
+//     searchText = Array.isArray(searchText)
+//       ? searchText
+//       : searchText
+//       ? [searchText]
+//       : [];
+
+//     const validFields = [
+//       'cell_bank_id',
+//       'strain',
+//       'project',
+//       'target_molecule',
+//       'description',
+//       'notes',
+//       'username',
+//       // 'date_timestampz',
+//       'human_readable_date',
+//     ];
+
+//     // Filter out invalid fields
+//     const queries = searchField
+//       .map((field, index) => ({
+//         field,
+//         text: searchText?.[index] || '',
+//       }))
+//       .filter((q) => validFields.includes(q.field) && q.text !== '');
+//     console.log('is console working after queries');
+//     console.log('queries', queries);
+
+//     const zodValidatedData = cellbanksSearchSchemaArray.safeParse(queries);
+//     if (!zodValidatedData.success) {
+//       return res.status(400).json({
+//         message: zodValidatedData.error.issues,
+//         serverError: 'Zod validation error on the server for search cell banks',
+//       });
+//     }
+
+//     if (queries.length === 0) {
+//       return res
+//         .status(400)
+//         .json({ message: 'Invalid or missing search fields.' });
+//     }
+
+//     // Construct WHERE clause dynamically
+//     const whereClauses = queries.map((q, index) => {
+//       const fieldForQuery =
+//         q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
+//       if (q.field === 'human_readable_date') {
+//         q.field = 'date_timestampz';
+//         q.text = getUtcTimestampFromLocalTime(q.text);
+//       }
+//       if (q.field === 'date_timestampz') {
+//         return `cell_banks.date_timestamptz > $${index + 1}`;
+//       } else {
+//         return `to_tsvector(${fieldForQuery}) @@ plainto_tsquery($${
+//           index + 1
+//         })`;
+//       }
+//     });
+
+//     const whereClause = whereClauses.join(' AND ');
+
+//     const query = {
+//       text: `SELECT * FROM cell_banks WHERE ${whereClause} ORDER BY cell_bank_id DESC;`,
+//       values: queries.map((q) => q.text),
+//     };
+
+//     const result = await db.query(query);
+
+//     if (result.rows.length === 0) {
+//       return res.status(404).json({ message: 'No cell banks found' });
+//     }
+
+//     res.status(200).json(result.rows);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: err?.detail || 'Internal server error' });
+//   }
+// });
 
 export default cellbankRouter;

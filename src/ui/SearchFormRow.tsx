@@ -9,6 +9,7 @@ import {
 import styled from 'styled-components';
 import Button from './Button';
 import { useMultiTextInputSearch } from '../hooks/table-hooks/useMultiTextInputSearch';
+import { useInfiniteFetchMultiTextInputSearch } from '../hooks/table-hooks/useInfiniteFetchMultiTextInputSearch';
 
 export const SearchTableRow = styled.tr`
   display: none;
@@ -34,18 +35,39 @@ export default function SearchFormRow({
   tableColumnsHeaderCellsArray,
   setSearchMultiError,
 }) {
+  // const {
+  //   searchCriteria,
+  //   handleSearchTextChange,
+  //   handleSearchSubmit,
+  //   handleSearchClear,
+  // } = useMultiTextInputSearch({
+  //   tableColumnsHeaderCellsArray,
+  //   tablePathName,
+  //   setSearchedData,
+  //   setSearchMultiError,
+  // });
+
   const {
+    data,
     searchCriteria,
     handleSearchTextChange,
     handleSearchSubmit,
     handleSearchClear,
-  } = useMultiTextInputSearch({
+  } = useInfiniteFetchMultiTextInputSearch({
     tableColumnsHeaderCellsArray,
     tablePathName,
     setSearchedData,
     setSearchMultiError,
+    
   });
 
+useEffect(()=> {
+  if(data){
+  setSearchedData(data)
+  }
+},[data])
+
+  console.log('useInfiniteFetchMultiTextInputSearch data', data);
   // useEffect(() => {
   //   console.log(searchError, 'searchError');
   //   if (searchError) {

@@ -28,7 +28,7 @@ export default function CellbankPage() {
     tableName: 'cellbanks',
     zodSchema: cellbanksArraySchema,
   });
-  console.log('cellbanks in cellbanks page', cellbanks);
+  // console.log('cellbanks in cellbanks page', cellbanks);
 
   const [toggleTextTruncation, setToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
 
@@ -43,6 +43,7 @@ export default function CellbankPage() {
   );
 
   // data from cellbanks table
+  console.log('cellbankspage, cellbanks', cellbanks)
   const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
   // console.log(cellbanksAll, 'cellbanksAll');
 

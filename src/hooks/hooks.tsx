@@ -44,17 +44,17 @@ export function useMainFilter({ selector }) {
 
 export function filteredTableData(
   tableRowsData,
-  searchedData,
+  filteredAndSortedData,
   sortColumn,
   timestamp_column
 ) {
-  // console.log(
-  //   // tableRowsData,
-  //   // searchedData,
-  //   sortColumn,
-  //   timestamp_column,
-  //   'tableRowsData, searchedData, sortColumn, timestamp_column'
-  // );
+  console.log(
+    tableRowsData,
+    filteredAndSortedData,
+    sortColumn,
+    timestamp_column,
+    'tableRowsData, searchedData, sortColumn, timestamp_column'
+  );
   let filteredTableData = [...tableRowsData];
   // console.log('filteredTableData.cellbankid', filteredTableData.map(e => e.cell_bank_id));
   // console.log(
@@ -64,8 +64,8 @@ export function filteredTableData(
   //   filteredTableData
   // );
 
-  if (searchedData?.length > 0) {
-    filteredTableData = [...searchedData];
+  if (filteredAndSortedData?.length > 0) {
+    filteredTableData = [...filteredAndSortedData];
   }
 
   if (timestamp_column) {
@@ -126,7 +126,7 @@ export function filteredTableData(
       }
     });
   }
-  // console.log('FINAL filteredTableData', filteredTableData);
+  console.log('FINAL filteredTableData', filteredTableData);
   return filteredTableData;
 }
 
@@ -173,22 +173,28 @@ export function useSetSortColumn<TTableColumns extends string>() {
 // update table data based on filter and sort settings
 export function useFilterSortTableData({
   dataName, // ex: cellbanks, flasks, samples, schedules
-  searchedData,
+  filteredAndSortedData,
   sortColumn,
   setFilteredAndSortedData,
 }) {
   // update selected data based on filter and sort settings
-  useEffect(() => {
-    // console.log('in useEffect', dataName, searchedData, sortColumn);
-    const updatedData = filteredTableData(
-      dataName,
-      searchedData,
-      sortColumn,
-      'date_timestamptz'
-    );
-    setFilteredAndSortedData(updatedData);
-    // console.log('useEffect in dataName table', dataName);
-  }, [dataName, searchedData, sortColumn, setFilteredAndSortedData]);
+  // useEffect(() => {
+  //   console.log('in useEffect of useFilterSortTableData', dataName, filteredAndSortedData, sortColumn);
+  //   const updatedData = filteredTableData(
+  //     dataName,
+  //     filteredAndSortedData,
+  //     sortColumn,
+  //     'date_timestamptz'
+  //   );
+  //   setFilteredAndSortedData(updatedData);
+  //   // console.log('useEffect in dataName table', dataName);
+  // }, [dataName, filteredAndSortedData, sortColumn, setFilteredAndSortedData]);
+  return filteredTableData(
+    dataName,
+    filteredAndSortedData,
+    sortColumn,
+    'date_timestamptz'
+  );
 }
 
 // toggle nav menus off when clicking outside of them

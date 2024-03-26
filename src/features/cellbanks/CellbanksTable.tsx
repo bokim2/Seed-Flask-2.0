@@ -8,7 +8,7 @@ import {
   TableHeaderCell,
   StyledForm,
 } from '../../styles/UtilStyles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useAppSelector,
   useFilterSortTableData,
@@ -58,7 +58,7 @@ export default function CellbanksTable({
     initialEditForm: initialEditCellbankForm,
     idColumnName: 'cell_bank_id',
     dateColumnName: 'date_timestamptz',
-  });
+  });  
 
   // delete cellbank
   const {
@@ -68,8 +68,8 @@ export default function CellbanksTable({
   } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
-  const [searchedData, setSearchedData] = useState<TCellbanks>([]);
-
+  const [searchedData, setSearchedData] = useState<any>([]);
+console.log('searchedData in cellbankstable', searchedData)
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
     useState<TCellbanks>([]);
@@ -87,9 +87,23 @@ export default function CellbanksTable({
   };
 
   // useEffect call to filter and sort data and keep it in sync
-  useFilterSortTableData({
+
+  useEffect(() => {
+    console.log('USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table', searchedData)
+   if(searchedData?.pages){
+    const searchedDataAll = searchedData?.pages.map((data) => data.data).flat() || [];
+
+    console.log('USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table', searchedDataAll)
+    setFilteredAndSortedData(searchedDataAll);
+   } else {
+    setFilteredAndSortedData(cellbanks);
+    // console.log('useEffect in dataName table', dataName);
+   }
+  }, [cellbanks, searchedData]);
+
+  const data = useFilterSortTableData({
     dataName: cellbanks,
-    searchedData,
+    filteredAndSortedData,
     sortColumn,
     setFilteredAndSortedData,
   });

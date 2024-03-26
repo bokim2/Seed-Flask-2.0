@@ -16,7 +16,6 @@ import {
 } from '../../hooks/hooks';
 import {
   TUpdateCellbankForm,
-  cellbanksTableHeaderCellsArray,
 } from '../cellbanks/cellbanks-types';
 import ErrorMessage from '../../ui/ErrorMessage';
 import { changePageLimit } from '../../redux/slices/pageSlice';

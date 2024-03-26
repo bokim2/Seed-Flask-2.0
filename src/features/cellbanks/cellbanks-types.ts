@@ -116,12 +116,13 @@ export type TCellbanksColumns =
   | 'username';
 
 export const cellbanksTableHeaderCellsArray = [
-  'cell_bank_id',
-  'strain',
-  'target_molecule',
-  'project',
-  'description',
-  'notes',
-  'human_readable_date',
-  'username',
+      'cell_bank_id',
+      'strain',
+      'target_molecule',
+      'project',
+      'description',
+      'notes',
+      'human_readable_date',
+      'username',
+      // 'date_timestampz',
 ];

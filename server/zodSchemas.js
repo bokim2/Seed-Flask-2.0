@@ -19,6 +19,7 @@ export const cellbankSearchSchema = createCellbankSchema
   .extend({
     cell_bank_id: z.string(),
     human_readable_date: z.string(),
+    username: z.string(), 
   })
   .partial();
 
