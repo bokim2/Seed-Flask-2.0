@@ -64,7 +64,7 @@ export function filteredTableData(
   //   filteredTableData
   // );
 
-  if (filteredAndSortedData?.length > 0) {
+  if (filteredAndSortedData && filteredAndSortedData?.length > 0) {
     filteredTableData = [...filteredAndSortedData];
   }
 

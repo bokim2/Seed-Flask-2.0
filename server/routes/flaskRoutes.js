@@ -3,10 +3,14 @@ import { db } from '../db/db.js';
 import { LIMIT } from '../../src/lib/constants.js';
 import {
   createCellbankSchema,
+  flasksSearchSchema,
+  flasksSearchSchemaArray,
   updateBackendCellbankSchema,
 } from '../zodSchemas.js';
 import { allowRolesAdminUser } from '../middleware/allowRolesAdminUser.js';
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
+import { getUtcTimestampFromLocalTime } from '../helperFunctions.js';
+import { z } from 'zod';
 
 const flaskRouter = express.Router();
 
@@ -54,6 +58,169 @@ flaskRouter.route('/').get(async (req, res) => {
 //     console.log(err);
 //   }
 // });
+
+console.log('right above flask search backend');
+flaskRouter.route('/search').get(async (req, res) => {
+  try {
+    console.log(
+      'req.query',
+      req.query,
+      'req.query.limit',
+      req.query.limit,
+      'req.query.offset',
+      req.query.offset
+    );
+    const limit = parseInt(req.query.limit, 10) || LIMIT || 10; // Default to 50 if not specified
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
+    // Assuming all queries come in as `searchField[]=field&searchText[]=text`
+    console.log('req.query in cellbanks/search', req.query);
+    let { searchField, searchText } = req.query;
+
+    // Ensure searchField and searchText are arrays (single query param or none will not be arrays)
+    searchField = Array.isArray(searchField)
+      ? searchField
+      : searchField
+      ? [searchField]
+      : [];
+    searchText = Array.isArray(searchText)
+      ? searchText
+      : searchText
+      ? [searchText]
+      : [];
+
+    const validFields = [
+      'flask_id',
+      'cell_bank_id',
+      'inoculum_ul',
+      'media',
+      'media_ml',
+      'rpm',
+      'start_date',
+      'temp_c',
+      'vessel_type',
+      'username',
+      'user_id',
+      'human_readable_date',
+    ];
+
+    // Filter out invalid fields
+    const queries = searchField
+      .map((field, index) => ({
+        field,
+        text: searchText?.[index] || '',
+      }))
+      .filter((q) => validFields.includes(q.field) && q.text !== '');
+    console.log('is console working after queries');
+    console.log('queries', queries);
+
+    if (queries.length === 0) {
+      return;
+    }
+
+    const numericFields = [
+      'flask_id',
+      'cell_bank_id',
+      'inoculum_ul',
+      'media_ml',
+      'rpm',
+      'temp_c',
+    ];
+
+    const transformQueryObject = (queryObject) => {
+      if (numericFields.includes(queryObject.field)) {
+        console.log(
+          'numericFields.includes(queryObject.field)',
+          numericFields.includes(queryObject.field)
+        );
+        return {
+          ...queryObject,
+          text: Number(queryObject.text),
+        };
+      }
+      return queryObject;
+    };
+
+    const queryObjectSchema = z.object({
+      field: z.string(),
+      text: z.string(),
+    });
+
+    const transformedQueryObjectSchema =
+      queryObjectSchema.transform(transformQueryObject);
+
+    const queryArraySchema = z.array(transformedQueryObjectSchema);
+
+    // console.log('queries before zodvalidation flaskroutes search', queries);
+    // const validatedQueries = queries.map((query)=> (flasksSearchSchema.safeParse(query).data));
+    // console.log('validatedQueries FLASK SEARCH', validatedQueries);
+    const zodValidatedData = queryArraySchema.parse(queries);
+    console.log('zodValidatedData', zodValidatedData);
+    // if (!zodValidatedData.success) {
+    //   return res.status(400).json({
+    //     message: zodValidatedData?.error?.issues,
+    //     serverError: 'Zod validation error on the server for search cell banks',
+    //   });
+    // }
+
+    // if (queries.length === 0) {
+    //   console.log('queries.length === 0' , queries.length === 0)
+    //   return res.status(400).json({
+    //     message: zodValidatedData?.error?.issues,
+    //     serverError: 'Invalid or missing search fields',
+    //   });
+    // }
+
+    // Construct WHERE clause dynamically
+    const whereClauses = zodValidatedData.map((q, index) => {
+      const fieldForQuery = q.field;
+      // q.field === 'flask_id' ? `${q.field}::text` : q.field;
+      if (typeof q.text === 'number'){
+        return `${q.field} = $${index + 1}`
+      }
+      if (q.field === 'human_readable_date') {
+        q.field = 'start_date';
+        q.text = getUtcTimestampFromLocalTime(q.text);
+      }
+      if (q.field === 'start_date') {
+        return `flasks.start_date > $${index + 1}`;
+      } else {
+        return `to_tsvector(${fieldForQuery}) @@ plainto_tsquery($${
+          index + 1
+        })`;
+      }
+    });
+
+    let queryText = `SELECT * FROM flasks`;
+    if (whereClauses.length > 0) {
+      queryText += ` WHERE ${whereClauses.join(' AND ')}`;
+    }
+    queryText += ` ORDER BY flask_id DESC LIMIT $${
+      whereClauses.length + 1
+    } OFFSET $${whereClauses.length + 2}`;
+
+    const query = {
+      text: queryText,
+      values: [...zodValidatedData.map((q) => q.text), limit, offset],
+    };
+
+    console.log('QUERY!!!', query);
+
+    const results = await db.query(query);
+
+    if (results.rows.length === 0) {
+      return res.status(404).json({ message: 'No flasks found' });
+    }
+    console.log('returned data', results.rows);
+    return res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
+  }
+});
 
 //GET one flask
 flaskRouter.route('/:id').get(async (req, res) => {
