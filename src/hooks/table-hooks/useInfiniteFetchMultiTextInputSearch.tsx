@@ -26,7 +26,7 @@ export function useInfiniteFetchMultiTextInputSearch({
   const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
 
   const queryOptions = {
-    queryKey: [tablePathName, "search", pageLimitSetting],
+    queryKey: [tablePathName, 'search', pageLimitSetting],
     queryFn: ({ pageParam = 0 }) => performInputTextSearch({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => {
@@ -77,12 +77,17 @@ export function useInfiniteFetchMultiTextInputSearch({
       'cellbanks/search url that is sent for fetch call',
       `${baseUrl}/api/${tablePathName}/search?${params}`
     );
+    console.log('params', params.toString());
+    if (params.toString() === 'offset=50&limit=50') {
+      handleSearchClear(tableColumnsHeaderCellsArray);
+      return null;
+    }
     try {
       const response = await fetch(
         `${baseUrl}/api/${tablePathName}/search?${params}`,
         { credentials: 'include' }
       );
-console.log('right after fetch in performInputTextSearch')
+      console.log('right after fetch in performInputTextSearch');
       const data = await response.json();
       console.log(data, 'data in performInputTextSearch');
       if (!response.ok) {
@@ -111,16 +116,16 @@ console.log('right after fetch in performInputTextSearch')
     }
   }
 
-  const handleSearchTextChange = (e, index) => {
+  function handleSearchTextChange(e, index) {
     const newCriteria = [...searchCriteria];
     const column = e.target.getAttribute('data-column');
     const textInput = e.target.value;
     newCriteria[index].field = column;
     newCriteria[index].text = e.target.value;
     setSearchCriteria(newCriteria);
-  };
+  }
 
-  const handleSearchSubmit = async (e) => {
+  async function handleSearchSubmit(e) {
     e.preventDefault();
     setSearchMultiError(null);
     setSearchTrigger(true);
@@ -129,9 +134,9 @@ console.log('right after fetch in performInputTextSearch')
     // console.log('performInputTextSearch', data);
     // setSearchedData(data);
     // console.log(data); // Do something with the data
-  };
+  }
 
-  const handleSearchClear = (tableColumnsHeaderCellsArray) => {
+  function handleSearchClear(tableColumnsHeaderCellsArray) {
     console.log(initialSearchCriteria, 'initialSearchCriteria');
     const resetSearch = tableColumnsHeaderCellsArray.map((criterion, i) => {
       return { field: criterion, text: '' };
@@ -139,7 +144,7 @@ console.log('right after fetch in performInputTextSearch')
     setSearchCriteria(resetSearch);
     setSearchedData(null);
     setSearchMultiError(null);
-  };
+  }
 
   return {
     searchCriteria,
