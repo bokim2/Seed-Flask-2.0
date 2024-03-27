@@ -43,7 +43,7 @@ export default function FlaskPage() {
       <Button
         type="button"
           onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
+          // disabled={!hasNextPage || isFetchingNextPage}
         >
           {/* {hasNextPage && !isFetchingNextPage && 'Load More'} */}
           {!hasNextPage ? 'No More Data': 'Load More'}
