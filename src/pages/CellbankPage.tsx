@@ -43,7 +43,7 @@ export default function CellbankPage() {
   );
 
   // data from cellbanks table
-  console.log('cellbankspage, cellbanks', cellbanks)
+  console.log('cellbankspage, cellbanks', cellbanks);
   const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
   // console.log(cellbanksAll, 'cellbanksAll');
 
@@ -75,12 +75,15 @@ export default function CellbankPage() {
           />
         )}
         <Button
-        type="button"
-          onClick={() => fetchNextPage()}
+          type="button"
+          onClick={() => {
+            console.log('fetchNextPage fired', fetchNextPage, hasNextPage);
+            fetchNextPage();
+          }}
           // disabled={!hasNextPage || isFetchingNextPage}
         >
           {/* {hasNextPage && !isFetchingNextPage && 'Load More'} */}
-          {!hasNextPage ? 'No More Data': 'Load More'}
+          {!hasNextPage ? 'No More Data' : 'Load More'}
         </Button>
         {/* {JSON.stringify(cellbanks)} */}
         {/* <CellbanksSingleInputForm /> */}
