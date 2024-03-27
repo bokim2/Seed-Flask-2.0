@@ -60,11 +60,13 @@ export default function SearchFormRow({
     setSearchMultiError,
     
   });
+  
+
 
 useEffect(()=> {
   if(data){
   setSearchedData(data)
-  }
+  } 
 },[data])
 
   console.log('useInfiniteFetchMultiTextInputSearch data', data);
@@ -123,10 +125,10 @@ useEffect(()=> {
           <Button
             $size="xs"
             type="button"
-            onClick={() => handleSearchClear(cellbanksTableHeaderCellsArray)}
+            onClick={() => handleSearchClear(tableColumnsHeaderCellsArray)}
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
-                () => handleSearchClear(cellbanksTableHeaderCellsArray);
+                () => handleSearchClear(tableColumnsHeaderCellsArray);
               }
             }}
           >

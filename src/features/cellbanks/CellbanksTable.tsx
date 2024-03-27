@@ -68,8 +68,13 @@ export default function CellbanksTable({
     error: deleteError,
   } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
+  type TPages = {status: string; data: TCellbanks };
+  type TSearchData = {
+    pages: TPages[]
+    pageParams: number[];
+  };
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
-  const [searchedData, setSearchedData] = useState<any>([]);
+  const [searchedData, setSearchedData] = useState<TSearchData | null>(null);
   console.log('searchedData in cellbankstable', searchedData);
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
@@ -92,7 +97,9 @@ export default function CellbanksTable({
   useEffect(() => {
     console.log(
       'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
-      searchedData, searchedData?.pages, searchedData?.pages?.length > 0
+      searchedData,
+      searchedData?.pages,
+      // searchedData?.pages?.[0]?.data?.length > 0
     );
     if (searchedData?.pages && searchedData?.pages?.[0]) {
       const searchedDataAll =

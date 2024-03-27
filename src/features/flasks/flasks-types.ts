@@ -1,23 +1,24 @@
+import { create } from 'domain';
 import { z } from 'zod';
 
 // fetch all flasks + important cellbank columns
 export const flasksInfoSchema = z.object({
-  flask_id: z.coerce.number(),
-  cell_bank_id: z.coerce.number() || null,
-  inoculum_ul: z.number() || null,
-  media: z.string() || null,
-  media_ml: z.coerce.number() || null,
-  rpm: z.coerce.number(),
-  start_date: z.string(),
-  temp_c: z.coerce.number(),
-  vessel_type: z.string(),
-  username: z.string(),
-  user_id: z.string(),
+  flask_id: z.coerce.number().nullable(),
+  cell_bank_id: z.coerce.number().nullable(),
+  inoculum_ul: z.number().nullable(),
+  media: z.string().nullable(),
+  media_ml: z.coerce.number().nullable(),
+  rpm: z.coerce.number().nullable(),
+  start_date: z.string().nullable(),
+  temp_c: z.coerce.number().nullable(),
+  vessel_type: z.string().nullable(),
+  username: z.string().nullable(),
+  user_id: z.string().nullable(),
 
   // cellbank columns
-  strain: z.string() || null,
-  target_molecule: z.string() || null,
-  project: z.string() || null,
+  strain: z.string().nullable(),
+  target_molecule: z.string().nullable(),
+  project: z.string().nullable(),
 });
 
 export const flasksInfoArraySchema = z.array(flasksInfoSchema);
@@ -125,7 +126,7 @@ export const flaskVesselTypes = [
   '24 well plate',
 ];
 
-// for multi search 
+
 
 
 export type TFlasksColumns = 

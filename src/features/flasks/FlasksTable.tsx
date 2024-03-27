@@ -46,7 +46,7 @@ export default function FlasksTable({
   //   toggleTextTruncation,
 }) {
   // console.log('cellbanks in cellbanks table', cellbanks);
-
+const [data, setData] = useState<TFlasksInfo>(flasks)
   const {
     editedForm,
     setEditedForm,
@@ -73,8 +73,13 @@ export default function FlasksTable({
 
   const [toggleCellbankData, setToggleCellbankData] = useState(false);
 
+  type TPages = {status: string; data: TFlasksInfo };
+  type TSearchData = {
+    pages: TPages[]
+    pageParams: number[];
+  };
   // searched data - searching table through text input - the SearchForm component will use setSearchedData to update this state
-  const [searchedData, setSearchedData] = useState<any>([]);
+  const [searchedData, setSearchedData] = useState<TSearchData | null>(null);
 
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
@@ -96,11 +101,11 @@ export default function FlasksTable({
   useEffect(() => {
     console.log(
       'USEEFFECT IN FLASKSSTABLE searchedData in flasks table',
-      searchedData, searchedData?.pages, searchedData?.pages?.length > 0
+      // searchedData, searchedData?.pages, searchedData?.pages?.length > 0
     );
-    if (searchedData?.pages && searchedData?.pages?.[0]) {
+    if (searchedData && searchedData?.pages && searchedData?.pages?.[0]) {
       const searchedDataAll =
-        searchedData?.pages.map((data) => data.data).flat() || [];
+        searchedData?.pages.map((data) => data?.data).flat() || [];
 
       console.log(
         'USEEFFECT IN FLASKSTABLE searchDataAll in flasks table',
@@ -113,13 +118,17 @@ export default function FlasksTable({
     }
   }, [flasks, searchedData]);
 
-  const data = filteredTableData(
+  useEffect(()=> {
+  const filteredData = filteredTableData(
     flasks,
     filteredAndSortedData,
     sortColumn,
-    'date_timestamptz'
+    'start_date'
   );
-
+  setData(filteredData)
+  console.log('data in flasks table', data);
+  },[flasks, filteredAndSortedData, sortColumn])
+  
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
@@ -211,7 +220,7 @@ export default function FlasksTable({
                 data?.length > 0 &&
                 data?.map((rowData) => (
                   <FlasksRow
-                    key={rowData.cell_bank_id}
+                    key={rowData.flask_id}
                     rowData={rowData}
                     // toggleTextTruncation={toggleTextTruncation}
                     editedForm={editedForm}

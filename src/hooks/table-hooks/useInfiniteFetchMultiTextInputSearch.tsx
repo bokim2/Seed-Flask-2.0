@@ -30,8 +30,9 @@ export function useInfiniteFetchMultiTextInputSearch({
     queryFn: ({ pageParam = 0 }) => performInputTextSearch({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => {
-      
-      const nextPage = lastPage?.data?.length ? allPages?.length + 1 : undefined;
+      const nextPage = lastPage?.data?.length
+        ? allPages?.length + 1
+        : undefined;
       return nextPage;
     },
     enabled: searchTrigger,
@@ -55,24 +56,35 @@ export function useInfiniteFetchMultiTextInputSearch({
 
   async function performInputTextSearch({ pageParam = 0 }: FetchTableDataArgs) {
     const params = new URLSearchParams();
-    searchCriteria.forEach((criterion) => {
-      params.append('searchField[]', criterion.field);
-      params.append('searchText[]', criterion.text);
-    });
 
+    searchCriteria.forEach((criterion) => {
+      if (criterion && criterion.text !== '') {
+        params.append('searchField[]', criterion.field);
+        params.append('searchText[]', criterion.text);
+      }
+    });
+    console.log(
+      searchCriteria,
+      'searchCriteria in performInputTextSearch',
+      'params',
+      params.toString()
+    );
     const offset = pageParam * pageLimitSetting;
     params.append('offset', offset.toString());
 
-    console.log('cellbanks/search url that is sent for fetch call', `${baseUrl}/api/${tablePathName}/search?${params}`)
+    console.log(
+      'cellbanks/search url that is sent for fetch call',
+      `${baseUrl}/api/${tablePathName}/search?${params}`
+    );
     try {
       const response = await fetch(
-        `${baseUrl}/api/${tablePathName}/search?${params}`, {credentials: 'include'}
+        `${baseUrl}/api/${tablePathName}/search?${params}`,
+        { credentials: 'include' }
       );
-
-      const  data  = await response.json();
+console.log('right after fetch in performInputTextSearch')
+      const data = await response.json();
       console.log(data, 'data in performInputTextSearch');
       if (!response.ok) {
-      
         const error: TError = {
           message: data?.message || 'Failed to perform input text search',
         };
@@ -80,10 +92,12 @@ export function useInfiniteFetchMultiTextInputSearch({
         console.log(error, 'error in performInputTextSearch the error STATE');
         throw new Error(error.message);
       }
-      console.log('data.ROWS in performInputTextSearch', data)
-      if (data.data.length === 0) {
+      console.log('data.ROWS in performInputTextSearch', data);
+      if (data && data?.data && data?.data?.length === 0) {
         const error: TError = {
-          message: data?.message || 'No matches with current filter criterias.  Try removing the last one that was added.',
+          message:
+            data?.message ||
+            'No matches with current filter criterias.  Try removing the last one that was added.',
         };
         setSearchMultiError(error.message);
         console.log(error, 'error in performInputTextSearch the error STATE');
@@ -91,10 +105,6 @@ export function useInfiniteFetchMultiTextInputSearch({
       }
       // setSearchedData(data);
       return data;
-    } catch (err) {
-      // throw err;
-      // console.error('Error in performInputTextSearch', err);
-      // return null;
     } finally {
       setSearchTrigger(false);
     }
@@ -126,7 +136,7 @@ export function useInfiniteFetchMultiTextInputSearch({
       return { field: criterion, text: '' };
     });
     setSearchCriteria(resetSearch);
-    setSearchedData([]);
+    setSearchedData(null);
     setSearchMultiError(null);
   };
 

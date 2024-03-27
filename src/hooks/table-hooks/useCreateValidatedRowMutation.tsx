@@ -15,6 +15,7 @@ export function useCreateValidatedRowMutation({
       mutationFn: (form: TzodSchema) => createRow(form, tableName, zodSchema),
       onSuccess: () => {
         // console.log('onSuccess in useCreateValidatedRowMutation!!!!', tableName);
+        // queryClient.invalidateQueries(tableName);
         queryClient.invalidateQueries({
           predicate: (query) => query.queryKey.includes(tableName),
         });
