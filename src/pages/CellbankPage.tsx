@@ -75,11 +75,12 @@ export default function CellbankPage() {
           />
         )}
         <Button
+        type="button"
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
         >
-          {hasNextPage && !isFetchingNextPage && 'Load More'}
-          {!hasNextPage && 'No More Data'}
+          {/* {hasNextPage && !isFetchingNextPage && 'Load More'} */}
+          {!hasNextPage ? 'No More Data': 'Load More'}
         </Button>
         {/* {JSON.stringify(cellbanks)} */}
         {/* <CellbanksSingleInputForm /> */}
