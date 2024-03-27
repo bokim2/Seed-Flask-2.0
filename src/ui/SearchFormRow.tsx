@@ -53,6 +53,7 @@ export default function SearchFormRow({
     handleSearchTextChange,
     handleSearchSubmit,
     handleSearchClear,
+    fetchNextPage,
   } = useInfiniteFetchMultiTextInputSearch({
     tableColumnsHeaderCellsArray,
     tablePathName,
@@ -133,6 +134,18 @@ useEffect(()=> {
             }}
           >
             Clear
+          </Button>
+          <Button
+            $size="xs"
+            type="button"
+            onClick={() => fetchNextPage()}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                () => fetchNextPage();
+              }
+            }}
+          >
+            load more data
           </Button>
         </ButtonsContainer>
       </TableHeaderCell>

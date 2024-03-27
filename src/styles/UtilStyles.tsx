@@ -73,7 +73,6 @@ export const LoginButton = styled.button`
 
 // Nav
 
-
 const pulseAnimation = keyframes`
   0%, 100% {
     border-width: 2px;
@@ -106,7 +105,6 @@ export const UserButton = styled.button`
     /* border: 4px solid red; */
     animation: ${pulseAnimation} 1s infinite;
   }
-
 
   @media (min-width: 850px) {
     padding: 0.5rem; /* Add padding if needed */
@@ -156,7 +154,6 @@ export const StyledNavLink = styled(NavLink)`
 
 // Side Menu
 
-
 // Main page styles
 
 export const PageContainer = styled.section`
@@ -172,6 +169,7 @@ export const PageContainer = styled.section`
 
 export const InnerPageContainer = styled.section`
   width: 80%;
+padding-bottom: 3rem;
   max-width: 1700px;
 `;
 
@@ -332,11 +330,11 @@ export const MultiFormInput = styled.textarea`
 `;
 
 export const FormSelect = styled.select`
-background-color: transparent;
-border: none;
-color: inherit;
-border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
-`
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
+`;
 
 // CellbanksSingleInput form.  NOT used currently
 export const SingleFormInput = styled.input`
@@ -467,10 +465,10 @@ export const MainFilterContainer = styled.div`
 `;
 
 export const MainFilterSelector = styled(Select)`
-font-family: var(--font-serif);
-/* background-color: transparent; */
-border-radius: 15px;
-padding-inline: 1rem;
+  font-family: var(--font-serif);
+  /* background-color: transparent; */
+  border-radius: 15px;
+  padding-inline: 1rem;
 `;
 
 export const MainFilterSelectorOption = styled.option``;
@@ -555,12 +553,12 @@ export const TableRow = styled.tr`
 `;
 
 export const TableSearchInput = styled.input`
-width: 100%;
-background-color: transparent;
-color: inherit;
-outline: none;
-border: none;
-border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
+  width: 100%;
+  background-color: transparent;
+  color: inherit;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
   /* margin: 0.5rem; */
   /* border-radius: 5px; */
   /* padding: 0.5rem; */
@@ -630,7 +628,7 @@ export const PreviousDataRow = styled(TableRow)<TTableRow>`
   }
 
   /* bookmarked */
-    background-color: ${(props) => props.$bookmarked && 'blue'};
+  background-color: ${(props) => props.$bookmarked && 'blue'};
   &:nth-of-type(2n) {
     background-color: ${(props) => props.$bookmarked && 'blue'};
   }
@@ -679,7 +677,7 @@ export const SearchInputAndButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  `
+`;
 
 // multi-input form
 

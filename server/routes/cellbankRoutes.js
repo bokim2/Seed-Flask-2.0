@@ -100,93 +100,6 @@ cellbankRouter
     }
   });
 
-// UPDATE one cell bank
-
-cellbankRouter.route('/:id').put(validateIdParam, async (req, res) => {
-  try {
-    // const {
-    //   strain,
-    //   target_molecule,
-    //   description,
-    //   notes,
-    //   date_timestamptz,
-    //   project,
-    // } = req.body;
-    const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
-    if (!validatedReqBody.success) {
-      return res.status(400).json({
-        message:
-          validatedReqBody.error.issues ||
-          'Zod validation error on the server for update cell bank',
-        serverError: 'Zod validation error on the server for update cell bank',
-      });
-    }
-    const {
-      strain,
-      target_molecule,
-      description,
-      notes,
-      date_timestamptz,
-      project,
-    } = validatedReqBody.data;
-
-    const cellBankId = req.params.id;
-    console.log('req.body', req.body, 'cellBankId', cellBankId);
-    const query = `
-        UPDATE cell_banks 
-        SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 , project = $6
-        WHERE cell_bank_id = $7 
-        RETURNING *;
-      `;
-    const updateValues = [
-      strain,
-      notes,
-      target_molecule,
-      description,
-      date_timestamptz,
-      project,
-      cellBankId,
-    ];
-    const results = await db.query(query, updateValues);
-
-    // Check if any rows were updated
-    if (results.rowCount === 0) {
-      return res.status(404).json({ message: 'Cell bank not found' });
-    }
-
-    // Sending back the updated data
-    res.json({ message: 'Update successful', data: results.rows });
-  } catch (err) {
-    console.error('Error in server PUT request:', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-// DELETE on cell bank
-cellbankRouter.route('/:id').delete(validateIdParam, async (req, res) => {
-  try {
-    const result = await db.query(
-      'DELETE FROM cell_banks WHERE cell_bank_id = $1',
-      [req.params.id]
-    );
-    if (result.rowCount === 0) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Cell bank not found',
-      });
-    }
-    res.status(200).json({
-      status: 'success',
-      message: `cellbank ${req.params.id} deleted successfully`,
-    });
-  } catch (err) {
-    console.error(`Error deleting cellbank ${req.params.id}`, err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
-  }
-});
 
 cellbankRouter.route('/search').get(async (req, res) => {
   try {
@@ -198,7 +111,7 @@ cellbankRouter.route('/search').get(async (req, res) => {
       'req.query.offset',
       req.query.offset
     );
-    const limit = parseInt(req.query.limit, 10) || LIMIT || 10; // Default to 50 if not specified
+    const limit = parseInt(req.query.limit, 10) || LIMIT; // Default to 50 if not specified
     const offset =
       parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
     // Assuming all queries come in as `searchField[]=field&searchText[]=text`
@@ -305,6 +218,95 @@ cellbankRouter.route('/search').get(async (req, res) => {
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
+
+// UPDATE one cell bank
+
+cellbankRouter.route('/:id').put(validateIdParam, async (req, res) => {
+  try {
+    // const {
+    //   strain,
+    //   target_molecule,
+    //   description,
+    //   notes,
+    //   date_timestamptz,
+    //   project,
+    // } = req.body;
+    const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
+    if (!validatedReqBody.success) {
+      return res.status(400).json({
+        message:
+          validatedReqBody.error.issues ||
+          'Zod validation error on the server for update cell bank',
+        serverError: 'Zod validation error on the server for update cell bank',
+      });
+    }
+    const {
+      strain,
+      target_molecule,
+      description,
+      notes,
+      date_timestamptz,
+      project,
+    } = validatedReqBody.data;
+
+    const cellBankId = req.params.id;
+    console.log('req.body', req.body, 'cellBankId', cellBankId);
+    const query = `
+        UPDATE cell_banks 
+        SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 , project = $6
+        WHERE cell_bank_id = $7 
+        RETURNING *;
+      `;
+    const updateValues = [
+      strain,
+      notes,
+      target_molecule,
+      description,
+      date_timestamptz,
+      project,
+      cellBankId,
+    ];
+    const results = await db.query(query, updateValues);
+
+    // Check if any rows were updated
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Cell bank not found' });
+    }
+
+    // Sending back the updated data
+    res.json({ message: 'Update successful', data: results.rows });
+  } catch (err) {
+    console.error('Error in server PUT request:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// DELETE on cell bank
+cellbankRouter.route('/:id').delete(validateIdParam, async (req, res) => {
+  try {
+    const result = await db.query(
+      'DELETE FROM cell_banks WHERE cell_bank_id = $1',
+      [req.params.id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Cell bank not found',
+      });
+    }
+    res.status(200).json({
+      status: 'success',
+      message: `cellbank ${req.params.id} deleted successfully`,
+    });
+  } catch (err) {
+    console.error(`Error deleting cellbank ${req.params.id}`, err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+});
+
 
 // cellbankRouter.route('/search').get(async (req, res) => {
 //   try {
