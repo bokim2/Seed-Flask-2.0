@@ -42,10 +42,11 @@ export default function FlaskPage() {
         )}
         <Button
           onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
+          // disabled={!hasNextPage || isFetchingNextPage}
         >
-          {hasNextPage && !isFetchingNextPage && 'Load More'}
-          {!hasNextPage && 'No More Data'}
+          {hasNextPage ? 'Load More' : 'No More Data'}
+          {/* {hasNextPage && !isFetchingNextPage && 'Load More'} */}
+          {/* {!hasNextPage && 'No More Data'} */}
         </Button>
       </InnerPageContainer>
     </PageContainer>
