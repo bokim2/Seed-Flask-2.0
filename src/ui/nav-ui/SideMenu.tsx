@@ -124,9 +124,9 @@ export default function SideMenu() {
       {/* side menu */}
       <SideMenuContainer>
         {/* <StyledInfoButtonContainer></StyledInfoButtonContainer> */}
-        {sideMenuInfo.map((singleMenu, index) => {
+        {sideMenuInfo.map((singleMenu, i) => {
           return (
-            <StyledSideMenuButtons to={singleMenu.to}>
+            <StyledSideMenuButtons to={singleMenu.to} key={i}>
               <StyledImage
                 //   className={className}
                 src={singleMenu.src}
