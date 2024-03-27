@@ -26,7 +26,7 @@ export function useInfiniteFetchMultiTextInputSearch({
   const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
 
   const queryOptions = {
-    queryKey: [tablePathName, searchCriteria, pageLimitSetting],
+    queryKey: [tablePathName, "search", pageLimitSetting],
     queryFn: ({ pageParam = 0 }) => performInputTextSearch({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => {
@@ -71,6 +71,7 @@ export function useInfiniteFetchMultiTextInputSearch({
     );
     const offset = pageParam * pageLimitSetting;
     params.append('offset', offset.toString());
+    params.append('limit', pageLimitSetting.toString());
 
     console.log(
       'cellbanks/search url that is sent for fetch call',
