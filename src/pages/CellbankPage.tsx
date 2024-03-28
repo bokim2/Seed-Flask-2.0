@@ -18,12 +18,13 @@ import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputFo
 
 export default function CellbankPage() {
   const {
-    data: cellbanks,
+    data: cellbanksAll,
     isLoading,
     error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetching,
   } = useFetchValidatedTableQuery({
     tableName: 'cellbanks',
     zodSchema: cellbanksArraySchema,
@@ -43,13 +44,13 @@ export default function CellbankPage() {
   );
 
   // data from cellbanks table
-  console.log('cellbankspage, cellbanks', cellbanks);
-  const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
-  // console.log(cellbanksAll, 'cellbanksAll');
+  // console.log('cellbankspage, cellbanks', cellbanks);
+  // const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
+  // // console.log(cellbanksAll, 'cellbanksAll');
 
   return (
     <PageContainer id="CellbankPageContainer">
-      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>{(isLoading || isFetching) && <LoaderBar />}</LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
         {error && <ErrorMessage error={error} />}
         <Button
@@ -66,7 +67,7 @@ export default function CellbankPage() {
         <CellbanksMultiInputForm />
 
         {/* {error?.message && <ErrorMessage error={error} />} */}
-        {cellbanksAll && cellbanksAll.length > 0 && !isLoading && (
+        {cellbanksAll && cellbanksAll?.length > 0 && !isLoading && (
           <CellbanksTable
             cellbanks={cellbanksAll}
             handleAddBookmark={handleAddBookmark}

@@ -26,20 +26,21 @@ import FilteredFlasks from '../features/charts/chart-tabs/FilteredFlasks';
 
 export default function ChartsPage() {
   const {
-    data: flasks,
+    data: flasksAll,
     isLoading,
     error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetching,
   } = useFetchValidatedTableQuery({
     tableName: 'flasks',
     zodSchema: flasksInfoArraySchema,
   });
 
   const dispatch = useDispatch();
-  const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
-  console.log(flasksAll, 'flasksAll');
+  // const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
+  // console.log(flasksAll, 'flasksAll');
 
   const [selectedTabName, setSelectedTabName] = useState('all');
 
@@ -152,9 +153,10 @@ export default function ChartsPage() {
   return (
     <PageContainer id="ChartsPage">
       <LoaderWrapper>
-        {isLoading && <LoaderBar />}
-        {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
+        {(isLoading || isFetching) && <LoaderBar />}
       </LoaderWrapper>
+        {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
+
       {/* {JSON.stringify(setChartData)} */}
       <InnerPageContainer id="ChartsPage">
         <TabSelectorContainer
