@@ -13,19 +13,20 @@ import ErrorMessage from '../ui/ErrorMessage';
 
 export default function SchedulesPage() {
   const {
-    data: schedules,
+    data: schedulesAll,
     isLoading,
     error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetching,
   } = useFetchValidatedTableQuery({
     tableName: 'schedules',
     zodSchema: schedulesArraySchema,
   });
   // console.log('schedules in schedules page', schedules);
 
-  const schedulesAll = schedules?.pages.map((data) => data.data).flat() || [];
+  // const schedulesAll = schedules?.pages.map((data) => data.data).flat() || [];
 
   return (
     <PageContainer>
