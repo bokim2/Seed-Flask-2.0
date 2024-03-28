@@ -9,7 +9,7 @@ import {
   StyledForm,
   LoaderWrapper,
 } from '../../styles/UtilStyles';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   filteredTableData,
   useAppSelector,
@@ -134,12 +134,12 @@ export default function CellbanksTable({
   //   setFilteredAndSortedData,
   // });
 
-  const data = filteredTableData(
+  const data = useMemo(()=>filteredTableData(
     cellbanks,
     filteredAndSortedData,
     sortColumn,
     'date_timestamptz'
-  );
+  ), [cellbanks, filteredAndSortedData, sortColumn]);
 
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);

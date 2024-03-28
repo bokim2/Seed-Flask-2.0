@@ -30,7 +30,9 @@ export default function SchedulesPage() {
 
   return (
     <PageContainer>
-      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>
+        {(isLoading || isFetching) && <LoaderBar />}
+      </LoaderWrapper>
       <InnerPageContainer>
         {/* <LoaderCircular/> three flasks bobbing */}
         {error && <ErrorMessage error={error} />}

@@ -177,8 +177,10 @@ padding-bottom: 3rem;
 export const LoaderWrapper = styled.div`
   position: fixed;
   top: 0;
+  left: 0;
   margin-top: 10vh;
   width: 100%;
+  z-index: 100;
 `;
 
 // MAIN MENU STYLES
