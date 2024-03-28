@@ -75,12 +75,12 @@ export function filteredTableData(
       //   tableRow?.[timestamp_column]
       // );
       if (tableRow?.[timestamp_column]) {
-        console.log(
-          'timestamp_column',
-          Boolean(timestamp_column),
-          'tableRow?.[timestamp_column]',
-          Boolean(tableRow?.[timestamp_column])
-        );
+        // console.log(
+        //   'timestamp_column',
+        //   Boolean(timestamp_column),
+        //   'tableRow?.[timestamp_column]',
+        //   Boolean(tableRow?.[timestamp_column])
+        // );
         return {
           ...tableRow,
           human_readable_date: displayLocalTime(tableRow[timestamp_column]),

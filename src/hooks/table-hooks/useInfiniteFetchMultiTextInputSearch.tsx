@@ -1,16 +1,19 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { baseUrl } from '../../../configs';
 import { TError } from '../../features/cellbanks/CellbanksTable';
 import { getUtcTimestampFromLocalTime, useAppSelector } from '../hooks';
 import { FetchTableDataArgs } from './useFetchValidatedTableQuery';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { set } from 'date-fns';
 
 export function useInfiniteFetchMultiTextInputSearch({
   tableColumnsHeaderCellsArray,
   tablePathName,
   setSearchedData,
   setSearchMultiError,
+  setSearchLoading,
 }) {
+  const queryClient = useQueryClient();
   // Keep search criteria as an array of objects { field, text }
   const initialSearchCriteria = tableColumnsHeaderCellsArray.map(
     (criterion) => {
@@ -46,7 +49,14 @@ export function useInfiniteFetchMultiTextInputSearch({
     hasNextPage,
     isFetchingNextPage,
     refetch,
+    isFetching,
   } = useInfiniteQuery(queryOptions);
+
+  const transformedData = useMemo(() => {
+    if (!data) return [];
+    const allData = data?.pages.map((data) => data.data).flat() || [];
+    return allData;
+  }, [data]);
 
   // Function to handle updating the search criteria array
   // const updateSearchCriteria = (criteria) => {
@@ -128,19 +138,27 @@ export function useInfiniteFetchMultiTextInputSearch({
   async function handleSearchSubmit(e) {
     e.preventDefault();
     setSearchMultiError(null);
+    setSearchTrigger(false);
+    queryClient.invalidateQueries({ queryKey: [tablePathName, 'search'] });
+
     setSearchTrigger(true);
+    // setSearchLoading(true)
     await refetch();
     // const data = await performInputTextSearch();
     // console.log('performInputTextSearch', data);
-    // setSearchedData(data);
+    console.log('transformedData in handleSEARCHSUBMIT', transformedData);
+    setSearchedData(transformedData);
+
+    // setSearchLoading(isLoading)
     // console.log(data); // Do something with the data
   }
 
   function handleSearchClear(tableColumnsHeaderCellsArray) {
-    console.log(initialSearchCriteria, 'initialSearchCriteria');
+    // console.log(initialSearchCriteria, 'initialSearchCriteria');
     const resetSearch = tableColumnsHeaderCellsArray.map((criterion, i) => {
       return { field: criterion, text: '' };
     });
+    console.log('transformedData in handleSEARCHCLEAR', transformedData);
     setSearchCriteria(resetSearch);
     setSearchedData(null);
     setSearchMultiError(null);
@@ -154,12 +172,13 @@ export function useInfiniteFetchMultiTextInputSearch({
     handleSearchTextChange,
     handleSearchSubmit,
     handleSearchClear,
-    data,
+    data: transformedData,
     isLoading,
     error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     refetch,
+    isFetching,
   };
 }

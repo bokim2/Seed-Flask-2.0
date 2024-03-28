@@ -7,17 +7,15 @@ import {
   TableHeaderCell,
   StyledForm,
   TableContainer,
+  LoaderWrapper,
 } from '../../styles/UtilStyles';
 import { useEffect, useState } from 'react';
 import {
   filteredTableData,
   useAppSelector,
-  useFilterSortTableData,
   useSetSortColumn,
 } from '../../hooks/hooks';
-import {
-  TUpdateCellbankForm,
-} from '../cellbanks/cellbanks-types';
+import { TUpdateCellbankForm } from '../cellbanks/cellbanks-types';
 import ErrorMessage from '../../ui/ErrorMessage';
 import { changePageLimit } from '../../redux/slices/pageSlice';
 import { useDispatch } from 'react-redux';
@@ -36,6 +34,7 @@ import {
 } from '../flasks/flasks-types';
 import FlasksRow from './FlasksRow';
 import Button from '../../ui/Button';
+import LoaderBar from '../../ui/LoaderBar';
 
 export type TError = {
   message: string;
@@ -46,7 +45,7 @@ export default function FlasksTable({
   //   toggleTextTruncation,
 }) {
   // console.log('cellbanks in cellbanks table', cellbanks);
-const [data, setData] = useState<TFlasksInfo>(flasks)
+  const [data, setData] = useState<TFlasksInfo>(flasks);
   const {
     editedForm,
     setEditedForm,
@@ -73,13 +72,13 @@ const [data, setData] = useState<TFlasksInfo>(flasks)
 
   const [toggleCellbankData, setToggleCellbankData] = useState(false);
 
-  type TPages = {status: string; data: TFlasksInfo };
+  type TPages = { status: string; data: TFlasksInfo };
   type TSearchData = {
-    pages: TPages[]
+    pages: TPages[];
     pageParams: number[];
   };
   // searched data - searching table through text input - the SearchForm component will use setSearchedData to update this state
-  const [searchedData, setSearchedData] = useState<TSearchData | null>(null);
+  const [searchedData, setSearchedData] = useState<TFlasksInfo | null>(null);
 
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
@@ -100,47 +99,54 @@ const [data, setData] = useState<TFlasksInfo>(flasks)
 
   useEffect(() => {
     console.log(
-      'USEEFFECT IN FLASKSSTABLE searchedData in flasks table',
+      'USEEFFECT IN FLASKSSTABLE searchedData in flasks table'
       // searchedData, searchedData?.pages, searchedData?.pages?.length > 0
     );
-    if (searchedData && searchedData?.pages && searchedData?.pages?.[0]) {
-      const searchedDataAll =
-        searchedData?.pages.map((data) => data?.data).flat() || [];
+    if (searchedData && searchedData?.length > 0) {
+      // const searchedDataAll =
+      //   searchedData?.pages.map((data) => data?.data).flat() || [];
 
       console.log(
         'USEEFFECT IN FLASKSTABLE searchDataAll in flasks table',
-        searchedDataAll
+        searchedData
       );
-      setFilteredAndSortedData(searchedDataAll);
+      setFilteredAndSortedData(searchedData);
     } else {
       setFilteredAndSortedData(flasks);
       // console.log('useEffect in dataName table', dataName);
     }
   }, [flasks, searchedData]);
 
-  useEffect(()=> {
-  const filteredData = filteredTableData(
-    flasks,
-    filteredAndSortedData,
-    sortColumn,
-    'start_date'
-  );
-  setData(filteredData)
-  console.log('data in flasks table', data);
-  },[flasks, filteredAndSortedData, sortColumn])
-  
+  useEffect(() => {
+    const filteredData = filteredTableData(
+      flasks,
+      filteredAndSortedData,
+      sortColumn,
+      'start_date'
+    );
+    setData(filteredData);
+    console.log('data in flasks table', data);
+  }, [flasks, filteredAndSortedData, sortColumn]);
+
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
   console.log(searchMultiError, 'searchMultiError');
   return (
     <>
+      {searchMultiError && <p>{searchMultiError}</p>}
+      <LoaderWrapper>{searchLoading && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>
+        {searchLoading && <p>SEARCH IS LOADING!!!!!</p>}
+      </LoaderWrapper>
+
       <Button onClick={() => setToggleCellbankData((prev) => !prev)}>
         cellbank data
       </Button>
       {searchMultiError && <p>{searchMultiError}</p>}
       {/* Search Section */}
-      <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} />
+      {/* <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} /> */}
 
       {/* Page Limit Section */}
       <PageLimitDropDownSelector
@@ -208,12 +214,15 @@ const [data, setData] = useState<TFlasksInfo>(flasks)
                 </TableHeaderCell>
               </TableRow>
 
-             {showSearchRow && <SearchFormRow
-                setSearchedData={setSearchedData}
-                tablePathName={'flasks'}
-                tableColumnsHeaderCellsArray={flasksTableHeaderCellsArray}
-                setSearchMultiError={setSearchMultiError}
-              />}
+              {showSearchRow && (
+                <SearchFormRow
+                  setSearchedData={setSearchedData}
+                  tablePathName={'flasks'}
+                  tableColumnsHeaderCellsArray={flasksTableHeaderCellsArray}
+                  setSearchMultiError={setSearchMultiError}
+                  setSearchLoading={setSearchLoading}
+                />
+              )}
             </TableHeader>
             <tbody>
               {data &&

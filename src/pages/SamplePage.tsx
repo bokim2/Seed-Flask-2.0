@@ -33,23 +33,24 @@ export default function SamplePage() {
   // console.log('samples', samples);
 
   const {
-    data: samples,
+    data: samplesAll,
     isLoading,
     error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     refetch,
+    isFetching,
   } = useFetchValidatedTableQuery({
     tableName: 'samples',
     zodSchema: samplesInfoArraySchema,
   });
 
-  const samplesAll = samples?.pages.map((page) => page.data).flat() || [];
+  // const samplesAll = samples?.pages.map((page) => page.data).flat() || [];
 
   return (
     <PageContainer id="SamplePageContainer">
-      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>{(isLoading || isFetching) && <LoaderBar />}</LoaderWrapper>
 
       <InnerPageContainer id="SampleInnerPageContainer">
 

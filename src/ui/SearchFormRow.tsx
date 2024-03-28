@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { cellbanksTableHeaderCellsArray } from '../features/cellbanks/cellbanks-types';
 import {
   ButtonsContainer,
+  LoaderWrapper,
   SearchInputAndButtonContainer,
   TableHeaderCell,
   TableSearchInput,
@@ -10,6 +11,7 @@ import styled from 'styled-components';
 import Button from './Button';
 import { useMultiTextInputSearch } from '../hooks/table-hooks/useMultiTextInputSearch';
 import { useInfiniteFetchMultiTextInputSearch } from '../hooks/table-hooks/useInfiniteFetchMultiTextInputSearch';
+import LoaderBar from './LoaderBar';
 
 export const SearchTableRow = styled.tr`
   display: none;
@@ -34,6 +36,7 @@ export default function SearchFormRow({
   tablePathName,
   tableColumnsHeaderCellsArray,
   setSearchMultiError,
+  setSearchLoading,
 }) {
   // const {
   //   searchCriteria,
@@ -54,21 +57,26 @@ export default function SearchFormRow({
     handleSearchSubmit,
     handleSearchClear,
     fetchNextPage,
+    isLoading,
+    isFetching,
   } = useInfiniteFetchMultiTextInputSearch({
     tableColumnsHeaderCellsArray,
     tablePathName,
     setSearchedData,
     setSearchMultiError,
-    
+    setSearchLoading,
   });
-  
 
+  useEffect(() => {
+    if (data) {
+      setSearchedData(data);
+    }
+  }, [data]);
 
-useEffect(()=> {
-  if(data){
-  setSearchedData(data)
-  } 
-},[data])
+  console.log('loading', isLoading);
+  useEffect(() => {
+    setSearchLoading(isFetching);
+  }, [isFetching]);
 
   console.log('useInfiniteFetchMultiTextInputSearch data', data);
   // useEffect(() => {
@@ -82,36 +90,38 @@ useEffect(()=> {
 
   return (
     // <StyledSearchFormRow>
-    <SearchTableRow>
-      {/* <form onSubmit={handleSubmit}> */}
-      {tableColumnsHeaderCellsArray.map((criterion, index) => (
+    <>
+      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
+      <SearchTableRow>
+        {/* <form onSubmit={handleSubmit}> */}
+        {tableColumnsHeaderCellsArray.map((criterion, index) => (
+          <TableHeaderCell>
+            <SearchInputAndButtonContainer>
+              <TableSearchInput
+                data-column={criterion}
+                value={searchCriteria[index].text}
+                onChange={(e) => handleSearchTextChange(e, index)}
+                placeholder="search..."
+              />
+              <Button
+                $size="xxs"
+                $variation="round"
+                type="button"
+                onClick={handleSearchSubmit}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    (e) => handleSearchSubmit(e);
+                  }
+                }}
+              >
+                s
+              </Button>
+            </SearchInputAndButtonContainer>
+          </TableHeaderCell>
+        ))}
         <TableHeaderCell>
-          <SearchInputAndButtonContainer>
-          <TableSearchInput
-            data-column={criterion}
-            value={searchCriteria[index].text}
-            onChange={(e) => handleSearchTextChange(e, index)}
-            placeholder="search..."
-          />
-          <Button
-            $size="xxs"
-            $variation="round"
-            type="button"
-            onClick={handleSearchSubmit}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                (e) => handleSearchSubmit(e);
-              }
-            }}
-          >
-            s
-          </Button>
-          </SearchInputAndButtonContainer>
-        </TableHeaderCell>
-      ))}
-      <TableHeaderCell>
-        <ButtonsContainer>
-          {/* <Button
+          <ButtonsContainer>
+            {/* <Button
             $size="xs"
             type="button"
             onClick={handleSearchSubmit}
@@ -123,32 +133,33 @@ useEffect(()=> {
           >
             Search
           </Button> */}
-          <Button
-            $size="xs"
-            type="button"
-            onClick={() => handleSearchClear(tableColumnsHeaderCellsArray)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                () => handleSearchClear(tableColumnsHeaderCellsArray);
-              }
-            }}
-          >
-            Clear
-          </Button>
-          <Button
-            $size="xs"
-            type="button"
-            onClick={() => fetchNextPage()}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                () => fetchNextPage();
-              }
-            }}
-          >
-            load more data
-          </Button>
-        </ButtonsContainer>
-      </TableHeaderCell>
-    </SearchTableRow>
+            <Button
+              $size="xs"
+              type="button"
+              onClick={() => handleSearchClear(tableColumnsHeaderCellsArray)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  () => handleSearchClear(tableColumnsHeaderCellsArray);
+                }
+              }}
+            >
+              Clear
+            </Button>
+            <Button
+              $size="xs"
+              type="button"
+              onClick={() => fetchNextPage()}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  () => fetchNextPage();
+                }
+              }}
+            >
+              load more data
+            </Button>
+          </ButtonsContainer>
+        </TableHeaderCell>
+      </SearchTableRow>
+    </>
   );
 }

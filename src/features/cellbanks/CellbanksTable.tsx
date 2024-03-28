@@ -7,6 +7,7 @@ import {
   TableRow,
   TableHeaderCell,
   StyledForm,
+  LoaderWrapper,
 } from '../../styles/UtilStyles';
 import { useEffect, useState } from 'react';
 import {
@@ -33,6 +34,7 @@ import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutati
 import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
 import SearchFormRow from '../../ui/SearchFormRow';
 import Button from '../../ui/Button';
+import LoaderBar from '../../ui/LoaderBar';
 
 export type TError = {
   message: string;
@@ -68,13 +70,13 @@ export default function CellbanksTable({
     error: deleteError,
   } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
-  type TPages = {status: string; data: TCellbanks };
-  type TSearchData = {
-    pages: TPages[]
-    pageParams: number[];
-  };
+  // type TPages = {status: string; data: TCellbanks };
+  // type TSearchData = {
+  //   pages: TPages[]
+  //   pageParams: number[];
+  // };
   // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
-  const [searchedData, setSearchedData] = useState<TSearchData | null>(null);
+  const [searchedData, setSearchedData] = useState<TCellbanks | null>(null);
   console.log('searchedData in cellbankstable', searchedData);
   // filtered and sorted data that will be passed to child components
   const [filteredAndSortedData, setFilteredAndSortedData] =
@@ -98,18 +100,27 @@ export default function CellbanksTable({
     console.log(
       'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
       searchedData,
-      searchedData?.pages,
+      // searchedData?.pages,
       // searchedData?.pages?.[0]?.data?.length > 0
     );
-    if (searchedData?.pages && searchedData?.pages?.[0]) {
-      const searchedDataAll =
-        searchedData?.pages.map((data) => data.data).flat() || [];
+    // if (searchedData?.pages && searchedData?.pages?.[0]) {
+    //   const searchedDataAll =
+    //     searchedData?.pages.map((data) => data.data).flat() || [];
+
+    //   console.log(
+    //     'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
+    //     searchedDataAll
+    //   );
+    //   setFilteredAndSortedData(searchedDataAll);
+    if (searchedData && searchedData?.length > 0) {
+      // const searchedDataAll =
+      //   searchedData?.pages.map((data) => data.data).flat() || [];
 
       console.log(
         'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
-        searchedDataAll
+        searchedData
       );
-      setFilteredAndSortedData(searchedDataAll);
+      setFilteredAndSortedData(searchedData);
     } else {
       setFilteredAndSortedData(cellbanks);
       // console.log('useEffect in dataName table', dataName);
@@ -133,10 +144,14 @@ export default function CellbanksTable({
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
   console.log(searchMultiError, 'searchMultiError');
+  console.log('searchLoading in cellbanks table', searchLoading);
   return (
     <>
       {searchMultiError && <p>{searchMultiError}</p>}
+      <LoaderWrapper>{searchLoading && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>{searchLoading && <p>SEARCH IS LOADING!!!!!</p>}</LoaderWrapper>
       {/* Search Section */}
       {/* <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} /> */}
 
@@ -199,6 +214,7 @@ export default function CellbanksTable({
                   tablePathName={'cellbanks'}
                   tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
                   setSearchMultiError={setSearchMultiError}
+                  setSearchLoading={setSearchLoading}
                 />
               )}
             </TableHeader>

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { baseUrl } from '../../../configs';
 import { useAppSelector } from '../hooks';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 export type FetchTableDataArgs = {
   pageParam?: number;
@@ -76,15 +77,23 @@ export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
     hasNextPage,
     isFetchingNextPage,
     refetch,
+    isFetching, 
   } = useInfiniteQuery(queryOptions);
 
+  const transformedData = useMemo(()=> {
+    if(!data) return [];
+    const allData= data?.pages.map((data) => data.data).flat() || [];
+    return allData;
+  },[data])
+
   return {
-    data,
+    data: transformedData,
     isLoading,
     error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     refetch,
+    isFetching
   };
 }
