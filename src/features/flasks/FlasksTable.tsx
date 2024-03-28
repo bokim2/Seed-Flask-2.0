@@ -9,7 +9,7 @@ import {
   TableContainer,
   LoaderWrapper,
 } from '../../styles/UtilStyles';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   filteredTableData,
   useAppSelector,
@@ -45,7 +45,7 @@ export default function FlasksTable({
   //   toggleTextTruncation,
 }) {
   // console.log('cellbanks in cellbanks table', cellbanks);
-  const [data, setData] = useState<TFlasksInfo>(flasks);
+  // const [data, setData] = useState<TFlasksInfo>(flasks);
   const {
     editedForm,
     setEditedForm,
@@ -117,16 +117,23 @@ export default function FlasksTable({
     }
   }, [flasks, searchedData]);
 
-  useEffect(() => {
-    const filteredData = filteredTableData(
-      flasks,
-      filteredAndSortedData,
-      sortColumn,
-      'start_date'
-    );
-    setData(filteredData);
-    console.log('data in flasks table', data);
-  }, [flasks, filteredAndSortedData, sortColumn]);
+  // useEffect(() => {
+  //   const filteredData = filteredTableData(
+  //     flasks,
+  //     filteredAndSortedData,
+  //     sortColumn,
+  //     'start_date'
+  //   );
+  //   setData(filteredData);
+  //   console.log('data in flasks table', data);
+  // }, [flasks, filteredAndSortedData, sortColumn]);
+
+  const data = useMemo(()=> filteredTableData(
+        flasks,
+        filteredAndSortedData,
+        sortColumn,
+        'start_date'
+      ), [flasks, filteredAndSortedData, sortColumn]);
 
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
