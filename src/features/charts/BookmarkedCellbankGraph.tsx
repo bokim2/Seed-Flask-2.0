@@ -12,10 +12,8 @@ import {
 } from 'chart.js';
 import { LineGraphColors } from '../../lib/constants';
 import styled from 'styled-components';
-import ChartsTable from './ChartsTable';
 import Scheduler from './add-to-schedule/Scheduler';
 import DateTimePicker from './add-to-schedule/DateTimePicker';
-import { useDispatch } from 'react-redux';
 
 ChartJS.register(
   CategoryScale,

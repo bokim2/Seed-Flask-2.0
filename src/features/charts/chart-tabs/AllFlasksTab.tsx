@@ -3,7 +3,7 @@ import { baseUrl } from '../../../../configs';
 import AllCellbanksGraph from '../AllCellbanksGraph';
 import ChartsTable from '../ChartsTable';
 
-export default function AllFlasks({
+export default function AllFlasksTab({
   allCellbankGraphData,
   bookmarkedFlasks,
   flasksAll,

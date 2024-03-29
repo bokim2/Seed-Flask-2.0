@@ -18,11 +18,12 @@ import {
   clearCellbankBookmark,
   clearFlaskBookmark,
 } from '../redux/slices/bookmarksSlice';
-import AllFlasks from '../features/charts/chart-tabs/AllFlasks';
-import BookmarkedFlasks from '../features/charts/chart-tabs/BookmarkedFlasks';
-import BookmarkedCellbanks from '../features/charts/chart-tabs/BookmarkedCellbanks';
-import SingleCellbank from '../features/charts/chart-tabs/SingleCellbank';
-import FilteredFlasks from '../features/charts/chart-tabs/FilteredFlasks';
+import AllFlasks from '../features/charts/chart-tabs/AllFlasksTab';
+
+import BookmarkedFlasksTab from '../features/charts/chart-tabs/BookmarkedFlasksTab';
+import BookmarkedCellbanksTab from '../features/charts/chart-tabs/BookmarkedCellbanksTab';
+import SingleCellbankTab from '../features/charts/chart-tabs/SingleCellbankTab';
+import SearchFlasksTab from '../features/charts/chart-tabs/SearchFlasksTab';
 
 export default function ChartsPage() {
   const {
@@ -43,10 +44,6 @@ export default function ChartsPage() {
   // console.log(flasksAll, 'flasksAll');
 
   const [selectedTabName, setSelectedTabName] = useState('all');
-
-  const [bookmarkedFlasksGraphData, setBookmarkedFlasksGraphData] = useState(
-    []
-  );
 
   // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
   //   []
@@ -118,34 +115,12 @@ export default function ChartsPage() {
     return data;
   };
 
-  const getBookmarkedFlasksGraphData = async () => {
-    try {
-      if (bookmarkedFlasks.length === 0) return;
-      console.log(bookmarkedFlasks, 'in getBookmarkedFlasksGraphData');
-      console.log(bookmarkedFlasks.join(','), bookmarkedFlasks.join(','));
-      const response = await fetch(
-        `${baseUrl}/api/chart/flasks?flaskIds=${bookmarkedFlasks.join(',')}`
-      );
-      if (!response.ok) throw new Error('Network response was not ok');
-      const { data } = await response.json();
-      console.log(data, 'in getBookmarkedFlasksGraphData');
-      setBookmarkedFlasksGraphData(data);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error('Fetching error:', err.message);
-      } else {
-        console.log('Unknown error:', err);
-      }
-      // Handle the error according to your application's needs
-    }
-  };
-
   useEffect(() => {
     // getGraphData();
     // getSingleCellbankGraphData(1);
     getAllCellbankGraphData();
     getBookmarkedCellbankGraphData(bookmarkedCellbanks);
-    getBookmarkedFlasksGraphData();
+    // getBookmarkedFlasksGraphData(bookmarkedFlasks);
   }, [bookmarkedCellbanks, bookmarkedFlasks]);
 
   // or... 'Filters'
@@ -155,7 +130,7 @@ export default function ChartsPage() {
       <LoaderWrapper>
         {(isLoading || isFetching) && <LoaderBar />}
       </LoaderWrapper>
-        {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
+      {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
 
       {/* {JSON.stringify(setChartData)} */}
       <InnerPageContainer id="ChartsPage">
@@ -197,8 +172,10 @@ export default function ChartsPage() {
           </p> */}
 
           {/* main filter - only show if user is logged in */}
-          <MainFilter />
+          {/* <MainFilter /> */}
+          
           {/* <MainNav /> */}
+
           {/* ALL flasks */}
           {selectedTabName === 'all' && (
             <AllFlasks
@@ -222,9 +199,9 @@ export default function ChartsPage() {
           /> */}
           {/* BOOKMARKED flasks */}
           {selectedTabName === 'bookmarkedFlasks' && (
-            <BookmarkedFlasks
-              allCellbankGraphData={allCellbankGraphData}
-              bookmarkedFlasksGraphData={bookmarkedFlasksGraphData}
+            <BookmarkedFlasksTab
+              // allCellbankGraphData={allCellbankGraphData}
+              // bookmarkedFlasksGraphData={bookmarkedFlasksGraphData}
               bookmarkedFlasks={bookmarkedFlasks}
               fetchNextPage={fetchNextPage}
               hasNextPage={hasNextPage}
@@ -255,7 +232,7 @@ export default function ChartsPage() {
 
           {/* BOOKMARKED Cellbanks */}
           {selectedTabName === 'bookmarkedCellbanks' && (
-            <BookmarkedCellbanks
+            <BookmarkedCellbanksTab
               bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
               bookmarkedFlasks={bookmarkedFlasks}
             />
@@ -275,7 +252,7 @@ export default function ChartsPage() {
           /> */}
 
           {/* single cell bank */}
-          {selectedTabName === 'cellbank' && <SingleCellbank />}
+          {selectedTabName === 'cellbank' && <SingleCellbankTab />}
           {/* <p>{JSON.stringify(singleCellbankGraphData)}</p>
           {singleCellbankGraphData?.length && (
             <SingleCellbankGraph
@@ -283,7 +260,9 @@ export default function ChartsPage() {
             />
           )} */}
 
-          {selectedTabName === 'search' && <FilteredFlasks flasks={flasksAll} />}
+          {selectedTabName === 'search' && (
+            <SearchFlasksTab flasks={flasksAll} isLoading={isLoading} />
+          )}
           {/* <LineGraph chartData={chartData} /> */}
           {/* <TimeLineGraph /> */}
           {/* <FlasksTable flasks={flasks} />*/}

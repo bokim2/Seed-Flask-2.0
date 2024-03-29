@@ -2,7 +2,7 @@ import React from 'react'
 import BookmarkedCellbankGraph from '../BookmarkedCellbankGraph'
 import ChartsTable from '../ChartsTable'
 
-export default function BookmarkedCellbanks({
+export default function BookmarkedCellbanksTab({
     bookmarkedCellbankGraphData,
     bookmarkedFlasks,
     // setBookmarkedFlasks,

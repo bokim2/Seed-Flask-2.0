@@ -4,7 +4,7 @@ import SingleCellbankGraph from '../SingleCellbankGraph';
 import Button from '../../../ui/Button';
 import ChartsTable from '../ChartsTable';
 
-export default function SingleCellbank() {
+export default function SingleCellbankTab() {
   const [selectedCellbankId, setSelectedCellbankId] = useState<number | null>(
     null
   );
