@@ -145,7 +145,7 @@ export default function SearchFormRow({
             >
               Clear
             </Button>
-            <Button
+            {data  && data?.length > 0 && <Button
               $size="xs"
               type="button"
               onClick={() => fetchNextPage()}
@@ -156,7 +156,7 @@ export default function SearchFormRow({
               }}
             >
               load more data
-            </Button>
+            </Button>}
           </ButtonsContainer>
         </TableHeaderCell>
       </SearchTableRow>

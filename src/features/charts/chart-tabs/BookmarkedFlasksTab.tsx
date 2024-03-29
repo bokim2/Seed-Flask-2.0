@@ -3,6 +3,8 @@ import AllCellbanksGraph from '../AllCellbanksGraph';
 import ChartsTable from '../ChartsTable';
 import Button from '../../../ui/Button';
 import { useBookmarkedFlasksGraphData } from '../chart-hooks';
+import BookmarkedCellbankGraph from '../BookmarkedCellbankGraph';
+import SelectedFlasksGraph from '../SelectedFlasksGraph';
 
 export default function BookmarkedFlasksTab({
   // allCellbankGraphData,
@@ -20,14 +22,21 @@ export default function BookmarkedFlasksTab({
     refetch,
   } = useBookmarkedFlasksGraphData(bookmarkedFlasks);
 
+  console.log('bookmarkedFlasksGraphData in BOOKMARKEDFLASKTAB', bookmarkedFlasksGraphData)
   return (
     <>
-      {Array.isArray(bookmarkedFlasksGraphData) && bookmarkedFlasksGraphData?.length && (
-        <AllCellbanksGraph
+      {Array.isArray(bookmarkedFlasksGraphData) && bookmarkedFlasksGraphData?.length && (<>
+        <SelectedFlasksGraph
+        graphData={bookmarkedFlasksGraphData}
+        bookmarkedFlasks={bookmarkedFlasks}
+        // setBookmarkedFlasks={setBookmarkedFlasks}
+      />
+        {/* <AllCellbanksGraph
           allCellbankGraphData={bookmarkedFlasksGraphData}
           bookmarkedFlasks={bookmarkedFlasks}
           // setBookmarkedFlasks={setBookmarkedFlasks}
-        />
+        /> */}
+        </>
       )}
       <ChartsTable
         chartTitle="Bookmarked Flasks"

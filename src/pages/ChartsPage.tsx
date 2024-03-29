@@ -97,7 +97,7 @@ export default function ChartsPage() {
         const res = await fetch(`${baseUrl}/api/chart/cellbank/${cellbank}`);
         const { data } = await res.json();
         // setBookmarkedCellbankGraphData(prev=> ({...prev, data}));
-        // console.log('data in setDataSingleCellbank page', data);
+        console.log('data in getBookmarkedCellbankGraphData page', data);
         return data;
       })
     );
@@ -173,7 +173,7 @@ export default function ChartsPage() {
 
           {/* main filter - only show if user is logged in */}
           {/* <MainFilter /> */}
-          
+
           {/* <MainNav /> */}
 
           {/* ALL flasks */}

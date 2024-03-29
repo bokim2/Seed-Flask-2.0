@@ -14,6 +14,7 @@ import { LineGraphColors } from '../../lib/constants';
 import styled from 'styled-components';
 import Scheduler from './add-to-schedule/Scheduler';
 import DateTimePicker from './add-to-schedule/DateTimePicker';
+import { useDispatch } from 'react-redux';
 
 ChartJS.register(
   CategoryScale,
@@ -25,8 +26,8 @@ ChartJS.register(
   Legend
 );
 
-export type TBookmarkedCellbankGraph = {
-  bookmarkedCellbankGraphData: any[][];
+export type TSelectedFlasksGraph = {
+  graphData: any[];
   bookmarkedFlasks: any;
   // setBookmarkedFlasks: any;
 };
@@ -40,15 +41,17 @@ const StyledBookmarkedCellbankGraph = styled.div`
   }
 `;
 
-const BookmarkedCellbankGraph = memo(
+const SelectedFlasksGraph = memo(
   ({
-    bookmarkedCellbankGraphData,
+    graphData,
     bookmarkedFlasks,
-  }: TBookmarkedCellbankGraph) => {
-    console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData');
+  }: TSelectedFlasksGraph) => {
+    console.log(graphData, 'graphData  in SELECTEDFLASKSGRAPH');
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
     const [selectedFlask, setSelectedFlask] = useState<number | null>(1);
+    const dispatch = useDispatch();
+
 
     const options: any = {
       responsive: true,
@@ -130,7 +133,7 @@ const BookmarkedCellbankGraph = memo(
         },
         title: {
           display: true,
-          text: 'Bookmarked Cellbank Graph',
+          // text: 'Bookmarked Cellbank Graph',
           font: {
             size: 22,
           },
@@ -140,12 +143,21 @@ const BookmarkedCellbankGraph = memo(
     };
 
     const datasets = useMemo(() => {
-      return bookmarkedCellbankGraphData.map(
-        (bookmarkedCellbank, bookmarkedCellbankId) =>
-          bookmarkedCellbank.map((flaskData) => {
+
+     
+      // graphData.map(
+      //   (bookmarkedCellbank, bookmarkedCellbankId) =>
+         return graphData.map((flaskData, i) => {
             // console.log(flaskData, 'flaskData')
 
-            const info = [
+            // const info = [
+            //   '',
+            //   `cell bank id: ${flaskData.cell_bank_id} `,
+            //   `project: ${flaskData.project} `,
+            //   `target molecule: ${flaskData.target_molecule} `,
+            // ];
+
+                 const info = [
               '',
               `cell bank id: ${flaskData.cell_bank_id} `,
               `project: ${flaskData.project} `,
@@ -163,19 +175,19 @@ const BookmarkedCellbankGraph = memo(
                 selectedFlask == flaskData.flask_id
                   ? 'white'
                   : LineGraphColors[
-                      bookmarkedCellbankId % LineGraphColors.length
+                      i % LineGraphColors.length
                     ],
               backgroundColor:
                 selectedFlask == flaskData.flask_id
                   ? 'white'
                   : LineGraphColors[
-                      bookmarkedCellbankId % LineGraphColors.length
+                      i % LineGraphColors.length
                     ],
               tension: 0.1,
             };
           })
-      );
-    }, [bookmarkedCellbankGraphData, selectedFlask]);
+      // );
+    }, [ graphData, selectedFlask]);
 
     // console.log('bookmarkedCellbankGraphData', bookmarkedCellbankGraphData)
     const data = {
@@ -183,6 +195,7 @@ const BookmarkedCellbankGraph = memo(
       datasets: datasets.flat(),
     };
     console.log(data, 'CHANGED data in bookmarked cellbank graph');
+    console.log(datasets, 'datasets in SELECTEDFLASKSGRAPH');
 
     return (
       <>
@@ -212,4 +225,4 @@ const BookmarkedCellbankGraph = memo(
   }
 );
 
-export default BookmarkedCellbankGraph;
+export default SelectedFlasksGraph;
