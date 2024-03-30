@@ -46,7 +46,7 @@ export function filteredTableData(
   tableRowsData,
   filteredAndSortedData,
   sortColumn,
-  timestamp_column
+  timestamp_column,
 ) {
   console.log(
     tableRowsData,

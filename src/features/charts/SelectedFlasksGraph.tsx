@@ -1,5 +1,5 @@
 import React, { memo, useMemo, useRef, useState } from 'react';
-import { Line } from 'react-chartjs-2';
+import { Line, getElementAtEvent } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import Scheduler from './add-to-schedule/Scheduler';
 import DateTimePicker from './add-to-schedule/DateTimePicker';
 import { useDispatch } from 'react-redux';
+import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
 
 ChartJS.register(
   CategoryScale,
@@ -52,6 +53,24 @@ const SelectedFlasksGraph = memo(
     const [selectedFlask, setSelectedFlask] = useState<number | null>(1);
     const dispatch = useDispatch();
 
+    function clickHandler(e) {
+      // console.log(e);
+      if (chartRef?.current) {
+        const chart = chartRef?.current;
+        const elements = getElementAtEvent(chart, e);
+        if (elements.length > 0) {
+          // const firstElementIndex = elements[0].index;
+          const datasetIndex = elements[0].datasetIndex;
+          const datasetLabel = chart.data.datasets[datasetIndex].label;
+          // Assuming the label is in the format "Flask <flask_id>"
+          if (datasetLabel) {
+            const flaskId = datasetLabel.replace('Flask ', '');
+
+            dispatch(toggleFlaskBookmark(Number(flaskId)));
+          }
+        }
+      }
+    }
 
     const options: any = {
       responsive: true,
@@ -210,7 +229,7 @@ const SelectedFlasksGraph = memo(
         {/* <ChartsTable flasks={datasets}/> */}
         {/* {JSON.stringify(datasets)} */}
         <StyledBookmarkedCellbankGraph>
-          <Line ref={chartRef} options={options} data={data} />
+          <Line ref={chartRef} options={options} data={data} onClick={clickHandler}/>
         </StyledBookmarkedCellbankGraph>
         {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
         <Scheduler clickedXY={clickedXY} />

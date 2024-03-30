@@ -35,15 +35,26 @@ import {
 import FlasksRow from './FlasksRow';
 import Button from '../../ui/Button';
 import LoaderBar from '../../ui/LoaderBar';
+import {
+  clearSearchedFlasksList,
+  setSearchedFlasksList,
+} from '../../redux/slices/bookmarksSlice';
 
 export type TError = {
   message: string;
 };
+
+type TFlasksTable = {
+  flasks: TFlasksInfo;
+  // setSearchedFlasksList?: (flasks: number[]) => void;
+};
+
 export default function FlasksTable({
   flasks,
-  // handleAddBookmark,
-  //   toggleTextTruncation,
-}) {
+}: // setSearchedFlasksList
+// handleAddBookmark,
+//   toggleTextTruncation,
+TFlasksTable) {
   // console.log('cellbanks in cellbanks table', cellbanks);
   // const [data, setData] = useState<TFlasksInfo>(flasks);
   const {
@@ -108,11 +119,28 @@ export default function FlasksTable({
 
       console.log(
         'USEEFFECT IN FLASKSTABLE searchDataAll in flasks table',
-        searchedData
+        searchedData, 
+        searchedData?.map((e) => {
+                if (e && e?.flask_id) {
+                  return Number(e?.flask_id);
+                }
+              })
       );
       setFilteredAndSortedData(searchedData);
+
+      dispatch(
+        setSearchedFlasksList(
+          searchedData?.map((e) => {
+            if (e && e?.flask_id) {
+              return Number(e?.flask_id);
+            }
+            return undefined;
+          }).filter((id): id is number => id !== undefined)
+        )
+      );
     } else {
       setFilteredAndSortedData(flasks);
+      // dispatch(clearSearchedFlasksList);
       // console.log('useEffect in dataName table', dataName);
     }
   }, [flasks, searchedData]);
@@ -128,12 +156,16 @@ export default function FlasksTable({
   //   console.log('data in flasks table', data);
   // }, [flasks, filteredAndSortedData, sortColumn]);
 
-  const data = useMemo(()=> filteredTableData(
+  const data = useMemo(
+    () =>
+      filteredTableData(
         flasks,
         filteredAndSortedData,
         sortColumn,
         'start_date'
-      ), [flasks, filteredAndSortedData, sortColumn]);
+      ),
+    [flasks, filteredAndSortedData, sortColumn]
+  );
 
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);

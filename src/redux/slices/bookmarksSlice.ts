@@ -6,12 +6,14 @@ type TBookmarks = {
   cellbank_bookmark: number[];
   flask_bookmark: number[];
   sample_bookmark: number[];
+  searched_flaks_list: number[];
 };
 
 const initialState: TBookmarks = {
   cellbank_bookmark: [],
   flask_bookmark: [],
   sample_bookmark: [],
+  searched_flaks_list: [],
 };
 
 const bookmarksSlice = createSlice({
@@ -43,6 +45,12 @@ const bookmarksSlice = createSlice({
     clearFlaskBookmark(state) {
       state.flask_bookmark = [];
     },
+    setSearchedFlasksList(state, action: PayloadAction<number[]>) {
+      state.searched_flaks_list = action.payload;
+    },
+    clearSearchedFlasksList(state) {
+      state.searched_flaks_list = [];
+    }
   },
 });
 
@@ -51,6 +59,8 @@ export const {
   clearCellbankBookmark,
   toggleFlaskBookmark,
   clearFlaskBookmark,
+  setSearchedFlasksList,
+  clearSearchedFlasksList
 } = bookmarksSlice.actions;
 
 export default bookmarksSlice.reducer;

@@ -53,7 +53,7 @@ export default function ChartsPage() {
     all: 'All Flasks',
     bookmarkedFlasks: 'Bookmarked Flasks',
     bookmarkedCellbanks: 'Bookmarked Cellbanks',
-    // cellbank: 'Single Cellbank',
+    cellbank: 'Single Cellbank',
     // user: 'User',
     // project: 'Project',
     search: 'Search Flasks',
@@ -67,6 +67,8 @@ export default function ChartsPage() {
   const bookmarkedFlasks = useSelector(
     (state: RootState) => state.bookmarks.flask_bookmark
   );
+
+  const searchedFlasksList = useSelector((state: RootState)=> state.bookmarks.searched_flaks_list)
 
   const [allCellbankGraphData, setAllCellbankGraphData] = useState<any[]>([]);
   const [bookmarkedCellbankGraphData, setBookmarkedCellbankGraphData] =
@@ -149,6 +151,7 @@ export default function ChartsPage() {
           <p>selected tab: {chartsTabNamesAndValues?.[selectedTabName]}</p>
           <p>cellbank bookmarks: {JSON.stringify(bookmarkedCellbanks)}</p>
           <p>flasks bookmarks: {JSON.stringify(bookmarkedFlasks)}</p>
+          <p>searched flasks list: {JSON.stringify(searchedFlasksList)}</p>
           <ButtonsContainer>
             <Button
               $size="xs"
@@ -261,7 +264,8 @@ export default function ChartsPage() {
           )} */}
 
           {selectedTabName === 'search' && (
-            <SearchFlasksTab flasks={flasksAll} isLoading={isLoading} />
+            // <SearchFlasksTab flasks={flasksAll} isLoading={isLoading} />
+            <SearchFlasksTab flasks={flasksAll}  />
           )}
           {/* <LineGraph chartData={chartData} /> */}
           {/* <TimeLineGraph /> */}
