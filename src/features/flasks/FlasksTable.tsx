@@ -106,6 +106,8 @@ TFlasksTable) {
     dispatch(changePageLimit(limit));
   };
 
+
+
   // useEffect call to filter and sort data and keep it in sync
 
   useEffect(() => {
@@ -138,6 +140,7 @@ TFlasksTable) {
           }).filter((id): id is number => id !== undefined)
         )
       );
+      
     } else {
       setFilteredAndSortedData(flasks);
       // dispatch(clearSearchedFlasksList);

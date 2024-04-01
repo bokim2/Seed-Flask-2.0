@@ -68,7 +68,7 @@ export default function ChartsPage() {
     (state: RootState) => state.bookmarks.flask_bookmark
   );
 
-  const searchedFlasksList = useSelector((state: RootState)=> state.bookmarks.searched_flaks_list)
+  const searchedFlasksList = useSelector((state: RootState)=> state.bookmarks.searched_flasks_list)
 
   const [allCellbankGraphData, setAllCellbankGraphData] = useState<any[]>([]);
   const [bookmarkedCellbankGraphData, setBookmarkedCellbankGraphData] =

@@ -6,14 +6,14 @@ type TBookmarks = {
   cellbank_bookmark: number[];
   flask_bookmark: number[];
   sample_bookmark: number[];
-  searched_flaks_list: number[];
+  searched_flasks_list: number[];
 };
 
 const initialState: TBookmarks = {
   cellbank_bookmark: [],
   flask_bookmark: [],
   sample_bookmark: [],
-  searched_flaks_list: [],
+  searched_flasks_list: [],
 };
 
 const bookmarksSlice = createSlice({
@@ -23,6 +23,7 @@ const bookmarksSlice = createSlice({
     toggleCellbankBookmark(state, action: PayloadAction<number>) {
       if (!state.cellbank_bookmark.includes(action.payload)) {
         state.cellbank_bookmark.push(action.payload);
+        state.cellbank_bookmark.sort((a, b) => a - b);
       } else {
         state.cellbank_bookmark = state.cellbank_bookmark.filter(
           (id) => id !== action.payload
@@ -35,7 +36,8 @@ const bookmarksSlice = createSlice({
     },
     toggleFlaskBookmark(state, action: PayloadAction<number>) {
       if (!state.flask_bookmark.includes(action.payload)) {
-        state.flask_bookmark.push(action.payload);
+        state.flask_bookmark.push(action.payload)
+        state.flask_bookmark.sort((a, b) => a - b);
       } else {
         state.flask_bookmark = state.flask_bookmark.filter(
           (id) => id !== action.payload
@@ -46,10 +48,11 @@ const bookmarksSlice = createSlice({
       state.flask_bookmark = [];
     },
     setSearchedFlasksList(state, action: PayloadAction<number[]>) {
-      state.searched_flaks_list = action.payload;
+      state.searched_flasks_list = action.payload;
+      state.searched_flasks_list.sort((a, b) => a - b);
     },
     clearSearchedFlasksList(state) {
-      state.searched_flaks_list = [];
+      state.searched_flasks_list = [];
     }
   },
 });
