@@ -89,28 +89,67 @@ flaskRouter.route('/search').get(async (req, res) => {
       ? [searchText]
       : [];
 
-    const validFields = [
-      'flask_id',
-      'cell_bank_id',
-      'inoculum_ul',
-      'media',
-      'media_ml',
-      'rpm',
-      'start_date',
-      'temp_c',
-      'vessel_type',
-      'username',
-      'user_id',
-      'human_readable_date',
-    ];
+    // const validFields = [
+    //   'flask_id',
+    //   'cell_bank_id',
+    //   'inoculum_ul',
+    //   'media',
+    //   'media_ml',
+    //   'rpm',
+    //   'start_date',
+    //   'temp_c',
+    //   'vessel_type',
+    //   'username',
+    //   'user_id',
+    //   'human_readable_date',
+    // ];
+
+    // const validFields = {
+    //   'flasks.flask_id': 'flask_id',
+    //   'flasks.cell_bank_id': 'cell_bank_id',
+    //   'flasks.inoculum_ul': 'inoculum_ul',
+    //   'flasks.media': 'media',
+    //   'flasks.media_ml': 'media_ml',
+    //   'flasks.rpm': 'rpm',
+    //   'flasks.start_date': 'start_date',
+    //   'flasks.temp_c': 'temp_c',
+    //   'flasks.vessel_type': 'vessel_type',
+    //   'flasks.username': 'username',
+    //   'flasks.user_id': 'user_id',
+    //   'flasks.human_readable_date': 'human_readable_date',
+    //   'cell_banks.cell_bank_id': 'cell_bank_id',
+    //   'cell_banks.strain': 'strain',
+    //   'cell_banks.target_molecule': 'target_molecule',
+    //   'cell_banks.project': 'project',
+    // }
+
+    const validFields = {
+      flask_id: 'flasks.flask_id',
+      cell_bank_id: 'flasks.cell_bank_id',
+      inoculum_ul: 'flasks.inoculum_ul',
+      media: 'flasks.media',
+      media_ml: 'flasks.media_ml',
+      rpm: 'flasks.rpm',
+      start_date: 'flasks.start_date',
+      temp_c: 'flasks.temp_c',
+      vessel_type: 'flasks.vessel_type',
+      username: 'flasks.username',
+      user_id: 'flasks.user_id',
+      human_readable_date: 'flasks.human_readable_date',
+      strain: 'cell_banks.strain',
+      target_molecule: 'cell_banks.target_molecule',
+      project: 'cell_banks.project',
+    };
 
     // Filter out invalid fields
     const queries = searchField
       .map((field, index) => ({
-        field,
+        field: validFields[field],
         text: searchText?.[index] || '',
       }))
-      .filter((q) => validFields.includes(q.field) && q.text !== '');
+      .filter(
+        (q) => Object.values(validFields).includes(q.field) && q.text !== ''
+      );
     console.log('is console working after queries');
     console.log('queries', queries);
 
@@ -119,12 +158,12 @@ flaskRouter.route('/search').get(async (req, res) => {
     }
 
     const numericFields = [
-      'flask_id',
-      'cell_bank_id',
-      'inoculum_ul',
-      'media_ml',
-      'rpm',
-      'temp_c',
+      validFields.flask_id,
+      validFields.cell_bank_id,
+      validFields.inoculum_ul,
+      validFields.media_ml,
+      validFields.rpm,
+      validFields.temp_c,
     ];
 
     const transformQueryObject = (queryObject) => {
@@ -175,8 +214,8 @@ flaskRouter.route('/search').get(async (req, res) => {
     const whereClauses = zodValidatedData.map((q, index) => {
       const fieldForQuery = q.field;
       // q.field === 'flask_id' ? `${q.field}::text` : q.field;
-      if (typeof q.text === 'number'){
-        return `${q.field} = $${index + 1}`
+      if (typeof q.text === 'number') {
+        return `${q.field} = $${index + 1}`;
       }
       if (q.field === 'human_readable_date') {
         q.field = 'start_date';
@@ -191,7 +230,9 @@ flaskRouter.route('/search').get(async (req, res) => {
       }
     });
 
-    let queryText = `SELECT * FROM flasks`;
+    // let queryText = `SELECT * FROM flasks`;
+    let queryText = `SELECT flasks.*, cell_banks.* FROM flasks
+    LEFT JOIN cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id`;
     if (whereClauses.length > 0) {
       queryText += ` WHERE ${whereClauses.join(' AND ')}`;
     }
@@ -208,9 +249,9 @@ flaskRouter.route('/search').get(async (req, res) => {
 
     const results = await db.query(query);
 
-    if (results.rows.length === 0) {
-      return res.status(404).json({ message: 'No flasks found' });
-    }
+    // if (results.rows.length === 0) {
+    //   return res.status(404).json({ message: 'No flasks found' });
+    // }
     console.log('returned data', results.rows);
     return res.status(200).json({
       status: 'success',
@@ -218,6 +259,11 @@ flaskRouter.route('/search').get(async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    console.error("Database query error:", err.message);
+  console.error("Detailed error:", err);
+  res.status(500).json({ message: err?.detail || 'Internal server error', error: err.message });
+
+
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });

@@ -35,6 +35,7 @@ export default function FlasksRow({
     target_molecule,
     username,
     user_id,
+    project,
   } = rowData;
   const editing = editingId === flask_id;
 
@@ -55,6 +56,17 @@ export default function FlasksRow({
           {displayLocalTime(start_date)}
         </TableDataCell>
         <TableDataCell data-cell="user">{username}</TableDataCell>
+
+        {/* {toggleCellbankData && (
+          <> */}
+            <TableDataCell data-cell="strain">{strain}</TableDataCell>
+            <TableDataCell data-cell="target molecule">
+              {target_molecule}
+            </TableDataCell>
+            <TableDataCell data-cell="project">{project}</TableDataCell>
+          {/* </>
+        )} */}
+
         <TableDataCell
           data-cell="edit"
           onClick={(e) => {
@@ -76,14 +88,6 @@ export default function FlasksRow({
           <Button $size={'small'}>Edit</Button>
         </TableDataCell>
 
-        {toggleCellbankData && (
-          <>
-            <TableDataCell data-cell="strain">{strain}</TableDataCell>
-            <TableDataCell data-cell="target molecule">
-              {target_molecule}
-            </TableDataCell>
-          </>
-        )}
         {/* </TableRow> */}
       </PreviousDataRow>
 
@@ -124,7 +128,6 @@ function FlasksEditForm({
 
         <TableDataCell data-cell="cell_bank_id">
           <EditTextArea
-            
             name="cell_bank_id"
             onChange={handleChange}
             placeholder="cell_bank_id"
@@ -137,7 +140,6 @@ function FlasksEditForm({
 
         <TableDataCell data-cell="media">
           <EditTextArea
-            
             name="media"
             onChange={handleChange}
             placeholder="media"
@@ -150,7 +152,6 @@ function FlasksEditForm({
 
         <TableDataCell data-cell="inoculum_ul">
           <EditTextArea
-            
             name="inoculum_ul"
             onChange={handleChange}
             placeholder="inoculum_ul"
@@ -163,7 +164,6 @@ function FlasksEditForm({
 
         <TableDataCell data-cell="media_ml">
           <EditTextArea
-            
             name="media_ml"
             onChange={handleChange}
             placeholder="media_ml"
@@ -176,7 +176,6 @@ function FlasksEditForm({
 
         <TableDataCell data-cell="temp_c">
           <EditTextArea
-            
             name="temp_c"
             onChange={handleChange}
             placeholder="temp_c"
@@ -189,7 +188,6 @@ function FlasksEditForm({
 
         <TableDataCell data-cell="rpm">
           <EditTextArea
-            
             name="rpm"
             onChange={handleChange}
             placeholder="rpm"
@@ -202,7 +200,6 @@ function FlasksEditForm({
 
         <TableDataCell data-cell="human_readable_date">
           <EditTextArea
-            
             name="human_readable_date"
             onChange={handleChange}
             placeholder="human_readable_date"
@@ -214,7 +211,9 @@ function FlasksEditForm({
         </TableDataCell>
 
         <TableDataCell data-cell="update">
-          <Button type="submit" $size={'small'}>update</Button>
+          <Button type="submit" $size={'small'}>
+            update
+          </Button>
         </TableDataCell>
 
         <TableDataCell data-cell="delete">

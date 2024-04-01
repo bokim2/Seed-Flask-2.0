@@ -88,6 +88,8 @@ export default function SearchFormRow({
   //   }
   // }, [searchError]);
 
+  console.log(tableColumnsHeaderCellsArray, 'tableColumnsHeaderCellsArray');
+
   return (
     // <StyledSearchFormRow>
     <>

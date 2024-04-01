@@ -48,15 +48,21 @@ import SearchFormRow from '../../ui/SearchFormRow';
 import ErrorMessage from '../../ui/ErrorMessage';
 import SearchForm from '../../ui/SearchForm';
 import { updateScheduleSchema } from '../../../server/zodSchemas';
-import { flushSync } from 'react-dom';
 // import Scheduler from './add-to-schedule/Scheduler';
+
+type TScheduleTable = {
+  schedules: TSchedules,
+  selectedScheduleId?: number | null,
+  selectIdHandler?: ()=> void,
+};
+
 
 export default function SchedulesTable({
   schedules,
   // chartTitle,
   // bookmarkedFlasks,
   // setBookmarkedFlasks,
-}) {
+}: TScheduleTable) {
   // console.log('schedules in schedules table', schedules);
   // const [editingId, setEditingId] = useState<number | null>(null);
   // const [editedForm, setEditedForm] = useState(initialEditScheduleForm);

@@ -154,5 +154,24 @@ export const flasksTableHeaderCellsArray = [
   'rpm',
   // 'start_date',
   'human_readable_date',
-  'username'
+  'username',
+
+  'strain',
+  'target_molecule',
+  'project',
+]
+
+export const flasksOnlyTableHeaderCellsArray = [
+  'flask_id' ,
+  'cell_bank_id',
+  'vessel_type',
+  'media',
+  'media_ml',
+  'inoculum_ul',
+  'temp_c',
+  'rpm',
+  // 'start_date',
+  'human_readable_date',
+  'username',
+
 ]

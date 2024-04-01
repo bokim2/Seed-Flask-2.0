@@ -24,6 +24,7 @@ import BookmarkedFlasksTab from '../features/charts/chart-tabs/BookmarkedFlasksT
 import BookmarkedCellbanksTab from '../features/charts/chart-tabs/BookmarkedCellbanksTab';
 import SingleCellbankTab from '../features/charts/chart-tabs/SingleCellbankTab';
 import SearchFlasksTab from '../features/charts/chart-tabs/SearchFlasksTab';
+import ScheduleTab from '../features/charts/chart-tabs/ScheduleTab';
 
 export default function ChartsPage() {
   const {
@@ -270,6 +271,10 @@ export default function ChartsPage() {
           {/* <LineGraph chartData={chartData} /> */}
           {/* <TimeLineGraph /> */}
           {/* <FlasksTable flasks={flasks} />*/}
+
+          {selectedTabName === 'schedule' && (
+            <ScheduleTab flasks={flasksAll} />
+          )}
         </TabSelectorContainer>
       </InnerPageContainer>
     </PageContainer>

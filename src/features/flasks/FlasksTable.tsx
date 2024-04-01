@@ -106,8 +106,6 @@ TFlasksTable) {
     dispatch(changePageLimit(limit));
   };
 
-
-
   // useEffect call to filter and sort data and keep it in sync
 
   useEffect(() => {
@@ -121,26 +119,27 @@ TFlasksTable) {
 
       console.log(
         'USEEFFECT IN FLASKSTABLE searchDataAll in flasks table',
-        searchedData, 
+        searchedData,
         searchedData?.map((e) => {
-                if (e && e?.flask_id) {
-                  return Number(e?.flask_id);
-                }
-              })
+          if (e && e?.flask_id) {
+            return Number(e?.flask_id);
+          }
+        })
       );
       setFilteredAndSortedData(searchedData);
 
       dispatch(
         setSearchedFlasksList(
-          searchedData?.map((e) => {
-            if (e && e?.flask_id) {
-              return Number(e?.flask_id);
-            }
-            return undefined;
-          }).filter((id): id is number => id !== undefined)
+          searchedData
+            ?.map((e) => {
+              if (e && e?.flask_id) {
+                return Number(e?.flask_id);
+              }
+              return undefined;
+            })
+            .filter((id): id is number => id !== undefined)
         )
       );
-      
     } else {
       setFilteredAndSortedData(flasks);
       // dispatch(clearSearchedFlasksList);
@@ -223,7 +222,7 @@ TFlasksTable) {
             <TableHeader>
               {/* select column to search */}
               <TableRow>
-                {!toggleCellbankData
+                {/* {!toggleCellbankData
                   ? flasksTableHeaderCellsArray.map((headerCell, i) => (
                       <TableHeaderCellComponent
                         key={headerCell}
@@ -236,6 +235,7 @@ TFlasksTable) {
                       ...flasksTableHeaderCellsArray,
                       'strain',
                       'target molecule',
+                      'project'
                     ].map((headerCell, i) => (
                       <TableHeaderCellComponent
                         key={headerCell}
@@ -243,8 +243,16 @@ TFlasksTable) {
                         handleSortColumn={handleSortColumn}
                         sortColumn={sortColumn}
                       />
-                    ))}
+                    ))} */}
 
+                {flasksTableHeaderCellsArray.map((headerCell, i) => (
+                  <TableHeaderCellComponent
+                    key={headerCell}
+                    columnName={headerCell}
+                    handleSortColumn={handleSortColumn}
+                    sortColumn={sortColumn}
+                  />
+                ))}
                 <TableHeaderCell>
                   <Button
                     type="button"
