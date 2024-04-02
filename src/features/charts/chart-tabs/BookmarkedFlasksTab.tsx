@@ -5,6 +5,8 @@ import Button from '../../../ui/Button';
 import { useBookmarkedFlasksGraphData } from '../chart-hooks';
 import BookmarkedCellbankGraph from '../BookmarkedCellbankGraph';
 import SelectedFlasksGraph from '../SelectedFlasksGraph';
+import { LoaderWrapper } from '../../../styles/UtilStyles';
+import LoaderBar from '../../../ui/LoaderBar';
 
 export default function BookmarkedFlasksTab({
   // allCellbankGraphData,
@@ -25,6 +27,8 @@ export default function BookmarkedFlasksTab({
   console.log('bookmarkedFlasksGraphData in BOOKMARKEDFLASKTAB', bookmarkedFlasksGraphData)
   return (
     <>
+      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
+
       {Array.isArray(bookmarkedFlasksGraphData) && bookmarkedFlasksGraphData?.length && (<>
         <SelectedFlasksGraph
         graphData={bookmarkedFlasksGraphData}

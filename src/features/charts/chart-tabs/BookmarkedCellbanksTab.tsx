@@ -9,6 +9,8 @@ export default function BookmarkedCellbanksTab({
 }) {
   return (
     <>
+
+    
             {bookmarkedCellbankGraphData?.length > 0 && (
             <BookmarkedCellbankGraph
               bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}

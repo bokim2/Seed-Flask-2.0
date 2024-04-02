@@ -21,7 +21,6 @@ import { changePageLimit } from '../../redux/slices/pageSlice';
 import { useDispatch } from 'react-redux';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
-import SearchForm from '../../ui/SearchForm';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
 import SearchFormRow from '../../ui/SearchFormRow';
