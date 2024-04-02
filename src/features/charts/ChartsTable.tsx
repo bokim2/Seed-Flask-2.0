@@ -128,6 +128,7 @@ export default function ChartsTable({
                   <>
                     <TableHeaderCell>strain</TableHeaderCell>
                     <TableHeaderCell>target molecule</TableHeaderCell>
+                    <TableHeaderCell>project</TableHeaderCell>
                   </>
                 )}
               </TableRow>

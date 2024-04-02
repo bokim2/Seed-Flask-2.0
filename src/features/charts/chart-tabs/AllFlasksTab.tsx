@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { baseUrl } from '../../../../configs';
 import AllCellbanksGraph from '../AllCellbanksGraph';
 import ChartsTable from '../ChartsTable';
+import FlasksTable from '../../flasks/FlasksTable';
 
 export default function AllFlasksTab({
   allCellbankGraphData,
@@ -23,6 +24,8 @@ export default function AllFlasksTab({
         bookmarkedFlasks={bookmarkedFlasks}
         // setBookmarkedFlasks={setBookmarkedFlasks}
       />
+
+      {/* <FlasksTable flasks={flasksAll} /> */}
     </>
   );
 }

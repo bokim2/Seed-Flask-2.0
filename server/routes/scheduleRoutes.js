@@ -103,7 +103,7 @@ scheduleRouter
     }
   });
 
-// UPDATE one cell bank
+// UPDATE one schedule
 
 scheduleRouter.route('/:id').put(validateIdParam, async (req, res) => {
   try {

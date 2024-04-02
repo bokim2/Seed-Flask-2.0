@@ -86,6 +86,9 @@ export default function ChartsRow({
             <TableDataCell data-cell="target molecule">
               {target_molecule}
             </TableDataCell>
+            <TableDataCell data-cell="project">
+              {project}
+            </TableDataCell>
           </>
         )}
         {/* </TableRow> */}

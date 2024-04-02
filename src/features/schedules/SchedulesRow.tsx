@@ -25,6 +25,7 @@ export default function SchedulesRow({
   isPendingDelete,
   editingId,
   setEditingId,
+  selectIdHandler,
 }) {
   const {
     schedule_id,
@@ -35,6 +36,7 @@ export default function SchedulesRow({
     flask_bookmark,
     flask_id,
     current_flasks,
+
   } = rowData;
 
   const editing = editingId === schedule_id;
@@ -44,7 +46,7 @@ export default function SchedulesRow({
       <PreviousDataRow $editing={editing}>
         <TableDataCell
           data-cell="schedule id"
-          // onClick={() => handleAddBookmark(cell_bank_id)}
+          onClick={() => selectIdHandler(schedule_id)}
         >
           {schedule_id}
         </TableDataCell>

@@ -48,13 +48,13 @@ export default function BookmarkedFlasksTab({
         bookmarkedFlasks={bookmarkedFlasks}
         // setBookmarkedFlasks={setBookmarkedFlasks}
       />
-      <Button
+      {/* <Button
         onClick={() => fetchNextPage()}
         disabled={!hasNextPage || isFetchingNextPage}
       >
         {hasNextPage && !isFetchingNextPage && 'Load More'}
         {!hasNextPage && 'No More Data'}
-      </Button>
+      </Button> */}
     </>
   );
 }

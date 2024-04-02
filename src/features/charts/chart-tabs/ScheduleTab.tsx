@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SchedulesTable from '../../schedules/SchedulesTable'
 import { useBookmarkedFlasksGraphData } from '../chart-hooks';
 import { useFetchValidatedTableQuery } from '../../../hooks/table-hooks/useFetchValidatedTableQuery';
 import { schedulesArraySchema } from '../../schedules/schedules-types';
 import ChartsTable from '../ChartsTable';
+import FlasksListGraph from '../FlasksListGraph';
 
 export default function ScheduleTab({flasks}) {
     const {
@@ -19,22 +20,31 @@ export default function ScheduleTab({flasks}) {
         zodSchema: schedulesArraySchema,
       });
 
-    const {
-        data: scheduleData,
-        isLoading,
-        error,
-        isFetching,
-        refetch,
-      } = useBookmarkedFlasksGraphData([1,42]);
+    const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(null);
+    // const {
+    //     data: scheduleData,
+    //     isLoading,
+    //     error,
+    //     isFetching,
+    //     refetch,
+    //   } = useBookmarkedFlasksGraphData([1,42]);
+const selectIdHandler = (id) => {
+  setSelectedScheduleId(id)
+}
 
+const selectedSchedule = schedulesAll.filter(schedule => schedule.schedule_id === selectedScheduleId);
+
+  const flasksList: number[] = selectedSchedule[0]?.current_flasks.concat(selectedSchedule[0]?.flask_bookmark) || [];
 
   return (
     <>
+    <p>Selected Schedule Id:  {JSON.stringify(selectedScheduleId)}</p>
     {/* <ChartsTable 
     chartTitle={"Schedules"}
     flasks={schedulesAll}
     bookmarkedFlasks={schedulesAll}/> */}
-    <SchedulesTable schedules={schedulesAll}/>
+    <FlasksListGraph flasksList={flasksList}/>
+    <SchedulesTable schedules={schedulesAll} selectIdHandler={selectIdHandler}/>
     </>
   )
 }

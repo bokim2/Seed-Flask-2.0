@@ -53,12 +53,13 @@ import { updateScheduleSchema } from '../../../server/zodSchemas';
 type TScheduleTable = {
   schedules: TSchedules,
   selectedScheduleId?: number | null,
-  selectIdHandler?: ()=> void,
+  selectIdHandler?: (id)=> void,
 };
 
 
 export default function SchedulesTable({
   schedules,
+  selectIdHandler,
   // chartTitle,
   // bookmarkedFlasks,
   // setBookmarkedFlasks,
@@ -244,6 +245,7 @@ export default function SchedulesTable({
                 data?.map((rowData) => (
                   <SchedulesRow
                     key={rowData.schedule_id}
+                    selectIdHandler={selectIdHandler}
                     rowData={rowData}
                     // toggleTextTruncation={toggleTextTruncation}
                     editedForm={editedForm}

@@ -200,6 +200,10 @@ GROUP BY f.flask_id, f.vessel_type, f.inoculum_uL, f.media_mL, f.start_date, cb.
 // get - GRAPH all flask and sample associated with all cellbanks
 app.get('/api/chart/cellbanks', async (req, res) => {
   try {
+    // need to fix limit and offset.  it is not set yet on the frontend
+    const limit = parseInt(req.query.limit, 10 || LIMIT) || 50;
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
     const results = await db.query(
       `SELECT 
       flasks.*,
@@ -213,8 +217,10 @@ app.get('/api/chart/cellbanks', async (req, res) => {
     LEFT JOIN 
       samples ON flasks.flask_id = samples.flask_id
     GROUP BY 
-      flasks.flask_id, cell_banks.cell_bank_id;
-  `
+      flasks.flask_id, cell_banks.cell_bank_id 
+      ORDER BY flask_id DESC 
+      LIMIT $1 OFFSET $2;`,
+        [limit, offset]
     );
     res.status(200).json({
       status: 'success',

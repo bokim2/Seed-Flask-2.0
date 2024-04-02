@@ -25,6 +25,8 @@ import BookmarkedCellbanksTab from '../features/charts/chart-tabs/BookmarkedCell
 import SingleCellbankTab from '../features/charts/chart-tabs/SingleCellbankTab';
 import SearchFlasksTab from '../features/charts/chart-tabs/SearchFlasksTab';
 import ScheduleTab from '../features/charts/chart-tabs/ScheduleTab';
+import { z } from 'zod';
+import AllFlasksTab from '../features/charts/chart-tabs/AllFlasksTab';
 
 export default function ChartsPage() {
   const {
@@ -69,9 +71,11 @@ export default function ChartsPage() {
     (state: RootState) => state.bookmarks.flask_bookmark
   );
 
-  const searchedFlasksList = useSelector((state: RootState)=> state.bookmarks.searched_flasks_list)
+  const searchedFlasksList = useSelector(
+    (state: RootState) => state.bookmarks.searched_flasks_list
+  );
 
-  const [allCellbankGraphData, setAllCellbankGraphData] = useState<any[]>([]);
+  // const [allCellbankGraphData, setAllCellbankGraphData] = useState<any[]>([]);
   const [bookmarkedCellbankGraphData, setBookmarkedCellbankGraphData] =
     useState<any[][]>([]);
 
@@ -109,19 +113,33 @@ export default function ChartsPage() {
     return results;
   };
 
-  const getAllCellbankGraphData = async () => {
-    // console.log('data in graphs page, before fetch');
-    const res = await fetch(`${baseUrl}/api/chart/cellbanks`);
-    const { data } = await res.json();
-    // console.log(data, 'in getallcellbankgraphdata');
-    setAllCellbankGraphData(data);
-    return data;
-  };
+  // const getAllCellbankGraphData = async () => {
+  //   // console.log('data in graphs page, before fetch');
+  //   const res = await fetch(`${baseUrl}/api/chart/cellbanks`);
+  //   const { data } = await res.json();
+  //   // console.log(data, 'in getallcellbankgraphdata');
+  //   setAllCellbankGraphData(data);
+  //   return data;
+  // };
+
+  const {
+    data: allCellbankGraphData,
+    // isLoading,
+    // error,
+    fetchNextPage: fetchNextPageAllCellbanks,
+    // hasNextPage,
+    // isFetchingNextPage ,
+    // isFetching,
+  } = useFetchValidatedTableQuery({
+    tableName: 'chart/cellbanks',
+    zodSchema: z.any(),
+  });
 
   useEffect(() => {
     // getGraphData();
     // getSingleCellbankGraphData(1);
-    getAllCellbankGraphData();
+
+    // getAllCellbankGraphData();
     getBookmarkedCellbankGraphData(bookmarkedCellbanks);
     // getBookmarkedFlasksGraphData(bookmarkedFlasks);
   }, [bookmarkedCellbanks, bookmarkedFlasks]);
@@ -182,11 +200,24 @@ export default function ChartsPage() {
 
           {/* ALL flasks */}
           {selectedTabName === 'all' && (
-            <AllFlasks
-              allCellbankGraphData={allCellbankGraphData}
-              bookmarkedFlasks={bookmarkedFlasks}
-              flasksAll={flasksAll}
-            />
+            <>
+              <AllFlasksTab
+                allCellbankGraphData={allCellbankGraphData}
+                bookmarkedFlasks={bookmarkedFlasks}
+                flasksAll={flasksAll}
+              />
+              <Button
+                type="button"
+                onClick={() => {
+                  fetchNextPage();
+                  fetchNextPageAllCellbanks();
+                }}
+                // disabled={!hasNextPage || isFetchingNextPage}
+              >
+                {/* {hasNextPage && !isFetchingNextPage && 'Load More'} */}
+                {!hasNextPage ? 'No More Data' : 'Load More'}
+              </Button>
+            </>
           )}
           {/* {allCellbankGraphData?.length && (
             <AllCellbanksGraph
@@ -266,15 +297,13 @@ export default function ChartsPage() {
 
           {selectedTabName === 'search' && (
             // <SearchFlasksTab flasks={flasksAll} isLoading={isLoading} />
-            <SearchFlasksTab flasks={flasksAll}  />
+            <SearchFlasksTab flasks={flasksAll} />
           )}
           {/* <LineGraph chartData={chartData} /> */}
           {/* <TimeLineGraph /> */}
           {/* <FlasksTable flasks={flasks} />*/}
 
-          {selectedTabName === 'schedule' && (
-            <ScheduleTab flasks={flasksAll} />
-          )}
+          {selectedTabName === 'schedule' && <ScheduleTab flasks={flasksAll} />}
         </TabSelectorContainer>
       </InnerPageContainer>
     </PageContainer>

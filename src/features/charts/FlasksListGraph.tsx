@@ -44,10 +44,16 @@ const StyledBookmarkedCellbankGraph = styled.div`
   }
 `;
 
-const FlasksListGraph = memo(() => {
+type TFlasksListGraph = {
+flasksList?: number[]
+}
+
+const FlasksListGraph = memo(({flasksList}: TFlasksListGraph) => {
   const searchedFlasksList = useSelector(
     (state: RootState) => state.bookmarks.searched_flasks_list
   );
+
+console.log(searchedFlasksList, 'searchedFlasksList in FlasksListGraph', flasksList, 'flasksList in FlasksListGraph');
 
   const {
     data: graphData,
@@ -55,7 +61,7 @@ const FlasksListGraph = memo(() => {
     error,
     isFetching,
     refetch,
-  } = useBookmarkedFlasksGraphData(searchedFlasksList);
+  } = useBookmarkedFlasksGraphData(flasksList || searchedFlasksList);
 
   console.log(graphData, 'graphData  in SELECTEDFLASKSGRAPH');
   const chartRef = useRef<any>(null);
