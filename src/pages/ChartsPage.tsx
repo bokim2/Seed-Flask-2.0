@@ -166,13 +166,13 @@ export default function ChartsPage() {
         )} */}
           {/* display cellbank bookmarks and flask bookmarks */}
           <p>selected tab: {chartsTabNamesAndValues?.[selectedTabName]}</p>
-          {/* <p>cellbank bookmarks: {JSON.stringify(bookmarkedCellbanks)}</p>
+          <p>cellbank bookmarks: {JSON.stringify(bookmarkedCellbanks)}</p>
           <p>flasks bookmarks: {JSON.stringify(bookmarkedFlasks)}</p>
-          <p>searched flasks list: {JSON.stringify(searchedFlasksList)}</p> */}
-
+          <p>searched flasks list: {JSON.stringify(searchedFlasksList)}</p>
+{/* 
           <p>cellbank bookmarks: {bookmarkedCellbanks.join(', ')}</p>
           <p>flasks bookmarks: {bookmarkedFlasks.join(', ')}</p>
-          <p>searched flasks list: {searchedFlasksList.join(', ')}</p>
+          <p>searched flasks list: {searchedFlasksList.join(', ')}</p> */}
           <ButtonsContainer>
             <Button
               $size="xs"
