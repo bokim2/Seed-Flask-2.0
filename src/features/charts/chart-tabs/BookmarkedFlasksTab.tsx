@@ -1,10 +1,10 @@
 import React from 'react';
-import AllCellbanksGraph from '../AllCellbanksGraph';
+import AllCellbanksGraph from '../graphs/AllCellbanksGraph';
 import ChartsTable from '../ChartsTable';
 import Button from '../../../ui/Button';
 import { useBookmarkedFlasksGraphData } from '../chart-hooks';
-import BookmarkedCellbankGraph from '../BookmarkedCellbankGraph';
-import SelectedFlasksGraph from '../SelectedFlasksGraph';
+import BookmarkedCellbankGraph from '../graphs/BookmarkedCellbankGraph';
+import SelectedFlasksGraph from '../graphs/SelectedFlasksGraph';
 import { LoaderWrapper } from '../../../styles/UtilStyles';
 import LoaderBar from '../../../ui/LoaderBar';
 
@@ -24,24 +24,29 @@ export default function BookmarkedFlasksTab({
     refetch,
   } = useBookmarkedFlasksGraphData(bookmarkedFlasks);
 
-  console.log('bookmarkedFlasksGraphData in BOOKMARKEDFLASKTAB', bookmarkedFlasksGraphData)
+  console.log(
+    'bookmarkedFlasksGraphData in BOOKMARKEDFLASKTAB',
+    bookmarkedFlasksGraphData
+  );
   return (
     <>
       <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
 
-      {Array.isArray(bookmarkedFlasksGraphData) && bookmarkedFlasksGraphData?.length && (<>
-        <SelectedFlasksGraph
-        graphData={bookmarkedFlasksGraphData}
-        bookmarkedFlasks={bookmarkedFlasks}
-        // setBookmarkedFlasks={setBookmarkedFlasks}
-      />
-        {/* <AllCellbanksGraph
+      {Array.isArray(bookmarkedFlasksGraphData) &&
+        bookmarkedFlasksGraphData?.length && (
+          <>
+            <SelectedFlasksGraph
+              graphData={bookmarkedFlasksGraphData}
+              bookmarkedFlasks={bookmarkedFlasks}
+              // setBookmarkedFlasks={setBookmarkedFlasks}
+            />
+            {/* <AllCellbanksGraph
           allCellbankGraphData={bookmarkedFlasksGraphData}
           bookmarkedFlasks={bookmarkedFlasks}
           // setBookmarkedFlasks={setBookmarkedFlasks}
         /> */}
-        </>
-      )}
+          </>
+        )}
       <ChartsTable
         chartTitle="Bookmarked Flasks"
         flasks={bookmarkedFlasksGraphData}

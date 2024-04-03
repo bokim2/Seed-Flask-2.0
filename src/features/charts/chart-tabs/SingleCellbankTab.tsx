@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { baseUrl } from '../../../../configs';
-import SingleCellbankGraph from '../SingleCellbankGraph';
+import SingleCellbankGraph from '../graphs/SingleCellbankGraph';
 import Button from '../../../ui/Button';
 import ChartsTable from '../ChartsTable';
 
@@ -30,7 +30,7 @@ export default function SingleCellbankTab() {
 
   return (
     <>
-      <form>
+      <form onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"
           value={selectedCellbankId ? String(selectedCellbankId) : ''}
@@ -40,18 +40,19 @@ export default function SingleCellbankTab() {
         <Button type="submit">Submit</Button>
       </form>
       {/* <p>{JSON.stringify(singleCellbankGraphData)}</p> */}
-      {singleCellbankGraphData?.length && (<>
-        <SingleCellbankGraph
-          singleCellbankGraphData={singleCellbankGraphData}
-        />
+      {singleCellbankGraphData && singleCellbankGraphData?.length > 0 && (
+        <>
+          <SingleCellbankGraph
+            singleCellbankGraphData={singleCellbankGraphData}
+          />
 
-        <ChartsTable
-        chartTitle="Single Cellbank"
-        flasks={singleCellbankGraphData.flat()}
-        bookmarkedFlasks={singleCellbankGraphData}
-        // setBookmarkedFlasks={setBookmarkedFlasks}
-      /> 
-      </>
+          <ChartsTable
+            chartTitle="Single Cellbank"
+            flasks={singleCellbankGraphData.flat()}
+            bookmarkedFlasks={singleCellbankGraphData}
+            // setBookmarkedFlasks={setBookmarkedFlasks}
+          />
+        </>
       )}
     </>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { baseUrl } from '../../../../configs';
-import AllCellbanksGraph from '../AllCellbanksGraph';
+import AllCellbanksGraph from '../graphs/AllCellbanksGraph';
 import ChartsTable from '../ChartsTable';
 import FlasksTable from '../../flasks/FlasksTable';
 

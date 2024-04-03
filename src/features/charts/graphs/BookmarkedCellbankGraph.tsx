@@ -10,10 +10,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { LineGraphColors } from '../../lib/constants';
+import { LineGraphColors } from '../../../lib/constants';
 import styled from 'styled-components';
-import Scheduler from './add-to-schedule/Scheduler';
-import DateTimePicker from './add-to-schedule/DateTimePicker';
+import Scheduler from '../add-to-schedule/Scheduler';
+import DateTimePicker from '../add-to-schedule/DateTimePicker';
+import { StyledGraphContainer } from '../../../styles/UtilStyles';
 
 ChartJS.register(
   CategoryScale,
@@ -100,6 +101,8 @@ const BookmarkedCellbankGraph = memo(
       },
       plugins: {
         tooltip: {
+          mode: 'nearest',
+          intersect: false,
           callbacks: {
             title: function () {
               return '';
@@ -185,7 +188,7 @@ const BookmarkedCellbankGraph = memo(
     console.log(data, 'CHANGED data in bookmarked cellbank graph');
 
     return (
-      <>
+      <StyledGraphContainer>
         <h3>
           {clickedXY &&
             `Bookmarked Cellbank Graph
@@ -207,7 +210,7 @@ const BookmarkedCellbankGraph = memo(
           bookmarkedFlasks={bookmarkedFlasks}
           // setBookmarkedFlasks={setBookmarkedFlasks}
         />
-      </>
+      </StyledGraphContainer>
     );
   }
 );

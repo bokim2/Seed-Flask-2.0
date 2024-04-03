@@ -12,13 +12,11 @@ import { flasksInfoArraySchema } from '../features/flasks/flasks-types';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../ui/Button';
 import TabSelectorContainer from '../ui/TabSelectorContainer';
-import MainFilter from '../ui/MainFilter';
 import { RootState } from '../redux/store';
 import {
   clearCellbankBookmark,
   clearFlaskBookmark,
 } from '../redux/slices/bookmarksSlice';
-import AllFlasks from '../features/charts/chart-tabs/AllFlasksTab';
 
 import BookmarkedFlasksTab from '../features/charts/chart-tabs/BookmarkedFlasksTab';
 import BookmarkedCellbanksTab from '../features/charts/chart-tabs/BookmarkedCellbanksTab';

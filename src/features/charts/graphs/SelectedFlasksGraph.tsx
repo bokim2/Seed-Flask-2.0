@@ -10,12 +10,13 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { LineGraphColors } from '../../lib/constants';
+import { LineGraphColors } from '../../../lib/constants';
 import styled from 'styled-components';
-import Scheduler from './add-to-schedule/Scheduler';
-import DateTimePicker from './add-to-schedule/DateTimePicker';
+import Scheduler from '../add-to-schedule/Scheduler';
+import DateTimePicker from '../add-to-schedule/DateTimePicker';
 import { useDispatch } from 'react-redux';
-import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
+import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
+import { StyledGraphContainer } from '../../../styles/UtilStyles';
 
 ChartJS.register(
   CategoryScale,
@@ -43,10 +44,7 @@ const StyledBookmarkedCellbankGraph = styled.div`
 `;
 
 const SelectedFlasksGraph = memo(
-  ({
-    graphData,
-    bookmarkedFlasks,
-  }: TSelectedFlasksGraph) => {
+  ({ graphData, bookmarkedFlasks }: TSelectedFlasksGraph) => {
     console.log(graphData, 'graphData  in SELECTEDFLASKSGRAPH');
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
@@ -122,6 +120,8 @@ const SelectedFlasksGraph = memo(
       },
       plugins: {
         tooltip: {
+          mode: 'nearest',
+          intersect: false,
           callbacks: {
             title: function () {
               return '';
@@ -162,51 +162,45 @@ const SelectedFlasksGraph = memo(
     };
 
     const datasets = useMemo(() => {
-
-     
       // graphData.map(
       //   (bookmarkedCellbank, bookmarkedCellbankId) =>
-         return graphData.map((flaskData, i) => {
-            // console.log(flaskData, 'flaskData')
+      return graphData.map((flaskData, i) => {
+        // console.log(flaskData, 'flaskData')
 
-            // const info = [
-            //   '',
-            //   `cell bank id: ${flaskData.cell_bank_id} `,
-            //   `project: ${flaskData.project} `,
-            //   `target molecule: ${flaskData.target_molecule} `,
-            // ];
+        // const info = [
+        //   '',
+        //   `cell bank id: ${flaskData.cell_bank_id} `,
+        //   `project: ${flaskData.project} `,
+        //   `target molecule: ${flaskData.target_molecule} `,
+        // ];
 
-                 const info = [
-              '',
-              `cell bank id: ${flaskData.cell_bank_id} `,
-              `project: ${flaskData.project} `,
-              `target molecule: ${flaskData.target_molecule} `,
-            ];
+        const info = [
+          '',
+          `cell bank id: ${flaskData.cell_bank_id} `,
+          `project: ${flaskData.project} `,
+          `target molecule: ${flaskData.target_molecule} `,
+        ];
 
-            return {
-              label: `Flask ${flaskData.flask_id}`,
-              data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
-                x: time,
-                y: flaskData.od600_values[index],
-                z: info,
-              })),
-              borderColor:
-                selectedFlask == flaskData.flask_id
-                  ? 'white'
-                  : LineGraphColors[
-                      i % LineGraphColors.length
-                    ],
-              backgroundColor:
-                selectedFlask == flaskData.flask_id
-                  ? 'white'
-                  : LineGraphColors[
-                      i % LineGraphColors.length
-                    ],
-              tension: 0.1,
-            };
-          })
+        return {
+          label: `Flask ${flaskData.flask_id}`,
+          data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
+            x: time,
+            y: flaskData.od600_values[index],
+            z: info,
+          })),
+          borderColor:
+            selectedFlask == flaskData.flask_id
+              ? 'white'
+              : LineGraphColors[i % LineGraphColors.length],
+          backgroundColor:
+            selectedFlask == flaskData.flask_id
+              ? 'white'
+              : LineGraphColors[i % LineGraphColors.length],
+          tension: 0.1,
+        };
+      });
       // );
-    }, [ graphData, selectedFlask]);
+    }, [graphData, selectedFlask]);
 
     // console.log('bookmarkedCellbankGraphData', bookmarkedCellbankGraphData)
     const data = {
@@ -217,7 +211,7 @@ const SelectedFlasksGraph = memo(
     console.log(datasets, 'datasets in SELECTEDFLASKSGRAPH');
 
     return (
-      <>
+      <StyledGraphContainer>
         <h3>
           {clickedXY &&
             `Bookmarked Cellbank Graph
@@ -229,7 +223,12 @@ const SelectedFlasksGraph = memo(
         {/* <ChartsTable flasks={datasets}/> */}
         {/* {JSON.stringify(datasets)} */}
         <StyledBookmarkedCellbankGraph>
-          <Line ref={chartRef} options={options} data={data} onClick={clickHandler}/>
+          <Line
+            ref={chartRef}
+            options={options}
+            data={data}
+            onClick={clickHandler}
+          />
         </StyledBookmarkedCellbankGraph>
         {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
         <Scheduler clickedXY={clickedXY} />
@@ -239,7 +238,7 @@ const SelectedFlasksGraph = memo(
           bookmarkedFlasks={bookmarkedFlasks}
           // setBookmarkedFlasks={setBookmarkedFlasks}
         />
-      </>
+      </StyledGraphContainer>
     );
   }
 );

@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { StyledGraphContainer } from '../../../styles/UtilStyles';
 
 ChartJS.register(
   CategoryScale,
@@ -23,9 +24,9 @@ ChartJS.register(
 
 export const options: any = {
   responsive: true,
-//   plugins: {
-//     tooltip: callbacks: 
-//   },
+  //   plugins: {
+  //     tooltip: callbacks:
+  //   },
   scales: {
     x: {
       type: 'linear',
@@ -35,6 +36,10 @@ export const options: any = {
     },
   },
   plugins: {
+    tooltip: {
+      mode: 'nearest',
+      intersect: false,
+    },
     legend: {
       position: 'top' as const,
     },
@@ -46,9 +51,9 @@ export const options: any = {
 };
 
 export default function SingleCellbankGraph({ singleCellbankGraphData }) {
-    // console.log(singleCellbankGraphData, 'singleCellbankGraphData')
+  // console.log(singleCellbankGraphData, 'singleCellbankGraphData')
 
-  const datasets = singleCellbankGraphData.map(flaskData => ({
+  const datasets = singleCellbankGraphData.map((flaskData) => ({
     label: `Flask ${flaskData.flask_id}`,
     data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
       x: time,
@@ -62,9 +67,8 @@ export default function SingleCellbankGraph({ singleCellbankGraphData }) {
   const data = { datasets };
 
   return (
-    <>
-
+    <StyledGraphContainer>
       <Line options={options} data={data} />
-    </>
+    </StyledGraphContainer>
   );
 }

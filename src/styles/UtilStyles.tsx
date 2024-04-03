@@ -739,3 +739,8 @@ export const ButtonsContainer = styled.div`
   margin: 1rem;
   gap: 1rem;
 `;
+
+// chart / graph
+
+export const StyledGraphContainer = styled.div`
+padding: 1rem;`

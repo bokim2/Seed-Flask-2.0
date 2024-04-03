@@ -10,14 +10,15 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { LineGraphColors } from '../../lib/constants';
+import { LineGraphColors } from '../../../lib/constants';
 import styled from 'styled-components';
-import Scheduler from './add-to-schedule/Scheduler';
-import DateTimePicker from './add-to-schedule/DateTimePicker';
+import Scheduler from '../add-to-schedule/Scheduler';
+import DateTimePicker from '../add-to-schedule/DateTimePicker';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
-import { useBookmarkedFlasksGraphData } from './chart-hooks';
-import { RootState } from '../../redux/store';
+import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
+import { useBookmarkedFlasksGraphData } from '../chart-hooks';
+import { RootState } from '../../../redux/store';
+import { StyledGraphContainer } from '../../../styles/UtilStyles';
 
 ChartJS.register(
   CategoryScale,
@@ -45,15 +46,20 @@ const StyledBookmarkedCellbankGraph = styled.div`
 `;
 
 type TFlasksListGraph = {
-flasksList?: number[]
-}
+  flasksList?: number[];
+};
 
-const FlasksListGraph = memo(({flasksList}: TFlasksListGraph) => {
+const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
   const searchedFlasksList = useSelector(
     (state: RootState) => state.bookmarks.searched_flasks_list
   );
 
-console.log(searchedFlasksList, 'searchedFlasksList in FlasksListGraph', flasksList, 'flasksList in FlasksListGraph');
+  console.log(
+    searchedFlasksList,
+    'searchedFlasksList in FlasksListGraph',
+    flasksList,
+    'flasksList in FlasksListGraph'
+  );
 
   const {
     data: graphData,
@@ -138,6 +144,8 @@ console.log(searchedFlasksList, 'searchedFlasksList in FlasksListGraph', flasksL
     },
     plugins: {
       tooltip: {
+        mode: 'nearest',
+        intersect: false,
         callbacks: {
           title: function () {
             return '';
@@ -231,7 +239,7 @@ console.log(searchedFlasksList, 'searchedFlasksList in FlasksListGraph', flasksL
   console.log(datasets, 'datasets in SELECTEDFLASKSGRAPH');
 
   return (
-    <>
+    <StyledGraphContainer>
       <h3>
         {clickedXY &&
           `Bookmarked Cellbank Graph
@@ -258,7 +266,7 @@ console.log(searchedFlasksList, 'searchedFlasksList in FlasksListGraph', flasksL
         bookmarkedFlasks={searchedFlasksList}
         // setBookmarkedFlasks={setBookmarkedFlasks}
       />
-    </>
+    </StyledGraphContainer>
   );
 });
 

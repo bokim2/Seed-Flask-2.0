@@ -12,7 +12,8 @@ export const StyledTabSelectorContainer = styled.div`
 export const StyledTabSelectorInnerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border: 10px solid red;
+  /* padding: 1rem; */
+  /* border: 10px solid red; */
   /* background-color: lightpink; */
   /* flex-grow: 1; */
   /* position: relative; */

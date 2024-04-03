@@ -1,4 +1,7 @@
 import React, { useRef, useState } from 'react';
+
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 import { Line, getElementAtEvent } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -13,7 +16,8 @@ import {
   ChartData,
 } from 'chart.js';
 import { useDispatch } from 'react-redux';
-import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
+import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
+import { StyledGraphContainer } from '../../../styles/UtilStyles';
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +27,13 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
+  // ChartDataLabels,
 );
+
+// labeling the x and y of each data point
+// ChartJS.defaults.set('plugins.datalabels', {
+//   color: '#dadada',
+// })
 
 export const options: ChartOptions<'line'> = {
   responsive: true,
@@ -49,13 +59,24 @@ export const options: ChartOptions<'line'> = {
       },
     },
   },
+  // for padding on the right side
+  // layout: {
+  //   padding: {
+  //     right: 50
+  //   }
+  // },
   plugins: {
     legend: {
-      position: 'top' as const,
+      // position: 'top' as const,
+      display: false,
     },
     title: {
       display: true,
       text: 'All Cellbanks Graph',
+    },
+    tooltip: {
+      mode: 'nearest',
+      intersect: false,
     },
   },
 };
@@ -110,13 +131,13 @@ export default function AllCellbanksGraph({
     }
   }
   return (
-    <>
+    <StyledGraphContainer>
       <Line
         options={options}
         data={data}
         onClick={clickHandler}
         ref={lineChartRef}
       />
-    </>
+    </StyledGraphContainer>
   );
 }
