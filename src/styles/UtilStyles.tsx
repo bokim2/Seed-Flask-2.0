@@ -8,7 +8,7 @@ export const InnerWrapper = styled.div`
   margin: auto;
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 90%;
   /* height: 70%; */
   /* margin-top: auto; */
 
@@ -168,8 +168,8 @@ export const PageContainer = styled.section`
 `;
 
 export const InnerPageContainer = styled.section`
-  width: 80%;
-padding-bottom: 3rem;
+  width: 90%;
+  padding-bottom: 3rem;
   max-width: 1700px;
 `;
 
@@ -743,4 +743,7 @@ export const ButtonsContainer = styled.div`
 // chart / graph
 
 export const StyledGraphContainer = styled.div`
-padding: 1rem;`
+  @media (min-width: 850px) {
+    padding: 1rem;
+  }
+`;
