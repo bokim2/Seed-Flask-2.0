@@ -5,7 +5,7 @@ import Button from '../../../ui/Button';
 import ChartsTable from '../ChartsTable';
 import { useFetchSingleCellbankGraphData } from '../chart-hooks';
 
-export default function SingleCellbankTab() {
+export default function SingleCellbankTab({bookmarkedFlasks}) {
   const [selectedCellbankId, setSelectedCellbankId] = useState<number | null>(
     null
   );
@@ -58,7 +58,7 @@ export default function SingleCellbankTab() {
           <ChartsTable
             chartTitle="Single Cellbank"
             flasks={singleCellbankGraphData.flat()}
-            bookmarkedFlasks={singleCellbankGraphData}
+            bookmarkedFlasks={bookmarkedFlasks}
             // setBookmarkedFlasks={setBookmarkedFlasks}
           />
         </>

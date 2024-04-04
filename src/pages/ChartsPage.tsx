@@ -144,7 +144,7 @@ export default function ChartsPage() {
 
   // or... 'Filters'
 
-  console.log('searchedFlasksList', searchedFlasksList)
+  console.log('searchedFlasksList', searchedFlasksList);
 
   return (
     <PageContainer id="ChartsPage">
@@ -301,7 +301,9 @@ export default function ChartsPage() {
           /> */}
 
           {/* single cell bank */}
-          {selectedTabName === 'cellbank' && <SingleCellbankTab />}
+          {selectedTabName === 'cellbank' && (
+            <SingleCellbankTab bookmarkedFlasks={bookmarkedFlasks} />
+          )}
           {/* <p>{JSON.stringify(singleCellbankGraphData)}</p>
           {singleCellbankGraphData?.length && (
             <SingleCellbankGraph
