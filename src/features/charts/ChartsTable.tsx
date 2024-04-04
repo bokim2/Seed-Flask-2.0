@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import FlasksRow from './ChartsRow';
-import {
-  TCreateFlask,
-  createFlaskSchema,
-  initialEditFlasksForm,
-  updateFlaskSchema,
-} from '../flasks/flasks-types';
+
 import {
   Caption,
   StyledForm,
@@ -15,12 +8,9 @@ import {
   TableHeader,
   TableHeaderCell,
   TableRow,
-  Wrapper,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
-import { initialCreateFlasksForm } from '../flasks/flasks-types';
 import ChartsRow from './ChartsRow';
-import { useUpdateRowMutation } from '../../hooks/table-hooks/useEditTableRowForm';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import { useAppSelector } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';

@@ -14,12 +14,11 @@ CREATE TABLE cell_banks (
     notes TEXT,
     target_molecule TEXT,
     description TEXT,
-    date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
     project VARCHAR(250),
     username VARCHAR(250),
-    user_id VARCHAR(250)
+    user_id VARCHAR(250),
 );
-
 
 
 
@@ -70,9 +69,9 @@ AFTER UPDATE ON flasks
 FOR EACH ROW
 EXECUTE FUNCTION flasks_update_time_since_inoc_hr();
 
--- UPDATE flasks
--- SET start_date = '2024-01-20 06:00 AM PST'::timestamptz
--- WHERE flask_id = 1;
+UPDATE flasks
+SET start_date = '2024-01-20 06:00 AM PST'::timestamptz
+WHERE flask_id = 1;
 
 
 

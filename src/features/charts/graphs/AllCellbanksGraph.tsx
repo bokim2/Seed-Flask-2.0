@@ -15,6 +15,7 @@ import {
   ChartOptions,
   ChartData,
 } from 'chart.js';
+import autocolors from 'chartjs-plugin-autocolors';
 import { useDispatch } from 'react-redux';
 import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
 import { StyledGraphContainer } from '../../../styles/UtilStyles';
@@ -26,7 +27,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  autocolors,
   // ChartDataLabels,
 );
 
@@ -66,6 +68,9 @@ export const options: ChartOptions<'line'> = {
   //   }
   // },
   plugins: {
+    autocolors: {
+      mode: 'data'
+    },
     legend: {
       // position: 'top' as const,
       display: false,
@@ -79,6 +84,7 @@ export const options: ChartOptions<'line'> = {
       intersect: false,
     },
   },
+  
 };
 
 export default function AllCellbanksGraph({
@@ -95,8 +101,8 @@ export default function AllCellbanksGraph({
       x: time,
       y: flaskData.od600_values[index],
     })),
-    borderColor: 'rgb(89, 192, 75)', // Change as needed
-    backgroundColor: 'rgb(89, 192, 75)', // Adjust for visibility
+    // borderColor: 'rgb(89, 192, 75)', // Change as needed
+    // backgroundColor: 'rgb(89, 192, 75)', // Adjust for visibility
     tension: 0.1,
   }));
 
