@@ -151,16 +151,20 @@ ${
   --clr-accent-4: 228, 241, 238;/* #E4F1EE menu button */
   --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
   --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
-  --clr-accent-7: #FBC7CA;
+  --clr-accent-7: #D4F27C; // selected table header
   --clr-accent-8: #F68086; 
   --clr-accent-9: #10e7dc;
   --clr-accent-10: #fde5d4;
+  --clr-accent-11: #7C9DF2;
+  --clr-accent-12: #FBC7CA;
+  --clr-accent-13: #fff5e4;
+  --clr-accent-14: #C8C0B8; 
 
   --clr-text-1: #D3D3D3;
   --clr-text-2: black;
   --clr-text-3: #CCCCCC;
   --clr-text-4: black;
-  --clr-text-5: #708090;
+  --clr-text-5: 112, 128, 144; //#708090
   --clr-text-6: black;
    }
   
@@ -195,7 +199,7 @@ ${
      font-size: 1em;
      font-weight: 500;
      font-family: inherit;
-     background-color: #1a1a1a;
+     background-color: #ffffff; //#1a1a1a;
      cursor: pointer;
      transition: border-color 0.25s;
    }
@@ -204,10 +208,10 @@ ${
    }
    button:focus,
    button:focus-visible {
-     outline: 4px auto -webkit-focus-ring-color;
+     ${'' /* outline: 4px auto -webkit-focus-ring-color; */}
    }
   
-   @media (prefers-color-scheme: light) {
+   ${'' /* @media (prefers-color-scheme: light) {
      :root {
        color: #213547;
        background-color: #ffffff;
@@ -218,7 +222,7 @@ ${
      button {
        background-color: #f9f9f9;
      }
-   }
+   } */}
   
 
   

@@ -6,7 +6,7 @@ import {
   TableDataCell,
   TableRow,
 } from '../../styles/UtilStyles';
-import { displayLocalTime } from '../../lib/hooks';
+import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditSampleForm } from './samples-types';
 import { set } from 'date-fns';
 import Button from '../../ui/Button';
@@ -29,6 +29,8 @@ export default function SamplesRow({
     completed,
     end_date,
     human_readable_date,
+    username,
+    user_id,
   } = rowData;
 
   const editing = editingId === sample_id;
@@ -48,7 +50,7 @@ export default function SamplesRow({
         <TableDataCell data-cell="completed">
           {completed ? 'completed' : 'in-progress'}
         </TableDataCell>
-        <TableDataCell data-cell="user">username</TableDataCell>
+        <TableDataCell data-cell="user">{username}</TableDataCell>
         <TableDataCell
           data-cell="edit"
           onClick={(e) => {
@@ -92,8 +94,11 @@ function SamplesEditForm({
   isPendingDelete,
 }) {
   function handleChange(e) {
+    const { name, value } = e.target;
+    console.log(name, value, 'name and value');
+
     setEditedForm((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
+      return { ...prev, [e.target.name]: value };
     });
   }
 
@@ -112,8 +117,7 @@ function SamplesEditForm({
             placeholder="flask id"
             required
             value={editedForm.flask_id}
-          >
-          </EditTextArea>
+          ></EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="od600">
@@ -124,8 +128,7 @@ function SamplesEditForm({
             placeholder="od600"
             required
             value={editedForm.od600}
-          >
-          </EditTextArea>
+          ></EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="time since inoc hr">
@@ -135,24 +138,22 @@ function SamplesEditForm({
         <TableDataCell data-cell="end date/time">
           <EditTextArea
             name="human_readable_date"
-            onChange={handleChange} 
+            onChange={handleChange}
             placeholder="YYYY-MM-DD HH:MM AM/PM"
             required
             value={editedForm.human_readable_date}
-          >
-          </EditTextArea>
+          >{editedForm.human_readable_date}</EditTextArea>
         </TableDataCell>
 
         <TableDataCell data-cell="completed">
-          <select id="completed" name="completed" 
-          value={editedForm.completed} 
-          onChange={handleChange}>
-            <option value="true" >
-              completed
-            </option>
-            <option value="false" >
-              in-progress
-            </option>
+          <select
+            id="completed"
+            name="completed"
+            value={editedForm.completed}
+            onChange={handleChange}
+          >
+            <option value="true">completed</option>
+            <option value="false">in-progress</option>
           </select>
         </TableDataCell>
 

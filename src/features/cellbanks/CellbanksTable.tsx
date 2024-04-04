@@ -7,65 +7,61 @@ import {
   TableRow,
   TableHeaderCell,
   StyledForm,
-  SearchSection,
+  LoaderWrapper,
 } from '../../styles/UtilStyles';
-import { useState } from 'react';
-// import { InitialEditCellbankForm } from '../../lib/constants';
-import { useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
-import { useTextInputSearch } from './cellbanks-hooks';
-import Button from '../../ui/Button';
-import styled from 'styled-components';
+import { useEffect, useMemo, useState } from 'react';
 import {
+  filteredTableData,
+  useAppSelector,
+  useFilterSortTableData,
+  useSetSortColumn,
+} from '../../hooks/hooks';
+import {
+  TCellbanks,
+  TCellbanksColumns,
   TUpdateCellbankForm,
+  cellbanksTableHeaderCellsArray,
   initialEditCellbankForm,
   updateCellbankSchema,
 } from './cellbanks-types';
 import ErrorMessage from '../../ui/ErrorMessage';
+import { changePageLimit } from '../../redux/slices/pageSlice';
+import { useDispatch } from 'react-redux';
+import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
+import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
+import SearchForm from '../../ui/SearchForm';
+import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
+import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
+import SearchFormRow from '../../ui/SearchFormRow';
+import Button from '../../ui/Button';
+import LoaderBar from '../../ui/LoaderBar';
 
-const TextSearchContainer = styled.div``;
-
-const TextSearchInput = styled.input`
-  margin: 0.5rem;
-  border-radius: 5px;
-  padding: 0.5rem;
-  width: 200px;
-
-  @media (min-width: 600px) {
-    width: 400px;
-  }
-`;
-
+export type TError = {
+  message: string;
+};
 export default function CellbanksTable({
   cellbanks,
   handleAddBookmark,
   toggleTextTruncation,
 }) {
-  console.log('cellbanks in cellbanks table', cellbanks);
-  const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
-    initialEditCellbankForm
-  );
-  // id of edited cellbank
-  const [editingId, setEditingId] = useState<number | null>(null);
+  // console.log('cellbanks in cellbanks table', cellbanks);
 
-  // update cellbank
-  // const { mutate: submitEditedCellbankForm, isPending: isPendingUpdate } = useUpdateCellbankMutation(setEditedForm);
-
-  // update row
   const {
-    mutate: submitEditedCellbankForm,
-    isPending: isPendingUpdate,
-    error: updateError,
-  } = useUpdateRowMutation({
+    editedForm,
+    setEditedForm,
+    editingId,
+    setEditingId,
+    submitEditedRowForm,
+    isPendingUpdate,
+    updateError,
+    handleEditFormSubmit,
+  } = useEditTableRowForm<TUpdateCellbankForm>({
     tableName: 'cellbanks',
     zodSchema: updateCellbankSchema,
     initialEditForm: initialEditCellbankForm,
-    setEditedForm: setEditedForm,
     idColumnName: 'cell_bank_id',
     dateColumnName: 'date_timestamptz',
   });
-
-  // delete row, only for cellbank (archive)
-  // const {mutate: deleteCellbank, isPending: isPendingDelete, isError, error} = useDeleteCellbankMutation();
 
   // delete cellbank
   const {
@@ -74,111 +70,158 @@ export default function CellbanksTable({
     error: deleteError,
   } = useDeleteRowMutation({ tableName: 'cellbanks' });
 
-  // searching cellbanks table through text input
-  const [searchedData, setSearchedData] = useState([]);
-  const {
-    searchText,
-    setSearchText,
-    SelectSearchField,
-    performInputTextSearch,
-    searchField,
-  } = useTextInputSearch();
+  // type TPages = {status: string; data: TCellbanks };
+  // type TSearchData = {
+  //   pages: TPages[]
+  //   pageParams: number[];
+  // };
+  // searched data - searching cellbanks table through text input - the SearchForm component will use setSearchedData to update this state
+  const [searchedData, setSearchedData] = useState<TCellbanks | null>(null);
+  console.log('searchedData in cellbankstable', searchedData);
+  // filtered and sorted data that will be passed to child components
+  const [filteredAndSortedData, setFilteredAndSortedData] =
+    useState<TCellbanks>([]);
 
-  const handleEditFormSubmit = (e, editedForm) => {
-    e.preventDefault();
-    e.stopPropagation();
-    submitEditedCellbankForm(editedForm);
-    setEditingId(null);
+  // sort selected column
+  const { sortColumn, handleSortColumn } =
+    useSetSortColumn<TCellbanksColumns>();
+
+  // page limit - how many rows to display per fetch  ex: 10, 20, 50
+  const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
+
+  const dispatch = useDispatch();
+  const handleChoosePageLimit = (limit: number) => {
+    dispatch(changePageLimit(limit));
   };
 
+  // useEffect call to filter and sort data and keep it in sync
+
+  useEffect(() => {
+    console.log(
+      'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
+      searchedData,
+      // searchedData?.pages,
+      // searchedData?.pages?.[0]?.data?.length > 0
+    );
+    // if (searchedData?.pages && searchedData?.pages?.[0]) {
+    //   const searchedDataAll =
+    //     searchedData?.pages.map((data) => data.data).flat() || [];
+
+    //   console.log(
+    //     'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
+    //     searchedDataAll
+    //   );
+    //   setFilteredAndSortedData(searchedDataAll);
+    if (searchedData && searchedData?.length > 0) {
+      // const searchedDataAll =
+      //   searchedData?.pages.map((data) => data.data).flat() || [];
+
+      console.log(
+        'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
+        searchedData
+      );
+      setFilteredAndSortedData(searchedData);
+    } else {
+      setFilteredAndSortedData(cellbanks);
+      // console.log('useEffect in dataName table', dataName);
+    }
+  }, [cellbanks, searchedData]);
+
+  // const data = useFilterSortTableData({
+  //   dataName: cellbanks,
+  //   filteredAndSortedData,
+  //   sortColumn,
+  //   setFilteredAndSortedData,
+  // });
+
+  const data = useMemo(()=>filteredTableData(
+    cellbanks,
+    filteredAndSortedData,
+    sortColumn,
+    'date_timestamptz'
+  ), [cellbanks, filteredAndSortedData, sortColumn]);
+
+  //state for multisearch
+  const [showSearchRow, setShowSearchRow] = useState(false);
+  const [searchMultiError, setSearchMultiError] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  console.log(searchMultiError, 'searchMultiError');
+  console.log('searchLoading in cellbanks table', searchLoading);
   return (
     <>
-      {/* Text Search Section */}
-      <SearchSection>
-        <h3>
-          Click on column to search:
-          <p>
-            {` ${
-              searchField == 'date_timestampz'
-                ? 'date'
-                : searchField.replace(/_/g, ' ')
-            }`}
-          </p>
-        </h3>
-        <TextSearchContainer>
-          <TextSearchInput
-            required
-            type="text"
-            id="search"
-            placeholder="Text Search"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <Button
-            type="button"
-            $size={'small'}
-            id="searchButton"
-            onClick={async () => {
-              try {
-                const data = await performInputTextSearch();
-                setSearchedData(data);
-              } catch (err) {
-                console.log('error', err);
-              }
-            }}
-          >
-            Search
-          </Button>
-        </TextSearchContainer>
-      </SearchSection>
+      {searchMultiError && <p>{searchMultiError}</p>}
+      <LoaderWrapper>{searchLoading && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>{searchLoading && <p>SEARCH IS LOADING!!!!!</p>}</LoaderWrapper>
+      {/* Search Section */}
+      {/* <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} /> */}
 
-      {/* Table Section */}
+      {/* Page Limit Section */}
+      <PageLimitDropDownSelector
+        handleChoosePageLimit={handleChoosePageLimit}
+        pageLimitSetting={pageLimitSetting}
+        tableName={'cellbanks'}
+      />
+
+      {/* loading and error messages */}
       {isPendingUpdate && <h1>edit is pending Update...</h1>}
       {isPendingDelete && <h1>edit is pending Delete...</h1>}
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
+      {searchMultiError && <ErrorMessage error={searchMultiError} />}
+
+      {/* Edit row form */}
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
-          handleEditFormSubmit(e, editedForm);
+          handleEditFormSubmit(
+            e,
+            editedForm,
+            submitEditedRowForm,
+            setEditingId
+          );
         }}
       >
+        <Caption>Cell Banks Table</Caption>
+        {/* Table Section */}
         <TableContainer id="CellbanksTableContainer">
           <StyledTable>
-            <Caption>Cell Banks Table</Caption>
             <TableHeader>
-              <TableRow onClick={SelectSearchField}>
-                <TableHeaderCell data-column-name="cell_bank_id">
-                  cell bank id
-                </TableHeaderCell>
-                <TableHeaderCell data-column-name="strain">
-                  strain
-                </TableHeaderCell>
-                <TableHeaderCell data-column-name="target_molecule">
-                  target molecule
-                </TableHeaderCell>
-                <TableHeaderCell data-column-name="project">
-                  project
-                </TableHeaderCell>
-                <TableHeaderCell data-column-name="details">
-                  details
-                </TableHeaderCell>
-                <TableHeaderCell data-column-name="notes">
-                  notes
-                </TableHeaderCell>
-                <TableHeaderCell data-column-name="date_timestampz">
-                  date
-                </TableHeaderCell>
-                <TableHeaderCell data-column-name="username">
-                  username
-                </TableHeaderCell>
+              {/* select column to search */}
+              <TableRow>
+                {cellbanksTableHeaderCellsArray.map((headerCell, i) => (
+                  <TableHeaderCellComponent
+                    key={headerCell}
+                    columnName={headerCell}
+                    handleSortColumn={handleSortColumn}
+                    sortColumn={sortColumn}
+                  />
+                ))}
 
-                <TableHeaderCell>edit</TableHeaderCell>
+                <TableHeaderCell>
+                  <Button
+                    type="button"
+                    onClick={() => setShowSearchRow((prev) => !prev)}
+                    $size={'small'}
+                  >
+                    Open Search
+                  </Button>
+                </TableHeaderCell>
               </TableRow>
+
+              {showSearchRow && (
+                <SearchFormRow
+                  setSearchedData={setSearchedData}
+                  tablePathName={'cellbanks'}
+                  tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
+                  setSearchMultiError={setSearchMultiError}
+                  setSearchLoading={setSearchLoading}
+                />
+              )}
             </TableHeader>
             <tbody>
-              {cellbanks.length > 0 &&
-                cellbanks?.map((rowData) => (
+              {data &&
+                data?.length > 0 &&
+                data?.map((rowData) => (
                   <CellbanksRow
                     key={rowData.cell_bank_id}
                     rowData={rowData}

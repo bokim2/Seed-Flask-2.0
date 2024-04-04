@@ -6,6 +6,9 @@ import process from 'process';
 
 // create a new pool here using the connection string above
 const pool = new Pool({ connectionString: process.env.PG_URI, 
+  ssl: {
+    rejectUnauthorized: false,
+  },
   max: 3, // added by BK
   min: 0, // added by BK
   idle: 10000,  // added by BK

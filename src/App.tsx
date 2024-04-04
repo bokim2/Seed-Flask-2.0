@@ -1,16 +1,12 @@
-// import { useEffect, useState } from 'react';
-// import axios from 'axios';
 import styled from 'styled-components';
 import GlobalStyles from './styles/GlobalStyles';
 // import Button from './ui/Button';
 import TestComponent from './ui/TestComponent';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import MainNav from './ui/MainNav';
+import MainNav from './ui/nav-ui/MainNav';
 import AppLayout from './AppLayout';
 import Dashboard from './pages/HomePage';
 
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SettingsPage from './pages/SettingsPage';
 
 import SamplePage from './pages/SamplePage';
@@ -18,10 +14,14 @@ import HomePage from './pages/HomePage';
 import FlaskPage from './pages/FlaskPage';
 import CellbankPage from './pages/CellbankPage';
 import ChartsPage from './pages/ChartsPage';
-import SignInPage from './pages/SignInPage';
-import BioreactorPage from './pages/BioreactorPage';
+import BioreactorPage from './pages/SchedulesPage';
 import { useEffect, useState } from 'react';
 import { baseUrl } from '../configs';
+import GetStarted from './pages/GetStarted';
+import LoaderBar from './ui/LoaderBar';
+import { useAppDispatch, useAppSelector } from './hooks/hooks';
+import { updateUserProfile } from './redux/slices/userProfileSlice';
+import { TuserProfile } from './redux/slices/userSlice';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -34,80 +34,104 @@ import { baseUrl } from '../configs';
 //   },
 // });
 
-
-type TuserProfile = {
-  picture: string;
-  name: string;
-  email: string;
-};
-
 function App() {
-  const queryClient = new QueryClient({
-    queryCache: new QueryCache({
-      onError: (error, query)=> {
-        if (query?.meta?.errorMessage) {
-          console.log(query.meta.errorMessage);
-        }
-      }
-    }),
-    mutationCache: new MutationCache({
-      onError: (error)=> {
-        console.log(error);
-      }
-    }),
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-      },
-    },
-  });
+  const userProfile = useAppSelector(
+    (state) => state.userProfile.userProfile
+  ) as TuserProfile | null;
+  const dispatch = useAppDispatch();
 
-  const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
-
+  const [userLoading, setUserLoading] = useState<boolean>(true);
+  // console.log('userProfile in APP console log before useEffect', userProfile);
   useEffect(() => {
     async function authProfile() {
-      try{
-        const response = await fetch(`${baseUrl}/profile`, {
+      try {
+        const response = await fetch(`${baseUrl}/api/auth/status`, {
           credentials: 'include', // Include cookies for cross-origin requests
         });
-        console.log(response)
-      const data = await response.json();
-      setUserProfile(data);
-      } catch(errr){
-        console.log('error', errr)
+        // console.log(response);
+        if (response.ok) {
+          const data = await response.json();
+
+          // setUserProfile(data);
+          // console.log('userProfile in APP first useEffect', data);
+          dispatch(updateUserProfile(data));
+        }
+        if (response.status === 401) {
+          console.log('Error: Not authenticated.  Please sign in.');
+        }
+        if (response.status === 403) {
+          console.log('Error: Not authorized to access this resource.');
+        }
+      } catch (err) {
+        console.log('error', err);
+      } finally {
+        setUserLoading(false);
       }
     }
 
     // getEnv()
     authProfile();
   }, []);
+  // console.log('userProfile in APP console log after useEffect', userProfile);
+
+  if (userLoading) {
+    return <LoaderBar />;
+  }
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <GlobalStyles />
-        {/* <StyledDiv>
+      <GlobalStyles />
+      {/* <StyledDiv>
 
       </StyledDiv> */}
-        <BrowserRouter>
-          <Routes>
-            <Route element={<AppLayout userProfile={userProfile}/>}>
-              <Route index element={<HomePage />} />
-              <Route path="cellbank" element={<CellbankPage />} />
-              <Route path="flask" element={<FlaskPage />} />
-              <Route path="sample" element={<SamplePage />} />
-              <Route path="bioreactor" element={<BioreactorPage/>} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="charts" element={<ChartsPage />} />
-              {/* <Route path="signin" element={<SignInPage />} /> */}
-            </Route>
-
-            <Route path="*" element={<h1>Page not found</h1>} />
-          </Routes>
-          {/* <TestComponent /> */}
-        </BrowserRouter>
-      </QueryClientProvider>
+      <BrowserRouter>
+        <Routes>
+          {userProfile && userProfile?.isAuthenticated === true ? (
+            <>
+              <Route
+                element={
+                  <AppLayout
+                    userProfile={userProfile}
+                    // setUserProfile={setUserProfile}
+                  />
+                }
+              >
+                <Route index element={<HomePage />} />
+                <Route path="cellbank" element={<CellbankPage />} />
+                <Route path="flask" element={<FlaskPage />} />
+                <Route path="sample" element={<SamplePage />} />
+                <Route path="schedule" element={<BioreactorPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="charts" element={<ChartsPage />} />
+                {/* <Route path="signin" element={<SignInPage />} /> */}
+              </Route>{' '}
+            </>
+          ) : (
+            <>
+              <Route
+                element={
+                  <AppLayout
+                    userProfile={userProfile}
+                    // setUserProfile={setUserProfile}
+                  />
+                }
+              >
+                <Route index element={<GetStarted />} />
+                {/* <Route path="cellbank" element={<CellbankPage />} />
+                <Route path="flask" element={<FlaskPage />} />
+                <Route path="sample" element={<SamplePage />} />
+                <Route path="bioreactor" element={<BioreactorPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="charts" element={<ChartsPage />} /> */}
+                {/* <Route path="signin" element={<SignInPage />} /> */}
+              </Route>
+              <Route path="*" element={<Navigate replace to="/" />} />
+            </>
+          )}
+          <Route path="*" element={<h1>Page not found</h1>} />
+        </Routes>
+        {/* <TestComponent /> */}
+      </BrowserRouter>
     </>
   );
 }

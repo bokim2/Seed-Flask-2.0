@@ -8,17 +8,18 @@
 --   date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
 
--- CREATE TABLE cell_banks (
---     cell_bank_id BIGSERIAL NOT NULL PRIMARY KEY,
---     strain VARCHAR(50),
---     notes TEXT,
---     target_molecule TEXT,
---     description TEXT,
---     date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC')
-    -- project VARCHAR(250),
-    -- username VARCHAR(250),
-    -- user_id VARCHAR(250),
--- );
+CREATE TABLE cell_banks (
+    cell_bank_id BIGSERIAL NOT NULL PRIMARY KEY,
+    strain VARCHAR(50),
+    notes TEXT,
+    target_molecule TEXT,
+    description TEXT,
+    date_timestamptz TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    project VARCHAR(250),
+    username VARCHAR(250),
+    user_id VARCHAR(250)
+);
+
 
 
 
@@ -27,7 +28,7 @@
 
 
 -- Create the enum type for vessel_type
-CREATE TYPE vessel_type AS ENUM ('flask', 'test_tube', '96_well_plate', '24_well_plate');
+CREATE TYPE vessel_type AS ENUM ('flask', 'test tube', '96_well plate', '24 well plate');
 
 
 CREATE TABLE flasks (
@@ -39,6 +40,8 @@ media_mL REAL,
 temp_c REAL NOT NULL,
 rpm REAL NOT NULL,
 start_date TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    username VARCHAR(250),
+    user_id VARCHAR(250),
 PRIMARY KEY(flask_id),
 cell_bank_id INT NOT NULL,
 FOREIGN KEY (cell_bank_id) REFERENCES cell_banks(cell_bank_id)
@@ -67,9 +70,9 @@ AFTER UPDATE ON flasks
 FOR EACH ROW
 EXECUTE FUNCTION flasks_update_time_since_inoc_hr();
 
-UPDATE flasks
-SET start_date = '2024-01-20 06:00 AM PST'::timestamptz
-WHERE flask_id = 1;
+-- UPDATE flasks
+-- SET start_date = '2024-01-20 06:00 AM PST'::timestamptz
+-- WHERE flask_id = 1;
 
 
 
@@ -92,6 +95,8 @@ CREATE TABLE samples (
   end_date TIMESTAMPTZ DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
   od600 REAL NOT NULL,
   completed BOOLEAN DEFAULT false,
+    username VARCHAR(250),
+    user_id VARCHAR(250),
   time_since_inoc_hr REAL, -- Updated data type
   FOREIGN KEY (flask_id) REFERENCES flasks(flask_id)
 );
@@ -135,13 +140,62 @@ EXECUTE FUNCTION calculate_time_since_inoc_hr_after_update();
 
 
 -- Insert a sample to test the trigger
-INSERT INTO samples (flask_id, od600) VALUES (1, 4.2);
-INSERT INTO samples (flask_id, od600) VALUES (2, 3.1);
+-- INSERT INTO samples (flask_id, od600) VALUES (1, 4.2);
+-- INSERT INTO samples (flask_id, od600) VALUES (2, 3.1);
 
-INSERT INTO samples (flask_id, od600) VALUES (1, 7.8);
-INSERT INTO samples (flask_id, od600) VALUES (2, 9.4);
+-- INSERT INTO samples (flask_id, od600) VALUES (1, 7.8);
+-- INSERT INTO samples (flask_id, od600) VALUES (2, 9.4);
 
-INSERT INTO samples (flask_id, od600) VALUES (1, 9.1);
-INSERT INTO samples (flask_id, od600) VALUES (2, 10.1);
+-- INSERT INTO samples (flask_id, od600) VALUES (1, 9.1);
+-- INSERT INTO samples (flask_id, od600) VALUES (2, 10.1);
 
 
+-- SCHEDULES
+
+CREATE TABLE IF NOT EXISTS schedules (
+    schedule_id BIGSERIAL NOT NULL PRIMARY KEY,
+    start_date TIMESTAMP NOT NULL,
+    time_since_inoc_hr REAL NOT NULL,
+    notes VARCHAR(500),
+    username VARCHAR(250) NOT NULL,
+    user_id VARCHAR(250) NOT NULL,
+    flask_bookmark INT[],
+    current_flasks INT[],
+    flask_id INT,
+    CONSTRAINT fk_flask_id FOREIGN KEY (flask_id) REFERENCES flasks (flask_id)
+);
+
+
+-- INSERT INTO schedules (
+--     start_date,
+--     time_since_inoc_hr,
+--     notes,
+--     username,
+--     flask_bookmark,
+--     flask_id
+--   )
+-- VALUES (
+--     '2023-03-14 10:00:00',
+--     5,
+--     'testing bk notes',
+--     'Bo Kim',
+--     '{1,42}',
+--     null
+--   );
+
+--   INSERT INTO schedules (
+--     start_date,
+--     time_since_inoc_hr,
+--     notes,
+--     username,
+--     flask_bookmark,
+--     flask_id
+--   )
+-- VALUES (
+--     '2023-03-14 11:00:00',
+--     24,
+--     'testing2 bk notes',
+--     'Bo Kim',
+--     '{1,42,2}',
+--     42
+--   );

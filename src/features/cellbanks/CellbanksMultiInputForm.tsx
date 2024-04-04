@@ -1,43 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { baseUrl } from '../../../configs';
 import styled from 'styled-components';
 import {
   FormLabel,
   StyledForm,
-  StyledTable,
-  TableRow,
   BulkInputTextArea,
   MultiInputFormBody,
-  MultiInputFormCell,
+  FormInputCell,
+  MultiInput,
+  ButtonsContainer,
+  CreateEntryTable,
+  CreateEntryTableRow,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import {
-  createCellbankSchema,
-  initialEditCellbankForm,
+  TCreateCellbank,
+  createCellbankColumnsArray,
+  initialCreateCellbankForm,
 } from './cellbanks-types';
-import { TCreateCellbankSchema } from './cellbanks-types';
-import { useCreateValidatedRowMutation } from '../../lib/hooks';
+
 import ErrorMessage from '../../ui/ErrorMessage';
-import PopularOptionsSelectors from '../../ui/PopularOptionsSelectors';
-import { MultiInput } from '../samples/SamplesMultiInputForm';
+import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
+import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
+import { createCellbankSchema } from '../../../server/zodSchemas';
 
-export const ButtonsContainer = styled.div`
-  display: flex;
-  margin: 1rem;
-  gap: 1rem;
-`;
-
-export default function CellbanksMultiInputForm({ popularOptions }) {
-  console.log('popularOptions in cellbanks multi input form', popularOptions);
-
-  const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
-  const [bulkForm, setBulkForm] = useState<TCreateCellbankSchema[] | []>([
-    initialEditCellbankForm,
-  ]); // data for submitting cellbank(s)
-  console.log(bulkForm, 'bulkForm')
-
-  // const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
-
+export default function CellbanksMultiInputForm() {
+  // create a row
   const {
     mutate: createCellbankMutation,
     isPending,
@@ -45,79 +32,20 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
   } = useCreateValidatedRowMutation({
     tableName: 'cellbanks',
     zodSchema: createCellbankSchema,
-    // apiEndpoint: 'cellbank',
   });
 
-  // update bulkForm when bulkTextAreaInput changes
-  useEffect(() => {
-    if (bulkTextAreaInput === '') return;
-    const pastedInputsArray = bulkTextAreaInput.split('\n').map((row) => {
-      const singleRow = row.split('\t');
-      const rowData = {
-        strain: singleRow[0],
-        target_molecule: singleRow[1],
-        project: singleRow[2],
-        description: singleRow[3],
-        notes: singleRow[3],
-      };
-      return rowData;
-    });
-    setBulkForm(pastedInputsArray);
-  }, [bulkTextAreaInput]);
-
-  const handleSubmit = async (e, bulkForm) => {
-    e.preventDefault();
-    const mutationPromises = bulkForm.map((row) => createCellbankMutation(row));
-    try {
-      await Promise.all(mutationPromises);
-      setBulkForm([initialEditCellbankForm]);
-      setBulkTextAreaInput('');
-    } catch (err) {
-      console.log(err, 'error in bulkForm mutation submit');
-    }
-  };
-
-  const handleChange = (e, rowNumber: number) => {
-    setBulkForm((prev) => {
-      return prev.map((row, i) => {
-        if (i === rowNumber) {
-          return { ...row, [e.target.name]: e.target.value };
-        }
-        return row;
-      });
-    });
-  };
-
-  const handleClearForm = () => {
-    setBulkForm([initialEditCellbankForm]);
-    setBulkTextAreaInput('');
-  };
-
-  // for popular options
-  const popularOptionsArray: any = []
-  for (let i = 0; i < 5; i++) {
-    
-      popularOptionsArray.push(<tr key={i}><PopularOptionsSelectors
-        popularOptions={popularOptions}
-        columns={[
-          'strain',
-          'target_molecule',
-          'project',
-          'description',
-          'notes',
-        ]}
-        i={i}
-        selectPopularOption={selectPopularOption}
-      ></PopularOptionsSelectors></tr>)
-    
-  }
-
-  function selectPopularOption(column, value){
-    console.log('value, column',value, column)
-    if (bulkForm.length > 1) return;
-    setBulkForm(prev => (prev.map(singleForm => ({...singleForm, [column]: value}))))
-  }
-  //
+  const {
+    bulkTextAreaInput,
+    setBulkTextAreaInput,
+    bulkForm,
+    handleSubmit,
+    handleChange,
+    handleClearForm,
+  } = useBulkInputForm<TCreateCellbank>({
+    createTableColumnsArray: createCellbankColumnsArray,
+    createTableRowMutation: createCellbankMutation,
+    initialCreateRowForm: initialCreateCellbankForm,
+  });
 
   return (
     <>
@@ -138,15 +66,13 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
           console.log('bulkForm in submit', bulkForm);
         }}
       >
-        <StyledTable>
+        <CreateEntryTable>
           <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
-                <TableRow key={i}>
-                  <MultiInputFormCell>
-                    {i == 0 && <FormLabel htmlFor="strain">strain</FormLabel>}
+                <CreateEntryTableRow key={i}>
+                  <FormInputCell className="create-row">
                     <MultiInput
-                      type="text"
                       id="strain"
                       name="strain"
                       placeholder="strain (e.g. aspergillus)"
@@ -155,16 +81,11 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
                       autoFocus
                       value={bulkForm[i].strain}
                     />
-                  </MultiInputFormCell>
+                    {i == 0 && <FormLabel htmlFor="strain">strain</FormLabel>}
+                  </FormInputCell>
 
-                  <MultiInputFormCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="target_molecule">
-                        target molecule
-                      </FormLabel>
-                    )}
+                  <FormInputCell>
                     <MultiInput
-                      type="text"
                       id="target_molecule"
                       name="target_molecule"
                       onChange={(e) => handleChange(e, i)}
@@ -172,12 +93,15 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
                       required
                       value={bulkForm[i].target_molecule}
                     />
-                  </MultiInputFormCell>
+                    {i == 0 && (
+                      <FormLabel htmlFor="target_molecule">
+                        target molecule
+                      </FormLabel>
+                    )}
+                  </FormInputCell>
 
-                  <MultiInputFormCell>
-                    {i == 0 && <FormLabel htmlFor="project">project</FormLabel>}
+                  <FormInputCell>
                     <MultiInput
-                      type="text"
                       id="project"
                       name="project"
                       onChange={(e) => handleChange(e, i)}
@@ -185,12 +109,10 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
                       required
                       value={bulkForm[i].project}
                     />
-                  </MultiInputFormCell>
+                    {i == 0 && <FormLabel htmlFor="project">project</FormLabel>}
+                  </FormInputCell>
 
-                  <MultiInputFormCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="description">description</FormLabel>
-                    )}
+                  <FormInputCell>
                     <MultiInput
                       id="description"
                       name="description"
@@ -199,10 +121,12 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
                       required
                       value={bulkForm[i].description}
                     />
-                  </MultiInputFormCell>
+                    {i == 0 && (
+                      <FormLabel htmlFor="description">description</FormLabel>
+                    )}
+                  </FormInputCell>
 
-                  <MultiInputFormCell>
-                    {i == 0 && <FormLabel htmlFor="notes">notes</FormLabel>}
+                  <FormInputCell>
                     <MultiInput
                       id="notes"
                       name="notes"
@@ -211,14 +135,14 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
                       required
                       value={bulkForm[i].notes}
                     />
-                  </MultiInputFormCell>
-                </TableRow>
+                    {i == 0 && <FormLabel htmlFor="notes">notes</FormLabel>}
+                  </FormInputCell>
+                </CreateEntryTableRow>
               ))}
 
-            {popularOptionsArray }
-
+            {/* {popularOptionsArray } */}
           </MultiInputFormBody>
-        </StyledTable>
+        </CreateEntryTable>
         <ButtonsContainer>
           <Button $size={'small'} type="submit" disabled={isPending}>
             Submit
@@ -236,7 +160,6 @@ export default function CellbanksMultiInputForm({ popularOptions }) {
 //   try {
 //     e.preventDefault();
 //     console.log('submitting', 'form', form, 'bulkform', bulkForm);
-//     await fetch(`${baseUrl}/api/cellbanks`, {
 //       method: 'POST',
 //       headers: {
 //         'content-type': 'application/json',

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { TableRow, TableDataCell, FormTextArea, PreviousDataRow, EditRow, EditTextArea } from '../../styles/UtilStyles';
+import {
+  TableDataCell,
+  PreviousDataRow,
+  EditRow,
+  EditTextArea,
+} from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
-import styled, { css } from 'styled-components';
-import { TTableRow } from '../../lib/types';
-import { displayLocalTime } from '../../lib/hooks';
-import { initialEditFlasksForm } from '../flasks/flasks-types';
+import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditCellbankForm } from './cellbanks-types';
-
-
 
 export default function CellbanksRow({
   rowData,
@@ -18,11 +17,21 @@ export default function CellbanksRow({
   toggleTextTruncation,
   isPendingUpdate,
   isPendingDelete,
-  editingId, 
-  setEditingId
+  editingId,
+  setEditingId,
 }) {
-  const { cell_bank_id, target_molecule, strain, description, notes, date_timestamptz, username, project } = rowData;
-  
+  const {
+    cell_bank_id,
+    target_molecule,
+    strain,
+    description,
+    notes,
+    date_timestamptz,
+    username,
+    project,
+    human_readable_date,
+  } = rowData;
+
   const editing = editingId === cell_bank_id;
   return (
     <>
@@ -36,13 +45,11 @@ export default function CellbanksRow({
 
         <TableDataCell data-cell="strain">{strain}</TableDataCell>
 
-        <TableDataCell data-cell="target_molecule">
+        <TableDataCell data-cell="target molecule">
           {target_molecule}
         </TableDataCell>
 
-        <TableDataCell data-cell="project">
-          {project}
-        </TableDataCell>
+        <TableDataCell data-cell="project">{project}</TableDataCell>
 
         <TableDataCell
           data-cell="description"
@@ -58,9 +65,7 @@ export default function CellbanksRow({
           {notes}
         </TableDataCell>
 
-        <TableDataCell data-cell="date">
-          {displayLocalTime(date_timestamptz)}
-        </TableDataCell>
+        <TableDataCell data-cell="date">{human_readable_date}</TableDataCell>
 
         <TableDataCell data-cell="user">{username}</TableDataCell>
 
@@ -79,11 +84,9 @@ export default function CellbanksRow({
             } else {
               setEditedForm({
                 ...rowData,
-                human_readable_date: displayLocalTime(
-                  date_timestamptz
-                  ),
-                });
-                setEditingId(cell_bank_id);
+                human_readable_date: displayLocalTime(date_timestamptz),
+              });
+              setEditingId(cell_bank_id);
             }
           }}
         >
@@ -114,9 +117,8 @@ function CellbanksEditForm({
   isPendingUpdate,
   deleteCellbank,
   // rowData,
-  isPendingDelete
+  isPendingDelete,
 }) {
-  
   const handleChange = (e) => {
     e.preventDefault();
     e.stopPropagation();

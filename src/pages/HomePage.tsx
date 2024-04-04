@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 import MainMenuButton, { StyledImage } from '../ui/MainMenuButton';
 import styled from 'styled-components';
 import { MdHeight } from 'react-icons/md';
@@ -8,34 +8,19 @@ import FlasksRow from '../features/flasks/FlasksRow';
 import Settings from './SettingsPage';
 import {
   InnerPageContainer,
+  InnerWrapper,
   LinkButton,
   PageContainer,
   StyledMainMenuButtons,
   Wrapper,
 } from '../styles/UtilStyles';
-import { Auth0Url, baseUrl } from '../../configs';
+import { baseUrl } from '../../configs';
 import Button from '../ui/Button';
+import { useQuery } from '@tanstack/react-query';
 
-const HomePageContainer = styled(PageContainer)`
+const HomeInnerPageContainer = styled.section`
   width: 80%;
-`;
-
-const InnerWrapper = styled.div`
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  /* height: 70%; */
-  /* margin-top: auto; */
-
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* height: 70%; */
-
-  @media (min-width: 800px) {
-    flex-direction: row;
-    /* height: revert; */
-  }
+  max-width: 1700px;
 `;
 
 const MenuButtonContainer = styled.div`
@@ -46,6 +31,7 @@ const MenuButtonContainer = styled.div`
   /* height: 60vh; */
   gap: clamp(1rem, 2vw, 2rem);
   justify-content: space-around;
+  align-items: center;
   /* max-width: 100%; */
 
   @media (min-width: 800px) {
@@ -57,7 +43,7 @@ export const CircularButton = styled(MainMenuButton)`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: clamp(8rem, 10vw, 15rem);
+  width: clamp(8rem, 12vw, 15rem);
   height: auto;
   aspect-ratio: 1/1;
   border-radius: 50%;
@@ -74,7 +60,7 @@ const SecondaryMenuButtonContainer = styled.div`
   flex-grow: 1;
   display: flex;
   align-items: flex-end;
-  /* gap: clamp(1rem, 2vw, 2rem); */
+  gap: clamp(1rem, 2vw, 2rem);
   justify-content: space-evenly;
 
   @media (min-width: 800px) {
@@ -91,107 +77,78 @@ type TuserProfile = {
 
 export default function HomePage() {
   // const { user, isAuthenticated, isLoading } = useAuth0();
-  const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
-  const [env, setEnv] = useState<any>(null);
+  // const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
+  // const [env, setEnv] = useState<any>(null);
 
-  useEffect(() => {
-    async function authProfile() {
-      try{
-        const response = await fetch(`${baseUrl}/profile`, {
-          credentials: 'include', // Include cookies for cross-origin requests
-        });
-        console.log(response)
-      const data = await response.json();
-      setUserProfile(data);
-      } catch(errr){
-        console.log('error', errr)
-      }
-    }
-
-    // getEnv()
-    authProfile();
-  }, []);
-
-      // async function getEnv() {
-    //   try{
-    //     const response = await fetch(`${baseUrl}/env`, {
-    //       credentials: 'include', // Include cookies for cross-origin requests
-    //     });
-    //     console.log(response)
-    //   const data = await response.json();
-    //   setEnv(data);
-    //   } catch(errr){
-    //     console.log('error', errr)
-    //   }
-    // }
-
-  // async function login() {
-  //   try{
-  //     const response = await fetch(`${baseUrl}/login`, {
-  //       credentials: 'include', // Include cookies for cross-origin requests
-  //     });
-  //     // console.log(response)
-  //   const data = await response.json();
-  //   // setUserProfile(data);
-  //   } catch(errr){
-  //     console.log('error', errr)
-  //   }
-  // }
   return (
     <PageContainer id="HomePageContainer">
-      <InnerPageContainer id="HomeInnerPageContainer">
-
+      <HomeInnerPageContainer id="HomeInnerPageContainer">
         <InnerWrapper id="HomeInnerWrapper">
-
           {/* <LoginButton />
           <LogoutButton /> */}
           {/* <Profile/> */}
 
-          <MenuButtonContainer>
+          <MenuButtonContainer id="MenuButtonContainer">
             <MainMenuButton
               toPath="/cellbank"
               text={'register cell bank'}
               backgroundColor={'rgba(var(--clr-accent-1), .8)'}
               imgUrl="images/yeast-21.png"
               imgAlt="microbe"
-              positionElement={{ left: '0%' }}
+              positionElement={{ left: '-15%' }}
             />
-            <MainMenuButton
+            {/* <MainMenuButton
               toPath="/flask"
               text={'start flask'}
               backgroundColor="rgba(var(--clr-accent-2), .8)"
               imgUrl="images/leaf-flask.png"
               imgAlt="flask"
-              positionElement={{ left: '10%' }}
+              positionElement={{ left: '-5%' }}
+            /> */}
+            <MainMenuButton
+              toPath="/charts"
+              text={'plan flask'}
+              backgroundColor="rgba(var(--clr-accent-2), .8)"
+              imgUrl="images/curve.png"
+              imgAlt="wave graph"
+              positionElement={{ left: '-5%' }}
+            />
+            <MainMenuButton
+              toPath="/flask"
+              text={'start flask'}
+              backgroundColor="rgba(var(--clr-accent-3), .8)"
+              imgUrl="images/leaf-flask.png"
+              imgAlt="flask"
+              positionElement={{ left: '5%' }}
             />
             <MainMenuButton
               toPath="/sample"
               text={'sample flask'}
-              backgroundColor="rgba(var(--clr-accent-3), .8)"
+              backgroundColor="rgba(var(--clr-accent-4), .8)"
               imgUrl="images/clock-testtube.png"
               imgAlt="clock and test tube"
               imgStyleOverride={{
                 height: 'clamp(1.8rem, 6vw, 6.6rem)',
                 scale: '1.1',
               }}
-              positionElement={{ left: '20%' }}
+              positionElement={{ left: '15%' }}
             />
-            <MainMenuButton
-              toPath="/bioreactor"
-              text={'start bioreactor'}
+            {/* <MainMenuButton
+              toPath="/schedule"
+              text={'view schedule'}
               backgroundColor="rgba(var(--clr-accent-4), .8)"
-              imgUrl="images/bioreactor-1.png"
-              imgAlt="bioreactor"
-              positionElement={{ left: '30%' }}
-            />
+              imgUrl="images/schedule.png"
+              imgAlt="schedule"
+              positionElement={{ left: '15%' }}
+            /> */}
           </MenuButtonContainer>
           <SecondaryMenuButtonContainer>
             <CircularButton
-              toPath="/charts"
-              // text={''}
+               toPath="/schedule"
+              //  text={'view schedule'}
               backgroundColor="#EAE0DA"
-              imgUrl="images/wave-graph-1.png"
-              imgAlt="wave graph"
+              imgUrl="images/schedule.png"
+              imgAlt="calendar"
               // positionElement={{ left: '30%' }}
               imgStyleOverride={{ borderRadius: '0', width: '60%' }}
             />
@@ -207,30 +164,29 @@ export default function HomePage() {
           </SecondaryMenuButtonContainer>
         </InnerWrapper>
 
-          {/* <p>{JSON.stringify(userProfile, null, 2)}</p>
+        {/* <p>{JSON.stringify(userProfile, null, 2)}</p>
           <p>{JSON.stringify(env, null, 2)}</p>
           {userProfile && <img src={userProfile.picture} alt={userProfile?.name} />} */}
-
-      </InnerPageContainer>
+      </HomeInnerPageContainer>
     </PageContainer>
   );
 }
 
-const LoginButton = () => {
-  const { loginWithRedirect } = useAuth0();
+// const LoginButton = () => {
+//   const { loginWithRedirect } = useAuth0();
 
-  return <button onClick={() => loginWithRedirect()}>Log In</button>;
-};
+//   return <button onClick={() => loginWithRedirect()}>Log In</button>;
+// };
 
-const LogoutButton = () => {
-  const { logout } = useAuth0();
+// const LogoutButton = () => {
+//   const { logout } = useAuth0();
 
-  return (
-    <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-      Log Out
-    </button>
-  );
-};
+//   return (
+//     <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+//       Log Out
+//     </button>
+//   );
+// };
 
 // const Profile = () => {
 //   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -250,4 +206,3 @@ const LogoutButton = () => {
 //     )
 //   );
 // };
-
