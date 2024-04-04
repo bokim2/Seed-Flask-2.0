@@ -4,6 +4,7 @@ import SingleCellbankGraph from '../graphs/SingleCellbankGraph';
 import Button from '../../../ui/Button';
 import ChartsTable from '../ChartsTable';
 import { useFetchSingleCellbankGraphData } from '../chart-hooks';
+import SelectedFlasksGraph from '../graphs/SelectedFlasksGraph';
 
 export default function SingleCellbankTab({bookmarkedFlasks}) {
   const [selectedCellbankId, setSelectedCellbankId] = useState<number | null>(
@@ -51,8 +52,9 @@ export default function SingleCellbankTab({bookmarkedFlasks}) {
       {/* <p>{JSON.stringify(singleCellbankGraphData)}</p> */}
       {singleCellbankGraphData && singleCellbankGraphData?.length > 0 && (
         <>
-          <SingleCellbankGraph
-            singleCellbankGraphData={singleCellbankGraphData}
+          <SelectedFlasksGraph
+            graphData={singleCellbankGraphData}
+            bookmarkedFlasks={bookmarkedFlasks}
           />
 
           <ChartsTable
