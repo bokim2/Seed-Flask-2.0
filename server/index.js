@@ -235,6 +235,7 @@ app.get('/api/chart/cellbanks', async (req, res) => {
 // get  - GRAPH all flask and sample associated with one cellbank
 app.get('/api/chart/cellbank/:id', async (req, res) => {
   try {
+    console.log('in cellbank:/id', req.params.id)
     const results = await db.query(
       `SELECT 
       flasks.*,

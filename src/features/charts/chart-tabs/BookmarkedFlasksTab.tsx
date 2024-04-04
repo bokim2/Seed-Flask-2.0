@@ -2,7 +2,7 @@ import React from 'react';
 import AllCellbanksGraph from '../graphs/AllCellbanksGraph';
 import ChartsTable from '../ChartsTable';
 import Button from '../../../ui/Button';
-import { useBookmarkedFlasksGraphData } from '../chart-hooks';
+import { useFetchBookmarkedFlasksGraphData } from '../chart-hooks';
 import BookmarkedCellbankGraph from '../graphs/BookmarkedCellbankGraph';
 import SelectedFlasksGraph from '../graphs/SelectedFlasksGraph';
 import { LoaderWrapper } from '../../../styles/UtilStyles';
@@ -22,7 +22,10 @@ export default function BookmarkedFlasksTab({
     error,
     isFetching,
     refetch,
-  } = useBookmarkedFlasksGraphData(bookmarkedFlasks);
+  } = useFetchBookmarkedFlasksGraphData({
+    bookmarkedFlasks: bookmarkedFlasks || [],
+    flasksListRoute: 'chart/flasks',
+  });
 
   console.log(
     'bookmarkedFlasksGraphData in BOOKMARKEDFLASKTAB',

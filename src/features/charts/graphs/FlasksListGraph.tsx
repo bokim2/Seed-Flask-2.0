@@ -16,7 +16,7 @@ import Scheduler from '../add-to-schedule/Scheduler';
 import DateTimePicker from '../add-to-schedule/DateTimePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
-import { useBookmarkedFlasksGraphData } from '../chart-hooks';
+import { useFetchBookmarkedFlasksGraphData } from '../chart-hooks';
 import { RootState } from '../../../redux/store';
 import { StyledGraphContainer } from '../../../styles/UtilStyles';
 
@@ -67,7 +67,10 @@ const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
     error,
     isFetching,
     refetch,
-  } = useBookmarkedFlasksGraphData(flasksList || searchedFlasksList);
+  } = useFetchBookmarkedFlasksGraphData({
+    bookmarkedFlasks: flasksList || searchedFlasksList || [],
+    flasksListRoute: 'chart/flasks',
+  });
 
   console.log(graphData, 'graphData  in SELECTEDFLASKSGRAPH');
   const chartRef = useRef<any>(null);

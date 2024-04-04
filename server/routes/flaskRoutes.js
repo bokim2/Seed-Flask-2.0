@@ -59,6 +59,33 @@ flaskRouter.route('/').get(async (req, res) => {
 //   }
 // });
 
+// get flask data from a list of flasks - not yet implemented
+// get ALL flasks - infinite scroll
+flaskRouter.route('/list').get(async (req, res) => {
+  try {
+    console.log('req.query.flaskIds', req.query.flaskIds);
+    const flaskIds = req.query.flaskIds ? req.query.flaskIds.split(',') : [];
+    if (!flaskIds?.length) {
+      return res.status(400).json({ message: 'No bookmarked flask ids' });
+    }
+    const results = await db.query(
+      `SELECT
+        *
+        FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
+        ORDER BY flask_id DESC;`,
+      [flaskIds]
+    );
+    // console.log('trying to get timezone to work', results);
+    res.status(200).json({
+      status: 'success',
+      // results: results.rows.length,
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 console.log('right above flask search backend');
 flaskRouter.route('/search').get(async (req, res) => {
   try {
@@ -259,10 +286,14 @@ flaskRouter.route('/search').get(async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    console.error("Database query error:", err.message);
-  console.error("Detailed error:", err);
-  res.status(500).json({ message: err?.detail || 'Internal server error', error: err.message });
-
+    console.error('Database query error:', err.message);
+    console.error('Detailed error:', err);
+    res
+      .status(500)
+      .json({
+        message: err?.detail || 'Internal server error',
+        error: err.message,
+      });
 
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }

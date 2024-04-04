@@ -523,6 +523,7 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
 
   @media (max-width: 850px) {
     display: none;
+    
   }
 `;
 

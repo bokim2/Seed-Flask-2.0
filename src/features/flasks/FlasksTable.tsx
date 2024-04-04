@@ -45,11 +45,13 @@ export type TError = {
 
 type TFlasksTable = {
   flasks: TFlasksInfo;
+  flasksListData?: TFlasksInfo;
   // setSearchedFlasksList?: (flasks: number[]) => void;
 };
 
 export default function FlasksTable({
   flasks,
+  flasksListData,
 }: // setSearchedFlasksList
 // handleAddBookmark,
 //   toggleTextTruncation,
@@ -112,6 +114,12 @@ TFlasksTable) {
       'USEEFFECT IN FLASKSSTABLE searchedData in flasks table'
       // searchedData, searchedData?.pages, searchedData?.pages?.length > 0
     );
+
+    if (flasksListData && flasksListData?.length > 0) {
+      setFilteredAndSortedData(flasksListData);
+      return;
+    }
+
     if (searchedData && searchedData?.length > 0) {
       // const searchedDataAll =
       //   searchedData?.pages.map((data) => data?.data).flat() || [];
@@ -144,7 +152,7 @@ TFlasksTable) {
       // dispatch(clearSearchedFlasksList);
       // console.log('useEffect in dataName table', dataName);
     }
-  }, [flasks, searchedData]);
+  }, [flasks, searchedData, flasksListData]);
 
   // useEffect(() => {
   //   const filteredData = filteredTableData(
@@ -253,17 +261,19 @@ TFlasksTable) {
                   />
                 ))}
                 <TableHeaderCell>
-                  <Button
-                    type="button"
-                    onClick={() => setShowSearchRow((prev) => !prev)}
-                    $size={'small'}
-                  >
-                    Open Search
-                  </Button>
+                  {!flasksListData && (
+                    <Button
+                      type="button"
+                      onClick={() => setShowSearchRow((prev) => !prev)}
+                      $size={'small'}
+                    >
+                      Open Search
+                    </Button>
+                  )}
                 </TableHeaderCell>
               </TableRow>
 
-              {showSearchRow && (
+              {!flasksListData && showSearchRow && (
                 <SearchFormRow
                   setSearchedData={setSearchedData}
                   tablePathName={'flasks'}

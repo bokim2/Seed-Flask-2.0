@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FlasksTable from '../../flasks/FlasksTable';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
-import { useBookmarkedFlasksGraphData } from '../chart-hooks';
+import { useFetchBookmarkedFlasksGraphData } from '../chart-hooks';
 import FlasksListGraph from '../graphs/FlasksListGraph';
 
 export default function SearchFlasksTab({ flasks }) {
@@ -16,7 +16,7 @@ export default function SearchFlasksTab({ flasks }) {
   //   error,
   //   isFetching,
   //   refetch,
-  // } = useBookmarkedFlasksGraphData(searchedFlasksList);
+  // } = useFetchBookmarkedFlasksGraphData(searchedFlasksList);
 
   return (
     <>

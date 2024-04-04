@@ -3,30 +3,39 @@ import { baseUrl } from '../../../../configs';
 import SingleCellbankGraph from '../graphs/SingleCellbankGraph';
 import Button from '../../../ui/Button';
 import ChartsTable from '../ChartsTable';
+import { useFetchSingleCellbankGraphData } from '../chart-hooks';
 
 export default function SingleCellbankTab() {
   const [selectedCellbankId, setSelectedCellbankId] = useState<number | null>(
     null
   );
 
-  const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
-    []
-  );
+  // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
+  //   []
+  // );
 
-  const getSingleCellbankGraphData = async (id) => {
-    // console.log('data in graphs page, before fetch');
-    const res = await fetch(`${baseUrl}/api/chart/cellbank/${id}`);
-    const { data } = await res.json();
-    setSingleCellbankGraphData(data);
-    // console.log('data in setDataSingleCellbank page', data);
-    return data;
-  };
+  // const getSingleCellbankGraphData = async (id) => {
+  //   // console.log('data in graphs page, before fetch');
+  //   const res = await fetch(`${baseUrl}/api/chart/cellbank/${id}`);
+  //   const { data } = await res.json();
+  //   setSingleCellbankGraphData(data);
+  //   // console.log('data in setDataSingleCellbank page', data);
+  //   return data;
+  // };
 
-  useEffect(() => {
-    // getGraphData();
-    if (!selectedCellbankId) return;
-    getSingleCellbankGraphData(selectedCellbankId);
-  }, [selectedCellbankId]);
+  const {
+    data: singleCellbankGraphData,
+    isLoading,
+    error,
+    isFetching,
+    refetch,
+  } = useFetchSingleCellbankGraphData(selectedCellbankId);
+
+  // useEffect(() => {
+  //   // getGraphData();
+  //   if (!selectedCellbankId) return;
+  //   getSingleCellbankGraphData(selectedCellbankId);
+  // }, [selectedCellbankId]);
 
   return (
     <>

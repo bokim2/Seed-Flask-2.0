@@ -144,6 +144,8 @@ export default function ChartsPage() {
 
   // or... 'Filters'
 
+  console.log('searchedFlasksList', searchedFlasksList)
+
   return (
     <PageContainer id="ChartsPage">
       <LoaderWrapper>
