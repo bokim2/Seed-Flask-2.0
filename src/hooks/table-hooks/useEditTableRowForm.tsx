@@ -34,9 +34,10 @@ async function updateRowEdit(
         },
         body: JSON.stringify({
           ...editedForm,
-          [dateColumnName]: tableName === 'schedules' ? editedForm.human_readable_date : getUtcTimestampFromLocalTime(
-            editedForm.human_readable_date
-          ),
+          [dateColumnName]:
+            tableName === 'schedules'
+              ? editedForm.human_readable_date
+              : getUtcTimestampFromLocalTime(editedForm.human_readable_date),
         }),
       }
     );
@@ -57,7 +58,7 @@ export function useUpdateRowMutation({
   zodSchema, // ex: updateCellbankSchema, updateFlaskSchema
   initialEditForm,
   setEditedForm,
-  idColumnName,  // ex: 'cell_bank_id', 'flask_id'
+  idColumnName, // ex: 'cell_bank_id', 'flask_id'
   dateColumnName, // ex: 'date_timestamptz', 'start_date'
 }) {
   const queryClient = useQueryClient();
@@ -73,7 +74,11 @@ export function useUpdateRowMutation({
     onSuccess: () => {
       // console.log('onSuccess in useUpdateRowMutation', tableName, [tableName])
       queryClient.invalidateQueries({ queryKey: [tableName] });
-      queryClient.invalidateQueries({ queryKey: ['chart/cellbanks'] });
+      // queryClient.invalidateQueries({ queryKey: ['chart/cellbanks'] });
+      if (tableName !== 'cellbanks') {
+        queryClient.removeQueries({ queryKey: ['chart/cellbanks'] });
+      }
+      // queryClient.invalidateQueries({ queryKey: ['flasks'] });
       setEditedForm(initialEditForm);
       reset();
     },
@@ -90,28 +95,19 @@ export function useUpdateRowMutation({
 // might want to erase this, it doesn't add anything.  just move it into styledForm
 // actually it helped w typescript errors.  keep for now.
 
-
 export function useEditTableRowForm<TUpdateCellbankForm>({
   tableName,
   zodSchema,
   initialEditForm,
   idColumnName,
   dateColumnName,
- 
-  
 }) {
-  const [editedForm, setEditedForm] = useState<TUpdateCellbankForm>(
-    initialEditForm
-  );
+  const [editedForm, setEditedForm] =
+    useState<TUpdateCellbankForm>(initialEditForm);
   // id of edited cellbank
   const [editingId, setEditingId] = useState<number | null>(null);
 
-   function handleEditFormSubmit(
-    e,
-    editedForm,
-    submitEditedForm,
-    setEditingId
-  ) {
+  function handleEditFormSubmit(e, editedForm, submitEditedForm, setEditingId) {
     // console.log('editedForm in handleEditFormSubmit', editedForm);
     // e.preventDefault();
     // e.stopPropagation();
@@ -140,6 +136,6 @@ export function useEditTableRowForm<TUpdateCellbankForm>({
     submitEditedRowForm,
     isPendingUpdate,
     updateError,
-    handleEditFormSubmit
+    handleEditFormSubmit,
   };
 }
