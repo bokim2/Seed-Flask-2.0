@@ -1,5 +1,6 @@
 import React, { memo, useMemo, useRef, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,6 +16,7 @@ import styled from 'styled-components';
 import Scheduler from '../add-to-schedule/Scheduler';
 import DateTimePicker from '../add-to-schedule/DateTimePicker';
 import { StyledGraphContainer } from '../../../styles/UtilStyles';
+import Button from '../../../ui/Button';
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +25,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartDataLabels
 );
 
 export type TBookmarkedCellbankGraph = {
@@ -49,7 +52,9 @@ const BookmarkedCellbankGraph = memo(
     console.log(bookmarkedCellbankGraphData, 'bookmarkedCellbankGraphData');
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
-    const [selectedFlask, setSelectedFlask] = useState<number | null>(1);
+    const [selectedFlask, setSelectedFlask] = useState<number | null>(null);
+    const [toggleGraphDataLabel, setToggleGraphDataLabel] =
+      useState<boolean>(false);
 
     const options: any = {
       responsive: true,
@@ -99,7 +104,15 @@ const BookmarkedCellbankGraph = memo(
         console.log(`Clicked on: x=${xValue}, y=${yValue}`);
         setClickedXY([xValue, yValue]);
       },
+
       plugins: {
+        datalabels: {
+          display: function (context) {
+            if (!toggleGraphDataLabel) return false;
+            return context.dataIndex === context.dataset.data.length - 1;
+          },
+        },
+
         tooltip: {
           mode: 'nearest',
           intersect: false,
@@ -149,18 +162,18 @@ const BookmarkedCellbankGraph = memo(
             // console.log(flaskData, 'flaskData')
 
             const info = [
-              '',
-              `cell bank id: ${flaskData.cell_bank_id} `,
-              `project: ${flaskData.project} `,
-              `target molecule: ${flaskData.target_molecule} `,
+              `flask id: ${flaskData.flask_id}`,
+              ` cell bank id: ${flaskData.cell_bank_id}`,
+              ` project: ${flaskData.project} `,
+              ` ${flaskData.target_molecule} `,
             ];
 
             return {
               label: `Flask ${flaskData.flask_id}`,
               data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
-                x: time,
-                y: flaskData.od600_values[index],
                 z: info,
+                x: parseFloat(Number(time).toFixed(2)),
+                y: flaskData.od600_values[index],
               })),
               borderColor:
                 selectedFlask == flaskData.flask_id
@@ -188,29 +201,38 @@ const BookmarkedCellbankGraph = memo(
     console.log(data, 'CHANGED data in bookmarked cellbank graph');
 
     return (
-      <StyledGraphContainer>
-        <h3>
+      <>
+        <Button
+          type="button"
+          onClick={() => setToggleGraphDataLabel((prev) => !prev)}
+          $size={'small'}
+        >
+         {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
+        </Button>
+          {/* <h3>
           {clickedXY &&
             `Bookmarked Cellbank Graph
-        clicked x: time ${clickedXY[0]?.toFixed(
-          2
-        )}  y: od600 ${clickedXY[1]?.toFixed(2)}`}
-        </h3>
-        {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
-        {/* <ChartsTable flasks={datasets}/> */}
-        {/* {JSON.stringify(datasets)} */}
-        <StyledBookmarkedCellbankGraph>
-          <Line ref={chartRef} options={options} data={data} />
-        </StyledBookmarkedCellbankGraph>
-        {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
-        <Scheduler clickedXY={clickedXY} />
-        <DateTimePicker
-          clickedXY={clickedXY}
-          setClickedXY={setClickedXY}
-          bookmarkedFlasks={bookmarkedFlasks}
-          // setBookmarkedFlasks={setBookmarkedFlasks}
-        />
-      </StyledGraphContainer>
+            clicked x: time ${clickedXY[0]?.toFixed(
+              2
+              )}  y: od600 ${clickedXY[1]?.toFixed(2)}`}
+            </h3> */}
+          {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
+          {/* <ChartsTable flasks={datasets}/> */}
+          {/* {JSON.stringify(datasets)} */}
+          {/* <StyledBookmarkedCellbankGraph> */}
+            <StyledGraphContainer>
+            <Line ref={chartRef} options={options} data={data} />
+          </StyledGraphContainer>
+          {/* </StyledBookmarkedCellbankGraph> */}
+          {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
+          <Scheduler clickedXY={clickedXY} />
+          <DateTimePicker
+            clickedXY={clickedXY}
+            setClickedXY={setClickedXY}
+            bookmarkedFlasks={bookmarkedFlasks}
+            // setBookmarkedFlasks={setBookmarkedFlasks}
+          />
+      </>
     );
   }
 );

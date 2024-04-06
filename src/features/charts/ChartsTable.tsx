@@ -98,8 +98,8 @@ export default function ChartsTable({
             pageLimitSetting={pageLimitSetting}
             tableName={'cellbanks'}
           />
-          <StyledTable>
             <Caption>{chartTitle}</Caption>
+          <StyledTable>
             <TableHeader>
               <TableRow>
                 <TableHeaderCell>Flask ID</TableHeaderCell>

@@ -6,6 +6,12 @@ import {
 import SortTableColumnsArrows from './SortTableColumnsArrows';
 import { formatColumnName } from '../../hooks/hooks';
 
+type TTableHeaderCellComponent = {
+  handleSortColumn?: (columnName: string)=> void;
+  sortColumn?: string;
+  columnName?: string;
+}
+
 export default function TableHeaderCellComponent({
   // searchField,
   handleSortColumn,

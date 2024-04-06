@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { baseUrl } from '../../configs';
+import React, { useState } from 'react';
 import CellbanksTable from '../features/cellbanks/CellbanksTable';
 import {
   InnerPageContainer,
@@ -15,6 +14,7 @@ import Button from '../ui/Button';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
+import { useMultiInputState } from '../hooks/hooks';
 
 export default function CellbankPage() {
   const {
@@ -30,6 +30,8 @@ export default function CellbankPage() {
     zodSchema: cellbanksArraySchema,
   });
   // console.log('cellbanks in cellbanks page', cellbanks);
+
+
 
   const [toggleTextTruncation, setToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
 
@@ -50,7 +52,9 @@ export default function CellbankPage() {
 
   return (
     <PageContainer id="CellbankPageContainer">
-      <LoaderWrapper>{(isLoading || isFetching) && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>
+        {(isLoading || isFetching) && <LoaderBar />}
+      </LoaderWrapper>
       <InnerPageContainer id="CellbankInnerPageContainer">
         {error && <ErrorMessage error={error} />}
         <Button
@@ -63,6 +67,8 @@ export default function CellbankPage() {
         </Button>
 
         <h3>{JSON.stringify(cellbankBookmarks)}</h3>
+
+    
 
         <CellbanksMultiInputForm />
 

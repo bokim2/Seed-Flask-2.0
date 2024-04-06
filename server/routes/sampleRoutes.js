@@ -84,6 +84,23 @@ sampleRouter
     }
   });
 
+
+sampleRouter.route('/search').get(async (req, res)=> {
+  try {
+const limit = parseInt(req.query.limit, 10 || LIMIT);
+const offset = parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
+
+let { searchField, searchText } = req.query;
+
+// searchField = 
+
+  } catch (err) {
+    console.log(err);
+    throw err;
+  
+  }
+})
+
 sampleRouter.route('/:id').delete(async (req, res) => {
   try {
     const sampleId = req.params.id;

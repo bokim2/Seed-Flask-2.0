@@ -417,8 +417,12 @@ export const StyledTable = styled.table`
   text-align: center;
 `;
 
-export const Caption = styled.caption`
+export const Caption = styled.p`
   position: sticky;
+  width: 100%;
+  /* display: flex;
+  align-items: center; */
+  text-align: center;
   z-index: 10;
   top: 10vh;
   font-family: var(--font-serif);
@@ -744,7 +748,11 @@ export const ButtonsContainer = styled.div`
 // chart / graph
 
 export const StyledGraphContainer = styled.div`
+max-height: 60vh;
+height: 50vh;
+max-width: 100%;
   @media (min-width: 850px) {
     padding: 1rem;
+    height: 80vh;
   }
 `;

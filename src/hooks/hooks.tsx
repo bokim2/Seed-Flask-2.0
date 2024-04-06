@@ -325,6 +325,15 @@ export function transformListStringToArray(listString) {
   return resultArray;
 }
 
+// multi-input open/close state management
+
+export function useMultiInputState() {
+  const [isOpenMultiInput, setIsOpen] = useState(false);
+  const handleToggleMultiInputState = () => setIsOpen((prev) => !prev);
+  // const close = () => setIsOpen(false);
+  return { isOpenMultiInput, handleToggleMultiInputState};
+}
+
 // // fetch all rows in table
 // export function useFetchValidatedTableQuery({ tableName, zodSchema }) {
 //   const { data, isLoading, error } = useQuery({
@@ -446,3 +455,5 @@ export function transformListStringToArray(listString) {
 //   const samples = data?.data;
 //   return [samples, isLoading, error] as const;
 // }
+
+

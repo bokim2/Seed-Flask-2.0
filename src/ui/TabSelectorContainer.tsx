@@ -7,11 +7,13 @@ export const StyledTabSelectorContainer = styled.div`
   flex-direction: column;
   /* border: 10px solid red; */
   /* background-color: lightpink; */
+  /* max-height: 70vh; */
 `;
 
 export const StyledTabSelectorInnerContainer = styled.div`
   display: flex;
   flex-direction: column;
+  /* max-height: 70vh; */
   /* padding: 1rem; */
   /* border: 10px solid red; */
   /* background-color: lightpink; */
