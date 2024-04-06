@@ -18,7 +18,10 @@ import {
 import autocolors from 'chartjs-plugin-autocolors';
 import { useDispatch } from 'react-redux';
 import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
-import { StyledGraphContainer } from '../../../styles/UtilStyles';
+import {
+  ButtonsContainer,
+  StyledGraphContainer,
+} from '../../../styles/UtilStyles';
 import Button from '../../../ui/Button';
 
 ChartJS.register(
@@ -43,12 +46,48 @@ export default function AllCellbanksGraph({
   bookmarkedFlasks,
   // setBookmarkedFlasks,
 }) {
+  console.log(allCellbankGraphData, 'allCellbankGraphData');
+
+  function formatZeroStartData(allCellbankGraphData) {
+    const filteredData = [...allCellbankGraphData].filter(
+      (flaskData) => flaskData.od600_values.length !== 0
+    );
+
+    console.log('filteredData', filteredData);
+    const zeroStartData = filteredData.map((data) => {
+      const od600_values = [...data.od600_values];
+      const time_since_inoc_hr_values = [...data.time_since_inoc_hr_values];
+
+      if (od600_values[0] !== 0) {
+        od600_values.unshift(0);
+        time_since_inoc_hr_values.unshift(0);
+      }
+
+      return {
+        ...data,
+        od600_values,
+        time_since_inoc_hr_values,
+      };
+    });
+    return zeroStartData;
+  }
+  const [zeroStartData, setZeroStartData] = useState<any>(
+    formatZeroStartData(allCellbankGraphData)
+  );
+  const [toggleZeroStartData, setToggleZeroStartData] = useState<boolean>(true);
+  console.log(zeroStartData, 'zeroStartData');
+
   const dispatch = useDispatch();
   const [toggleGraphDataLabel, setToggleGraphDataLabel] =
     useState<boolean>(false);
 
-  console.log(allCellbankGraphData, 'allCellbankGraphData');
-  const datasets = allCellbankGraphData.map((flaskData) => {
+  console.log(
+    toggleZeroStartData ? zeroStartData : allCellbankGraphData,
+    'allCellbankGraphData'
+  );
+  const datasets = (
+    toggleZeroStartData ? zeroStartData : allCellbankGraphData
+  ).map((flaskData) => {
     const info = [
       `flask id: ${flaskData.flask_id}`,
       ` cell bank id: ${flaskData.cell_bank_id}`,
@@ -156,13 +195,23 @@ export default function AllCellbanksGraph({
   }
   return (
     <>
-     <Button
+      <ButtonsContainer>
+        
+        <Button
           type="button"
           onClick={() => setToggleGraphDataLabel((prev) => !prev)}
           $size={'small'}
         >
-         {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
+          {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
         </Button>
+        <Button
+          type="button"
+          onClick={() => setToggleZeroStartData((prev) => !prev)}
+          $size={'small'}
+        >
+          {toggleZeroStartData ? 'Remove zero start' : 'Zero start'}
+        </Button>
+      </ButtonsContainer>
       <StyledGraphContainer>
         <Line
           options={options}

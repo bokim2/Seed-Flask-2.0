@@ -8,7 +8,7 @@ import {
 } from '../../styles/UtilStyles';
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
-import { initialCreateFlasksForm } from './flasks-types';
+import { flaskVesselTypes, initialCreateFlasksForm } from './flasks-types';
 
 export default function FlasksRow({
   rowData,
@@ -136,6 +136,21 @@ function FlasksEditForm({
           >
             {editedForm.cell_bank_id}
           </EditTextArea>
+        </TableDataCell>
+
+        <TableDataCell data-cell="vessel_type">
+          <select
+            id="vessel_type"
+            name="vessel_type"
+            value={editedForm.vessel_type}
+            onChange={handleChange}
+          >
+             {flaskVesselTypes.map((type) => (
+                        <option key={type} value={type} >
+                          {type}
+                        </option>
+                      ))}
+          </select>
         </TableDataCell>
 
         <TableDataCell data-cell="media">
