@@ -73,6 +73,7 @@ export function useUpdateRowMutation({
     onSuccess: () => {
       // console.log('onSuccess in useUpdateRowMutation', tableName, [tableName])
       queryClient.invalidateQueries({ queryKey: [tableName] });
+      queryClient.invalidateQueries({ queryKey: ['chart/cellbanks'] });
       setEditedForm(initialEditForm);
       reset();
     },
