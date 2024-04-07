@@ -275,7 +275,7 @@ export const FormInputCell = styled.td`
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  font-size: 1rem;
+  font-size: .7rem;
   flex-direction: column-reverse;
 
   textarea:focus + label {
@@ -284,16 +284,18 @@ export const FormInputCell = styled.td`
 
   @media (min-width: 850px) {
     /* display: table-cell; */
+    font-size: 1rem;
   }
 `;
 
 export const FormLabel = styled.label`
   font-weight: 600;
+  text-transform: none;
   /* margin-block: 2rem; */
   /* font-family: var(--font-serif); */
   color: rgba(var(--clr-accent-0), 1);
   /* letter-spacing: .1rem; */
-  font-size: 1.2rem;
+  font-size: 1rem;
 
   @media (min-width: 850px) {
     font-size: 1.5rem;
@@ -336,6 +338,9 @@ export const FormSelect = styled.select`
   border: none;
   color: inherit;
   border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
+  width: 95%;
+  padding-top: 0.5rem;
+
 `;
 
 // CellbanksSingleInput form.  NOT used currently
@@ -527,7 +532,6 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
 
   @media (max-width: 850px) {
     display: none;
-    
   }
 `;
 
@@ -590,12 +594,27 @@ export const TableDataCell = styled.td`
   }
 
   @media (max-width: 850px) {
-    display: grid;
+    /* display: grid; */
+    padding: 0rem 1rem;
+    display: flex;
+    font-size: 0.7rem;
+
     &::before {
-      content: attr(data-cell) ' ';
+      content: attr(data-cell) ':  ';
       font-weight: 700;
       color: rgba(var(--clr-accent-0), 1);
+      margin-right: 0.5rem;
     }
+
+    &[data-cell='none']::before {
+      content: none;
+    }
+
+    /* &[data-cell='none'] {
+      button {
+        display: none;
+      }
+    } */
 
     &.ellipsis {
       display: none;
@@ -607,7 +626,8 @@ export const TableDataCell = styled.td`
         } */
 
     &:first-child {
-      font-size: 1.5rem;
+      color: rgba(var(--clr-accent-3), 1);
+      font-size: 1rem;
     }
   }
 `;
@@ -616,9 +636,10 @@ export const TableDataCell = styled.td`
 
 export const EditTextArea = styled(FormTextArea)`
   /* padding-top: 0rem !important; */
+  width: 100%;
+  /* width: auto; */
 
   text-align: center;
-  width: 100%;
   height: 2rem;
   box-sizing: content-box;
   /* background-color: red; */
@@ -748,9 +769,9 @@ export const ButtonsContainer = styled.div`
 // chart / graph
 
 export const StyledGraphContainer = styled.div`
-max-height: 60vh;
-height: 50vh;
-max-width: 100%;
+  max-height: 60vh;
+  height: 50vh;
+  max-width: 100%;
   @media (min-width: 850px) {
     padding: 1rem;
     height: 80vh;

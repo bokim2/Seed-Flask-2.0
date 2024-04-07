@@ -52,7 +52,8 @@ export default function SamplesRow({
         </TableDataCell>
         <TableDataCell data-cell="user">{username}</TableDataCell>
         <TableDataCell
-          data-cell="edit"
+          // data-cell="edit"
+          data-cell="none"
           onClick={(e) => {
             e.preventDefault();
             if (editingId === sample_id) {

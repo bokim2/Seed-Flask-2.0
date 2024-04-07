@@ -68,7 +68,8 @@ export default function FlasksRow({
         )} */}
 
         <TableDataCell
-          data-cell="edit"
+          // data-cell="edit"
+          data-cell="none"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();

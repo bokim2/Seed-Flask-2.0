@@ -70,7 +70,8 @@ export default function CellbanksRow({
         <TableDataCell data-cell="user">{username}</TableDataCell>
 
         <TableDataCell
-          data-cell="edit"
+          // data-cell="edit"
+          data-cell="none"
           // onClick={(e) => initializeCellbankEdit(e, cellbank.cell_bank_id)}
           // onClick={(e)=> initializeRowEdit(e, cellbank.cell_bank_id, "cell_bank_id")}
 
@@ -149,7 +150,7 @@ function CellbanksEditForm({
 
         <TableDataCell data-cell="target_molecule">
           <EditTextArea
-            data-cell="target_molecule"
+            data-cell="target molecule"
             id="target_molecule"
             name="target_molecule"
             onChange={handleChange}
@@ -175,7 +176,7 @@ function CellbanksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="description">
           <EditTextArea
             id="description"
             name="description"
@@ -186,7 +187,7 @@ function CellbanksEditForm({
           />
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="notes">
           <EditTextArea
             id="notes"
             name="notes"
@@ -197,7 +198,7 @@ function CellbanksEditForm({
           />
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="date">
           <EditTextArea
             id="human_readable_date"
             name="human_readable_date"
@@ -208,13 +209,13 @@ function CellbanksEditForm({
           />
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="none">
           <Button $size={'small'} type="submit" disabled={isPendingUpdate}>
             Update
           </Button>
         </TableDataCell>
 
-        <TableDataCell data-cell="delete">
+        <TableDataCell data-cell="none">
           <Button
             $size={'small'}
             type="button"
