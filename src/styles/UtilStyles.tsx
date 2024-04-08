@@ -614,7 +614,8 @@ export const TableSearchInput = styled.input`
 
 export const TableDataCell = styled.td`
 display: table-cell;
-  text-align: left;
+ 
+  text-align: center;
   white-space: normal;
   overflow-wrap: break-word;
   /* max-width: 100%; */
@@ -632,6 +633,7 @@ display: table-cell;
   }
 
   @media (max-width: 850px) {
+     text-align: left;
     /* display: grid; */
     padding: 0rem 1rem;
     display: flex;
