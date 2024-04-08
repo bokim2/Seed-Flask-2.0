@@ -17,10 +17,17 @@ const sizes = {
     min-width: 4rem;
   `,
   small: css`
-    font-size: 1rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
     font-weight: 600;
-    min-width: 8rem;
+    min-width: 2rem;
+
+    @media (min-width: 850px) {
+      font-size: 1rem;
+      padding: 0.4rem 0.8rem;
+      font-weight: 600;
+      min-width: 8rem;
+    }
   `,
   medium: css`
     font-size: 1.4rem;
@@ -71,8 +78,7 @@ const Button = styled.button<ButtonProps>`
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
   &:hover
-  /* &:focus  */
-  {
+  /* &:focus  */ {
     background-color: rgba(var(--clr-accent-5), 0.8);
   }
 

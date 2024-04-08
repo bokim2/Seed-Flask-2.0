@@ -432,7 +432,7 @@ export const Caption = styled.p`
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
-  font-size: 2rem;
+  font-size: 1.4rem;
   margin-bottom: 2rem;
   color: var(--clr-text-1);
   /* background-color: #121118; */
@@ -443,6 +443,7 @@ export const Caption = styled.p`
 
   @media (min-width: 850px) {
     top: 2vh;
+    font-size: 2rem;
     background-color: transparent;
   }
 `;
@@ -486,9 +487,13 @@ export const MainFilterSelectorOption = styled.option``;
 export const MainFilterValue = styled.select``;
 
 export const TableHeader = styled.thead`
-  position: sticky;
   top: 9.7vh; // reference at NavBar styles
   background-color: black;
+  
+  @media (min-width: 850px) {
+    position: sticky;
+    /* top: 0; */
+  }
 `;
 
 // type TTableHeaderCell = {
@@ -530,7 +535,11 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
   }
 
   @media (max-width: 850px) {
-    display: none;
+    /* display: none; */
+
+    display: flex;
+
+
   }
 `;
 
@@ -562,6 +571,14 @@ export const TableRow = styled.tr`
   }
 `;
 
+export const TableHeaderRow = styled(TableRow)`
+  display: none;
+
+  @media (min-width: 850px) {
+    display: table-row;
+  }
+`
+
 export const TableSearchInput = styled.input`
   width: 100%;
   background-color: transparent;
@@ -574,13 +591,30 @@ export const TableSearchInput = styled.input`
   /* padding: 0.5rem; */
   /* width: 200px; */
 
-  @media (min-width: 850px) {
-    /* width: 400px; */
-  }
+  /* @media (min-width: 850px) { */
+    /* padding: 0rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.7rem;
+    &::before {
+      content: attr(data-cell) ':  ';
+      font-weight: 700;
+      color: rgba(var(--clr-accent-0), 1);
+      margin-right: 0.5rem;
+    }
+
+    &[data-cell='none']::before {
+      content: none;
+    } */
+  /* } */
 `;
 
 export const TableDataCell = styled.td`
-  text-align: center;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: break-word;
+  /* max-width: 100%; */
+
   padding: 0.5rem;
   text-transform: none;
   /* max-width: 20vw; */
@@ -596,6 +630,7 @@ export const TableDataCell = styled.td`
     /* display: grid; */
     padding: 0rem 1rem;
     display: flex;
+    flex-wrap: wrap;
     font-size: 0.7rem;
 
     &::before {
@@ -704,6 +739,26 @@ export const SearchInputAndButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1rem;
+
+   @media (max-width: 850px) {
+    padding: 0rem 1rem;
+    display: flex;
+    /* flex-wrap: wrap; */
+    font-size: 0.7rem;
+    /* width: 400px; */
+    &::before {
+      background-color: red;
+      content: attr(data-cell) ':  ';
+      font-weight: 700;
+      color: rgba(var(--clr-accent-0), 1);
+      margin-right: 0.5rem;
+    }
+
+    &[data-cell='none']::before {
+      content: none;
+    }
+  }
 `;
 
 // multi-input form

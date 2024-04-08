@@ -8,6 +8,7 @@ import {
   StyledForm,
   TableContainer,
   LoaderWrapper,
+  TableHeaderRow,
 } from '../../styles/UtilStyles';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -177,7 +178,7 @@ TFlasksTable) {
   );
 
   //state for multisearch
-  const [showSearchRow, setShowSearchRow] = useState(false);
+  const [showSearchRow, setShowSearchRow] = useState(true);
   const [searchMultiError, setSearchMultiError] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   console.log(searchMultiError, 'searchMultiError');
@@ -210,6 +211,14 @@ TFlasksTable) {
       {deleteError?.message && <ErrorMessage error={deleteError} />}
       {searchMultiError && <ErrorMessage error={searchMultiError} />}
 
+      <Button
+        type="button"
+        onClick={() => setShowSearchRow((prev) => !prev)}
+        $size={'small'}
+      >
+        Open Search
+      </Button>
+
       {/* Edit row form */}
       <StyledForm
         onSubmit={(e) => {
@@ -228,7 +237,7 @@ TFlasksTable) {
           <StyledTable>
             <TableHeader>
               {/* select column to search */}
-              <TableRow>
+              <TableHeaderRow>
                 {/* {!toggleCellbankData
                   ? flasksTableHeaderCellsArray.map((headerCell, i) => (
                       <TableHeaderCellComponent
@@ -271,7 +280,7 @@ TFlasksTable) {
                     </Button>
                   )}
                 </TableHeaderCell>
-              </TableRow>
+              </TableHeaderRow>
 
               {!flasksListData && showSearchRow && (
                 <SearchFormRow

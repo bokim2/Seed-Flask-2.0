@@ -6,6 +6,7 @@ import {
   TableContainer,
   TableHeader,
   TableHeaderCell,
+  TableHeaderRow,
   TableRow,
   Wrapper,
 } from '../../styles/UtilStyles';
@@ -166,6 +167,14 @@ export default function SamplesTable({ samples }) {
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
 
+      <Button
+        type="button"
+        onClick={() => setShowSearchRow((prev) => !prev)}
+        $size={'small'}
+      >
+        Open Search
+      </Button>
+
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
@@ -185,7 +194,7 @@ export default function SamplesTable({ samples }) {
         <TableContainer id="SamplesTableContainer">
           <StyledTable>
             <TableHeader>
-              <TableRow>
+              <TableHeaderRow>
                 {samplesTableHeaderCellsArray.map((headerCell) => (
                   <TableHeaderCellComponent
                     key={headerCell}
@@ -205,7 +214,7 @@ export default function SamplesTable({ samples }) {
                     </Button>
                   )}
                 </TableHeaderCell>
-                  </TableRow>
+                  </TableHeaderRow>
 
                   { showSearchRow && (
                 <SearchFormRow

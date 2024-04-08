@@ -8,6 +8,7 @@ import {
   TableHeaderCell,
   StyledForm,
   LoaderWrapper,
+  TableHeaderRow,
 } from '../../styles/UtilStyles';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -99,7 +100,7 @@ export default function CellbanksTable({
   useEffect(() => {
     console.log(
       'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
-      searchedData,
+      searchedData
       // searchedData?.pages,
       // searchedData?.pages?.[0]?.data?.length > 0
     );
@@ -134,15 +135,19 @@ export default function CellbanksTable({
   //   setFilteredAndSortedData,
   // });
 
-  const data = useMemo(()=>filteredTableData(
-    cellbanks,
-    filteredAndSortedData,
-    sortColumn,
-    'date_timestamptz'
-  ), [cellbanks, filteredAndSortedData, sortColumn]);
+  const data = useMemo(
+    () =>
+      filteredTableData(
+        cellbanks,
+        filteredAndSortedData,
+        sortColumn,
+        'date_timestamptz'
+      ),
+    [cellbanks, filteredAndSortedData, sortColumn]
+  );
 
   //state for multisearch
-  const [showSearchRow, setShowSearchRow] = useState(false);
+  const [showSearchRow, setShowSearchRow] = useState(true);
   const [searchMultiError, setSearchMultiError] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   console.log(searchMultiError, 'searchMultiError');
@@ -151,7 +156,9 @@ export default function CellbanksTable({
     <>
       {searchMultiError && <p>{searchMultiError}</p>}
       <LoaderWrapper>{searchLoading && <LoaderBar />}</LoaderWrapper>
-      <LoaderWrapper>{searchLoading && <p>SEARCH IS LOADING!!!!!</p>}</LoaderWrapper>
+      <LoaderWrapper>
+        {searchLoading && <p>SEARCH IS LOADING!!!!!</p>}
+      </LoaderWrapper>
       {/* Search Section */}
       {/* <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} /> */}
 
@@ -168,6 +175,14 @@ export default function CellbanksTable({
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
       {searchMultiError && <ErrorMessage error={searchMultiError} />}
+
+      <Button
+        type="button"
+        onClick={() => setShowSearchRow((prev) => !prev)}
+        $size={'small'}
+      >
+        Open Search
+      </Button>
 
       {/* Edit row form */}
       <StyledForm
@@ -187,7 +202,7 @@ export default function CellbanksTable({
           <StyledTable>
             <TableHeader>
               {/* select column to search */}
-              <TableRow>
+              <TableHeaderRow>
                 {cellbanksTableHeaderCellsArray.map((headerCell, i) => (
                   <TableHeaderCellComponent
                     key={headerCell}
@@ -206,7 +221,7 @@ export default function CellbanksTable({
                     Open Search
                   </Button>
                 </TableHeaderCell>
-              </TableRow>
+              </TableHeaderRow>
 
               {showSearchRow && (
                 <SearchFormRow

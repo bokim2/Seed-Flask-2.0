@@ -21,7 +21,7 @@ export default function TableHeaderCellComponent({
   return (
     <>
       <TableHeaderCell
-        data-column-name={columnName}
+        data-cell={columnName}
         // className={`${searchField == columnName ? 'dbsearch' : ''}
         //           ${
         //             searchField == columnName &&

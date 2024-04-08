@@ -13,6 +13,7 @@ import {
   TableContainer,
   TableHeader,
   TableHeaderCell,
+  TableHeaderRow,
   TableRow,
   Wrapper,
 } from '../../styles/UtilStyles';
@@ -146,8 +147,8 @@ export default function SchedulesTable({
   );
 
   //state for multisearch
-
-  // const [searchMultiError, setSearchMultiError] = useState(null);
+  const [showSearchRow, setShowSearchRow] = useState(true);
+  const [searchMultiError, setSearchMultiError] = useState(null);
   // console.log(searchMultiError, 'searchMultiError');
 
   return (
@@ -168,6 +169,14 @@ export default function SchedulesTable({
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
       {/* {searchMultiError && <ErrorMessage error={searchMultiError} />} */}
+
+      <Button
+        type="button"
+        onClick={() => setShowSearchRow((prev) => !prev)}
+        $size={'small'}
+      >
+        Open Search
+      </Button>
 
       {/* Edit row form */}
       <StyledForm
@@ -221,7 +230,7 @@ export default function SchedulesTable({
           <StyledTable>
             <TableHeader>
               {/* select column to search */}
-              <TableRow>
+              <TableHeaderRow>
                 {schedulesTableHeaderCellsArray.map((headerCell, i) => (
                   <TableHeaderCellComponent
                     key={headerCell}
@@ -232,12 +241,17 @@ export default function SchedulesTable({
                 ))}
 
                 <TableHeaderCell>edit</TableHeaderCell>
-              </TableRow>
+              </TableHeaderRow>
 
-              {/* <SearchFormRow setSearchedData={setSearchedData} tableName={'schedules'} 
-            tableColumnsHeaderCellsArray={schedulesTableHeaderCellsArray}
-            setSearchMultiError={setSearchMultiError}
-            /> */}
+              {/* {showSearchRow && (
+                <SearchFormRow
+                  setSearchedData={setSearchedData}
+                  tablePathName={'cellbanks'}
+                  tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
+                  setSearchMultiError={setSearchMultiError}
+                  setSearchLoading={setSearchLoading}
+                />
+              )} */}
             </TableHeader>
             <tbody>
               {data &&

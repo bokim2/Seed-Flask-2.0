@@ -14,7 +14,8 @@ import { useInfiniteFetchMultiTextInputSearch } from '../hooks/table-hooks/useIn
 import LoaderBar from './LoaderBar';
 
 export const SearchTableRow = styled.tr`
-  display: none;
+  /* display: none; */
+  
   background-color: hsl(0, 0%, 0%, 0.5);
   &:nth-of-type(2n) {
     background-color: hsl(0, 0%, 0%, 0.2);
@@ -37,6 +38,7 @@ export default function SearchFormRow({
   tableColumnsHeaderCellsArray,
   setSearchMultiError,
   setSearchLoading,
+  
 }) {
   // const {
   //   searchCriteria,
@@ -98,9 +100,10 @@ export default function SearchFormRow({
         {/* <form onSubmit={handleSubmit}> */}
         {tableColumnsHeaderCellsArray.map((criterion, index) => (
           <TableHeaderCell>
-            <SearchInputAndButtonContainer>
+            <SearchInputAndButtonContainer data-cell={criterion}>
               <TableSearchInput
                 data-column={criterion}
+                // data-cell="none"
                 value={searchCriteria[index].text}
                 onChange={(e) => handleSearchTextChange(e, index)}
                 placeholder="search..."
@@ -147,6 +150,8 @@ export default function SearchFormRow({
             >
               Clear
             </Button>
+
+
             {data  && data?.length > 0 && <Button
               $size="xs"
               type="button"
