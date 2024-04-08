@@ -79,8 +79,9 @@ sampleRouter
       }
       res.status(200).json({ message: 'Update successful', data: results.rows });
     } catch (err) {
+      res.status(500).json({ message: err?.detail || 'Internal server error' });
       console.log(err);
-      throw err;
+     
     }
   });
 

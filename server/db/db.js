@@ -9,9 +9,9 @@ const pool = new Pool({ connectionString: process.env.PG_URI,
   ssl: {
     rejectUnauthorized: false,
   },
-  max: 3, // added by BK
-  min: 0, // added by BK
-  idle: 10000,  // added by BK
+  // max: 3, // added by BK
+  // min: 0, // added by BK
+  // idle: 10000,  // added by BK
 });
 
 // Adding some notes about the database here will be helpful for future you or other developers.
