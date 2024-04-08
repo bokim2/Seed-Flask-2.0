@@ -59,12 +59,12 @@ export default function FlasksRow({
 
         {/* {toggleCellbankData && (
           <> */}
-            <TableDataCell data-cell="strain">{strain}</TableDataCell>
-            <TableDataCell data-cell="target molecule">
-              {target_molecule}
-            </TableDataCell>
-            <TableDataCell data-cell="project">{project}</TableDataCell>
-          {/* </>
+        <TableDataCell data-cell="strain">{strain}</TableDataCell>
+        <TableDataCell data-cell="target molecule">
+          {target_molecule}
+        </TableDataCell>
+        <TableDataCell data-cell="project">{project}</TableDataCell>
+        {/* </>
         )} */}
 
         <TableDataCell
@@ -146,11 +146,11 @@ function FlasksEditForm({
             value={editedForm.vessel_type}
             onChange={handleChange}
           >
-             {flaskVesselTypes.map((type) => (
-                        <option key={type} value={type} >
-                          {type}
-                        </option>
-                      ))}
+            {flaskVesselTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
           </select>
         </TableDataCell>
 
@@ -166,18 +166,6 @@ function FlasksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell data-cell="inoculum_ul">
-          <EditTextArea
-            name="inoculum_ul"
-            onChange={handleChange}
-            placeholder="inoculum_ul"
-            required
-            value={editedForm.inoculum_ul}
-          >
-            {editedForm.inoculum_ul}
-          </EditTextArea>
-        </TableDataCell>
-
         <TableDataCell data-cell="media_ml">
           <EditTextArea
             name="media_ml"
@@ -187,6 +175,18 @@ function FlasksEditForm({
             value={editedForm.media_ml}
           >
             {editedForm.media_ml}
+          </EditTextArea>
+        </TableDataCell>
+
+        <TableDataCell data-cell="inoculum_ul">
+          <EditTextArea
+            name="inoculum_ul"
+            onChange={handleChange}
+            placeholder="inoculum_ul"
+            required
+            value={editedForm.inoculum_ul}
+          >
+            {editedForm.inoculum_ul}
           </EditTextArea>
         </TableDataCell>
 

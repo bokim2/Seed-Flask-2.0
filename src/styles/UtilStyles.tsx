@@ -275,7 +275,7 @@ export const FormInputCell = styled.td`
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  font-size: .7rem;
+  font-size: 0.7rem;
   flex-direction: column-reverse;
 
   textarea:focus + label {
@@ -340,7 +340,6 @@ export const FormSelect = styled.select`
   border-bottom: 2px solid rgba(var(--clr-accent-0), 1);
   width: 95%;
   padding-top: 0.5rem;
-
 `;
 
 // CellbanksSingleInput form.  NOT used currently
@@ -753,10 +752,16 @@ export const MultiInputFormBody = styled.tbody``;
 export const MultiInputFormCell = styled(FormInputCell)``; // td
 
 export const MultiInput = styled(MultiFormInput)`
+  font-size: 1rem;
   padding-top: 0.7rem;
   height: 2.5rem;
   /* background-color: yellow; */
   /* vertical-align: bottom; */
+
+  &:focus {
+    background-color: red;
+    font-size: 14px;
+  }
 `; // input
 
 // buttons container
