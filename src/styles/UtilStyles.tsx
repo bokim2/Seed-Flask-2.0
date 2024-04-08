@@ -759,7 +759,7 @@ export const MultiInput = styled(MultiFormInput)`
   /* vertical-align: bottom; */
 
   &:focus {
-    background-color: red;
+    /* background-color: red; */
     font-size: 14px;
   }
 `; // input
