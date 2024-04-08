@@ -670,7 +670,7 @@ display: table-cell;
         } */
 
     &:first-child {
-      color: rgba(var(--clr-accent-3), 1);
+      /* color: rgba(var(--clr-accent-3), 1); */
       font-size: 1rem;
     }
   }
