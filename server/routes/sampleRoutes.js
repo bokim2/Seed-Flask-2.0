@@ -31,8 +31,8 @@ sampleRouter.route('/').get(async (req, res) => {
       data: results.rows,
     });
   } catch (err) {
-    console.log(err);
-    throw err;
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -60,7 +60,7 @@ sampleRouter
         data: results.rows,
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   });
@@ -79,8 +79,8 @@ sampleRouter
       }
       res.status(200).json({ message: 'Update successful', data: results.rows });
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: err?.detail || 'Internal server error' });
-      console.log(err);
      
     }
   });
@@ -116,8 +116,8 @@ sampleRouter.route('/:id').delete(async (req, res) => {
       .status(200)
       .json({ message: `Sample ${sampleId} deleted successfully` });
   } catch (err) {
-    console.log(err);
-    throw err;
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 

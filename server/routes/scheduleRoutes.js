@@ -33,9 +33,11 @@ scheduleRouter.route('/').get(async (req, res) => {
       status: 'success',
       data: results.rows,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Failed to fetch schedules' });
+  } catch (err) {
+    // console.log(error);
+    // res.status(500).json({ error: 'Failed to fetch schedules' });
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -98,7 +100,9 @@ scheduleRouter
         data: results.rows,
       });
     } catch (err) {
-      console.error(err, { message: err?.detail || 'Internal server error' });
+      // console.error(err, { message: err?.detail || 'Internal server error' });
+      // res.status(500).json({ message: err?.detail || 'Internal server error' });
+      console.error(err);
       res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   });

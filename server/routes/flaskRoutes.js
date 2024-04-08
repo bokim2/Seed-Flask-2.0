@@ -35,7 +35,8 @@ flaskRouter.route('/').get(async (req, res) => {
       data: results.rows,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -82,7 +83,8 @@ flaskRouter.route('/list').get(async (req, res) => {
       data: results.rows,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 

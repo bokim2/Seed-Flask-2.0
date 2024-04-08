@@ -39,9 +39,11 @@ cellbankRouter.route('/').get(async (req, res) => {
       status: 'success',
       data: results.rows,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Failed to fetch cell banks' });
+  } catch (err) {
+    // console.log(error);
+    // res.status(500).json({ error: 'Failed to fetch cell banks' });
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -95,7 +97,7 @@ cellbankRouter
         data: results.rows,
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   });
@@ -215,6 +217,15 @@ cellbankRouter.route('/search').get(async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    console.error('Database query error:', err.message);
+    console.error('Detailed error:', err);
+    res
+      .status(500)
+      .json({
+        message: err?.detail || 'Internal server error',
+        error: err.message,
+      });
+
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
@@ -276,8 +287,10 @@ cellbankRouter.route('/:id').put(validateIdParam, async (req, res) => {
     // Sending back the updated data
     res.json({ message: 'Update successful', data: results.rows });
   } catch (err) {
-    console.error('Error in server PUT request:', err);
-    res.status(500).json({ message: 'Internal server error' });
+    // console.error('Error in server PUT request:', err);
+    // res.status(500).json({ message: 'Internal server error' });
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -300,10 +313,12 @@ cellbankRouter.route('/:id').delete(validateIdParam, async (req, res) => {
     });
   } catch (err) {
     console.error(`Error deleting cellbank ${req.params.id}`, err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
+    // res.status(500).json({
+    //   status: 'error',
+    //   message: 'Internal server error',
+    // });
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
