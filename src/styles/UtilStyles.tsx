@@ -813,10 +813,10 @@ export const MultiInput = styled(MultiFormInput)`
   /* background-color: yellow; */
   /* vertical-align: bottom; */
 
-  &:focus {
-    /* background-color: red; */
+  /* &:focus {
+
     font-size: 14px;
-  }
+  } */
 `; // input
 
 // buttons container
