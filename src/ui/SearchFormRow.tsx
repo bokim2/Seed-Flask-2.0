@@ -12,6 +12,7 @@ import Button from './Button';
 import { useMultiTextInputSearch } from '../hooks/table-hooks/useMultiTextInputSearch';
 import { useInfiniteFetchMultiTextInputSearch } from '../hooks/table-hooks/useInfiniteFetchMultiTextInputSearch';
 import LoaderBar from './LoaderBar';
+import { formatColumnName } from '../hooks/hooks';
 
 export const SearchTableRow = styled.tr`
   /* display: none; */
@@ -100,7 +101,7 @@ export default function SearchFormRow({
         {/* <form onSubmit={handleSubmit}> */}
         {tableColumnsHeaderCellsArray.map((criterion, index) => (
           <TableHeaderCell>
-            <SearchInputAndButtonContainer data-cell={criterion}>
+            <SearchInputAndButtonContainer data-cell={formatColumnName(criterion)}>
               <TableSearchInput
                 data-column={criterion}
                 // data-cell="none"

@@ -504,6 +504,9 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
   /* display: flex; */
 
   /* font-family: var(--font-serif); */
+  /* background-color: orange; */
+  /* line-height: .5; */
+
   padding: 0.5rem;
   font-weight: 600;
   font-size: 1.1rem;
@@ -538,7 +541,7 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
     /* display: none; */
 
     display: flex;
-
+width: 100%;
 
   }
 `;
@@ -610,10 +613,12 @@ export const TableSearchInput = styled.input`
 `;
 
 export const TableDataCell = styled.td`
+display: table-cell;
   text-align: left;
   white-space: normal;
   overflow-wrap: break-word;
   /* max-width: 100%; */
+  vertical-align: bottom;
 
   padding: 0.5rem;
   text-transform: none;
@@ -631,10 +636,13 @@ export const TableDataCell = styled.td`
     padding: 0rem 1rem;
     display: flex;
     flex-wrap: wrap;
+    /* justify-content: flex-end;
+    align-items: flex-end; */
     font-size: 0.7rem;
 
     &::before {
       content: attr(data-cell) ':  ';
+      vertical-align: bottom;
       font-weight: 700;
       color: rgba(var(--clr-accent-0), 1);
       margin-right: 0.5rem;
@@ -670,14 +678,40 @@ export const TableDataCell = styled.td`
 
 export const EditTextArea = styled(FormTextArea)`
   /* padding-top: 0rem !important; */
-  width: 100%;
+  /* text-align: left; */
   /* width: auto; */
-
-  text-align: center;
+  /* font-size: 1rem;
   height: 2rem;
-  box-sizing: content-box;
+  height: auto; */
+  /* box-sizing: content-box; */
   /* background-color: red; */
   /* vertical-align: bottom; */
+
+  /* &::before {
+      background-color: red;
+      content: attr(data-cell) ':  ';
+      font-weight: 700;
+      color: rgba(var(--clr-accent-0), 1);
+      margin-right: 0.5rem;
+    }
+
+    &[data-cell='none']::before {
+      content: none;
+    } */
+
+    /* line-height: .5; */
+    width: 100%;
+      height: 1.4rem;
+  background-color: transparent;
+  color: inherit;
+  outline: none;
+  /* border: none; */
+  
+  @media (min-width: 850px) {
+    text-align: center;
+    width: 100%;
+
+  }
 `;
 
 export const PreviousDataRow = styled(TableRow)<TTableRow>`
@@ -740,6 +774,7 @@ export const SearchInputAndButtonContainer = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 1rem;
+  width: 100%;
 
    @media (max-width: 850px) {
     padding: 0rem 1rem;

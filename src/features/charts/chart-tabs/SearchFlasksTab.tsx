@@ -4,11 +4,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { useFetchBookmarkedFlasksGraphData } from '../chart-hooks';
 import FlasksListGraph from '../graphs/FlasksListGraph';
+import AllFlasksTab from './AllFlasksTab';
+import AllCellbanksGraph from '../graphs/AllCellbanksGraph';
 
-export default function SearchFlasksTab({ flasks }) {
+export default function SearchFlasksTab({ flasks, allCellbankGraphData }) {
   // const [searchedFlasksList, setSearchedFlasksList] = useState<number[]>([]);
 
-  // const searchedFlasksList = useSelector((state: RootState)=> state.bookmarks.searched_flasks_list)
+  const searchedFlasksList = useSelector(
+    (state: RootState) => state.bookmarks.searched_flasks_list
+  );
 
   // const {
   //   data: bookmarkedFlasksGraphData,
@@ -29,7 +33,14 @@ export default function SearchFlasksTab({ flasks }) {
 
         </>
       )} */}
-      <FlasksListGraph />
+      {searchedFlasksList.length == 0 && allCellbankGraphData?.length && (
+        <AllCellbanksGraph
+          allCellbankGraphData={allCellbankGraphData}
+          // bookmarkedFlasks={bookmarkedFlasks}
+          // setBookmarkedFlasks={setBookmarkedFlasks}
+        />
+      )}
+      {searchedFlasksList.length > 0 && <FlasksListGraph flasks={flasks} />}
       {flasks && flasks.length > 0 && (
         <FlasksTable
           flasks={flasks}

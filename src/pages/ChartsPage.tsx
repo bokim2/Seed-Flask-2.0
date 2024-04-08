@@ -16,6 +16,7 @@ import { RootState } from '../redux/store';
 import {
   clearCellbankBookmark,
   clearFlaskBookmark,
+  clearSearchedFlasksList,
 } from '../redux/slices/bookmarksSlice';
 
 import BookmarkedFlasksTab from '../features/charts/chart-tabs/BookmarkedFlasksTab';
@@ -44,20 +45,20 @@ export default function ChartsPage() {
   // const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
   // console.log(flasksAll, 'flasksAll');
 
-  const [selectedTabName, setSelectedTabName] = useState('all');
+  const [selectedTabName, setSelectedTabName] = useState('search');
 
   // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
   //   []
   // );
 
   const chartsTabNamesAndValues = {
-    all: 'All Flasks',
+    // all: 'All Flasks',
+    search: 'Search Flasks',
     bookmarkedFlasks: 'Bookmarked Flasks',
     bookmarkedCellbanks: 'Bookmarked Cellbanks',
-    cellbank: 'Single Cellbank',
+    // cellbank: 'Single Cellbank',
     // user: 'User',
     // project: 'Project',
-    search: 'Search Flasks',
     schedule: 'Schedule List',
   };
 
@@ -195,6 +196,13 @@ export default function ChartsPage() {
             <Button $size="xs" onClick={() => dispatch(clearFlaskBookmark())}>
               Clear Flask bookmarks
             </Button>
+
+            <Button
+              $size="xs"
+              onClick={() => dispatch(clearSearchedFlasksList())}
+            >
+              Clear searched flasks list
+            </Button>
           </ButtonsContainer>
 
           {/* bookmarks data
@@ -212,6 +220,26 @@ export default function ChartsPage() {
 
           {/* <MainNav /> */}
 
+          {selectedTabName === 'search' && (
+            // <SearchFlasksTab flasks={flasksAll} isLoading={isLoading} />
+            <>
+              <SearchFlasksTab
+                flasks={flasksAll}
+                allCellbankGraphData={allCellbankGraphData}
+              />
+
+              <Button
+                type="button"
+                onClick={() => {
+                  fetchNextPage();
+                  fetchNextPageAllCellbanks();
+                }}
+              >
+                {!hasNextPage ? 'No More Data' : 'Load More'}
+              </Button>
+            </>
+          )}
+
           {/* ALL flasks */}
           {selectedTabName === 'all' && (
             <>
@@ -226,9 +254,7 @@ export default function ChartsPage() {
                   fetchNextPage();
                   fetchNextPageAllCellbanks();
                 }}
-                // disabled={!hasNextPage || isFetchingNextPage}
               >
-                {/* {hasNextPage && !isFetchingNextPage && 'Load More'} */}
                 {!hasNextPage ? 'No More Data' : 'Load More'}
               </Button>
             </>
@@ -301,9 +327,9 @@ export default function ChartsPage() {
           /> */}
 
           {/* single cell bank */}
-          {selectedTabName === 'cellbank' && (
+          {/* {selectedTabName === 'cellbank' && (
             <SingleCellbankTab bookmarkedFlasks={bookmarkedFlasks} />
-          )}
+          )} */}
           {/* <p>{JSON.stringify(singleCellbankGraphData)}</p>
           {singleCellbankGraphData?.length && (
             <SingleCellbankGraph
@@ -311,10 +337,6 @@ export default function ChartsPage() {
             />
           )} */}
 
-          {selectedTabName === 'search' && (
-            // <SearchFlasksTab flasks={flasksAll} isLoading={isLoading} />
-            <SearchFlasksTab flasks={flasksAll} />
-          )}
           {/* <LineGraph chartData={chartData} /> */}
           {/* <TimeLineGraph /> */}
           {/* <FlasksTable flasks={flasks} />*/}

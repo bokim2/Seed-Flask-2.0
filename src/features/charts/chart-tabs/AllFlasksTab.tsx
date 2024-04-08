@@ -14,7 +14,7 @@ export default function AllFlasksTab({
       {allCellbankGraphData?.length && (
         <AllCellbanksGraph
           allCellbankGraphData={allCellbankGraphData}
-          bookmarkedFlasks={bookmarkedFlasks}
+          // bookmarkedFlasks={bookmarkedFlasks}
           // setBookmarkedFlasks={setBookmarkedFlasks}
         />
       )}

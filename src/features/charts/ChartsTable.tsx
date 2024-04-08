@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHeader,
   TableHeaderCell,
+  TableHeaderRow,
   TableRow,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
@@ -101,7 +102,7 @@ export default function ChartsTable({
             <Caption>{chartTitle}</Caption>
           <StyledTable>
             <TableHeader>
-              <TableRow>
+              <TableHeaderRow>
                 <TableHeaderCell>Flask ID</TableHeaderCell>
                 <TableHeaderCell>Cell Bank ID</TableHeaderCell>
                 <TableHeaderCell>Project</TableHeaderCell>
@@ -121,7 +122,7 @@ export default function ChartsTable({
                     <TableHeaderCell>project</TableHeaderCell>
                   </>
                 )}
-              </TableRow>
+              </TableHeaderRow>
             </TableHeader>
             <tbody>
               {Array.isArray(flasks) &&

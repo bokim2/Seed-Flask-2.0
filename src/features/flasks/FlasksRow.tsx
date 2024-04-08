@@ -127,7 +127,7 @@ function FlasksEditForm({
           {editedForm.flask_id}
         </TableDataCell>
 
-        <TableDataCell data-cell="cell_bank_id">
+        <TableDataCell data-cell="cell bank id">
           <EditTextArea
             name="cell_bank_id"
             onChange={handleChange}

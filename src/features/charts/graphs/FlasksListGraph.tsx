@@ -47,13 +47,15 @@ const StyledBookmarkedCellbankGraph = styled.div`
 `;
 
 type TFlasksListGraph = {
+  flasks?: any;
   flasksList?: number[];
 };
 
-const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
+const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
   const searchedFlasksList = useSelector(
     (state: RootState) => state.bookmarks.searched_flasks_list
   );
+
 
   console.log(
     searchedFlasksList,

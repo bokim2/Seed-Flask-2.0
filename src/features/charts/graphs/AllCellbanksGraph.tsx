@@ -43,7 +43,7 @@ ChartJS.register(
 
 export default function AllCellbanksGraph({
   allCellbankGraphData,
-  bookmarkedFlasks,
+  // bookmarkedFlasks,
   // setBookmarkedFlasks,
 }) {
   console.log(allCellbankGraphData, 'allCellbankGraphData');
