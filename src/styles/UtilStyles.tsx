@@ -205,6 +205,7 @@ export const StyledMainMenuButtons = styled(NavLink)`
     cursor: pointer;
     transform: scale(1.02);
     filter: brightness(105%);
+        /* box-shadow: 0 0px 3px rgba(var(--clr-accent-0), 1); */
   }
 
   &:active {
@@ -872,5 +873,31 @@ export const StyledGraphContainer = styled.div`
   @media (min-width: 850px) {
     padding: 1rem;
     height: 80vh;
+  }
+`;
+
+
+// full screen container - for page < or  > buttons
+
+export const FullScreenContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  /* left: 1rem; */
+  /* align-items: center; */
+  /* height: 100vh; */
+  /* width: 100vw; */
+  z-index: 100;
+  /* background-color: rgba(var(--clr-primary-900), 0.8); */
+
+  &.leftSide {
+    left: 1rem;
+  }
+
+  &.rightSide {
+    right: 1rem;
   }
 `;

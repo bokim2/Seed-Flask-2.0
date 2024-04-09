@@ -322,6 +322,7 @@ export function transformListStringToArray(listString) {
     }
   });
   const resultArray = Array.from(resultSet).sort((a, b) => a - b);
+  if (resultArray?.[0] == 0) return [];
   return resultArray;
 }
 

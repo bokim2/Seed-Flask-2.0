@@ -222,7 +222,7 @@ function ScheduleEditForm({
             onChange={handleChange}
             placeholder="flask_bookmark"
             value={editedForm.flask_bookmark}
-            required
+            // required
           />
         </TableDataCell>
 
@@ -233,7 +233,7 @@ function ScheduleEditForm({
             onChange={handleChange}
             placeholder="current_flasks"
             value={editedForm.current_flasks}
-            required
+            // required
           />
         </TableDataCell>
 
@@ -243,7 +243,7 @@ function ScheduleEditForm({
             name="flask_id"
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
             onChange={handleChange}
-            required
+            // required
             value={editedForm.flask_id}
           />
         </TableDataCell>
