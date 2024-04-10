@@ -18,12 +18,12 @@ export default function AllFlasksTab({
           // setBookmarkedFlasks={setBookmarkedFlasks}
         />
       )} */}
-      <ChartsTable
+      {/* <ChartsTable
         chartTitle="All Flasks"
         flasks={flasksAll}
         bookmarkedFlasks={bookmarkedFlasks}
         // setBookmarkedFlasks={setBookmarkedFlasks}
-      />
+      /> */}
 
       {/* <FlasksTable flasks={flasksAll} /> */}
     </>
