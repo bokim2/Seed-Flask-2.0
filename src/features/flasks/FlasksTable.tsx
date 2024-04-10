@@ -19,7 +19,7 @@ import {
 import { TUpdateCellbankForm } from '../cellbanks/cellbanks-types';
 import ErrorMessage from '../../ui/ErrorMessage';
 import { changePageLimit } from '../../redux/slices/pageSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
@@ -39,6 +39,7 @@ import {
   clearSearchedFlasksList,
   setSearchedFlasksList,
 } from '../../redux/slices/bookmarksSlice';
+import { RootState } from '../../redux/store';
 
 export type TError = {
   message: string;
@@ -47,12 +48,14 @@ export type TError = {
 type TFlasksTable = {
   flasks: TFlasksInfo;
   flasksListData?: TFlasksInfo;
+  handleAddBookmark?: (id: number) => void;
   // setSearchedFlasksList?: (flasks: number[]) => void;
 };
 
 export default function FlasksTable({
   flasks,
   flasksListData,
+  // handleAddBookmark,
 }: // setSearchedFlasksList
 // handleAddBookmark,
 //   toggleTextTruncation,
@@ -107,6 +110,8 @@ TFlasksTable) {
   const handleChoosePageLimit = (limit: number) => {
     dispatch(changePageLimit(limit));
   };
+
+
 
   // useEffect call to filter and sort data and keep it in sync
 

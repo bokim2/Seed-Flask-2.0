@@ -42,8 +42,8 @@ export default function SearchFlasksTab({ flasks, allCellbankGraphData }) {
         />
       )}
       
-      {searchedFlasksList.length > 0 && <FlasksListGraph flasks={flasks} />}
-      {flasks && flasks.length > 0 && (
+      {searchedFlasksList?.length > 0 && <FlasksListGraph flasks={flasks} />}
+      {flasks && flasks?.length > 0 && (
         <FlasksTable
           flasks={flasks}
           // setSearchedFlasksList={setSearchedFlasksList}

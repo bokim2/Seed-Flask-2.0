@@ -13,6 +13,9 @@ import ErrorMessage from '../ui/ErrorMessage';
 import { flasksInfoArraySchema } from '../features/flasks/flasks-types';
 import FlasksMultiInputForm from '../features/flasks/FlasksMultiInputForm';
 import Button from '../ui/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleFlaskBookmark } from '../redux/slices/bookmarksSlice';
+import { RootState } from '../redux/store';
 
 export default function FlaskPage() {
   const {
@@ -31,6 +34,14 @@ export default function FlaskPage() {
   // const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
   // console.log(flasksAll, 'flasksAll');
 
+  const flaskBookmarks = useSelector(
+    (state: RootState) => state.bookmarks.flask_bookmark
+  );
+
+  const cellbankBookmarks = useSelector(
+    (state: RootState) => state.bookmarks.cellbank_bookmark
+  );
+
   return (
     <PageContainer id="FlaskPageContainer">
       <LoaderWrapper>
@@ -39,9 +50,15 @@ export default function FlaskPage() {
       <InnerPageContainer id="InnerFlaskPageContainer">
         {error && <ErrorMessage error={error} />}
 
+        <h3>flask bookmarks: {JSON.stringify(flaskBookmarks)}</h3>
+        <h3>cellbank bookmarks: {JSON.stringify(cellbankBookmarks)}</h3>
+
         <FlasksMultiInputForm />
         {flasksAll && flasksAll.length > 0 && !isLoading && (
-          <FlasksTable flasks={flasksAll} />
+          <FlasksTable
+            flasks={flasksAll}
+            // handleAddBookmark={handleAddBookmark}
+          />
         )}
         <Button
           type="button"

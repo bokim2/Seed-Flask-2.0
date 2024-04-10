@@ -224,7 +224,7 @@ export const StyledMainMenuButtons = styled(NavLink)`
 export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   gap: 0.5rem;
   justify-content: center;
   align-items: center;
@@ -261,7 +261,7 @@ export const FormTableCell = styled.td`
   &::before {
     content: attr(data-cell) ': ';
     font-weight: 700;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
     color: rgba(var(--clr-accent-0), 1);
   }
 
@@ -633,6 +633,26 @@ display: table-cell;
     text-overflow: ellipsis;
   }
 
+  &[data-cell='cell bank id'] {
+      /* background-color: red !important; */
+      cursor: pointer;
+
+      &:hover {
+        font-weight: 700;
+        color: rgba(var(--clr-accent-6), .8);
+      }
+    }
+
+    &[data-cell='flask id'] {
+      /* background-color: red !important; */
+      cursor: pointer;
+
+      &:hover {
+        font-weight: 700;
+        color: rgba(var(--clr-accent-0), .8);
+      }
+    }
+
   @media (max-width: 850px) {
      text-align: left;
     /* display: grid; */
@@ -654,6 +674,8 @@ display: table-cell;
     &[data-cell='none']::before {
       content: none;
     }
+
+
 
     /* &[data-cell='none'] {
       button {
@@ -756,7 +778,7 @@ export const SearchInputPTag = styled.p`
   color: var(--clr-accent-7);
   font-weight: 600;
   font-size: 1.3rem;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
 `;
 
 export const TextSearchContainer = styled.div``;

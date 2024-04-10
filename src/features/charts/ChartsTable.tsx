@@ -61,6 +61,11 @@ export default function ChartsTable({
     dispatch(changePageLimit(limit));
   };
 
+  // const dispatch = useDispatch();
+  // const handleAddBookmark = (id: number) => {
+  //   dispatch(toggleFlaskBookmark(id));
+  // }
+
   // console.log(
   //   'chartTitle, bookmarkedFlasks, flasks',
   //   chartTitle,

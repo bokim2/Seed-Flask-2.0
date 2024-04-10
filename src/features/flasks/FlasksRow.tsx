@@ -9,6 +9,8 @@ import {
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
 import { flaskVesselTypes, initialCreateFlasksForm } from './flasks-types';
+import { useDispatch } from 'react-redux';
+import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
 
 export default function FlasksRow({
   rowData,
@@ -20,6 +22,7 @@ export default function FlasksRow({
   deleteFlask,
   isPendingDelete,
   isPendingUpdate,
+  // handleAddBookmark,
 }) {
   const {
     flask_id,
@@ -39,11 +42,24 @@ export default function FlasksRow({
   } = rowData;
   const editing = editingId === flask_id;
 
+  const dispatch = useDispatch();
+  const handleAddFlaskBookmark = (id: number) => {
+    dispatch(toggleFlaskBookmark(id));
+  }
+
   return (
     <>
       <PreviousDataRow $editing={editing}>
         {/* <TableRow> */}
-        <TableDataCell data-cell="Flask ID">{flask_id}</TableDataCell>
+        <TableDataCell
+          data-cell="flask id"
+          onClick={() => {
+            console.log('+flask_id', +flask_id);
+            handleAddFlaskBookmark(+flask_id);
+          }}
+        >
+          {flask_id}
+        </TableDataCell>
         <TableDataCell data-cell="cell bank id">{cell_bank_id}</TableDataCell>
         <TableDataCell data-cell="vessel type">{vessel_type}</TableDataCell>
         <TableDataCell data-cell="media">{media}</TableDataCell>

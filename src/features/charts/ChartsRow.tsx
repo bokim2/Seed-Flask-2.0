@@ -41,6 +41,7 @@ export default function ChartsRow({
   } = rowData;
   // const editing = editingId === flask_id;
   // console.log('rowData', rowData);
+
   const dispatch = useDispatch();
 
   return (
@@ -86,9 +87,7 @@ export default function ChartsRow({
             <TableDataCell data-cell="target molecule">
               {target_molecule}
             </TableDataCell>
-            <TableDataCell data-cell="project">
-              {project}
-            </TableDataCell>
+            <TableDataCell data-cell="project">{project}</TableDataCell>
           </>
         )}
         {/* </TableRow> */}
