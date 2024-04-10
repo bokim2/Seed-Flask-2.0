@@ -11,13 +11,13 @@ export default function AllFlasksTab({
 }) {
   return (
     <>
-      {allCellbankGraphData?.length && (
+      {/* {allCellbankGraphData?.length && (
         <AllCellbanksGraph
           allCellbankGraphData={allCellbankGraphData}
           // bookmarkedFlasks={bookmarkedFlasks}
           // setBookmarkedFlasks={setBookmarkedFlasks}
         />
-      )}
+      )} */}
       <ChartsTable
         chartTitle="All Flasks"
         flasks={flasksAll}

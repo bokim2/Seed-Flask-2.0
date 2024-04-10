@@ -24,6 +24,7 @@ import BookmarkedCellbanksTab from '../features/charts/chart-tabs/BookmarkedCell
 import SearchFlasksTab from '../features/charts/chart-tabs/SearchFlasksTab';
 import ScheduleTab from '../features/charts/chart-tabs/ScheduleTab';
 import { z } from 'zod';
+import AllFlasksTab from '../features/charts/chart-tabs/AllFlasksTab';
 
 export default function ChartsPage() {
   const {
@@ -43,8 +44,7 @@ export default function ChartsPage() {
   // const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
   // console.log(flasksAll, 'flasksAll');
 
-  // const [selectedTabName, setSelectedTabName] = useState('search');
-  const [selectedTabName, setSelectedTabName] = useState('bookmarkedFlasks');
+  const [selectedTabName, setSelectedTabName] = useState('search');
 
   // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
   //   []
@@ -209,7 +209,7 @@ export default function ChartsPage() {
               </Button>
             </>
           )}
-{/* 
+
           {selectedTabName === 'all' && (
             <>
               <AllFlasksTab
@@ -227,7 +227,7 @@ export default function ChartsPage() {
                 {!hasNextPage ? 'No More Data' : 'Load More'}
               </Button>
             </>
-          )} */}
+          )}
 
           {selectedTabName === 'bookmarkedFlasks' && (
             <BookmarkedFlasksTab
