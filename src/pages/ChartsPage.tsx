@@ -24,7 +24,6 @@ import BookmarkedCellbanksTab from '../features/charts/chart-tabs/BookmarkedCell
 import SearchFlasksTab from '../features/charts/chart-tabs/SearchFlasksTab';
 import ScheduleTab from '../features/charts/chart-tabs/ScheduleTab';
 import { z } from 'zod';
-import AllFlasksTab from '../features/charts/chart-tabs/AllFlasksTab';
 
 export default function ChartsPage() {
   const {
@@ -193,10 +192,10 @@ export default function ChartsPage() {
 
           {selectedTabName === 'search' && (
             <>
-              <SearchFlasksTab
+              {/* <SearchFlasksTab
                 flasks={flasksAll}
                 allCellbankGraphData={allCellbankGraphData}
-              />
+              /> */}
 
               <Button
                 type="button"
@@ -209,7 +208,7 @@ export default function ChartsPage() {
               </Button>
             </>
           )}
-
+{/* 
           {selectedTabName === 'all' && (
             <>
               <AllFlasksTab
@@ -227,7 +226,7 @@ export default function ChartsPage() {
                 {!hasNextPage ? 'No More Data' : 'Load More'}
               </Button>
             </>
-          )}
+          )} */}
 
           {selectedTabName === 'bookmarkedFlasks' && (
             <BookmarkedFlasksTab
