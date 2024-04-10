@@ -192,10 +192,10 @@ export default function ChartsPage() {
 
           {selectedTabName === 'search' && (
             <>
-              {/* <SearchFlasksTab
+              <SearchFlasksTab
                 flasks={flasksAll}
                 allCellbankGraphData={allCellbankGraphData}
-              /> */}
+              />
 
               <Button
                 type="button"

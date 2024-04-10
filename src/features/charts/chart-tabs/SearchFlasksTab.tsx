@@ -21,6 +21,7 @@ export default function SearchFlasksTab({ flasks, allCellbankGraphData }) {
   //   isFetching,
   //   refetch,
   // } = useFetchBookmarkedFlasksGraphData(searchedFlasksList);
+  console.log('flasks in SearchFlasksTab', flasks, 'allcellbanksgraphdata', allCellbankGraphData);
 
   return (
     <>
@@ -33,13 +34,13 @@ export default function SearchFlasksTab({ flasks, allCellbankGraphData }) {
 
         </>
       )} */}
-      {searchedFlasksList.length == 0 && allCellbankGraphData?.length && (
+      {/* {searchedFlasksList.length == 0 && allCellbankGraphData?.length && (
         <AllCellbanksGraph
           allCellbankGraphData={allCellbankGraphData}
           // bookmarkedFlasks={bookmarkedFlasks}
           // setBookmarkedFlasks={setBookmarkedFlasks}
         />
-      )}
+      )} */}
       {searchedFlasksList.length > 0 && <FlasksListGraph flasks={flasks} />}
       {flasks && flasks.length > 0 && (
         <FlasksTable
