@@ -890,7 +890,7 @@ export const FullScreenContainer = styled.div`
   /* align-items: center; */
   /* height: 100vh; */
   /* width: 100vw; */
-  z-index: 100;
+  z-index: 9;
   /* background-color: rgba(var(--clr-primary-900), 0.8); */
 
   &.leftSide {
