@@ -154,7 +154,7 @@ export default function ChartsPage() {
       </LoaderWrapper>
 
       <InnerPageContainer id="ChartsPage">
-        {/* <TabSelectorContainer
+        <TabSelectorContainer
           chartsTabNamesAndValues={chartsTabNamesAndValues}
           selectedTabName={selectedTabName}
           setSelectedTabName={setSelectedTabName}
@@ -249,7 +249,7 @@ export default function ChartsPage() {
           )}
 
           {selectedTabName === 'schedule' && <ScheduleTab flasks={flasksAll} />}
-        </TabSelectorContainer> */}
+        </TabSelectorContainer>
       </InnerPageContainer>
     </PageContainer>
   );
