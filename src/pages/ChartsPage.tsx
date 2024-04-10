@@ -44,7 +44,7 @@ export default function ChartsPage() {
   // console.log(flasksAll, 'flasksAll');
 
   // const [selectedTabName, setSelectedTabName] = useState('search');
-  const [selectedTabName, setSelectedTabName] = useState(null);
+  const [selectedTabName, setSelectedTabName] = useState('bookmarkedFlasks');
 
   // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
   //   []
