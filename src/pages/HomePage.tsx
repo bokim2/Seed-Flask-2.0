@@ -153,7 +153,7 @@ export default function HomePage() {
               imgStyleOverride={{ borderRadius: '0', width: '60%' }}
             />
             <CircularButton
-              toPath="/graphs"
+              toPath="/about"
               // text={''}
               backgroundColor="#F2D17C"
               imgUrl="images/document-1.png"

@@ -22,6 +22,9 @@ import LoaderBar from './ui/LoaderBar';
 import { useAppDispatch, useAppSelector } from './hooks/hooks';
 import { updateUserProfile } from './redux/slices/userProfileSlice';
 import { TuserProfile } from './redux/slices/userSlice';
+import AboutPage from './pages/AboutPage';
+import AboutCreator from './features/about/AboutCreator';
+import AboutSeedFlask from './features/about/AboutSeedFlask';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -102,6 +105,10 @@ function App() {
                 <Route path="sample" element={<SamplePage />} />
                 <Route path="schedule" element={<BioreactorPage />} />
                 <Route path="settings" element={<SettingsPage />} />
+                <Route path="about/*" element={<AboutPage />}/>
+                  {/* <Route path="about/seed-flask" element={<AboutSeedFlask />} />
+                  <Route path="about/bo" element={<AboutCreator />} /> */}
+                {/* </Route> */}
                 <Route path="charts" element={<ChartsPage />} />
                 {/* <Route path="signin" element={<SignInPage />} /> */}
               </Route>{' '}
