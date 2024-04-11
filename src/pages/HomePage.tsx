@@ -93,7 +93,7 @@ export default function HomePage() {
               toPath="/cellbank"
               text={'register cell bank'}
               backgroundColor={'rgba(var(--clr-accent-1), .8)'}
-              imgUrl="images/yeast-21.png"
+              imgUrl="/images/yeast-21.png"
               imgAlt="microbe"
               positionElement={{ left: '-15%' }}
             />
@@ -109,7 +109,7 @@ export default function HomePage() {
               toPath="/charts"
               text={'plan flask'}
               backgroundColor="rgba(var(--clr-accent-2), .8)"
-              imgUrl="images/curve.png"
+              imgUrl="/images/curve.png"
               imgAlt="wave graph"
               positionElement={{ left: '-5%' }}
             />
@@ -117,7 +117,7 @@ export default function HomePage() {
               toPath="/flask"
               text={'start flask'}
               backgroundColor="rgba(var(--clr-accent-3), .8)"
-              imgUrl="images/leaf-flask.png"
+              imgUrl="/images/leaf-flask.png"
               imgAlt="flask"
               positionElement={{ left: '5%' }}
             />
@@ -125,7 +125,7 @@ export default function HomePage() {
               toPath="/sample"
               text={'sample flask'}
               backgroundColor="rgba(var(--clr-accent-4), .8)"
-              imgUrl="images/clock-testtube.png"
+              imgUrl="/images/clock-testtube.png"
               imgAlt="clock and test tube"
               imgStyleOverride={{
                 height: 'clamp(1.8rem, 6vw, 6.6rem)',
@@ -147,7 +147,7 @@ export default function HomePage() {
                toPath="/schedule"
               //  text={'view schedule'}
               backgroundColor="#EAE0DA"
-              imgUrl="images/schedule.png"
+              imgUrl="/images/schedule.png"
               imgAlt="calendar"
               // positionElement={{ left: '30%' }}
               imgStyleOverride={{ borderRadius: '0', width: '60%' }}
@@ -156,7 +156,7 @@ export default function HomePage() {
               toPath="/about"
               // text={''}
               backgroundColor="#F2D17C"
-              imgUrl="images/document-1.png"
+              imgUrl="/images/document-1.png"
               imgAlt="wave graph"
               // positionElement={{ left: '30%' }}
               imgStyleOverride={{ borderRadius: '0', width: '60%' }}

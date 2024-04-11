@@ -43,7 +43,7 @@ export default function AboutPage() {
             <CropContainer className="small margin2">
         <StyledAboutsImage
           className="small top"
-          src="images/about/van.jpg"
+          src="/images/about/van.jpg"
           alt="van"
         />
       </CropContainer>

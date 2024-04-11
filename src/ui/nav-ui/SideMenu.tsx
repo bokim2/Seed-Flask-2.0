@@ -99,14 +99,14 @@ export const StyledInfoButtonContainer = styled.div`
 const sideMenuInfo = [
   {
     to: '/cellbank',
-    src: 'images/yeast-21.png',
+    src: '/images/yeast-21.png',
     alt: 'microbe',
     style: { backgroundColor: 'rgba(var(--clr-accent-1), .8)' },
   },
-  { to: '/flask', src: 'images/leaf-flask.png', alt: 'flask' },
-  { to: '/sample', src: 'images/clock-testtube.png', alt: 'sample' },
-  { to: '/schedule', src: 'images/schedule.png', alt: 'schedule' },
-  { to: '/charts', src: 'images/wave-graph-1.png', alt: 'charts' },
+  { to: '/flask', src: '/images/leaf-flask.png', alt: 'flask' },
+  { to: '/sample', src: '/images/clock-testtube.png', alt: 'sample' },
+  { to: '/schedule', src: '/images/schedule.png', alt: 'schedule' },
+  { to: '/charts', src: '/images/wave-graph-1.png', alt: 'charts' },
 ];
 
 export default function SideMenu() {
@@ -115,7 +115,7 @@ export default function SideMenu() {
       {/* info button */}
       <InfoButtonForModal
         buttonBackgroundColor="light"
-        imgSrc="images/info/about.png"
+        imgSrc="/images/info/about.png"
         alt="info button"
       >
         <div>'hello test'</div>

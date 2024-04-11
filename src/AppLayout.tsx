@@ -35,7 +35,7 @@ const StyledBackgroundImg = styled.div`
   height: 100%;
   position: fixed;
 
-  background-image: url('images/blobTop.svg'), url('images/blobBottom.svg');
+  background-image: url('/images/blobTop.svg'), url('/images/blobBottom.svg');
   background-size: 80vw;
   background-repeat: no-repeat;
   background-position-x: 25%, 0%;
@@ -189,7 +189,7 @@ export default function AppLayout({ userProfile }) {
         <FullScreenContainer className="leftSide">
           <StyledMainMenuNavButtons to={'/schedule'} >
             <StyledPageNavImage
-              src="images/left-arrow.png"
+              src="/images/left-arrow.png"
               alt={''}
               $fetchpriority="high"
             />
@@ -199,7 +199,7 @@ export default function AppLayout({ userProfile }) {
         <FullScreenContainer className="rightSide">
           <StyledMainMenuNavButtons to={'/schedule'} className="rightSide">
             <StyledPageNavImage
-              src="images/right-arrow.png"
+              src="/images/right-arrow.png"
               alt={''}
               $fetchpriority="high"
             />
