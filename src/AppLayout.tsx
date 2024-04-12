@@ -13,6 +13,11 @@ import {
 } from './styles/UtilStyles';
 import MainMenuButton, { StyledImage } from './ui/MainMenuButton';
 import { CircularButton } from './pages/HomePage';
+import { updateUserProfile } from './redux/slices/userProfileSlice';
+import { baseUrl } from '../configs';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from './hooks/hooks';
+import { TuserProfile } from './redux/slices/userSlice';
 
 const StyledAppLayout = styled.div`
   flex: 1;
@@ -148,7 +153,7 @@ const StyledMainMenuNavButtons = styled(StyledMainMenuButtons)`
 
 const StyledPageNavImage = styled(StyledImage)``;
 
-export default function AppLayout({ userProfile }) {
+export default function AppLayout() {
   // const handleNavToggle: THandleNavToggle = (e, navOrUser) => {
   //   // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
   //   e.stopPropagation();
@@ -161,6 +166,46 @@ export default function AppLayout({ userProfile }) {
   //     setOpenUser((prev) => !prev);
   //   }
   // };
+
+  const userProfile = useAppSelector(
+    (state) => state.userProfile.userProfile
+  ) as TuserProfile | null;
+  const dispatch = useAppDispatch();
+
+  const [userLoading, setUserLoading] = useState<boolean>(true);
+  // console.log('userProfile in APP console log before useEffect', userProfile);
+  useEffect(() => {
+    async function authProfile() {
+      try {
+        const response = await fetch(`${baseUrl}/api/auth/status`, {
+          credentials: 'include', // Include cookies for cross-origin requests
+        });
+        // console.log(response);
+        if (response.ok) {
+          const data = await response.json();
+
+          // setUserProfile(data);
+          // console.log('userProfile in APP first useEffect', data);
+          dispatch(updateUserProfile(data));
+        }
+        if (response.status === 401) {
+          console.log('Error: Not authenticated.  Please sign in.');
+        }
+        if (response.status === 403) {
+          console.log('Error: Not authorized to access this resource.');
+        }
+      } catch (err) {
+        console.log('error', err);
+      } finally {
+        setUserLoading(false);
+      }
+    }
+
+    // getEnv()
+    authProfile();
+  }, []);
+  // console.log('userProfile in APP console log after useEffect', userProfile);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -222,13 +267,13 @@ export default function AppLayout({ userProfile }) {
               imgStyleOverride={{ height: '1rem', justifyContent: 'center', alignItems: 'center' }}
             /> */}
 
-        {userProfile.isAuthenticated && (
+        {userProfile?.isAuthenticated && (
           <>
             <FullScreenContainer className="leftSide">
               <StyledMainMenuNavButtons to={navigateCarousel(-1)}>
                 <StyledPageNavImage
                   src="/images/left-arrow.png"
-                  alt={''}
+                  alt='left arrow'
                   $fetchpriority="high"
                 />
               </StyledMainMenuNavButtons>
@@ -241,7 +286,7 @@ export default function AppLayout({ userProfile }) {
               >
                 <StyledPageNavImage
                   src="/images/right-arrow.png"
-                  alt={''}
+                  alt='right arrow'
                   $fetchpriority="high"
                 />
               </StyledMainMenuNavButtons>

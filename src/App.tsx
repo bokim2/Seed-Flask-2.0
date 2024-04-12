@@ -93,7 +93,7 @@ function App() {
               <Route
                 element={
                   <AppLayout
-                    userProfile={userProfile}
+                    // userProfile={userProfile}
                     // setUserProfile={setUserProfile}
                   />
                 }
@@ -117,7 +117,7 @@ function App() {
               <Route
                 element={
                   <AppLayout
-                    userProfile={userProfile}
+                    // userProfile={userProfile}
                     // setUserProfile={setUserProfile}
                   />
                 }
