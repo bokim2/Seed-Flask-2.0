@@ -224,9 +224,9 @@ export default function SchedulesTable({
           );
         }}
       >
-        <Caption>Schedules Table</Caption>
         {/* Table Section */}
         <TableContainer id="SchedulesTableContainer">
+        <Caption>Schedules Table</Caption>
           <StyledTable>
             <TableHeader>
               {/* select column to search */}

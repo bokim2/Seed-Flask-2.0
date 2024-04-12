@@ -236,9 +236,9 @@ TFlasksTable) {
           );
         }}
       >
-        <Caption>Flasks Table</Caption>
         {/* Table Section */}
         <TableContainer id="SearchFlasksTableContainer">
+        <Caption>Flasks Table</Caption>
           <StyledTable>
             <TableHeader>
               {/* select column to search */}

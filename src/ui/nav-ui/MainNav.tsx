@@ -71,8 +71,9 @@ const StyledTitle = styled.h1`
   }
 
   &:active {
-    transform: scale(0.99);
+    transform: scale(0.98);
     filter: brightness(90%);
+    
   }
 
   /* &:active {

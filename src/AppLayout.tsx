@@ -115,20 +115,34 @@ const StyledMainMenuNavButtons = styled(StyledMainMenuButtons)`
   justify-content: center; */
   /* position: fixed; */
   /* z-index: 100; */
-  height: 5%;
+  /* height: 5%; */
   /* top: 50%; */
+  overflow: hidden;
   background-color: rgba(var(--clr-accent-0), 1);
+  border-radius: 99999vw;
 
   width: auto;
   /* padding: 1rem; */
-  height: 5vh;
   aspect-ratio: 1/1;
+
+  height: 2.5vh;
 
   &:hover {
     cursor: pointer;
     transform: scale(1.02);
     filter: brightness(105%);
     box-shadow: 0 0px 3px rgba(var(--clr-accent-0), 1);
+  }
+
+  &:active {
+    transform: scale(0.98);
+    filter: brightness(114%);
+    box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1);
+  }
+
+  @media (min-width: 850px) {
+    /* height: 10%; */
+    height: 4vh;
   }
 `;
 
@@ -187,7 +201,7 @@ export default function AppLayout({ userProfile }) {
               imgStyleOverride={{ height: '1rem', justifyContent: 'center', alignItems: 'center' }}
             /> */}
         <FullScreenContainer className="leftSide">
-          <StyledMainMenuNavButtons to={'/schedule'} >
+          <StyledMainMenuNavButtons to={'/schedule'}>
             <StyledPageNavImage
               src="/images/left-arrow.png"
               alt={''}

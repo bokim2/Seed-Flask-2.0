@@ -196,9 +196,9 @@ export default function CellbanksTable({
           );
         }}
       >
-        <Caption>Cell Banks Table</Caption>
         {/* Table Section */}
         <TableContainer id="CellbanksTableContainer">
+        <Caption>Cell Banks Table</Caption>
           <StyledTable>
             <TableHeader>
               {/* select column to search */}

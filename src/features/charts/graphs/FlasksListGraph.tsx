@@ -56,7 +56,6 @@ const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
     (state: RootState) => state.bookmarks.searched_flasks_list
   );
 
-
   console.log(
     searchedFlasksList,
     'searchedFlasksList in FlasksListGraph',
@@ -105,7 +104,8 @@ const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
   const options: any = {
     responsive: true,
     animation: false,
-    aspectRatio: 1.5,
+    // aspectRatio: 1.5,
+    maintainAspectRatio: false,
     scales: {
       x: {
         type: 'linear',
@@ -216,7 +216,6 @@ const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
       //   `target molecule: ${flaskData.target_molecule} `,
       // ];
 
-      
       const info = [
         `flask id: ${flaskData.flask_id}`,
         ` cell bank id: ${flaskData.cell_bank_id}`,
@@ -263,12 +262,12 @@ const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
           )}  y: od600 ${clickedXY[1]?.toFixed(2)}`}
       </h3> */}
       <Button
-          type="button"
-          onClick={() => setToggleGraphDataLabel((prev) => !prev)}
-          $size={'small'}
-        >
-         {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
-        </Button>
+        type="button"
+        onClick={() => setToggleGraphDataLabel((prev) => !prev)}
+        $size={'small'}
+      >
+        {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
+      </Button>
       {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
       {/* <ChartsTable flasks={datasets}/> */}
       {/* {JSON.stringify(datasets)} */}

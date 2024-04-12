@@ -205,7 +205,7 @@ export const StyledMainMenuButtons = styled(NavLink)`
     cursor: pointer;
     transform: scale(1.02);
     filter: brightness(105%);
-        /* box-shadow: 0 0px 3px rgba(var(--clr-accent-0), 1); */
+    /* box-shadow: 0 0px 3px rgba(var(--clr-accent-0), 1); */
   }
 
   &:active {
@@ -429,7 +429,7 @@ export const Caption = styled.p`
   align-items: center; */
   text-align: center;
   z-index: 10;
-  top: 10vh;
+  top: 9.8vh;
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
@@ -490,7 +490,7 @@ export const MainFilterValue = styled.select``;
 export const TableHeader = styled.thead`
   top: 9.7vh; // reference at NavBar styles
   background-color: black;
-  
+
   @media (min-width: 850px) {
     position: sticky;
     /* top: 0; */
@@ -542,8 +542,7 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
     /* display: none; */
 
     display: flex;
-width: 100%;
-
+    width: 100%;
   }
 `;
 
@@ -581,7 +580,7 @@ export const TableHeaderRow = styled(TableRow)`
   @media (min-width: 850px) {
     display: table-row;
   }
-`
+`;
 
 export const TableSearchInput = styled.input`
   width: 100%;
@@ -596,7 +595,7 @@ export const TableSearchInput = styled.input`
   /* width: 200px; */
 
   /* @media (min-width: 850px) { */
-    /* padding: 0rem 1rem;
+  /* padding: 0rem 1rem;
     display: flex;
     flex-wrap: wrap;
     font-size: 0.7rem;
@@ -614,8 +613,8 @@ export const TableSearchInput = styled.input`
 `;
 
 export const TableDataCell = styled.td`
-display: table-cell;
- 
+  display: table-cell;
+
   text-align: center;
   white-space: normal;
   overflow-wrap: break-word;
@@ -634,27 +633,27 @@ display: table-cell;
   }
 
   &[data-cell='cell bank id'] {
-      /* background-color: red !important; */
-      cursor: pointer;
+    /* background-color: red !important; */
+    cursor: pointer;
 
-      &:hover {
-        font-weight: 700;
-        color: rgba(var(--clr-accent-6), .8);
-      }
+    &:hover {
+      font-weight: 700;
+      color: rgba(var(--clr-accent-6), 0.8);
     }
+  }
 
-    &[data-cell='flask id'] {
-      /* background-color: red !important; */
-      cursor: pointer;
+  &[data-cell='flask id'] {
+    /* background-color: red !important; */
+    cursor: pointer;
 
-      &:hover {
-        font-weight: 700;
-        color: rgba(var(--clr-accent-0), .8);
-      }
+    &:hover {
+      font-weight: 700;
+      color: rgba(var(--clr-accent-0), 0.8);
     }
+  }
 
   @media (max-width: 850px) {
-     text-align: left;
+    text-align: left;
     /* display: grid; */
     padding: 0rem 1rem;
     display: flex;
@@ -674,8 +673,6 @@ display: table-cell;
     &[data-cell='none']::before {
       content: none;
     }
-
-
 
     /* &[data-cell='none'] {
       button {
@@ -724,18 +721,17 @@ export const EditTextArea = styled(FormTextArea)`
       content: none;
     } */
 
-    /* line-height: .5; */
-    width: 100%;
-      height: 1.4rem;
+  /* line-height: .5; */
+  width: 100%;
+  height: 1.4rem;
   background-color: transparent;
   color: inherit;
   outline: none;
   /* border: none; */
-  
+
   @media (min-width: 850px) {
     text-align: center;
     width: 100%;
-
   }
 `;
 
@@ -801,7 +797,7 @@ export const SearchInputAndButtonContainer = styled.div`
   font-size: 1rem;
   width: 100%;
 
-   @media (max-width: 850px) {
+  @media (max-width: 850px) {
     padding: 0rem 1rem;
     display: flex;
     /* flex-wrap: wrap; */
@@ -894,10 +890,9 @@ export const StyledGraphContainer = styled.div`
   max-width: 100%;
   @media (min-width: 850px) {
     padding: 1rem;
-    height: 80vh;
+    /* height: 80vh; */
   }
 `;
-
 
 // full screen container - for page < or  > buttons
 
@@ -916,10 +911,19 @@ export const FullScreenContainer = styled.div`
   /* background-color: rgba(var(--clr-primary-900), 0.8); */
 
   &.leftSide {
-    left: 1rem;
+    left: 0.25rem;
+  }
+  &.rightSide {
+    right: 0.25rem;
   }
 
-  &.rightSide {
-    right: 1rem;
+  @media (min-width: 850px) {
+    /* width: 100vw; */
+    &.leftSide {
+      left: 0.5rem;
+    }
+    &.rightSide {
+      right: 0.5rem;
+    }
   }
 `;

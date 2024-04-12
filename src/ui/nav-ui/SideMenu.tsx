@@ -145,7 +145,7 @@ export default function SideMenu() {
         >
           <StyledImage
             //   className={className}
-            src={'images/document-1.png'}
+            src={'/images/document-1.png'}
             alt={'wave graph'}
             style={{ backgroundColor: 'rgba(var(--clr-accent-1), .8)' }}
             //   style={imgStyleOverride}

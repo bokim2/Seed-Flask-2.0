@@ -190,8 +190,8 @@ export default function SamplesTable({ samples }) {
           );
         }}
       >
-            <Caption>Samples</Caption>
         <TableContainer id="SamplesTableContainer">
+            <Caption>Samples</Caption>
           <StyledTable>
             <TableHeader>
               <TableHeaderRow>

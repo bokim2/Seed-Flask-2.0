@@ -59,7 +59,8 @@ const BookmarkedCellbankGraph = memo(
     const options: any = {
       responsive: true,
       animation: false,
-      aspectRatio: 1.5,
+      // aspectRatio: 1.5,
+      maintainAspectRatio: false,
       scales: {
         x: {
           type: 'linear',

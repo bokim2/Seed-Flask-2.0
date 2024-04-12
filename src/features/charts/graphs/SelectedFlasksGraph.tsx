@@ -78,7 +78,7 @@ const SelectedFlasksGraph = memo(
       responsive: true,
       animation: false,
       maintainAspectRatio: false,
-      aspectRatio: 2,
+      // aspectRatio: 2,
       scales: {
         x: {
           type: 'linear',
