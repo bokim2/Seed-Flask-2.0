@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import MainNav, { StyledUser } from './ui/nav-ui/MainNav';
 import styled from 'styled-components';
 import NavList from './ui/nav-ui/NavList';
@@ -161,6 +161,18 @@ export default function AppLayout({ userProfile }) {
   //     setOpenUser((prev) => !prev);
   //   }
   // };
+const navigate = useNavigate();
+const location = useLocation();
+
+const APP_PAGE_ORDER = ["/", "/cellbank", "/charts", "/flask", "/sample", "/schedule", "/about"]
+
+const navigateCarousel = (direction) => {
+  const currentIndex = APP_PAGE_ORDER.indexOf(location.pathname);
+  const nextIndex = (currentIndex + direction + APP_PAGE_ORDER.length) % APP_PAGE_ORDER.length;
+  return APP_PAGE_ORDER[nextIndex]
+  // navigate(APP_PAGE_ORDER[nextIndex]);
+}
+
 
   return (
     <StyledAppLayout>
@@ -201,7 +213,7 @@ export default function AppLayout({ userProfile }) {
               imgStyleOverride={{ height: '1rem', justifyContent: 'center', alignItems: 'center' }}
             /> */}
         <FullScreenContainer className="leftSide">
-          <StyledMainMenuNavButtons to={'/schedule'}>
+          <StyledMainMenuNavButtons to={navigateCarousel(-1)}>
             <StyledPageNavImage
               src="/images/left-arrow.png"
               alt={''}
@@ -211,7 +223,7 @@ export default function AppLayout({ userProfile }) {
         </FullScreenContainer>
 
         <FullScreenContainer className="rightSide">
-          <StyledMainMenuNavButtons to={'/schedule'} className="rightSide">
+          <StyledMainMenuNavButtons to={navigateCarousel(1)} className="rightSide">
             <StyledPageNavImage
               src="/images/right-arrow.png"
               alt={''}

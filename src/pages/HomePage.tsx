@@ -75,6 +75,8 @@ type TuserProfile = {
   email: string;
 };
 
+const APP_PAGE_NUMBER = 0;
+
 export default function HomePage() {
   // const { user, isAuthenticated, isLoading } = useAuth0();
   // const [userProfile, setUserProfile] = useState<TuserProfile | null>(null);
