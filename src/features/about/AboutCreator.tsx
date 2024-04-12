@@ -34,7 +34,7 @@ export const CropContainer = styled.div`
 export default function AboutCreator() {
   return (
     <StyledAboutCreator>
-        <h1>Meet Bo</h1>
+        {/* <h1>Meet Bo</h1> */}
       <CropContainer className="small margin2">
         <StyledAboutsImage
           className="small"

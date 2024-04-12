@@ -69,11 +69,11 @@ const SecondaryMenuButtonContainer = styled.div`
   }
 `;
 
-type TuserProfile = {
-  picture: string;
-  name: string;
-  email: string;
-};
+// type TuserProfile = {
+//   picture: string;
+//   name: string;
+//   email: string;
+// };
 
 const APP_PAGE_NUMBER = 0;
 
