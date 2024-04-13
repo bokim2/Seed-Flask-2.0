@@ -4,6 +4,8 @@ import {
   InnerPageContainer,
   LoaderWrapper,
   PageContainer,
+  StyledBookmark,
+  StyledBookmarkContainer,
 } from '../styles/UtilStyles';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
@@ -31,8 +33,6 @@ export default function CellbankPage() {
   });
   // console.log('cellbanks in cellbanks page', cellbanks);
 
-
-
   const [toggleTextTruncation, setToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
 
   // bookmarked cellbanks
@@ -41,7 +41,7 @@ export default function CellbankPage() {
     dispatch(toggleCellbankBookmark(parseInt(id)));
   };
 
-  const cellbankBookmarks = useSelector(
+  const bookmarkedCellbanks = useSelector(
     (state: RootState) => state.bookmarks.cellbank_bookmark
   );
 
@@ -66,9 +66,14 @@ export default function CellbankPage() {
             : 'Hide Table Cell Overflow'}
         </Button>
 
-        <h3>{JSON.stringify(cellbankBookmarks)}</h3>
-
-    
+        {/* <h3>{JSON.stringify(cellbankBookmarks)}</h3> */}
+        <StyledBookmarkContainer>
+          <StyledBookmark>
+            cellbank bookmarks:{' '}
+            {Array.isArray(bookmarkedCellbanks) &&
+              bookmarkedCellbanks.join(', ')}
+          </StyledBookmark>
+        </StyledBookmarkContainer>
 
         <CellbanksMultiInputForm />
 

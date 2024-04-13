@@ -25,6 +25,8 @@ export const cellbankSearchSchema = createCellbankSchema
 
 export const cellbanksSearchSchemaArray = z.array(cellbankSearchSchema);
 
+
+
 // FLASK SCHEMAS
 // create a flask
 export const createFlaskSchema = z.object({
@@ -62,3 +64,23 @@ export const createScheduleSchema = z.object({
 export const updateScheduleSchema = createScheduleSchema.extend({
   human_readable_date: z.string(),
 });
+
+
+// sample search schema - make all keys optional
+
+export const createSampleSchema = z.object({
+  flask_id: z.coerce.number().nullable(),
+  od600: z.coerce.number().nullable(),
+  completed: z.boolean().nullable()
+})
+
+
+export const sampleSearchSchema = createSampleSchema
+  .extend({
+    sample_id: z.coerce.number().nullable(),
+    human_readable_date: z.string(),
+    username: z.string(), 
+  })
+  .partial();
+
+export const sampleSearchSchemaArray = z.array(sampleSearchSchema);

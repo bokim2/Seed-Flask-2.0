@@ -147,7 +147,7 @@ export default function CellbanksTable({
   );
 
   //state for multisearch
-  const [showSearchRow, setShowSearchRow] = useState(true);
+  const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   console.log(searchMultiError, 'searchMultiError');
@@ -198,7 +198,7 @@ export default function CellbanksTable({
       >
         {/* Table Section */}
         <TableContainer id="CellbanksTableContainer">
-        <Caption>Cell Banks Table</Caption>
+          <Caption>Cell Banks Table</Caption>
           <StyledTable>
             <TableHeader>
               {/* select column to search */}
@@ -215,10 +215,11 @@ export default function CellbanksTable({
                 <TableHeaderCell>
                   <Button
                     type="button"
+                    $variation="special"
                     onClick={() => setShowSearchRow((prev) => !prev)}
                     $size={'small'}
                   >
-                    Open Search
+                    {!showSearchRow ? 'Open Search' : 'Close Search'}
                   </Button>
                 </TableHeaderCell>
               </TableHeaderRow>

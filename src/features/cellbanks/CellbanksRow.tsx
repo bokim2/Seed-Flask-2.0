@@ -65,7 +65,7 @@ export default function CellbanksRow({
           {notes}
         </TableDataCell>
 
-        <TableDataCell data-cell="date">{human_readable_date}</TableDataCell>
+        <TableDataCell data-cell="date" style={{whiteSpace: 'nowrap'}}>{human_readable_date}</TableDataCell>
 
         <TableDataCell data-cell="user">{username}</TableDataCell>
 

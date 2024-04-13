@@ -4,6 +4,8 @@ import {
   InnerPageContainer,
   LoaderWrapper,
   PageContainer,
+  StyledBookmark,
+  StyledBookmarkContainer,
 } from '../styles/UtilStyles';
 import LoaderBar from '../ui/LoaderBar';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
@@ -157,20 +159,23 @@ export default function ChartsPage() {
           selectedTabName={selectedTabName}
           setSelectedTabName={setSelectedTabName}
         >
+          <StyledBookmarkContainer>
+            <StyledBookmark>
+              cellbank bookmarks:{' '}
+              {Array.isArray(bookmarkedCellbanks) &&
+                bookmarkedCellbanks.join(', ')}
+            </StyledBookmark>
+            <StyledBookmark>
+              flasks bookmarks:{' '}
+              {Array.isArray(bookmarkedFlasks) && bookmarkedFlasks.join(', ')}
+            </StyledBookmark>
+            <StyledBookmark>
+              searched flasks list:{' '}
+              {Array.isArray(searchedFlasksList) &&
+                searchedFlasksList.join(', ')}
+            </StyledBookmark>
+          </StyledBookmarkContainer>
 
-          <p>
-            cellbank bookmarks:{' '}
-            {Array.isArray(bookmarkedCellbanks) &&
-              bookmarkedCellbanks.join(', ')}
-          </p>
-          <p>
-            flasks bookmarks:{' '}
-            {Array.isArray(bookmarkedFlasks) && bookmarkedFlasks.join(', ')}
-          </p>
-          <p>
-            searched flasks list:{' '}
-            {Array.isArray(searchedFlasksList) && searchedFlasksList.join(', ')}
-          </p>
           <ButtonsContainer>
             <Button
               $size="xs"
@@ -208,7 +213,7 @@ export default function ChartsPage() {
               </Button>
             </>
           )}
-{/* 
+          {/* 
           {selectedTabName === 'all' && (
             <>
               <AllFlasksTab

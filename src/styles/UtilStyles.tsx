@@ -927,3 +927,23 @@ export const FullScreenContainer = styled.div`
     }
   }
 `;
+
+// displayed bookmark style <p>
+
+export const StyledBookmarkContainer = styled.div`
+  padding: 1rem;
+
+  @media (min-width: 850px) {
+    font-size: 1.5rem;
+    padding: 2rem .5rem;
+  }
+`;
+
+export const StyledBookmark = styled.p`
+  padding: 0.25rem;
+
+  @media (min-width: 850px) {
+    font-size: 1.5rem;
+    /* padding: .5rem .5rem; */
+  }
+`;

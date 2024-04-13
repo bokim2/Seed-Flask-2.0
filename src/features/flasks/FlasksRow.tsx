@@ -68,7 +68,7 @@ export default function FlasksRow({
 
         <TableDataCell data-cell="temp c">{temp_c}</TableDataCell>
         <TableDataCell data-cell="rpm">{rpm}</TableDataCell>
-        <TableDataCell data-cell="start date (user's timezone)">
+        <TableDataCell data-cell="start date" style={{whiteSpace: 'nowrap'}}>
           {displayLocalTime(start_date)}
         </TableDataCell>
         <TableDataCell data-cell="user">{username}</TableDataCell>

@@ -183,7 +183,7 @@ TFlasksTable) {
   );
 
   //state for multisearch
-  const [showSearchRow, setShowSearchRow] = useState(true);
+  const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   console.log(searchMultiError, 'searchMultiError');
@@ -216,13 +216,13 @@ TFlasksTable) {
       {deleteError?.message && <ErrorMessage error={deleteError} />}
       {searchMultiError && <ErrorMessage error={searchMultiError} />}
 
-      <Button
+      {/* <Button
         type="button"
         onClick={() => setShowSearchRow((prev) => !prev)}
         $size={'small'}
       >
         Open Search
-      </Button>
+      </Button> */}
 
       {/* Edit row form */}
       <StyledForm
@@ -278,10 +278,11 @@ TFlasksTable) {
                   {!flasksListData && (
                     <Button
                       type="button"
+                      $variation="special"
                       onClick={() => setShowSearchRow((prev) => !prev)}
                       $size={'small'}
                     >
-                      Open Search
+                      {!showSearchRow ? 'Open Search' : 'Close Search'}
                     </Button>
                   )}
                 </TableHeaderCell>

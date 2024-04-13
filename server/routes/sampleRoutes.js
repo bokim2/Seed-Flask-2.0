@@ -3,10 +3,161 @@ import { db } from '../db/db.js';
 import { LIMIT } from '../../src/lib/constants.js';
 import { allowRolesAdminUser } from '../middleware/roles/allowRolesAdminUserMiddleware.js';
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
+import { sampleSearchSchemaArray } from '../zodSchemas.js';
+import { getUtcTimestampFromLocalTime } from '../helperFunctions.js';
+import { z } from 'zod';
 
 const sampleRouter = express.Router();
 
 // GET all samples
+console.log('in sampleRoutes.js');
+
+
+sampleRouter.route('/search').get(async (req, res) => {
+  try {
+    console.log('in samples search backend')
+    const limit = parseInt(req.query.limit, 10 || LIMIT);
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
+
+    let { searchField, searchText } = req.query;
+
+    searchField = Array.isArray(searchField)
+      ? searchField
+      : searchField
+      ? [searchField]
+      : [];
+    searchText = Array.isArray(searchText)
+      ? searchText
+      : searchText
+      ? [searchText]
+      : [];
+
+    const validFields = [
+      'sample_id',
+      'flask_id',
+      // 'end_date',
+      'od600',
+      'completed',
+      'username',
+      'user_id',
+      'time_since_inoc_hr',
+
+      'human_readable_date',
+    ];
+
+    const queries = searchField
+      .map((field, index) => ({
+        field,
+        text: searchText?.[index] || '',
+      }))
+      .filter((q) => validFields.includes(q.field) && q.text !== '');
+
+    if (queries.length === 0) {
+      return res
+        .status(400)
+        .json({ message: 'No valid search fields provided' });
+    }
+
+    // const zodValidatedData = sampleSearchSchemaArray.safeParse(queries);
+    // if (!zodValidatedData.success) {
+    //   return res.status(400).json({
+    //     message: zodValidatedData.error.issues,
+    //     serverError: 'Zod validation error on the server for search samples',
+    //   });
+    // }
+
+    // if (queries.length === 0) {
+    //   return res.status(400).json({
+    //     message: zodValidatedData.error.issues,
+    //     serverError: 'Invalid or missing search fields',
+    //   });
+    // }
+// console.log('zodValidatedData.data in samples search', zodValidatedData.data)
+
+const numericFields = ['sample_id', 'flask_id', 'od600'];
+
+const transformQueryObject = (queryObject) => {
+  if (numericFields.includes(queryObject.field)) {
+    console.log(
+      'numericFields.includes(queryObject.field)',
+      numericFields.includes(queryObject.field)
+    );
+    return {
+      ...queryObject,
+      text: Number(queryObject.text),
+    };
+  }
+  return queryObject;
+};
+
+const queryObjectSchema = z.object({
+  field: z.string(),
+  text: z.string(),
+});
+
+const transformedQueryObjectSchema =
+queryObjectSchema.transform(transformQueryObject);
+
+const queryArraySchema = z.array(transformedQueryObjectSchema);
+
+const zodValidatedData = queryArraySchema.parse(queries);
+console.log('zodValidatedData in samples search', zodValidatedData)
+
+
+    // Construct WHERE clause dynamically
+    const whereClauses = zodValidatedData.map((q, index) => {
+      const fieldForQuery = q.field;
+      // q.field === 'flask_id' ? `${q.field}::text` : q.field;
+      if (typeof q.text === 'number') {
+        return `${q.field} = $${index + 1}`;
+      }
+      if (q.field === 'human_readable_date') {
+        q.field = 'end_date';
+        q.text = getUtcTimestampFromLocalTime(q.text);
+      }
+      if (q.field === 'end_date') {
+        return `samples.end_date > $${index + 1}`;
+      } else {
+        return `to_tsvector(${fieldForQuery}) @@ plainto_tsquery($${
+          index + 1
+        })`;
+      }
+    });
+
+
+    let queryText = `SELECT * FROM samples`;
+    if (whereClauses.length > 0) {
+      queryText += ` WHERE ${whereClauses.join(' AND ')}`;
+    }
+    queryText += ` ORDER BY sample_id DESC LIMIT $${
+      whereClauses.length + 1
+    } OFFSET $${whereClauses.length + 2}`;
+
+    const query = {
+      text: queryText,
+      values: [...queries.map((q) => q.text), limit, offset],
+    };
+
+    console.log('QUERY!!!', query);
+
+    const results = await db.query(query);
+
+    if (results.rows.length === 0) {
+      return res.status(404).json({ message: 'No samples found' });
+    }
+    console.log('returned data', results.rows);
+    return res.status(200).json({
+      status: 'success',
+      data: results.rows,
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
+
 
 sampleRouter.route('/').get(async (req, res) => {
   try {
@@ -65,6 +216,7 @@ sampleRouter
     }
   });
 
+
 // update a sample
 sampleRouter.route('/:id').put(async (req, res) => {
   try {
@@ -80,21 +232,6 @@ sampleRouter.route('/:id').put(async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err?.detail || 'Internal server error' });
-  }
-});
-
-sampleRouter.route('/search').get(async (req, res) => {
-  try {
-    const limit = parseInt(req.query.limit, 10 || LIMIT);
-    const offset =
-      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
-
-    let { searchField, searchText } = req.query;
-
-    // searchField =
-  } catch (err) {
-    console.log(err);
-    throw err;
   }
 });
 

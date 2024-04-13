@@ -44,7 +44,7 @@ export default function SamplesRow({
         <TableDataCell data-cell="time since inoc hr">
           {time_since_inoc_hr?.toFixed(2)}
         </TableDataCell>
-        <TableDataCell data-cell="end date/time">
+        <TableDataCell data-cell="end date/time" style={{whiteSpace: 'nowrap'}}>
           {displayLocalTime(end_date)}
         </TableDataCell>
         <TableDataCell data-cell="completed">

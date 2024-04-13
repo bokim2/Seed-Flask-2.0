@@ -63,6 +63,14 @@ const variations = {
   round: css`
     border-radius: 50%;
   `,
+  special: css`
+    background-color: rgba(var(--clr-accent-6), 0.9);
+
+    &:hover
+  /* &:focus  */ {
+    background-color: rgba(var(--clr-accent-5), 0.8);
+  }
+  `,
 };
 
 type ButtonProps = {

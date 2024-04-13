@@ -91,8 +91,8 @@ flaskRouter.route('/list').get(async (req, res) => {
   }
 });
 
-console.log('right above flask search backend');
 flaskRouter.route('/search').get(async (req, res) => {
+  console.log('in flask search backend');
   try {
     console.log(
       'req.query',
@@ -226,7 +226,8 @@ flaskRouter.route('/search').get(async (req, res) => {
     // const validatedQueries = queries.map((query)=> (flasksSearchSchema.safeParse(query).data));
     // console.log('validatedQueries FLASK SEARCH', validatedQueries);
     const zodValidatedData = queryArraySchema.parse(queries);
-    console.log('zodValidatedData', zodValidatedData);
+    console.log('zodValidatedData in flasks search', zodValidatedData)
+    // console.log('zodValidatedData', zodValidatedData);
     // if (!zodValidatedData.success) {
     //   return res.status(400).json({
     //     message: zodValidatedData?.error?.issues,

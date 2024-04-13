@@ -102,6 +102,7 @@ export default function AllCellbanksGraph({
         y: flaskData.od600_values[index],
       })),
       tension: 0.1,
+      pointHitRadius: 50,
       // borderColor: 'rgb(89, 192, 75)', // Change as needed
       // backgroundColor: 'rgb(89, 192, 75)', // Adjust for visibility
     };

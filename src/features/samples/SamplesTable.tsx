@@ -147,7 +147,7 @@ export default function SamplesTable({ samples }) {
         samples,
         filteredAndSortedData,
         sortColumn,
-        'start_date'
+        'end_date'
       ),
     [samples, filteredAndSortedData, sortColumn]
   );
@@ -228,8 +228,8 @@ export default function SamplesTable({ samples }) {
             </TableHeader>
 
             <tbody>
-              {samples &&
-                samples?.map((rowData) => {
+              {data &&
+                data?.map((rowData) => {
                   return (
                     <SamplesRow
                       key={rowData.sample_id}

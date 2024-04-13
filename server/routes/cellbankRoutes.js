@@ -156,7 +156,8 @@ cellbankRouter.route('/search').get(async (req, res) => {
     console.log('queries', queries);
 
     if (queries.length === 0) {
-      return;
+      // return;
+      return res.status(400).json({message: 'No valid search fields provided'});
     }
 
     const zodValidatedData = cellbanksSearchSchemaArray.safeParse(queries);
