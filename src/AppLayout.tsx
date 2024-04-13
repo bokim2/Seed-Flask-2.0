@@ -187,6 +187,7 @@ export default function AppLayout() {
           // setUserProfile(data);
           // console.log('userProfile in APP first useEffect', data);
           dispatch(updateUserProfile(data));
+          console.log('user data in applayout', data)
         }
         if (response.status === 401) {
           console.log('Error: Not authenticated.  Please sign in.');
