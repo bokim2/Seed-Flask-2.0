@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { db } from './db/db.js';
 import { badWordsMiddleware } from './middleware/badWordsMiddleware.js';
-import { allowRolesAdminUser } from './middleware/allowRolesAdminUser.js';
+import { allowRolesAdminUser } from './middleware/roles/allowRolesAdminUserMiddleware.js';
 import { validateIdParam } from './middleware/validateIdParam.js';
 import { LIMIT } from '../src/lib/constants.js';
 import {
@@ -102,6 +102,14 @@ const config = {
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
+
+
+app.use((req, res, next) => {
+  console.log('Is Authenticated:', req.oidc.isAuthenticated());
+  console.log('User:', req.oidc.user);
+  next();
+});
+
 
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
@@ -220,7 +228,7 @@ app.get('/api/chart/cellbanks', async (req, res) => {
       flasks.flask_id, cell_banks.cell_bank_id 
       ORDER BY flask_id DESC 
       LIMIT $1 OFFSET $2;`,
-        [limit, offset]
+      [limit, offset]
     );
     res.status(200).json({
       status: 'success',
@@ -235,7 +243,7 @@ app.get('/api/chart/cellbanks', async (req, res) => {
 // get  - GRAPH all flask and sample associated with one cellbank
 app.get('/api/chart/cellbank/:id', async (req, res) => {
   try {
-    console.log('in cellbank:/id', req.params.id)
+    console.log('in cellbank:/id', req.params.id);
     const results = await db.query(
       `SELECT 
       flasks.*,
@@ -433,7 +441,7 @@ flasks.flask_id, cell_banks.cell_bank_id;`;
 //         return res.status(400).json({
 //           message: zodValidatedData.error.issues,
 //           serverError: 'Zod validation error on the server for search cell banks',
-//         });  
+//         });
 //       }
 
 //     if (queries.length === 0) {

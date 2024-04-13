@@ -1,7 +1,7 @@
 import express from 'express';
 import { db } from '../db/db.js';
 import { LIMIT } from '../../src/lib/constants.js';
-import { allowRolesAdminUser } from '../middleware/allowRolesAdminUser.js';
+import { allowRolesAdminUser } from '../middleware/roles/allowRolesAdminUserMiddleware.js';
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
 
 const sampleRouter = express.Router();
@@ -65,42 +65,38 @@ sampleRouter
     }
   });
 
-
-  // update a sample
-  sampleRouter.route('/:id').put(async (req, res) => {
-    try {
-      const { flask_id, end_date, od600, completed } = req.body;
-      const sampleId = req.params.id;
-      const query = `UPDATE samples SET flask_id = $1, end_date = $2, od600 = $3, completed = $4 WHERE sample_id = $5 RETURNING *`;
-      const values = [flask_id, end_date, od600, completed, sampleId];
-      const results = await db.query(query, values);
-      if (results.rowCount === 0) {
-        return res.status(404).json({ message: 'Sample not found' });
-      }
-      res.status(200).json({ message: 'Update successful', data: results.rows });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: err?.detail || 'Internal server error' });
-     
-    }
-  });
-
-
-sampleRouter.route('/search').get(async (req, res)=> {
+// update a sample
+sampleRouter.route('/:id').put(async (req, res) => {
   try {
-const limit = parseInt(req.query.limit, 10 || LIMIT);
-const offset = parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
+    const { flask_id, end_date, od600, completed } = req.body;
+    const sampleId = req.params.id;
+    const query = `UPDATE samples SET flask_id = $1, end_date = $2, od600 = $3, completed = $4 WHERE sample_id = $5 RETURNING *`;
+    const values = [flask_id, end_date, od600, completed, sampleId];
+    const results = await db.query(query, values);
+    if (results.rowCount === 0) {
+      return res.status(404).json({ message: 'Sample not found' });
+    }
+    res.status(200).json({ message: 'Update successful', data: results.rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
+  }
+});
 
-let { searchField, searchText } = req.query;
+sampleRouter.route('/search').get(async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit, 10 || LIMIT);
+    const offset =
+      parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
 
-// searchField = 
+    let { searchField, searchText } = req.query;
 
+    // searchField =
   } catch (err) {
     console.log(err);
     throw err;
-  
   }
-})
+});
 
 sampleRouter.route('/:id').delete(async (req, res) => {
   try {
@@ -120,7 +116,5 @@ sampleRouter.route('/:id').delete(async (req, res) => {
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
-
-
 
 export default sampleRouter;

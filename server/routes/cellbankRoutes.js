@@ -6,8 +6,9 @@ import {
   createCellbankSchema,
   updateBackendCellbankSchema,
 } from '../zodSchemas.js';
-import { allowRolesAdminUser } from '../middleware/allowRolesAdminUser.js';
+import { allowRolesAdminUser } from '../middleware/roles/allowRolesAdminUserMiddleware.js';
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
+import { allowIfUserIdMatchesMiddleware } from '../middleware/roles/allowIfUserIdMatchesMiddleware.js';
 import { LIMIT } from '../../src/lib/constants.js';
 import { getUtcTimestampFromLocalTime } from '../helperFunctions.js';
 
@@ -53,6 +54,7 @@ cellbankRouter
   .post(allowRolesAdminUser, badWordsMiddleware, async (req, res) => {
     try {
       const userObj = req.oidc.user;
+      console.log('userObj in cellbank post', userObj);
       const username = userObj.name;
       const user_id = userObj.sub;
       console.log(req.body, 'in post cell bank server');
@@ -101,7 +103,6 @@ cellbankRouter
       res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   });
-
 
 cellbankRouter.route('/search').get(async (req, res) => {
   try {
@@ -219,12 +220,10 @@ cellbankRouter.route('/search').get(async (req, res) => {
     console.error(err);
     console.error('Database query error:', err.message);
     console.error('Detailed error:', err);
-    res
-      .status(500)
-      .json({
-        message: err?.detail || 'Internal server error',
-        error: err.message,
-      });
+    res.status(500).json({
+      message: err?.detail || 'Internal server error',
+      error: err.message,
+    });
 
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
@@ -232,67 +231,72 @@ cellbankRouter.route('/search').get(async (req, res) => {
 
 // UPDATE one cell bank
 
-cellbankRouter.route('/:id').put(validateIdParam, async (req, res) => {
-  try {
-    // const {
-    //   strain,
-    //   target_molecule,
-    //   description,
-    //   notes,
-    //   date_timestamptz,
-    //   project,
-    // } = req.body;
-    const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
-    if (!validatedReqBody.success) {
-      return res.status(400).json({
-        message:
-          validatedReqBody.error.issues ||
-          'Zod validation error on the server for update cell bank',
-        serverError: 'Zod validation error on the server for update cell bank',
-      });
-    }
-    const {
-      strain,
-      target_molecule,
-      description,
-      notes,
-      date_timestamptz,
-      project,
-    } = validatedReqBody.data;
+cellbankRouter
+  .route('/:id')
+  .put(validateIdParam, allowIfUserIdMatchesMiddleware, async (req, res) => {
+    try {
+      // const {
+      //   strain,
+      //   target_molecule,
+      //   description,
+      //   notes,
+      //   date_timestamptz,
+      //   project,
+      // } = req.body;
+      const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
+      if (!validatedReqBody.success) {
+        return res.status(400).json({
+          message:
+            validatedReqBody.error.issues ||
+            'Zod validation error on the server for update cell bank',
+          serverError:
+            'Zod validation error on the server for update cell bank',
+        });
+      }
+      const {
+        strain,
+        target_molecule,
+        description,
+        notes,
+        date_timestamptz,
+        project,
+      } = validatedReqBody.data;
 
-    const cellBankId = req.params.id;
-    console.log('req.body', req.body, 'cellBankId', cellBankId);
-    const query = `
+      const cellBankId = req.params.id;
+      // req.tableName = 'cell_banks';
+      // req.primaryKey = 'cell_bank_id';
+      console.log('req.body', req.body, 'cellBankId', cellBankId);
+      const query = `
         UPDATE cell_banks 
         SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 , project = $6
         WHERE cell_bank_id = $7 
         RETURNING *;
       `;
-    const updateValues = [
-      strain,
-      notes,
-      target_molecule,
-      description,
-      date_timestamptz,
-      project,
-      cellBankId,
-    ];
-    const results = await db.query(query, updateValues);
+      const updateValues = [
+        strain,
+        notes,
+        target_molecule,
+        description,
+        date_timestamptz,
+        project,
+        cellBankId,
+      ];
+      const results = await db.query(query, updateValues);
 
-    // Check if any rows were updated
-    if (results.rowCount === 0) {
-      return res.status(404).json({ message: 'Cell bank not found' });
+      // Check if any rows were updated
+      if (results.rowCount === 0) {
+        return res.status(404).json({ message: 'Cell bank not found' });
+      }
+
+      // Sending back the updated data
+      res.json({ message: 'Update successful', data: results.rows });
+    } catch (err) {
+      // console.error('Error in server PUT request:', err);
+      // res.status(500).json({ message: 'Internal server error' });
+      console.error(err);
+      res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
-
-    // Sending back the updated data
-    res.json({ message: 'Update successful', data: results.rows });
-  } catch (err) {
-    // console.error('Error in server PUT request:', err);
-    // res.status(500).json({ message: 'Internal server error' });
-    console.error(err);
-    res.status(500).json({ message: err?.detail || 'Internal server error' });
-  }
-});
+  });
 
 // DELETE on cell bank
 cellbankRouter.route('/:id').delete(validateIdParam, async (req, res) => {
@@ -321,7 +325,6 @@ cellbankRouter.route('/:id').delete(validateIdParam, async (req, res) => {
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
-
 
 // cellbankRouter.route('/search').get(async (req, res) => {
 //   try {

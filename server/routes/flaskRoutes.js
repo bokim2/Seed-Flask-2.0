@@ -7,8 +7,11 @@ import {
   flasksSearchSchemaArray,
   updateBackendCellbankSchema,
 } from '../zodSchemas.js';
-import { allowRolesAdminUser } from '../middleware/allowRolesAdminUser.js';
+import { allowRolesAdminUser } from '../middleware/roles/allowRolesAdminUserMiddleware.js';
+
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
+import { allowIfUserIdMatchesMiddleware } from '../middleware/roles/allowIfUserIdMatchesMiddleware.js';
+import { validateIdParam } from '../middleware/validateIdParam.js';
 import { getUtcTimestampFromLocalTime } from '../helperFunctions.js';
 import { z } from 'zod';
 
@@ -290,12 +293,10 @@ flaskRouter.route('/search').get(async (req, res) => {
     console.error(err);
     console.error('Database query error:', err.message);
     console.error('Detailed error:', err);
-    res
-      .status(500)
-      .json({
-        message: err?.detail || 'Internal server error',
-        error: err.message,
-      });
+    res.status(500).json({
+      message: err?.detail || 'Internal server error',
+      error: err.message,
+    });
 
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
@@ -368,7 +369,7 @@ flaskRouter
 
 // update a flask
 
-flaskRouter.route('/:id').put(async (req, res) => {
+flaskRouter.route('/:id').put(validateIdParam, allowIfUserIdMatchesMiddleware, async (req, res) => {
   console.log('req.body in server', req.body, 'req.params.id', req.params.id);
   const {
     inoculum_ul,

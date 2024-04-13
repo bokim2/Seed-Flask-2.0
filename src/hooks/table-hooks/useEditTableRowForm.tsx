@@ -29,6 +29,7 @@ async function updateRowEdit(
       `${baseUrl}/api/${tableName}/${editedForm[idColumnName]}`,
       {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
