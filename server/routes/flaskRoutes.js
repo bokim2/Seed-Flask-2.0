@@ -25,10 +25,12 @@ flaskRouter.route('/').get(async (req, res) => {
       parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
     const results = await db.query(
       `SELECT
-        *
-        FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
-        ORDER BY flask_id DESC
-        LIMIT $1 OFFSET $2;`,
+      f.*, 
+      c.strain, c.target_molecule, c.project  
+      FROM flasks as f
+      LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
+      ORDER BY f.flask_id DESC
+      LIMIT $1 OFFSET $2;`,
       [limit, offset]
     );
     // console.log('trying to get timezone to work', results);
@@ -73,10 +75,18 @@ flaskRouter.route('/list').get(async (req, res) => {
       return res.status(400).json({ message: 'No bookmarked flask ids' });
     }
     const results = await db.query(
+      // `SELECT
+      //   *
+      //   FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
+      //   ORDER BY flask_id DESC;`,
       `SELECT
-        *
-        FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
-        ORDER BY flask_id DESC;`,
+      f.*,
+      c.strain, c.target_molecule, c.project
+      FROM flasks as f 
+      LEFT JOIN cell_banks as c ON f.cell_bank_id
+      ORDER BY f.flask_id DESC
+      LIMIT $1 OFFSET $2;
+      `,
       [flaskIds]
     );
     // console.log('trying to get timezone to work', results);
