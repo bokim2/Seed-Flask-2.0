@@ -46,7 +46,7 @@ export function filteredTableData(
   tableRowsData,
   filteredAndSortedData,
   sortColumn,
-  timestamp_column
+  timestamp_column,
 ) {
   console.log(
     tableRowsData,
@@ -141,58 +141,32 @@ export function formatColumnName(columnName) {
 
 // set sorted column and asc or desc
 
-// export function useSetSortColumn<TTableColumns extends string>() {
-//   type TSortOrder = 'asc' | 'desc' | '';
-//   type TSortColumn = { [key in TTableColumns]?: TSortOrder };
-
-//   const [sortColumn, setSortColumn] = useState<TSortColumn>({});
-//   // console.log(sortColumn, 'sortColumn');
-
-//   const handleSortColumn = (e, columnName, sortOrder) => {
-//     e.stopPropagation();
-
-//     const sortObject = {
-//       [columnName]: sortOrder,
-//     };
-
-//     if (sortOrder) {
-//       setSortColumn((prev: TSortColumn) => {
-//         if (
-//           ((prev?.[columnName] === 'asc') === sortOrder) ||
-//           ((prev?.[columnName] === 'desc') === sortOrder)
-//         ) {
-//           return { [columnName]: '' };
-//         }
-//         return sortObject;
-//       });
-//     }
-//   };
-//   return { sortColumn, handleSortColumn, setSortColumn };
-// }
-
 export function useSetSortColumn<TTableColumns extends string>() {
-  type TSortOrder = 'asc' | 'desc' | ''; // Defines possible sorting states.
-  type TSortColumn = { [key in TTableColumns]?: TSortOrder }; // Mapping of column names to their sorting order.
+  type TSortOrder = 'asc' | 'desc' | '';
+  type TSortColumn = { [key in TTableColumns]?: TSortOrder };
 
   const [sortColumn, setSortColumn] = useState<TSortColumn>({});
+  // console.log(sortColumn, 'sortColumn');
 
-  const handleSortColumn = (e: React.MouseEvent, columnName: TTableColumns, sortOrder: TSortOrder) => {
-    e.stopPropagation(); // Prevents the event from bubbling up the event chain.
+  const handleSortColumn = (e, columnName, sortOrder) => {
+    e.stopPropagation();
 
-    // Directly setting or toggling the sort state based on current and intended state.
-    setSortColumn(prev => {
-      // Current sort state of the column.
-      const currentSort = prev[columnName];
+    const sortObject = {
+      [columnName]: sortOrder,
+    };
 
-      // Toggle sort state: if the same as intended, reset; otherwise, apply new sort.
-      if (currentSort === sortOrder) {
-        return { ...prev, [columnName]: '' as TSortOrder }; // Reset if the same sort order is clicked.
-      } else {
-        return { ...prev, [columnName]: sortOrder }; // Apply new sort order.
-      }
-    });
+    if (sortOrder) {
+      setSortColumn((prev) => {
+        if (
+          (prev?.[columnName] === 'asc') && (prev?.[columnName] === sortOrder) ||
+          (prev?.[columnName] === 'desc') && (prev?.[columnName] === sortOrder)
+        ) {
+          return { [columnName]: '' };
+        }
+        return sortObject;
+      });
+    }
   };
-
   return { sortColumn, handleSortColumn, setSortColumn };
 }
 
@@ -358,7 +332,7 @@ export function useMultiInputState() {
   const [isOpenMultiInput, setIsOpen] = useState(false);
   const handleToggleMultiInputState = () => setIsOpen((prev) => !prev);
   // const close = () => setIsOpen(false);
-  return { isOpenMultiInput, handleToggleMultiInputState };
+  return { isOpenMultiInput, handleToggleMultiInputState};
 }
 
 // // fetch all rows in table
@@ -482,3 +456,5 @@ export function useMultiInputState() {
 //   const samples = data?.data;
 //   return [samples, isLoading, error] as const;
 // }
+
+
