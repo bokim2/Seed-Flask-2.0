@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Line, getElementAtEvent } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -19,6 +19,40 @@ import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
 import { StyledGraphContainer } from '../../../styles/UtilStyles';
 import Button from '../../../ui/Button';
 
+const crosshairPlugin = {
+  id: 'crosshairPlugin',
+  afterDraw: (chart) => {
+    const ctx = chart.ctx;
+    const clickedXY = chart.options.pixelClickedXY;
+    if (!clickedXY || clickedXY.length !== 2) return;
+
+    const [x, y] = clickedXY; 
+    const { left, right, top, bottom } = chart.chartArea;
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 99, 132, 0.8)';
+    ctx.lineWidth = 1;
+
+    // Ensure lines are drawn within the chart area
+    if (x >= left && x <= right && y >= top && y <= bottom) {
+      // Draw vertical line
+      ctx.beginPath();
+      ctx.moveTo(x, top);
+      ctx.lineTo(x, bottom);
+      ctx.stroke();
+
+      // Draw horizontal line
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(right, y);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+};
+
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,7 +60,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  crosshairPlugin
 );
 
 export type TBookmarkedFlasksGraph = {
@@ -35,28 +70,40 @@ export type TBookmarkedFlasksGraph = {
   // setBookmarkedFlasks: any;
 };
 
-const StyledBookmarkedCellbankGraph = styled.div`
-  width: auto;
-  height: auto;
+// const StyledBookmarkedCellbankGraph = styled.div`
+//   width: auto;
+//   height: auto;
 
-  @media (min-width: 850px) {
-    width: 80%;
-  }
-`;
+//   @media (min-width: 850px) {
+//     width: 80%;
+//   }
+// `;
 
 const BookmarkedFlasksGraph = memo(
   ({ graphData, bookmarkedFlasks }: TBookmarkedFlasksGraph) => {
     console.log(graphData, 'graphData  in SELECTEDFLASKSGRAPH');
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
+    const [pixelClickedXY, setPixelClickedXY] = useState<number[] | null>(null);
     const [selectedFlask, setSelectedFlask] = useState<number | null>(null);
     const [toggleGraphDataLabel, setToggleGraphDataLabel] =
     useState<boolean>(false);
 
     const dispatch = useDispatch();
 
+    
+
     function clickHandler(e) {
       // console.log(e);
+      if (chartRef.current) {
+        const chart = chartRef.current;
+        const canvasPosition = e.nativeEvent;
+    
+        const xValue = canvasPosition.offsetX;
+        const yValue = canvasPosition.offsetY;
+    
+        // setClickedXY([xValue, yValue]); // Store coordinates in an array
+      }
       if (chartRef?.current) {
         const chart = chartRef?.current;
         const elements = getElementAtEvent(chart, e);
@@ -116,7 +163,9 @@ const BookmarkedFlasksGraph = memo(
           },
         },
       },
-
+// clickedXY: {x: clickedXY?.[0], y: clickedXY?.[1] }
+pixelClickedXY: pixelClickedXY
+,
       onClick: (event) => {
         console.log('in graph onclick');
         if (!chartRef.current) {
@@ -139,6 +188,14 @@ const BookmarkedFlasksGraph = memo(
 
         console.log(`Clicked on: x=${xValue}, y=${yValue}`);
         setClickedXY([xValue, yValue]);
+
+
+        const { offsetX, offsetY } = event.native; // Capture the pixel values directly
+
+  console.log(`Clicked on: Pixel x=${offsetX}, Pixel y=${offsetY}`); // Debug output
+
+setPixelClickedXY([offsetX, offsetY]);
+
       },
       plugins: {
         datalabels: {
@@ -188,6 +245,16 @@ const BookmarkedFlasksGraph = memo(
         },
       },
     };
+
+    useEffect(() => {
+      return () => {
+        if (chartRef.current) {
+          chartRef.current.destroy();
+        }
+      };
+    }, []);
+
+    
 
     const datasets = useMemo(() => {
       // graphData.map(
