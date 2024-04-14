@@ -46,7 +46,7 @@ export function filteredTableData(
   tableRowsData,
   filteredAndSortedData,
   sortColumn,
-  timestamp_column,
+  timestamp_column
 ) {
   console.log(
     tableRowsData,
@@ -156,7 +156,7 @@ export function useSetSortColumn<TTableColumns extends string>() {
     };
 
     if (sortOrder) {
-      setSortColumn((prev) => {
+      setSortColumn((prev: TSortColumn) => {
         if (
           (prev?.[columnName] === 'asc') === sortOrder ||
           (prev?.[columnName] === 'desc') === sortOrder
@@ -332,7 +332,7 @@ export function useMultiInputState() {
   const [isOpenMultiInput, setIsOpen] = useState(false);
   const handleToggleMultiInputState = () => setIsOpen((prev) => !prev);
   // const close = () => setIsOpen(false);
-  return { isOpenMultiInput, handleToggleMultiInputState};
+  return { isOpenMultiInput, handleToggleMultiInputState };
 }
 
 // // fetch all rows in table
@@ -456,5 +456,3 @@ export function useMultiInputState() {
 //   const samples = data?.data;
 //   return [samples, isLoading, error] as const;
 // }
-
-
