@@ -140,35 +140,28 @@ export function formatColumnName(columnName) {
 }
 
 // set sorted column and asc or desc
-
 export function useSetSortColumn<TTableColumns extends string>() {
   type TSortOrder = 'asc' | 'desc' | '';
   type TSortColumn = { [key in TTableColumns]?: TSortOrder };
 
   const [sortColumn, setSortColumn] = useState<TSortColumn>({});
-  // console.log(sortColumn, 'sortColumn');
 
-  const handleSortColumn = (e, columnName, sortOrder) => {
+  const handleSortColumn = (e: React.MouseEvent, columnName: TTableColumns, sortOrder: TSortOrder) => {
     e.stopPropagation();
 
-    const sortObject = {
-      [columnName]: sortOrder,
-    };
+    setSortColumn((prev: TSortColumn) => {
+      // Using type assertion to ensure the return type matches TSortColumn
+      const newSortState = {
+        [columnName]: sortOrder === prev[columnName] ? '' : sortOrder
+      } as TSortColumn;
 
-    if (sortOrder) {
-      setSortColumn((prev) => {
-        if (
-          (prev?.[columnName] === 'asc') && (prev?.[columnName] === sortOrder) ||
-          (prev?.[columnName] === 'desc') && (prev?.[columnName] === sortOrder)
-        ) {
-          return { [columnName]: '' };
-        }
-        return sortObject;
-      });
-    }
+      return newSortState;
+    });
   };
+
   return { sortColumn, handleSortColumn, setSortColumn };
 }
+
 
 // update table data based on filter and sort settings
 export function useFilterSortTableData({
