@@ -158,8 +158,8 @@ export function useSetSortColumn<TTableColumns extends string>() {
     if (sortOrder) {
       setSortColumn((prev: TSortColumn) => {
         if (
-          (prev?.[columnName] === 'asc') === sortOrder ||
-          (prev?.[columnName] === 'desc') === sortOrder
+          ((prev?.[columnName] === 'asc') === sortOrder) ||
+          ((prev?.[columnName] === 'desc') === sortOrder)
         ) {
           return { [columnName]: '' };
         }
