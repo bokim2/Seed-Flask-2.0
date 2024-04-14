@@ -24,7 +24,7 @@ html,
 body {
   ${'' /* height: 100%; */}
   ${'' /* overflow-y: scroll; */}
-  background-color: #150F1D;
+  background-color: rgb(2, 6, 23);
 }
 
   /* Style the scrollbar */
@@ -37,7 +37,11 @@ body {
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+    ${'' /* background: #555;  */}
+    ${'' /* transform: brightness(1.2);
+    width: 20px;  */}
+    cursor: pointer;
+    
   }
 
 

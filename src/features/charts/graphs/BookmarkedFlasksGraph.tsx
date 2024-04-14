@@ -29,7 +29,7 @@ ChartJS.register(
   Legend
 );
 
-export type TSelectedFlasksGraph = {
+export type TBookmarkedFlasksGraph = {
   graphData: any[];
   bookmarkedFlasks: any;
   // setBookmarkedFlasks: any;
@@ -44,8 +44,8 @@ const StyledBookmarkedCellbankGraph = styled.div`
   }
 `;
 
-const SelectedFlasksGraph = memo(
-  ({ graphData, bookmarkedFlasks }: TSelectedFlasksGraph) => {
+const BookmarkedFlasksGraph = memo(
+  ({ graphData, bookmarkedFlasks }: TBookmarkedFlasksGraph) => {
     console.log(graphData, 'graphData  in SELECTEDFLASKSGRAPH');
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
@@ -280,4 +280,4 @@ const SelectedFlasksGraph = memo(
   }
 );
 
-export default SelectedFlasksGraph;
+export default BookmarkedFlasksGraph;

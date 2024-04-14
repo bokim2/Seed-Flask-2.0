@@ -103,7 +103,7 @@ export const UserButton = styled.button`
 
   &.loggingIn {
     /* border: 4px solid red; */
-    animation: ${pulseAnimation} 1s infinite;
+    animation: ${pulseAnimation} 1s 5;
   }
 
   @media (min-width: 850px) {
@@ -652,6 +652,12 @@ export const TableDataCell = styled.td`
     }
   }
 
+  &.clickableId {
+    &:active {
+      font-weight:400;
+    }
+  }
+
   @media (max-width: 850px) {
     text-align: left;
     /* display: grid; */
@@ -888,6 +894,10 @@ export const StyledGraphContainer = styled.div`
   max-height: 60vh;
   height: 50vh;
   max-width: 100%;
+
+  &:hover {
+    cursor: crosshair;
+  }
   @media (min-width: 850px) {
     padding: 1rem;
     /* height: 80vh; */
@@ -935,7 +945,7 @@ export const StyledBookmarkContainer = styled.div`
 
   @media (min-width: 850px) {
     font-size: 1.5rem;
-    padding: 2rem .5rem;
+    padding: 2rem 0.5rem;
   }
 `;
 

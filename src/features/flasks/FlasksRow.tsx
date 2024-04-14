@@ -10,7 +10,7 @@ import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
 import { flaskVesselTypes, initialCreateFlasksForm } from './flasks-types';
 import { useDispatch } from 'react-redux';
-import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
+import { toggleCellbankBookmark, toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
 
 export default function FlasksRow({
   rowData,
@@ -45,7 +45,11 @@ export default function FlasksRow({
   const dispatch = useDispatch();
   const handleAddFlaskBookmark = (id: number) => {
     dispatch(toggleFlaskBookmark(id));
-  }
+  };
+
+  const handleAddCellbankBookmark = (id: number) => {
+    dispatch(toggleCellbankBookmark(id));
+  };
 
   return (
     <>
@@ -53,6 +57,7 @@ export default function FlasksRow({
         {/* <TableRow> */}
         <TableDataCell
           data-cell="flask id"
+          className="clickableId"
           onClick={() => {
             console.log('+flask_id', +flask_id);
             handleAddFlaskBookmark(+flask_id);
@@ -60,7 +65,15 @@ export default function FlasksRow({
         >
           {flask_id}
         </TableDataCell>
-        <TableDataCell data-cell="cell bank id">{cell_bank_id}</TableDataCell>
+        <TableDataCell
+          data-cell="cell bank id"
+          className="clickableId"
+          onClick={() => {
+            handleAddCellbankBookmark(+cell_bank_id);
+          }}
+        >
+          {cell_bank_id}
+        </TableDataCell>
         <TableDataCell data-cell="vessel type">{vessel_type}</TableDataCell>
         <TableDataCell data-cell="media">{media}</TableDataCell>
         <TableDataCell data-cell="media mL">{media_ml}</TableDataCell>
@@ -68,7 +81,7 @@ export default function FlasksRow({
 
         <TableDataCell data-cell="temp c">{temp_c}</TableDataCell>
         <TableDataCell data-cell="rpm">{rpm}</TableDataCell>
-        <TableDataCell data-cell="start date" style={{whiteSpace: 'nowrap'}}>
+        <TableDataCell data-cell="start date" style={{ whiteSpace: 'nowrap' }}>
           {displayLocalTime(start_date)}
         </TableDataCell>
         <TableDataCell data-cell="user">{username}</TableDataCell>

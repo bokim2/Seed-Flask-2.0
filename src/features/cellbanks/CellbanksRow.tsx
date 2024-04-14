@@ -38,6 +38,7 @@ export default function CellbanksRow({
       <PreviousDataRow $editing={editing}>
         <TableDataCell
           data-cell="cell bank id"
+          className="clickableId"
           onClick={() => handleAddBookmark(cell_bank_id)}
         >
           {cell_bank_id}
