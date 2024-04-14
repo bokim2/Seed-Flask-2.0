@@ -26,4 +26,8 @@ export const LineGraphColors = [
   '#FF338F', // Deep Pink
 ];
 
+export const GRAPH_LEGEND_TEXT_COLOR = '#CCCCCC'; //'#150F1D'; // axis label color
+
+
+export const GRAPH_AXIS_TEXT_COLOR = '#CCCCCC'; //'#150F1D'; // numbers on the axis
 

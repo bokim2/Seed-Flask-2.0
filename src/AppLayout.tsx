@@ -69,6 +69,8 @@ const MainPageContainer = styled.main`
   display: flex;
   /* height: 100%; */
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
+
+  
 `;
 
 // const PageButton = styled(NavLink)`
@@ -245,7 +247,8 @@ export default function AppLayout() {
       {/* <LoaderBar /> */}
 
       {/* <span>testing app layout</span> */}
-      <MainPageContainer id="MainPageContainer">
+      <MainPageContainer id="MainPageContainer" >
+        
         {/* <PageButton
           toPath="/schedule"
           //  text={'view schedule'}

@@ -23,7 +23,41 @@ html {
 html,
 body {
   ${'' /* height: 100%; */}
+  ${'' /* overflow-y: scroll; */}
+  background-color: #150F1D;
 }
+
+  /* Style the scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px; 
+
+    @media (max-width: 600px) {
+      width: 20px;
+    }
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
+
+  ::-webkit-scrollbar-track {
+    background: black; 
+    padding: 10px;
+    margin-top: 10vh;
+    ${'' /* border-radius: 9999vw; */}
+   
+  }
+
+  ::-webkit-scrollbar-thumb {
+    
+    background: linear-gradient(0, #ebb936, blue); 
+    border-radius: 9999vw;
+    height: 20px;
+    width: 20px;
+    padding: 10px;
+  }
+    ${'' /* background: #888;  */}
 
 /* Remove default margin in favour of better control in authored CSS */
 body, h1, h2, h3, h4, p,
@@ -126,6 +160,7 @@ ${
 --font-sans-serif: 'Inter', sans-serif;
 --font-serif: 'Playfair Display', serif;
 
+//DARKMODE
        /* Colors */
   --clr-primary-0: white;
   --clr-primary-50: #f8fafc;
@@ -144,6 +179,7 @@ ${
   --clr-table-100: 38, 34, 49;  // less dark black - table #262231
   --clr-table-200: 18, 17, 24;  // dark black - background of Page #121118
 
+//DARKMODE
   --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
   --clr-accent-1: 250, 247, 240; /* menu button #FAF7F0 */ 
   --clr-accent-2: 225, 246, 242; /* #E1F6F2*/
@@ -160,13 +196,19 @@ ${
   --clr-accent-13: #fff5e4;
   --clr-accent-14: #C8C0B8; 
 
-  --clr-text-1: #D3D3D3;
+  --clr-text-1: #D3D3D3; //DARKMODE
   --clr-text-2: black;
   --clr-text-3: #CCCCCC;
   --clr-text-4: black;
   --clr-text-5: 112, 128, 144; //#708090
   --clr-text-6: black;
-   }
+   //DARKMODE END
+
+   ${'' /* possible light-mode test */}
+
+ }
+
+   ${'' /* lightmode test end */}
   
    a {
      font-weight: 500;

@@ -34,6 +34,8 @@ export default function SearchFlasksTab({ flasks, allCellbankGraphData }) {
 
         </>
       )} */}
+
+      
       { searchedFlasksList && searchedFlasksList?.length == 0 && allCellbankGraphData && allCellbankGraphData?.length > 0 && (
         <AllCellbanksGraph
           allCellbankGraphData={allCellbankGraphData}

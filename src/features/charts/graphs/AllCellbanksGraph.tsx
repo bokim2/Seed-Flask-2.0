@@ -23,6 +23,7 @@ import {
   StyledGraphContainer,
 } from '../../../styles/UtilStyles';
 import Button from '../../../ui/Button';
+import { GRAPH_AXIS_TEXT_COLOR, GRAPH_LEGEND_TEXT_COLOR } from '../../../lib/constants';
 
 ChartJS.register(
   CategoryScale,
@@ -116,20 +117,37 @@ export default function AllCellbanksGraph({
     scales: {
       x: {
         type: 'linear',
+        title: {
+          display: true,
+          text: 'Time (hours)',
+          color: GRAPH_LEGEND_TEXT_COLOR,
+          font: {
+            size: 20,
+          },
+        },
+        
         ticks: {
+          color: GRAPH_AXIS_TEXT_COLOR,
           font: {
             size: 18,
           },
-          color: '#dadada',
         },
       },
       y: {
         type: 'linear',
-        ticks: {
+        title: {
+          display: true,
+          text: 'OD600',
+          color: GRAPH_LEGEND_TEXT_COLOR,
           font: {
             size: 20,
           },
-          color: '#dadada',
+        },
+        ticks: {
+          color: GRAPH_AXIS_TEXT_COLOR,
+          font: {
+            size: 20,
+          },
         },
       },
     },
@@ -151,6 +169,9 @@ export default function AllCellbanksGraph({
       },
       legend: {
         // position: 'top' as const,
+        labels: {
+          color: GRAPH_LEGEND_TEXT_COLOR
+        },
         display: false,
       },
       title: {
@@ -196,8 +217,9 @@ export default function AllCellbanksGraph({
   }
   return (
     <>
+    
       <ButtonsContainer>
-        
+      {/* <h1>testing hello </h1> */}
         <Button
           type="button"
           onClick={() => setToggleGraphDataLabel((prev) => !prev)}
@@ -213,6 +235,7 @@ export default function AllCellbanksGraph({
           {toggleZeroStartData ? 'Remove zero start' : 'Zero start'}
         </Button>
       </ButtonsContainer>
+      
       <StyledGraphContainer>
         <Line
           options={options}

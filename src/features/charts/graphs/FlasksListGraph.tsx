@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { LineGraphColors } from '../../../lib/constants';
+import { GRAPH_AXIS_TEXT_COLOR, GRAPH_LEGEND_TEXT_COLOR, LineGraphColors } from '../../../lib/constants';
 import styled from 'styled-components';
 import Scheduler from '../add-to-schedule/Scheduler';
 import DateTimePicker from '../add-to-schedule/DateTimePicker';
@@ -109,20 +109,37 @@ const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
     scales: {
       x: {
         type: 'linear',
+        title: {
+          display: true,
+          text: 'Time (hours)',
+          color: GRAPH_LEGEND_TEXT_COLOR,
+          font: {
+            size: 20,
+          },
+        },
+        
         ticks: {
+          color: GRAPH_AXIS_TEXT_COLOR,
           font: {
             size: 18,
           },
-          color: '#dadada',
         },
       },
       y: {
         type: 'linear',
-        ticks: {
+        title: {
+          display: true,
+          text: 'OD600',
+          color: GRAPH_LEGEND_TEXT_COLOR,
           font: {
             size: 20,
           },
-          color: '#dadada',
+        },
+        ticks: {
+          color: GRAPH_AXIS_TEXT_COLOR,
+          font: {
+            size: 20,
+          },
         },
       },
     },
