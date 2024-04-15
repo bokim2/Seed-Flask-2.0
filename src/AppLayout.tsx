@@ -69,8 +69,9 @@ const MainPageContainer = styled.main`
   display: flex;
   /* height: 100%; */
   /* padding-top: clamp(0.5rem, 4vw, 3rem); */
+  /* background-color: rgba(var(--clr-accent-0), 0.9); */
 
-  
+  ${'' /* overflow-y: scroll; */}
 `;
 
 // const PageButton = styled(NavLink)`
@@ -155,6 +156,46 @@ const StyledMainMenuNavButtons = styled(StyledMainMenuButtons)`
 
 const StyledPageNavImage = styled(StyledImage)``;
 
+export const ScrollbarContainer = styled.div`
+  /* margin-top: 10vh; */
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+
+    @media (max-width: 600px) {
+      /* width: 20px; */
+    }
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    ${'' /* background: #555;  */}
+    ${
+      '' /* transform: brightness(1.2);
+    width: 20px;  */
+    }
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: black;
+
+    ${'' /* padding: 10px; */}
+    margin-top: 10vh;
+    ${'' /* border-radius: 9999vw; */}
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(0, #ebb936, blue);
+    border-radius: 9999vw;
+    height: 20px;
+    width: 20px;
+    padding: 10px;
+  }
+`;
+
 export default function AppLayout() {
   // const handleNavToggle: THandleNavToggle = (e, navOrUser) => {
   //   // console.log('e.target, e.currentTarget', e.target, e.currentTarget)
@@ -189,7 +230,7 @@ export default function AppLayout() {
           // setUserProfile(data);
           // console.log('userProfile in APP first useEffect', data);
           dispatch(updateUserProfile(data));
-          console.log('user data in applayout', data)
+          console.log('user data in applayout', data);
         }
         if (response.status === 401) {
           console.log('Error: Not authenticated.  Please sign in.');
@@ -247,8 +288,7 @@ export default function AppLayout() {
       {/* <LoaderBar /> */}
 
       {/* <span>testing app layout</span> */}
-      <MainPageContainer id="MainPageContainer" >
-        
+      <MainPageContainer id="MainPageContainer">
         {/* <PageButton
           toPath="/schedule"
           //  text={'view schedule'}
@@ -271,35 +311,36 @@ export default function AppLayout() {
               imgStyleOverride={{ height: '1rem', justifyContent: 'center', alignItems: 'center' }}
             /> */}
 
-        {userProfile?.isAuthenticated && (
-          <>
-            <FullScreenContainer className="leftSide">
-              <StyledMainMenuNavButtons to={navigateCarousel(-1)}>
-                <StyledPageNavImage
-                  src="/images/left-arrow.png"
-                  alt='left arrow'
-                  $fetchpriority="high"
-                />
-              </StyledMainMenuNavButtons>
-            </FullScreenContainer>
+        <ScrollbarContainer id="scrollbar-container">
+          {userProfile?.isAuthenticated && (
+            <>
+              <FullScreenContainer className="leftSide">
+                <StyledMainMenuNavButtons to={navigateCarousel(-1)}>
+                  <StyledPageNavImage
+                    src="/images/left-arrow.png"
+                    alt="left arrow"
+                    $fetchpriority="high"
+                  />
+                </StyledMainMenuNavButtons>
+              </FullScreenContainer>
 
-            <FullScreenContainer className="rightSide">
-              <StyledMainMenuNavButtons
-                to={navigateCarousel(1)}
-                className="rightSide"
-              >
-                <StyledPageNavImage
-                  src="/images/right-arrow.png"
-                  alt='right arrow'
-                  $fetchpriority="high"
-                />
-              </StyledMainMenuNavButtons>
-            </FullScreenContainer>
-          </>
-        )}
+              <FullScreenContainer className="rightSide">
+                <StyledMainMenuNavButtons
+                  to={navigateCarousel(1)}
+                  className="rightSide"
+                >
+                  <StyledPageNavImage
+                    src="/images/right-arrow.png"
+                    alt="right arrow"
+                    $fetchpriority="high"
+                  />
+                </StyledMainMenuNavButtons>
+              </FullScreenContainer>
+            </>
+          )}
 
-        <Outlet />
-
+          <Outlet />
+        </ScrollbarContainer>
         <Footer />
       </MainPageContainer>
       {/* </StyledAppLayout> */}

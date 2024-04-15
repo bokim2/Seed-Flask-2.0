@@ -24,43 +24,13 @@ html,
 body {
   ${'' /* height: 100%; */}
   ${'' /* overflow-y: scroll; */}
-  background-color: rgb(2, 6, 23);
+  ${'' /* background-color: rgb(2, 6, 23); */}
+
+    /* Style the scrollbar */
+
 }
 
-  /* Style the scrollbar */
-  ::-webkit-scrollbar {
-    width: 10px; 
 
-    @media (max-width: 600px) {
-      width: 20px;
-    }
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    ${'' /* background: #555;  */}
-    ${'' /* transform: brightness(1.2);
-    width: 20px;  */}
-    cursor: pointer;
-    
-  }
-
-
-  ::-webkit-scrollbar-track {
-    background: black; 
-    padding: 10px;
-    margin-top: 10vh;
-    ${'' /* border-radius: 9999vw; */}
-   
-  }
-
-  ::-webkit-scrollbar-thumb {
-    
-    background: linear-gradient(0, #ebb936, blue); 
-    border-radius: 9999vw;
-    height: 20px;
-    width: 20px;
-    padding: 10px;
-  }
     ${'' /* background: #888;  */}
 
 /* Remove default margin in favour of better control in authored CSS */

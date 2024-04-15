@@ -1,5 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Line, getElementAtEvent } from 'react-chartjs-2';
+
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,7 +12,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { GRAPH_AXIS_TEXT_COLOR, GRAPH_LEGEND_TEXT_COLOR, LineGraphColors } from '../../../lib/constants';
+import {
+  GRAPH_AXIS_TEXT_COLOR,
+  GRAPH_LEGEND_TEXT_COLOR,
+  LineGraphColors,
+} from '../../../lib/constants';
 import styled from 'styled-components';
 import Scheduler from '../add-to-schedule/Scheduler';
 import DateTimePicker from '../add-to-schedule/DateTimePicker';
@@ -26,7 +32,7 @@ const crosshairPlugin = {
     const clickedXY = chart.options.pixelClickedXY;
     if (!clickedXY || clickedXY.length !== 2) return;
 
-    const [x, y] = clickedXY; 
+    const [x, y] = clickedXY;
     const { left, right, top, bottom } = chart.chartArea;
 
     ctx.save();
@@ -49,9 +55,8 @@ const crosshairPlugin = {
     }
 
     ctx.restore();
-  }
+  },
 };
-
 
 ChartJS.register(
   CategoryScale,
@@ -61,6 +66,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  ChartDataLabels,
   crosshairPlugin
 );
 
@@ -87,21 +93,19 @@ const BookmarkedFlasksGraph = memo(
     const [pixelClickedXY, setPixelClickedXY] = useState<number[] | null>(null);
     const [selectedFlask, setSelectedFlask] = useState<number | null>(null);
     const [toggleGraphDataLabel, setToggleGraphDataLabel] =
-    useState<boolean>(false);
+      useState<boolean>(false);
 
     const dispatch = useDispatch();
-
-    
 
     function clickHandler(e) {
       // console.log(e);
       if (chartRef.current) {
         const chart = chartRef.current;
         const canvasPosition = e.nativeEvent;
-    
+
         const xValue = canvasPosition.offsetX;
         const yValue = canvasPosition.offsetY;
-    
+
         // setClickedXY([xValue, yValue]); // Store coordinates in an array
       }
       if (chartRef?.current) {
@@ -137,12 +141,21 @@ const BookmarkedFlasksGraph = memo(
               size: 20,
             },
           },
-          
+
           ticks: {
             color: GRAPH_AXIS_TEXT_COLOR,
             font: {
               size: 18,
             },
+          },
+          grid: {
+            drawBorder: false,
+            // make gridline where x is zero
+            // color: (context) => {
+            //   if (context.tick.value === 0) {
+            //     return 'white';
+            //   }
+            // },
           },
         },
         y: {
@@ -163,9 +176,8 @@ const BookmarkedFlasksGraph = memo(
           },
         },
       },
-// clickedXY: {x: clickedXY?.[0], y: clickedXY?.[1] }
-pixelClickedXY: pixelClickedXY
-,
+      // clickedXY: {x: clickedXY?.[0], y: clickedXY?.[1] }
+      pixelClickedXY: pixelClickedXY,
       onClick: (event) => {
         console.log('in graph onclick');
         if (!chartRef.current) {
@@ -189,19 +201,49 @@ pixelClickedXY: pixelClickedXY
         console.log(`Clicked on: x=${xValue}, y=${yValue}`);
         setClickedXY([xValue, yValue]);
 
-
         const { offsetX, offsetY } = event.native; // Capture the pixel values directly
 
-  console.log(`Clicked on: Pixel x=${offsetX}, Pixel y=${offsetY}`); // Debug output
+        console.log(`Clicked on: Pixel x=${offsetX}, Pixel y=${offsetY}`); // Debug output
 
-setPixelClickedXY([offsetX, offsetY]);
-
+        setPixelClickedXY([offsetX, offsetY]);
       },
       plugins: {
         datalabels: {
           display: function (context) {
+            console.log(
+              'Checking if label should display for:',
+              context.dataIndex
+            );
+
             if (!toggleGraphDataLabel) return false;
             return context.dataIndex === context.dataset.data.length - 1;
+          },
+          color: '#8f8e8e', // Label text color
+          anchor: 'end', // Positioning of the label relative to the data point
+          align: 'top', // Alignment of the label text
+          font: {
+            weight: 'bold', // Makes label text bold
+          },
+          formatter: function (value, context) {
+            // This function helps to determine which label to display
+            // Only display the label for the last data point in the dataset
+            console.log(
+              'Formatting label for:',
+              value,
+              'in dataset',
+              context.datasetIndex
+            );
+            // return `${context.dataset.label}: ${value.y}`;
+            return `${context.dataset.label}`;
+            const datasets = context.chart.data.datasets;
+            const datasetIndex = context.datasetIndex;
+            const lastDataIndex = datasets[datasetIndex].data.length - 1;
+            if (context.dataIndex === lastDataIndex) {
+              // return datasets[datasetIndex].label + ': ' + value;
+              return datasets[datasetIndex].label;
+            } else {
+              return null; // Return null to hide labels for non-last points
+            }
           },
         },
         tooltip: {
@@ -253,8 +295,6 @@ setPixelClickedXY([offsetX, offsetY]);
         }
       };
     }, []);
-
-    
 
     const datasets = useMemo(() => {
       // graphData.map(
@@ -322,17 +362,17 @@ setPixelClickedXY([offsetX, offsetY]);
           onClick={() => setToggleGraphDataLabel((prev) => !prev)}
           $size={'small'}
         >
-         {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
+          {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
         </Button>
         {/* <StyledBookmarkedCellbankGraph> */}
-          <StyledGraphContainer>
+        <StyledGraphContainer>
           <Line
             ref={chartRef}
             options={options}
             data={data}
             onClick={clickHandler}
-            />
-            </StyledGraphContainer>
+          />
+        </StyledGraphContainer>
         {/* </StyledBookmarkedCellbankGraph> */}
         {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
         <Scheduler clickedXY={clickedXY} />

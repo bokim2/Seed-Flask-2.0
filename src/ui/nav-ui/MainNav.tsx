@@ -29,7 +29,7 @@ import { updateUserProfile } from '../../redux/slices/userProfileSlice';
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
   z-index: 10;
-  background-color: rgba(var(--clr-primary-950), 0.9);
+  background-color: rgba(var(--clr-primary-950), 0.99);
   padding-block: 0.5rem;
   flex-grow: 1;
   height: 100%;
