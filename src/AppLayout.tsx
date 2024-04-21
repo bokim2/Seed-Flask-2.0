@@ -18,6 +18,7 @@ import { baseUrl } from '../configs';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from './hooks/hooks';
 import { TuserProfile } from './redux/slices/userSlice';
+import InnerPageTransition from './ui/InnerPageTransition';
 
 const StyledAppLayout = styled.div`
   flex: 1;
@@ -297,19 +298,19 @@ export default function AppLayout() {
           imgAlt="calendar"
           // positionElement={{ left: '30%' }}
           // imgStyleOverride={{ borderRadius: '0', width: '60%' }}
-          /> */}
+        /> */}
 
         {/* <PageButton src="images/left-arrow.png" alt="prev page" /> */}
 
         {/* <NavCircularButton
                toPath="/schedule"
-              //  text={'view schedule'}
-              backgroundColor="#EAE0DA"
-              imgUrl="images/schedule.png"
-              imgAlt="calendar"
-              // positionElement={{ left: '30%' }}
-              imgStyleOverride={{ height: '1rem', justifyContent: 'center', alignItems: 'center' }}
-            /> */}
+               //  text={'view schedule'}
+               backgroundColor="#EAE0DA"
+               imgUrl="images/schedule.png"
+               imgAlt="calendar"
+               // positionElement={{ left: '30%' }}
+               imgStyleOverride={{ height: '1rem', justifyContent: 'center', alignItems: 'center' }}
+              /> */}
 
         <ScrollbarContainer id="scrollbar-container">
           {userProfile?.isAuthenticated && (
@@ -339,7 +340,11 @@ export default function AppLayout() {
             </>
           )}
 
-          <Outlet />
+          {/* <InnerPageTransition> */}
+          {/* <InnerPageTransition> */}
+            <Outlet />
+          {/* </InnerPageTransition> */}
+          {/* </InnerPageTransition> */}
         </ScrollbarContainer>
         <Footer />
       </MainPageContainer>

@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import classes from './styles.module.css';
 import { StyledNavLink, StyledNavList } from '../../styles/UtilStyles';
 import MainMenuButton, { StyledImage } from '../MainMenuButton';
 import { NavLink, Outlet } from 'react-router-dom';
 import InfoButtonForModal from '../InfoButtonForModal';
+import { ZodUndefined } from 'zod';
 
 const StyledSideMenu = styled.div`
   display: flex;
@@ -48,9 +50,17 @@ export const StyledSideMenuButtons = styled(NavLink)`
   }
 
   &:active {
-    transform: scale(0.98);
+    transform: scale(.98);
     filter: brightness(114%);
     box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1);
+  }
+
+  // active side nav link
+  &.active {
+     transform: scale(1.1);
+    filter: brightness(114%);
+    box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1);
+    z-index: 11;
   }
 
   @media (min-width: 800px) {
@@ -126,7 +136,10 @@ export default function SideMenu() {
         {/* <StyledInfoButtonContainer></StyledInfoButtonContainer> */}
         {sideMenuInfo.map((singleMenu, i) => {
           return (
-            <StyledSideMenuButtons to={singleMenu.to} key={i}>
+            <StyledSideMenuButtons to={singleMenu.to} 
+            key={i}
+            className={({ isActive }) => isActive ? "active" : ""}
+            >
               <StyledImage
                 //   className={className}
                 src={singleMenu.src}

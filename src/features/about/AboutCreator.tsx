@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { StyledBackgroundImg } from '../../styles/UtilStyles';
 
 const StyledAboutCreator = styled.div`
   display: flex;
@@ -71,8 +72,13 @@ export const StyledAboutsImage = styled.img`
 `;
 
 export default function AboutCreator() {
-  return (
-    <StyledAboutCreator>
+  return (<>
+                {/* <StyledBackgroundImg
+          className="fit-logo"
+          src="/images/progressive/dylann-hendricks-vxd9c9WNauo-unsplash__1_.jpg"
+          alt="calysta"
+          /> */}
+          <StyledAboutCreator>
       {/* <h1>Meet Bo</h1> */}
       {/* <CropContainer className="small margin2">
         <StyledAboutsImage
@@ -85,7 +91,7 @@ export default function AboutCreator() {
       <CropContainer className="small margin2">
         <StyledAboutsImage
           className="small top"
-          src="/images/about/van.jpg"
+          src="/images/progressive/van.jpg"
           alt="van"
         />
       </CropContainer>
@@ -93,7 +99,7 @@ export default function AboutCreator() {
       <CropContainer className="small margin2">
         <StyledAboutsImage
           className="small bottom zoom"
-          src="/images/about/amt.jpg"
+          src="/images/progressive/amt.jpg"
           alt="amt"
         />
       </CropContainer>
@@ -101,7 +107,7 @@ export default function AboutCreator() {
       <CropContainer className="small margin2 right">
         <StyledAboutsImage
           className="right"
-          src="/images/about/amyris.jpg"
+          src="/images/progressive/amyris.jpg"
           alt="calysta"
         />
       </CropContainer>
@@ -109,7 +115,7 @@ export default function AboutCreator() {
       <CropContainer className="small margin2">
         <StyledAboutsImage
           className="small "
-          src="/images/about/calysta.jpg"
+          src="/images/progressive/calysta.jpg"
           alt="calysta"
         />
       </CropContainer>
@@ -117,7 +123,7 @@ export default function AboutCreator() {
       <CropContainer className="small margin2">
         <StyledAboutsImage
           className="small"
-          src="/images/about/genencor.jpeg"
+          src="/images/progressive/genencor1.jpg"
           alt="genencor"
         />
       </CropContainer>
@@ -125,13 +131,13 @@ export default function AboutCreator() {
 
       {/* logos */}
 
-      <CropContainer className="small margin2">
+      {/* <CropContainer className="small margin2">
         <StyledAboutsImage
           className="small top"
-          src="/images/about/van.jpg"
+          src="/images/progressive/van.jpg"
           alt="van"
         />
-      </CropContainer>
+      </CropContainer> */}
 
       <CropContainer className="small margin2">
         <StyledAboutsImage
@@ -173,5 +179,6 @@ export default function AboutCreator() {
         />
       </CropContainer>
     </StyledAboutCreator>
+    </>
   );
 }

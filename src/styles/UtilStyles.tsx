@@ -166,6 +166,9 @@ export const PageContainer = styled.section`
   flex-direction: column;
   align-items: center;
   
+  &#HomePageContainer {
+    min-height: 80%;
+  }
 `;
 
 export const InnerPageContainer = styled.section`
@@ -958,3 +961,13 @@ export const StyledBookmark = styled.p`
     /* padding: .5rem .5rem; */
   }
 `;
+
+// background image entire page
+
+export const StyledBackgroundImg = styled.img`
+position: fixed;
+min-width: 100%;
+height: 100%;
+object-fit: cover; 
+z-index: -1;
+`
