@@ -224,7 +224,7 @@ flaskRouter.route('/search').get(async (req, res) => {
 
     const queryObjectSchema = z.object({
       field: z.string(),
-      text: z.string(),
+      text: z.string() || z.number(),
     });
 
     const transformedQueryObjectSchema =
@@ -236,7 +236,7 @@ flaskRouter.route('/search').get(async (req, res) => {
     // const validatedQueries = queries.map((query)=> (flasksSearchSchema.safeParse(query).data));
     // console.log('validatedQueries FLASK SEARCH', validatedQueries);
     const zodValidatedData = queryArraySchema.parse(queries);
-    console.log('zodValidatedData in flasks search', zodValidatedData)
+    console.log('zodValidatedData in flasks search', zodValidatedData);
     // console.log('zodValidatedData', zodValidatedData);
     // if (!zodValidatedData.success) {
     //   return res.status(400).json({
@@ -258,9 +258,10 @@ flaskRouter.route('/search').get(async (req, res) => {
       const fieldForQuery = q.field;
       // q.field === 'flask_id' ? `${q.field}::text` : q.field;
       if (typeof q.text === 'number') {
+        console.log(`{q.field} = $${index + 1}`, q.field, index + 1);
         return `${q.field} = $${index + 1}`;
       }
-      if (q.field === 'human_readable_date') {
+      if (q.field === 'flasks.human_readable_date') {
         q.field = 'start_date';
         q.text = getUtcTimestampFromLocalTime(q.text);
       }
@@ -380,63 +381,67 @@ flaskRouter
 
 // update a flask
 
-flaskRouter.route('/:id').put(validateIdParam, allowIfUserIdMatchesMiddleware, async (req, res) => {
-  console.log('req.body in server', req.body, 'req.params.id', req.params.id);
-  const {
-    inoculum_ul,
-    media,
-    media_ml,
-    rpm,
-    start_date,
-    temp_c,
-    vessel_type,
-    cell_bank_id,
-  } = req.body;
+flaskRouter
+  .route('/:id')
+  .put(validateIdParam, allowIfUserIdMatchesMiddleware, async (req, res) => {
+    console.log('req.body in server', req.body, 'req.params.id', req.params.id);
+    const {
+      inoculum_ul,
+      media,
+      media_ml,
+      rpm,
+      start_date,
+      temp_c,
+      vessel_type,
+      cell_bank_id,
+    } = req.body;
 
-  //   const validatedData = editFlaskSchema.validate({
-  //   inoculum_ul,
-  //   media,
-  //   media_ml,
-  //   rpm,
-  //   start_date,
-  //   temp_c,
-  //   vessel_type,
-  //   cell_bank_id,
-  // });
+    //   const validatedData = editFlaskSchema.validate({
+    //   inoculum_ul,
+    //   media,
+    //   media_ml,
+    //   rpm,
+    //   start_date,
+    //   temp_c,
+    //   vessel_type,
+    //   cell_bank_id,
+    // });
 
-  // console.log('validatedData.success', validatedData.success);
+    // console.log('validatedData.success', validatedData.success);
 
-  const flaskId = req.params.id;
+    const flaskId = req.params.id;
 
-  const query = `
+    const query = `
     UPDATE flasks
     SET inoculum_ul = $1, media = $2, media_ml = $3, rpm = $4, start_date = $5, temp_c = $6, vessel_type = $7,  cell_bank_id = $8
     WHERE flask_id = $9 `;
 
-  const values = [
-    inoculum_ul,
-    media,
-    media_ml,
-    rpm,
-    start_date,
-    temp_c,
-    vessel_type,
-    cell_bank_id,
-    flaskId,
-  ];
-  try {
-    const results = await db.query(query, values);
-    if (results.rowCount === 0) {
-      return res.status(404).json({ message: 'Flask not found' });
+    const values = [
+      inoculum_ul,
+      media,
+      media_ml,
+      rpm,
+      start_date,
+      temp_c,
+      vessel_type,
+      cell_bank_id,
+      flaskId,
+    ];
+    try {
+      const results = await db.query(query, values);
+      if (results.rowCount === 0) {
+        return res.status(404).json({ message: 'Flask not found' });
+      }
+      res
+        .status(200)
+        .json({ message: 'Update successful', data: results.rows });
+    } catch (err) {
+      console.error('Error in server PUT request:', err);
+      return res
+        .status(500)
+        .json({ message: 'Internal server error', error: err.message });
     }
-    res.status(200).json({ message: 'Update successful', data: results.rows });
-  } catch (err) {
-    console.error('Error in server PUT request:', err);
-    return res
-      .status(500)
-      .json({ message: 'Internal server error', error: err.message });
-  }
-});
+  });
 
 flaskRouter.route('/:id').delete(async (req, res) => {
   const query = 'DELETE FROM flasks WHERE flask_id = $1';

@@ -71,7 +71,7 @@ export type TUpdateSampleForm = z.infer<typeof updateSampleSchema>;
 export const samplesTableHeaderCellsArray = [
   'sample_id',
   'flask_id',
-  'OD600',
+  'od600',
   'time_since_inoc_hr',
   'end date/time',
   'completed',

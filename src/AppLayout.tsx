@@ -162,6 +162,7 @@ export const ScrollbarContainer = styled.div`
   height: 100vh;
   width: 100%;
   overflow-y: scroll;
+  overflow-x: auto;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -188,8 +189,57 @@ export const ScrollbarContainer = styled.div`
     ${'' /* border-radius: 9999vw; */}
   }
 
-  &::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb:vertical {
     background: linear-gradient(0, #ebb936, blue);
+    border-radius: 9999vw;
+    height: 20px;
+    width: 20px;
+    padding: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:horizontal {
+    background: red;
+    border-radius: 9999vw;
+    height: 20px;
+    width: 20px;
+    padding: 10px;
+  }
+`;
+
+
+export const ScrollbarXAxisContainer = styled.div`
+  height: 100%;
+  width: 100vw;
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    height: 10px;
+
+    @media (max-width: 600px) {
+      /* width: 20px; */
+    }
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    ${'' /* background: #555;  */}
+    ${
+      '' /* transform: brightness(1.2);
+    width: 20px;  */
+    }
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: black;
+
+    ${'' /* padding: 10px; */}
+    margin-top: 10vh;
+    ${'' /* border-radius: 9999vw; */}
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: red;
     border-radius: 9999vw;
     height: 20px;
     width: 20px;
@@ -313,6 +363,7 @@ export default function AppLayout() {
               /> */}
 
         <ScrollbarContainer id="scrollbar-container">
+          {/* <ScrollbarXAxisContainer> */}
           {userProfile?.isAuthenticated && (
             <>
               <FullScreenContainer className="leftSide">
@@ -345,6 +396,7 @@ export default function AppLayout() {
             <Outlet />
           {/* </InnerPageTransition> */}
           {/* </InnerPageTransition> */}
+          {/* </ScrollbarXAxisContainer> */}
         </ScrollbarContainer>
         <Footer />
       </MainPageContainer>

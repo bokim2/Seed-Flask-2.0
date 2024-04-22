@@ -160,6 +160,7 @@ export const PageContainer = styled.section`
   margin-top: max(12vh, 5rem);
 
   justify-content: center;
+
   width: 100%;
   position: relative;
   display: flex;
@@ -232,6 +233,7 @@ export const StyledForm = styled.form`
   gap: 0.5rem;
   justify-content: center;
   align-items: center;
+  
 
   @media (min-width: 800px) {
   }
@@ -245,6 +247,7 @@ export const InputContainer = styled.div`
   color: white;
   gap: 0.25rem;
   margin-block: 1rem;
+  
 
   &:focus-within label {
     color: rgba(var(--clr-accent-6), 0.8);
@@ -405,6 +408,7 @@ export const TableContainer = styled.div`
   /* background-color: lightblue; */
   margin-block: 1rem;
   width: 100%;
+  
 
   /* overflow */
   /* max-height: 80vh;
@@ -413,7 +417,7 @@ export const TableContainer = styled.div`
   -webkit-overflow-scrolling: touch; */
 
   @media (min-width: 850px) {
-    width: auto;
+    /* width: auto; */
   }
 `;
 

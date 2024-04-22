@@ -37,45 +37,32 @@ sampleRouter.route('/search').get(async (req, res) => {
       'sample_id',
       'flask_id',
       // 'end_date',
+      'end date/time',
       'od600',
       'completed',
       'username',
       'user_id',
       'time_since_inoc_hr',
-
+      
       'human_readable_date',
     ];
+    
+    const numericFields = ['sample_id', 'flask_id', 'od600', 'time_since_inoc_hr'];
 
+    console.log('searchField', searchField, 'searchText', searchText)
     const queries = searchField
       .map((field, index) => ({
         field,
-        text: searchText?.[index] || '',
+        text: (numericFields.includes(field) ? Number(searchText?.[index]) : searchText?.[index]) || '',
       }))
       .filter((q) => validFields.includes(q.field) && q.text !== '');
 
+      console.log('queries', queries, 'numericFields.includes(searchField)', numericFields.includes(searchField))
     if (queries.length === 0) {
       return res
         .status(400)
         .json({ message: 'No valid search fields provided' });
     }
-
-    // const zodValidatedData = sampleSearchSchemaArray.safeParse(queries);
-    // if (!zodValidatedData.success) {
-    //   return res.status(400).json({
-    //     message: zodValidatedData.error.issues,
-    //     serverError: 'Zod validation error on the server for search samples',
-    //   });
-    // }
-
-    // if (queries.length === 0) {
-    //   return res.status(400).json({
-    //     message: zodValidatedData.error.issues,
-    //     serverError: 'Invalid or missing search fields',
-    //   });
-    // }
-// console.log('zodValidatedData.data in samples search', zodValidatedData.data)
-
-const numericFields = ['sample_id', 'flask_id', 'od600'];
 
 const transformQueryObject = (queryObject) => {
   if (numericFields.includes(queryObject.field)) {
@@ -93,7 +80,7 @@ const transformQueryObject = (queryObject) => {
 
 const queryObjectSchema = z.object({
   field: z.string(),
-  text: z.string(),
+  text: z.union([z.string(), z.number()])
 });
 
 const transformedQueryObjectSchema =
@@ -108,11 +95,15 @@ console.log('zodValidatedData in samples search', zodValidatedData)
     // Construct WHERE clause dynamically
     const whereClauses = zodValidatedData.map((q, index) => {
       const fieldForQuery = q.field;
+      console.log(q.field, 'q.field', q.text, 'q.text', index, 'index')
       // q.field === 'flask_id' ? `${q.field}::text` : q.field;
       if (typeof q.text === 'number') {
-        return `${q.field} = $${index + 1}`;
+
+        console.log(`{q.field} = $${index + 1}`, q.field, index + 1)
+
+        return `ROUND(${q.field}::numeric) = ROUND($${index + 1}::numeric)`;
       }
-      if (q.field === 'human_readable_date') {
+      if (q.field === 'end date/time') {
         q.field = 'end_date';
         q.text = getUtcTimestampFromLocalTime(q.text);
       }
@@ -152,8 +143,10 @@ console.log('zodValidatedData in samples search', zodValidatedData)
       data: results.rows,
     });
   } catch (err) {
-    console.log(err);
-    throw err;
+    console.log(err, err.detail);
+    res.status(500).json({
+      message: err?.detail || 'Internal server error',
+    })
   }
 });
 
