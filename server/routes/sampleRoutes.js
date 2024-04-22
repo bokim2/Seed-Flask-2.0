@@ -12,10 +12,9 @@ const sampleRouter = express.Router();
 // GET all samples
 console.log('in sampleRoutes.js');
 
-
 sampleRouter.route('/search').get(async (req, res) => {
   try {
-    console.log('in samples search backend')
+    console.log('in samples search backend');
     const limit = parseInt(req.query.limit, 10 || LIMIT);
     const offset =
       parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0;
@@ -43,63 +42,86 @@ sampleRouter.route('/search').get(async (req, res) => {
       'username',
       'user_id',
       'time_since_inoc_hr',
-      
+
       'human_readable_date',
     ];
-    
-    const numericFields = ['sample_id', 'flask_id', 'od600', 'time_since_inoc_hr'];
 
-    console.log('searchField', searchField, 'searchText', searchText)
+    const numericFields = [
+      'sample_id',
+      'flask_id',
+      'od600',
+      'time_since_inoc_hr',
+    ];
+
+    console.log('searchField', searchField, 'searchText', searchText);
     const queries = searchField
       .map((field, index) => ({
         field,
-        text: (numericFields.includes(field) ? Number(searchText?.[index]) : searchText?.[index]) || '',
+        text:
+          (numericFields.includes(field)
+            ? Number(searchText?.[index])
+            : searchText?.[index]) || '',
       }))
       .filter((q) => validFields.includes(q.field) && q.text !== '');
 
-      console.log('queries', queries, 'numericFields.includes(searchField)', numericFields.includes(searchField))
+    console.log(
+      'queries',
+      queries,
+      'numericFields.includes(searchField)',
+      numericFields.includes(searchField)
+    );
     if (queries.length === 0) {
       return res
         .status(400)
         .json({ message: 'No valid search fields provided' });
     }
 
-const transformQueryObject = (queryObject) => {
-  if (numericFields.includes(queryObject.field)) {
-    console.log(
-      'numericFields.includes(queryObject.field)',
-      numericFields.includes(queryObject.field)
-    );
-    return {
-      ...queryObject,
-      text: Number(queryObject.text),
+    const queryObjectSchema = z.object({
+      field: z.string(),
+      text: z.union([z.string(), z.number()]),
+    });
+
+    const transformQueryObject = (queryObject) => {
+      if (numericFields.includes(queryObject.field)) {
+        console.log(
+          'numericFields.includes(queryObject.field)',
+          numericFields.includes(queryObject.field)
+        );
+        return {
+          ...queryObject,
+          text: Number(queryObject.text),
+        };
+      }
+      return queryObject;
     };
-  }
-  return queryObject;
-};
 
-const queryObjectSchema = z.object({
-  field: z.string(),
-  text: z.union([z.string(), z.number()])
-});
+    const transformedQueryObjectSchema =
+      queryObjectSchema.transform(transformQueryObject);
 
-const transformedQueryObjectSchema =
-queryObjectSchema.transform(transformQueryObject);
+    const queryArraySchema = z.array(transformedQueryObjectSchema);
 
-const queryArraySchema = z.array(transformedQueryObjectSchema);
+    const { data, success, error } = queryArraySchema.safeParse(queries);
+    // console.log('zodValidatedData in samples search', zodValidatedData)
+    if (!success) {
+      return res
+        .status(400)
+        .json({ message: error?.issues, serverError: 'Invalid search query' });
+    }
 
-const zodValidatedData = queryArraySchema.parse(queries);
-console.log('zodValidatedData in samples search', zodValidatedData)
-
+    if (data?.length === 0) {
+      return res.status(400).json({
+        message: error?.issues,
+        serverError: 'No Match.  Check search fields',
+      });
+    }
 
     // Construct WHERE clause dynamically
-    const whereClauses = zodValidatedData.map((q, index) => {
+    const whereClauses = data.map((q, index) => {
       const fieldForQuery = q.field;
-      console.log(q.field, 'q.field', q.text, 'q.text', index, 'index')
+      console.log(q.field, 'q.field', q.text, 'q.text', index, 'index');
       // q.field === 'flask_id' ? `${q.field}::text` : q.field;
       if (typeof q.text === 'number') {
-
-        console.log(`{q.field} = $${index + 1}`, q.field, index + 1)
+        console.log(`{q.field} = $${index + 1}`, q.field, index + 1);
 
         return `ROUND(${q.field}::numeric) = ROUND($${index + 1}::numeric)`;
       }
@@ -116,7 +138,6 @@ console.log('zodValidatedData in samples search', zodValidatedData)
       }
     });
 
-
     let queryText = `SELECT * FROM samples`;
     if (whereClauses.length > 0) {
       queryText += ` WHERE ${whereClauses.join(' AND ')}`;
@@ -127,7 +148,7 @@ console.log('zodValidatedData in samples search', zodValidatedData)
 
     const query = {
       text: queryText,
-      values: [...queries.map((q) => q.text), limit, offset],
+      values: [...data.map((q) => q.text), limit, offset],
     };
 
     console.log('QUERY!!!', query);
@@ -146,11 +167,9 @@ console.log('zodValidatedData in samples search', zodValidatedData)
     console.log(err, err.detail);
     res.status(500).json({
       message: err?.detail || 'Internal server error',
-    })
+    });
   }
 });
-
-
 
 sampleRouter.route('/').get(async (req, res) => {
   try {
@@ -208,7 +227,6 @@ sampleRouter
       res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   });
-
 
 // update a sample
 sampleRouter.route('/:id').put(async (req, res) => {

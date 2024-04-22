@@ -84,6 +84,11 @@ const Button = styled.button<ButtonProps>`
   border-radius: 0.5em;
   /* color: var(--clr-text-1); */
   cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Non-prefixed version, currently supported by Chrome, Opera and Safari */
+  
   transition: background-color 0.2s ease-in-out;
   &:hover
   /* &:focus  */ {

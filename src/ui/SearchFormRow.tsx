@@ -16,7 +16,7 @@ import { formatColumnName } from '../hooks/hooks';
 
 export const SearchTableRow = styled.tr`
   /* display: none; */
-  
+
   background-color: hsl(0, 0%, 0%, 0.5);
   &:nth-of-type(2n) {
     background-color: hsl(0, 0%, 0%, 0.2);
@@ -39,7 +39,6 @@ export default function SearchFormRow({
   tableColumnsHeaderCellsArray,
   setSearchMultiError,
   setSearchLoading,
-  
 }) {
   // const {
   //   searchCriteria,
@@ -101,24 +100,33 @@ export default function SearchFormRow({
         {/* <form onSubmit={handleSubmit}> */}
         {tableColumnsHeaderCellsArray.map((criterion, index) => (
           <TableHeaderCell>
-            <SearchInputAndButtonContainer data-cell={formatColumnName(criterion)}>
+            <SearchInputAndButtonContainer
+              data-cell={formatColumnName(criterion)}
+            >
               <TableSearchInput
                 data-column={criterion}
                 // data-cell="none"
                 value={searchCriteria[index].text}
                 onChange={(e) => handleSearchTextChange(e, index)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    console.log('enter key pressed');
+                    handleSearchSubmit(e);
+                  }
+                }}
                 placeholder="search..."
               />
               <Button
                 $size="xxs"
                 $variation="round"
-                type="button"
+                type="submit"
                 onClick={handleSearchSubmit}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    (e) => handleSearchSubmit(e);
-                  }
-                }}
+                // onKeyPress={(e) => {
+                //   if (e.key === 'Enter') {
+                //     console.log('enter key pressed')
+                //     handleSearchSubmit(e);
+                //   }
+                // }}
               >
                 s
               </Button>
@@ -152,19 +160,20 @@ export default function SearchFormRow({
               Clear
             </Button>
 
-
-            {data  && data?.length > 0 && <Button
-              $size="xs"
-              type="button"
-              onClick={() => fetchNextPage()}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  () => fetchNextPage();
-                }
-              }}
-            >
-              load more data
-            </Button>}
+            {data && data?.length > 0 && (
+              <Button
+                $size="xs"
+                type="button"
+                onClick={() => fetchNextPage()}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    () => fetchNextPage();
+                  }
+                }}
+              >
+                load more data
+              </Button>
+            )}
           </ButtonsContainer>
         </TableHeaderCell>
       </SearchTableRow>

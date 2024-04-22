@@ -196,7 +196,9 @@ flaskRouter.route('/search').get(async (req, res) => {
     console.log('queries', queries);
 
     if (queries.length === 0) {
-      return;
+      return res
+        .status(400)
+        .json({ message: 'No valid search fields provided' });
     }
 
     const numericFields = [
@@ -224,7 +226,7 @@ flaskRouter.route('/search').get(async (req, res) => {
 
     const queryObjectSchema = z.object({
       field: z.string(),
-      text: z.string() || z.number(),
+      text: z.union([z.string(), z.number()]),
     });
 
     const transformedQueryObjectSchema =
@@ -235,26 +237,26 @@ flaskRouter.route('/search').get(async (req, res) => {
     // console.log('queries before zodvalidation flaskroutes search', queries);
     // const validatedQueries = queries.map((query)=> (flasksSearchSchema.safeParse(query).data));
     // console.log('validatedQueries FLASK SEARCH', validatedQueries);
-    const zodValidatedData = queryArraySchema.parse(queries);
-    console.log('zodValidatedData in flasks search', zodValidatedData);
+    const {data, success, error} = queryArraySchema.safeParse(queries);
+    // console.log('zodValidatedData in flasks search', zodValidatedData);
     // console.log('zodValidatedData', zodValidatedData);
-    // if (!zodValidatedData.success) {
-    //   return res.status(400).json({
-    //     message: zodValidatedData?.error?.issues,
-    //     serverError: 'Zod validation error on the server for search cell banks',
-    //   });
-    // }
+    if (!success) {
+      return res.status(400).json({
+        message: error?.issues,
+        serverError: 'Zod validation error on the server for search flasks',
+      });
+    }
 
-    // if (queries.length === 0) {
-    //   console.log('queries.length === 0' , queries.length === 0)
-    //   return res.status(400).json({
-    //     message: zodValidatedData?.error?.issues,
-    //     serverError: 'Invalid or missing search fields',
-    //   });
-    // }
+    if (data?.length === 0) {
+      return res.status(400).json({
+        message: error?.issues,
+        serverError: 'No Match.  Check search fields',
+      });
+    }
+
 
     // Construct WHERE clause dynamically
-    const whereClauses = zodValidatedData.map((q, index) => {
+    const whereClauses = data.map((q, index) => {
       const fieldForQuery = q.field;
       // q.field === 'flask_id' ? `${q.field}::text` : q.field;
       if (typeof q.text === 'number') {
@@ -286,7 +288,7 @@ flaskRouter.route('/search').get(async (req, res) => {
 
     const query = {
       text: queryText,
-      values: [...zodValidatedData.map((q) => q.text), limit, offset],
+      values: [...data.map((q) => q.text), limit, offset],
     };
 
     console.log('QUERY!!!', query);

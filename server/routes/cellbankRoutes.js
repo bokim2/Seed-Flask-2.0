@@ -11,6 +11,7 @@ import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
 import { allowIfUserIdMatchesMiddleware } from '../middleware/roles/allowIfUserIdMatchesMiddleware.js';
 import { LIMIT } from '../../src/lib/constants.js';
 import { getUtcTimestampFromLocalTime } from '../helperFunctions.js';
+import { z } from 'zod';
 
 const cellbankRouter = express.Router();
 
@@ -145,11 +146,16 @@ cellbankRouter.route('/search').get(async (req, res) => {
       'human_readable_date',
     ];
 
+    const numericFields = ['cell_bank_id'];
+
     // Filter out invalid fields
     const queries = searchField
       .map((field, index) => ({
         field,
-        text: searchText?.[index] || '',
+        text:
+          (numericFields.includes(field)
+            ? Number(searchText?.[index])
+            : searchText?.[index]) || '',
       }))
       .filter((q) => validFields.includes(q.field) && q.text !== '');
     console.log('is console working after queries');
@@ -157,26 +163,51 @@ cellbankRouter.route('/search').get(async (req, res) => {
 
     if (queries.length === 0) {
       // return;
-      return res.status(400).json({message: 'No valid search fields provided'});
+      return res
+        .status(400)
+        .json({ message: 'No valid search fields provided' });
     }
 
-    const zodValidatedData = cellbanksSearchSchemaArray.safeParse(queries);
-    if (!zodValidatedData.success) {
+    const queryObjectSchema = z.object({
+      field: z.string(),
+      text: z.union([z.string(), z.number()]),
+    });
+
+    const transformQueryObject = (queryObject) => {
+      if (numericFields.includes(queryObject.field)) {
+        return { ...queryObject, text: Number(queryObject.text) };
+      }
+      return queryObject;
+    };
+
+    const transformedQueryObjectSchema =
+      queryObjectSchema.transform(transformQueryObject);
+
+    const queryArraySchema = z.array(transformedQueryObjectSchema);
+
+    // const zodValidatedData = queryArraySchema.parse(queries);
+
+    const { data, success, error } = queryArraySchema.safeParse(queries);
+    if (!success) {
       return res.status(400).json({
-        message: zodValidatedData.error.issues,
+        message: error?.issues?.map((issue) => ({
+          path: issue.path.join('.'),
+          message: issue.message,
+        })),
         serverError: 'Zod validation error on the server for search cell banks',
       });
     }
 
-    if (queries.length === 0) {
+    if (data?.length === 0) {
       return res.status(400).json({
-        message: zodValidatedData.error.issues,
-        serverError: 'Invalid or missing search fields',
+        message: error?.issues,
+        serverError: 'No Match.  Check search fields',
       });
     }
-
+    console.log('data', data);
+    // console.log('zodValidatedData', zodValidatedData);
     // Construct WHERE clause dynamically
-    const whereClauses = queries.map((q, index) => {
+    const whereClauses = data.map((q, index) => {
       const fieldForQuery =
         q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
       if (q.field === 'human_readable_date') {
@@ -202,7 +233,7 @@ cellbankRouter.route('/search').get(async (req, res) => {
 
     const query = {
       text: queryText,
-      values: [...queries.map((q) => q.text), limit, offset],
+      values: [...data.map((q) => q.text), limit, offset],
     };
 
     console.log('QUERY!!!', query);
