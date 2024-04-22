@@ -237,7 +237,7 @@ flaskRouter.route('/search').get(async (req, res) => {
     // console.log('queries before zodvalidation flaskroutes search', queries);
     // const validatedQueries = queries.map((query)=> (flasksSearchSchema.safeParse(query).data));
     // console.log('validatedQueries FLASK SEARCH', validatedQueries);
-    const {data, success, error} = queryArraySchema.safeParse(queries);
+    const { data, success, error } = queryArraySchema.safeParse(queries);
     // console.log('zodValidatedData in flasks search', zodValidatedData);
     // console.log('zodValidatedData', zodValidatedData);
     if (!success) {
@@ -253,7 +253,6 @@ flaskRouter.route('/search').get(async (req, res) => {
         serverError: 'No Match.  Check search fields',
       });
     }
-
 
     // Construct WHERE clause dynamically
     const whereClauses = data.map((q, index) => {
@@ -276,9 +275,38 @@ flaskRouter.route('/search').get(async (req, res) => {
       }
     });
 
+    // flask_id: 'flasks.flask_id',
+    // cell_bank_id: 'flasks.cell_bank_id',
+    // inoculum_ul: 'flasks.inoculum_ul',
+    // media: 'flasks.media',
+    // media_ml: 'flasks.media_ml',
+    // rpm: 'flasks.rpm',
+    // start_date: 'flasks.start_date',
+    // temp_c: 'flasks.temp_c',
+    // vessel_type: 'flasks.vessel_type',
+    // username: 'flasks.username',
+    // user_id: 'flasks.user_id',
+    // human_readable_date: 'flasks.human_readable_date',
+    // strain: 'cell_banks.strain',
+    // target_molecule: 'cell_banks.target_molecule',
+    // project: 'cell_banks.project',
     // let queryText = `SELECT * FROM flasks`;
-    let queryText = `SELECT flasks.*, cell_banks.* FROM flasks
-    LEFT JOIN cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id`;
+    let queryText = `SELECT 
+      flasks.flask_id, 
+      flasks.cell_bank_id,
+      flasks.media,
+      flasks.media_ml,
+      flasks.rpm,
+      flasks.start_date,
+      flasks.temp_c,
+      flasks.vessel_type,
+      flasks.username,
+      flasks.user_id,
+      cell_banks.strain,
+      cell_banks.target_molecule,
+      cell_banks.project
+      FROM flasks
+      LEFT JOIN cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id`;
     if (whereClauses.length > 0) {
       queryText += ` WHERE ${whereClauses.join(' AND ')}`;
     }
