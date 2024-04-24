@@ -25,7 +25,7 @@ import ErrorMessage from '../../ui/ErrorMessage';
 import { flushSync } from 'react-dom';
 import { set } from 'date-fns';
 import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
-import { filteredTableData, useAppSelector, useSetSortColumn } from '../../hooks/hooks';
+import {  useAppSelector, useFilteredTableData, useSetSortColumn } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../../redux/slices/pageSlice';
 import Button from '../../ui/Button';
@@ -141,16 +141,13 @@ export default function SamplesTable({ samples }) {
   //   console.log('data in flasks table', data);
   // }, [flasks, filteredAndSortedData, sortColumn]);
 
-  const data = useMemo(
-    () =>
-      filteredTableData(
+  const data = 
+      useFilteredTableData(
         samples,
         filteredAndSortedData,
         sortColumn,
         'end_date'
-      ),
-    [samples, filteredAndSortedData, sortColumn]
-  );
+      )
 
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);

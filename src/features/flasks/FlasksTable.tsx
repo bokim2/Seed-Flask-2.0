@@ -12,8 +12,8 @@ import {
 } from '../../styles/UtilStyles';
 import { useEffect, useMemo, useState } from 'react';
 import {
-  filteredTableData,
   useAppSelector,
+  useFilteredTableData,
   useSetSortColumn,
 } from '../../hooks/hooks';
 import { TUpdateCellbankForm } from '../cellbanks/cellbanks-types';
@@ -55,8 +55,8 @@ type TFlasksTable = {
 export default function FlasksTable({
   flasks,
   flasksListData,
-  // handleAddBookmark,
-}: // setSearchedFlasksList
+}: // handleAddBookmark,
+// setSearchedFlasksList
 // handleAddBookmark,
 //   toggleTextTruncation,
 TFlasksTable) {
@@ -93,12 +93,13 @@ TFlasksTable) {
     pages: TPages[];
     pageParams: number[];
   };
+
   // searched data - searching table through text input - the SearchForm component will use setSearchedData to update this state
   const [searchedData, setSearchedData] = useState<TFlasksInfo | null>(null);
 
   // filtered and sorted data that will be passed to child components
-  const [filteredAndSortedData, setFilteredAndSortedData] =
-    useState<TFlasksInfo>([]);
+  // const [filteredAndSortedData, setFilteredAndSortedData] =
+  //   useState<TFlasksInfo>([]);
 
   // sort selected column
   const { sortColumn, handleSortColumn } = useSetSortColumn<TFlasksColumns>();
@@ -111,36 +112,39 @@ TFlasksTable) {
     dispatch(changePageLimit(limit));
   };
 
-
-
   // useEffect call to filter and sort data and keep it in sync
 
-  useEffect(() => {
-    console.log(
-      'USEEFFECT IN FLASKSSTABLE searchedData in flasks table'
-      // searchedData, searchedData?.pages, searchedData?.pages?.length > 0
-    );
+  // useEffect(() => {
+  //   if (flasksListData && flasksListData?.length > 0) {
+  //     setFilteredAndSortedData(flasksListData);
+  //     return;
+  //   }
 
+  //   if (searchedData && searchedData?.length > 0) {
+  //     setFilteredAndSortedData(searchedData);
+
+  //     dispatch(
+  //       setSearchedFlasksList(
+  //         searchedData
+  //           ?.map((e) => {
+  //             if (e && e?.flask_id) {
+  //               return Number(e?.flask_id);
+  //             }
+  //             return undefined;
+  //           })
+  //           .filter((id): id is number => id !== undefined)
+  //       )
+  //     );
+  //   } else {
+  //     setFilteredAndSortedData(flasks);
+  //   }
+  // }, [flasks, searchedData, flasksListData]);
+
+  const filteredAndSortedData = useMemo(() => {
     if (flasksListData && flasksListData?.length > 0) {
-      setFilteredAndSortedData(flasksListData);
-      return;
+      return flasksListData;
     }
-
     if (searchedData && searchedData?.length > 0) {
-      // const searchedDataAll =
-      //   searchedData?.pages.map((data) => data?.data).flat() || [];
-
-      console.log(
-        'USEEFFECT IN FLASKSTABLE searchDataAll in flasks table',
-        searchedData,
-        searchedData?.map((e) => {
-          if (e && e?.flask_id) {
-            return Number(e?.flask_id);
-          }
-        })
-      );
-      setFilteredAndSortedData(searchedData);
-
       dispatch(
         setSearchedFlasksList(
           searchedData
@@ -153,10 +157,9 @@ TFlasksTable) {
             .filter((id): id is number => id !== undefined)
         )
       );
+      return searchedData;
     } else {
-      setFilteredAndSortedData(flasks);
-      // dispatch(clearSearchedFlasksList);
-      // console.log('useEffect in dataName table', dataName);
+      return flasks;
     }
   }, [flasks, searchedData, flasksListData]);
 
@@ -171,16 +174,14 @@ TFlasksTable) {
   //   console.log('data in flasks table', data);
   // }, [flasks, filteredAndSortedData, sortColumn]);
 
-  const data = useMemo(
-    () =>
-      filteredTableData(
+  const data = 
+    useFilteredTableData(
         flasks,
         filteredAndSortedData,
         sortColumn,
         'start_date'
-      ),
-    [flasks, filteredAndSortedData, sortColumn]
-  );
+      )
+
 
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
@@ -238,7 +239,7 @@ TFlasksTable) {
       >
         {/* Table Section */}
         <TableContainer id="SearchFlasksTableContainer">
-        <Caption>Flasks Table</Caption>
+          <Caption>Flasks Table</Caption>
           <StyledTable>
             <TableHeader>
               {/* select column to search */}

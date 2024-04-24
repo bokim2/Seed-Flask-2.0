@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import {
   TCreateFlask,
@@ -26,10 +26,9 @@ import {
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import {
-  filteredTableData,
   transformListStringToArray,
   useAppSelector,
-  useFilterSortTableData,
+  useFilteredTableData,
   useSetSortColumn,
 } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
@@ -116,8 +115,8 @@ export default function SchedulesTable({
   // const [searchedData, setSearchedData] = useState<TSchedules>([]);
 
   // filtered and sorted data that will be passed to child components
-  const [filteredAndSortedData, setFilteredAndSortedData] =
-    useState<TSchedules>([]);
+  // const [filteredAndSortedData, setFilteredAndSortedData] =
+  //   useState<TSchedules>([]);
 
   // sort selected column
   const { sortColumn, handleSortColumn } =
@@ -139,7 +138,20 @@ export default function SchedulesTable({
   //   setFilteredAndSortedData,
   // });
 
-  const data = filteredTableData(
+
+  const filteredAndSortedData = useMemo(()=> {
+    console.log('Calculating filtered and sorted data');
+    if (searchedData && searchedData.length > 0) {
+      console.log('Using searched data', searchedData);
+      return searchedData;
+    } else {
+      console.log('Using default cellbanks data', schedules);
+      return schedules;
+    }
+  
+  }, [searchedData, schedules])
+
+  const data = useFilteredTableData(
     schedules,
     filteredAndSortedData,
     sortColumn,

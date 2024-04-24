@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { baseUrl } from '../../configs';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
@@ -42,93 +42,155 @@ export function useMainFilter({ selector }) {
 
 // seting table to data (sorted and searched if any)
 
-export function filteredTableData(
+// export function filteredTableData(
+//   tableRowsData,
+//   filteredAndSortedData,
+//   sortColumn,
+//   timestamp_column
+// ) {
+//   console.log(
+//     tableRowsData,
+//     filteredAndSortedData,
+//     sortColumn,
+//     timestamp_column,
+//     'tableRowsData, searchedData, sortColumn, timestamp_column'
+//   );
+//   let filteredTableData = [...tableRowsData];
+//   // console.log('filteredTableData.cellbankid', filteredTableData.map(e => e.cell_bank_id));
+//   // console.log(
+//   //   'timestamp_column',
+//   //   timestamp_column,
+//   //   'filteredTableData',
+//   //   filteredTableData
+//   // );
+
+//   if (filteredAndSortedData && filteredAndSortedData?.length > 0) {
+//     filteredTableData = [...filteredAndSortedData];
+//   }
+
+//   if (timestamp_column) {
+//     filteredTableData = [...filteredTableData].map((tableRow) => {
+//       // console.log(
+//       //   'tableRow?.[timestamp_column]',
+//       //   tableRow?.[timestamp_column]
+//       // );
+//       if (tableRow?.[timestamp_column]) {
+//         // console.log(
+//         //   'timestamp_column',
+//         //   Boolean(timestamp_column),
+//         //   'tableRow?.[timestamp_column]',
+//         //   Boolean(tableRow?.[timestamp_column])
+//         // );
+//         return {
+//           ...tableRow,
+//           human_readable_date: displayLocalTime(tableRow[timestamp_column]),
+//         };
+//       }
+//       // console.log('tableRow', tableRow);
+
+//       return tableRow;
+//     });
+//   }
+
+//   // console.log('Object.values(sortColumn)[0]', Object.values(sortColumn)[0], Object.values(sortColumn))
+//   if (Object.values(sortColumn)[0]) {
+//     const sortDirection = Object.values(sortColumn)[0]; // asc or desc
+//     const sortColumnKey = Object.keys(sortColumn)[0]; // column name
+//     // console.log('sortDirection', sortDirection);
+
+//     filteredTableData = [...filteredTableData].sort((a, b) => {
+//       // console.log(
+//       //   'a[sortColumnKey], b[sortColumnKey]',
+//       //   a[sortColumnKey],
+//       //   b[sortColumnKey],
+//       //   a[sortColumnKey] < b[sortColumnKey]
+
+//       // );
+//       const numericColumns = new Set([
+//         'cell_bank_id',
+//         'flask_id',
+//         'sample_id',
+//         'inoculum_ul',
+//         'media_ml',
+//         'rpm',
+//         'temp_c',
+//         'od600',
+//         'time_since_inoc_hr',
+//       ]);
+//       if (!numericColumns.has(sortColumnKey)) {
+//         if (sortDirection === 'asc') {
+//           // console.log(
+//           //   'a[sortColumnKey].localeCompare(b[sortColumnKey])', a[sortColumnKey], b[sortColumnKey], a[sortColumnKey].localeCompare(b[sortColumnKey])
+//           // )
+//           // console.log(
+//           //   'a[sortColumnKey].localeCompare(b[sortColumnKey])', a[sortColumnKey], b[sortColumnKey], 'rgfdf'.localeCompare('1')
+//           // )
+//           return a[sortColumnKey].localeCompare(b[sortColumnKey]);
+//         }
+//         if (sortDirection === 'desc')
+//           return b[sortColumnKey].localeCompare(a[sortColumnKey]);
+//       } else {
+//         if (sortDirection === 'asc') return a[sortColumnKey] - b[sortColumnKey];
+//         if (sortDirection === 'desc')
+//           return b[sortColumnKey] - a[sortColumnKey];
+//       }
+//     });
+//   }
+//   console.log('FINAL filteredTableData', filteredTableData);
+//   return filteredTableData;
+// }
+
+const numericColumns = new Set([
+  'cell_bank_id',
+  'flask_id',
+  'sample_id',
+  'inoculum_ul',
+  'media_ml',
+  'rpm',
+  'temp_c',
+  'od600',
+  'time_since_inoc_hr',
+]);
+
+export function useFilteredTableData(
   tableRowsData,
   filteredAndSortedData,
   sortColumn,
-  timestamp_column,
+  timestamp_column
 ) {
-  console.log(
-    tableRowsData,
-    filteredAndSortedData,
-    sortColumn,
-    timestamp_column,
-    'tableRowsData, searchedData, sortColumn, timestamp_column'
-  );
-  let filteredTableData = [...tableRowsData];
-  // console.log('filteredTableData.cellbankid', filteredTableData.map(e => e.cell_bank_id));
-  // console.log(
-  //   'timestamp_column',
-  //   timestamp_column,
-  //   'filteredTableData',
-  //   filteredTableData
-  // );
 
-  if (filteredAndSortedData && filteredAndSortedData?.length > 0) {
-    filteredTableData = [...filteredAndSortedData];
-  }
-
-  if (timestamp_column) {
-    filteredTableData = [...filteredTableData].map((tableRow) => {
-      // console.log(
-      //   'tableRow?.[timestamp_column]',
-      //   tableRow?.[timestamp_column]
-      // );
-      if (tableRow?.[timestamp_column]) {
-        // console.log(
-        //   'timestamp_column',
-        //   Boolean(timestamp_column),
-        //   'tableRow?.[timestamp_column]',
-        //   Boolean(tableRow?.[timestamp_column])
-        // );
-        return {
-          ...tableRow,
-          human_readable_date: displayLocalTime(tableRow[timestamp_column]),
-        };
-      }
-      // console.log('tableRow', tableRow);
-
-      return tableRow;
-    });
-  }
-
-  // console.log('Object.values(sortColumn)[0]', Object.values(sortColumn)[0], Object.values(sortColumn))
-  if (Object.values(sortColumn)[0]) {
-    const sortDirection = Object.values(sortColumn)[0]; // asc or desc
-    const sortColumnKey = Object.keys(sortColumn)[0]; // column name
-    // console.log('sortDirection', sortDirection);
-
-    filteredTableData = [...filteredTableData].sort((a, b) => {
-      // console.log(
-      //   'a[sortColumnKey], b[sortColumnKey]',
-      //   a[sortColumnKey],
-      //   b[sortColumnKey],
-      //   a[sortColumnKey] < b[sortColumnKey]
-
-      // );
-      const numericColumns = new Set(['cell_bank_id', 'flask_id', 'sample_id']);
-      if (!numericColumns.has(sortColumnKey)) {
-        if (sortDirection === 'asc') {
-          // console.log(
-          //   'a[sortColumnKey].localeCompare(b[sortColumnKey])', a[sortColumnKey], b[sortColumnKey], a[sortColumnKey].localeCompare(b[sortColumnKey])
-          // )
-          // console.log(
-          //   'a[sortColumnKey].localeCompare(b[sortColumnKey])', a[sortColumnKey], b[sortColumnKey], 'rgfdf'.localeCompare('1')
-          // )
-          return a[sortColumnKey].localeCompare(b[sortColumnKey]);
-        }
-        if (sortDirection === 'desc')
-          return b[sortColumnKey].localeCompare(a[sortColumnKey]);
-      } else {
-        if (sortDirection === 'asc') return a[sortColumnKey] - b[sortColumnKey];
-        if (sortDirection === 'desc')
-          return b[sortColumnKey] - a[sortColumnKey];
-      }
-    });
-  }
-  console.log('FINAL filteredTableData', filteredTableData);
-  return filteredTableData;
+  const formattedData = useMemo(()=> {
+if (timestamp_column){
+  tableRowsData.map(row=> ({
+...row,
+human_readable_date: displayLocalTime(row[timestamp_column])
+  }))
 }
+  },[tableRowsData, timestamp_column])
+
+
+const dataToSort = filteredAndSortedData && filteredAndSortedData?.length > 0 ? filteredAndSortedData : formattedData;
+const sortedData = useMemo(() => {
+  if (!Object.values(sortColumn)[0]) return dataToSort; // Skip sorting if no sortColumn is defined
+
+  const sortDirection = Object.values(sortColumn)[0]; // 'asc' or 'desc'
+  const sortColumnKey = Object.keys(sortColumn)[0]; // column name to sort by
+
+  return [...dataToSort].sort((a, b) => {
+    const isNumeric = numericColumns.has(sortColumnKey);
+    if (isNumeric) {
+      return sortDirection === 'asc' ? a[sortColumnKey] - b[sortColumnKey] : b[sortColumnKey] - a[sortColumnKey];
+    } else {
+      return sortDirection === 'asc'
+        ? a[sortColumnKey].localeCompare(b[sortColumnKey])
+        : b[sortColumnKey].localeCompare(a[sortColumnKey]);
+    }
+  });
+}, [dataToSort, sortColumn]);
+
+return sortedData;
+}
+
 
 // format column name - to remove _ and replace with ' '
 export function formatColumnName(columnName) {
@@ -146,13 +208,17 @@ export function useSetSortColumn<TTableColumns extends string>() {
 
   const [sortColumn, setSortColumn] = useState<TSortColumn>({});
 
-  const handleSortColumn = (e: React.MouseEvent, columnName: TTableColumns, sortOrder: TSortOrder) => {
+  const handleSortColumn = (
+    e: React.MouseEvent,
+    columnName: TTableColumns,
+    sortOrder: TSortOrder
+  ) => {
     e.stopPropagation();
 
     setSortColumn((prev: TSortColumn) => {
       // Using type assertion to ensure the return type matches TSortColumn
       const newSortState = {
-        [columnName]: sortOrder === prev[columnName] ? '' : sortOrder
+        [columnName]: sortOrder === prev[columnName] ? '' : sortOrder,
       } as TSortColumn;
 
       return newSortState;
@@ -163,32 +229,6 @@ export function useSetSortColumn<TTableColumns extends string>() {
 }
 
 
-// update table data based on filter and sort settings
-export function useFilterSortTableData({
-  dataName, // ex: cellbanks, flasks, samples, schedules
-  filteredAndSortedData,
-  sortColumn,
-  setFilteredAndSortedData,
-}) {
-  // update selected data based on filter and sort settings
-  // useEffect(() => {
-  //   console.log('in useEffect of useFilterSortTableData', dataName, filteredAndSortedData, sortColumn);
-  //   const updatedData = filteredTableData(
-  //     dataName,
-  //     filteredAndSortedData,
-  //     sortColumn,
-  //     'date_timestamptz'
-  //   );
-  //   setFilteredAndSortedData(updatedData);
-  //   // console.log('useEffect in dataName table', dataName);
-  // }, [dataName, filteredAndSortedData, sortColumn, setFilteredAndSortedData]);
-  return filteredTableData(
-    dataName,
-    filteredAndSortedData,
-    sortColumn,
-    'date_timestamptz'
-  );
-}
 
 // toggle nav menus off when clicking outside of them
 export function useOnClickOutside(refs, handlerFn) {
@@ -325,7 +365,7 @@ export function useMultiInputState() {
   const [isOpenMultiInput, setIsOpen] = useState(false);
   const handleToggleMultiInputState = () => setIsOpen((prev) => !prev);
   // const close = () => setIsOpen(false);
-  return { isOpenMultiInput, handleToggleMultiInputState};
+  return { isOpenMultiInput, handleToggleMultiInputState };
 }
 
 // // fetch all rows in table
@@ -449,5 +489,3 @@ export function useMultiInputState() {
 //   const samples = data?.data;
 //   return [samples, isLoading, error] as const;
 // }
-
-

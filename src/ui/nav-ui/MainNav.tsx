@@ -13,10 +13,7 @@ import {
 import {
   LinkButton,
   LoginButton,
-  MainFilterContainer,
-  MainFilterSelector,
-  MainFilterSelectorOption,
-  MainFilterValue,
+
   NavMenuButton,
   NavSection,
   UserButton,

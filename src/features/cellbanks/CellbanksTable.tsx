@@ -4,17 +4,15 @@ import {
   StyledTable,
   Caption,
   TableHeader,
-  TableRow,
   TableHeaderCell,
   StyledForm,
   LoaderWrapper,
   TableHeaderRow,
 } from '../../styles/UtilStyles';
-import { useEffect, useMemo, useState } from 'react';
+import {  useMemo, useState } from 'react';
 import {
-  filteredTableData,
   useAppSelector,
-  useFilterSortTableData,
+  useFilteredTableData,
   useSetSortColumn,
 } from '../../hooks/hooks';
 import {
@@ -80,8 +78,8 @@ export default function CellbanksTable({
   const [searchedData, setSearchedData] = useState<TCellbanks | null>(null);
   console.log('searchedData in cellbankstable', searchedData);
   // filtered and sorted data that will be passed to child components
-  const [filteredAndSortedData, setFilteredAndSortedData] =
-    useState<TCellbanks>([]);
+  // const [filteredAndSortedData, setFilteredAndSortedData] =
+  //   useState<TCellbanks>([]);
 
   // sort selected column
   const { sortColumn, handleSortColumn } =
@@ -97,36 +95,48 @@ export default function CellbanksTable({
 
   // useEffect call to filter and sort data and keep it in sync
 
-  useEffect(() => {
-    console.log(
-      'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
-      searchedData
-      // searchedData?.pages,
-      // searchedData?.pages?.[0]?.data?.length > 0
-    );
-    // if (searchedData?.pages && searchedData?.pages?.[0]) {
-    //   const searchedDataAll =
-    //     searchedData?.pages.map((data) => data.data).flat() || [];
+  // useEffect(() => {
+  //   console.log(
+  //     'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
+  //     searchedData
+  //     // searchedData?.pages,
+  //     // searchedData?.pages?.[0]?.data?.length > 0
+  //   );
+  //   // if (searchedData?.pages && searchedData?.pages?.[0]) {
+  //   //   const searchedDataAll =
+  //   //     searchedData?.pages.map((data) => data.data).flat() || [];
 
-    //   console.log(
-    //     'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
-    //     searchedDataAll
-    //   );
-    //   setFilteredAndSortedData(searchedDataAll);
-    if (searchedData && searchedData?.length > 0) {
-      // const searchedDataAll =
-      //   searchedData?.pages.map((data) => data.data).flat() || [];
+  //   //   console.log(
+  //   //     'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
+  //   //     searchedDataAll
+  //   //   );
+  //   //   setFilteredAndSortedData(searchedDataAll);
+  //   if (searchedData && searchedData?.length > 0) {
+  //     // const searchedDataAll =
+  //     //   searchedData?.pages.map((data) => data.data).flat() || [];
 
-      console.log(
-        'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
-        searchedData
-      );
-      setFilteredAndSortedData(searchedData);
+  //     console.log(
+  //       'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
+  //       searchedData
+  //     );
+  //     setFilteredAndSortedData(searchedData);
+  //   } else {
+  //     setFilteredAndSortedData(cellbanks);
+  //     // console.log('useEffect in dataName table', dataName);
+  //   }
+  // }, [cellbanks, searchedData]);
+
+  const filteredAndSortedData = useMemo(()=> {
+    console.log('Calculating filtered and sorted data');
+    if (searchedData && searchedData.length > 0) {
+      console.log('Using searched data', searchedData);
+      return searchedData;
     } else {
-      setFilteredAndSortedData(cellbanks);
-      // console.log('useEffect in dataName table', dataName);
+      console.log('Using default cellbanks data', cellbanks);
+      return cellbanks;
     }
-  }, [cellbanks, searchedData]);
+  
+  }, [searchedData, cellbanks])
 
   // const data = useFilterSortTableData({
   //   dataName: cellbanks,
@@ -135,16 +145,13 @@ export default function CellbanksTable({
   //   setFilteredAndSortedData,
   // });
 
-  const data = useMemo(
-    () =>
-      filteredTableData(
+  const data = 
+      useFilteredTableData(
         cellbanks,
         filteredAndSortedData,
         sortColumn,
         'date_timestamptz'
-      ),
-    [cellbanks, filteredAndSortedData, sortColumn]
-  );
+      )
 
   //state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
