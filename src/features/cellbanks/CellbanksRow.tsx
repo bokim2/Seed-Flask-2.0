@@ -66,7 +66,7 @@ export default function CellbanksRow({
           {notes}
         </TableDataCell>
 
-        <TableDataCell data-cell="date" style={{whiteSpace: 'nowrap'}}>{human_readable_date}</TableDataCell>
+        <TableDataCell data-cell="date" style={{whiteSpace: 'nowrap'}}>{human_readable_date || displayLocalTime(date_timestamptz)}</TableDataCell>
 
         <TableDataCell data-cell="user">{username}</TableDataCell>
 

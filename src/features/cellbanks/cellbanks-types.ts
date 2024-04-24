@@ -112,7 +112,7 @@ export type TCellbanksColumns =
   | 'description'
   | 'notes'
   | 'date_timestampz'
-  | 'human_readable_date'
+  // | 'human_readable_date'
   | 'username';
 
 export const cellbanksTableHeaderCellsArray = [
@@ -122,7 +122,7 @@ export const cellbanksTableHeaderCellsArray = [
       'project',
       'description',
       'notes',
-      'human_readable_date',
+      // 'human_readable_date',
+      'date_timestamptz',
       'username',
-      // 'date_timestampz',
 ];

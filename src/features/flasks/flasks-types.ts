@@ -152,8 +152,8 @@ export const flasksTableHeaderCellsArray = [
   'inoculum_ul',
   'temp_c',
   'rpm',
-  // 'start_date',
-  'human_readable_date',
+  'start_date',
+  // 'human_readable_date',
   'username',
 
   'strain',

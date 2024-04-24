@@ -144,13 +144,22 @@ const numericColumns = new Set([
   'cell_bank_id',
   'flask_id',
   'sample_id',
+  'schedule_id',
   'inoculum_ul',
   'media_ml',
   'rpm',
   'temp_c',
   'od600',
   'time_since_inoc_hr',
+  'completed'
 ]);
+
+const timeDisplayVSColumnName = {
+  'start date/time': 'start_date',
+  'start_date': 'start_date',
+  'end date/time': 'end_date',
+
+}
 
 export function useFilteredTableData(
   tableRowsData,
@@ -158,43 +167,54 @@ export function useFilteredTableData(
   sortColumn,
   timestamp_column
 ) {
-
-  const formattedData = useMemo(()=> {
-if (timestamp_column){
-  tableRowsData.map(row=> ({
-...row,
-human_readable_date: displayLocalTime(row[timestamp_column])
-  }))
-}
-  },[tableRowsData, timestamp_column])
-
-
-const dataToSort = filteredAndSortedData && filteredAndSortedData?.length > 0 ? filteredAndSortedData : formattedData;
-const sortedData = useMemo(() => {
-  if (!Object.values(sortColumn)[0]) return dataToSort; // Skip sorting if no sortColumn is defined
-
-  const sortDirection = Object.values(sortColumn)[0]; // 'asc' or 'desc'
-  const sortColumnKey = Object.keys(sortColumn)[0]; // column name to sort by
-
-  return [...dataToSort].sort((a, b) => {
-    const isNumeric = numericColumns.has(sortColumnKey);
-    if (isNumeric) {
-      return sortDirection === 'asc' ? a[sortColumnKey] - b[sortColumnKey] : b[sortColumnKey] - a[sortColumnKey];
-    } else {
-      return sortDirection === 'asc'
-        ? a[sortColumnKey].localeCompare(b[sortColumnKey])
-        : b[sortColumnKey].localeCompare(a[sortColumnKey]);
+  const formattedData = useMemo(() => {
+    if (timestamp_column) {
+      tableRowsData.map((row) => ({
+        ...row,
+        human_readable_date: displayLocalTime(row[timestamp_column]),
+      }));
     }
-  });
-}, [dataToSort, sortColumn]);
+  }, [tableRowsData, timestamp_column]);
 
-return sortedData;
+  const dataToSort =
+    filteredAndSortedData && filteredAndSortedData?.length > 0
+      ? filteredAndSortedData
+      : formattedData;
+  const sortedData = useMemo(() => {
+    if (!Object.values(sortColumn)[0]) return dataToSort; // Skip sorting if no sortColumn is defined
+
+    const sortDirection = Object.values(sortColumn)[0]; // 'asc' or 'desc'
+    const sortColumnKey = Object.keys(sortColumn)[0]; // column name to sort by
+
+    return [...dataToSort].sort((a, b) => {
+      console.log('sortColumnKey , timestamp_column', sortColumnKey , timestamp_column, 'timeDisplayVSColumnName?.[sortColumnKey]', timeDisplayVSColumnName?.[sortColumnKey])
+      const isNumeric = numericColumns.has(sortColumnKey);
+      if (isNumeric) {
+        return sortDirection === 'asc'
+          ? a[sortColumnKey] - b[sortColumnKey]
+          : b[sortColumnKey] - a[sortColumnKey];
+      } else if (timeDisplayVSColumnName?.[sortColumnKey] === timestamp_column) {
+        console.log('sorting by timestamp');
+        const dateA = new Date(a?.[timestamp_column]).getTime();
+        const dateB = new Date(b?.[timestamp_column]).getTime();
+        console.log('dateA, dateB', dateA, dateB);
+        return sortDirection === 'asc'
+          ? dateA - dateB : dateB - dateA;
+      } else {
+        console.log('sorting by string, else statement')
+        return sortDirection === 'asc'
+          ? a[sortColumnKey].localeCompare(b[sortColumnKey])
+          : b[sortColumnKey].localeCompare(a[sortColumnKey]);
+      }
+    });
+  }, [dataToSort, sortColumn, timestamp_column]);
+
+  return sortedData;
 }
-
 
 // format column name - to remove _ and replace with ' '
 export function formatColumnName(columnName) {
-  if (columnName === 'human_readable_date') {
+    if (columnName === 'human_readable_date'|| columnName === 'start_date' || columnName === 'end_date' || columnName === 'date_timestamptz' || columnName === 'date') {
     return 'date';
   } else {
     return columnName.replace(/_/g, ' ');
@@ -227,8 +247,6 @@ export function useSetSortColumn<TTableColumns extends string>() {
 
   return { sortColumn, handleSortColumn, setSortColumn };
 }
-
-
 
 // toggle nav menus off when clicking outside of them
 export function useOnClickOutside(refs, handlerFn) {
