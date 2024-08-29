@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 export const StyledInnerPageTransition = styled.div` 
@@ -47,10 +47,10 @@ export default function InnerPageTransition({ children }) {
 
   return (
     <StyledInnerPageTransition>
-      <motion.div {...anim(slide)} className="slide">
+      {/* <motion.div {...anim(slide)} className="slide">
         <motion.div {...anim(opacity)} className="inner-page">
         </motion.div>
-      </motion.div>
+      </motion.div> */}
           {children}
     </StyledInnerPageTransition>
   );
