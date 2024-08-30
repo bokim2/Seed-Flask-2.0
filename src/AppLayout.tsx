@@ -18,7 +18,6 @@ import { baseUrl } from '../configs';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from './hooks/hooks';
 import { TuserProfile } from './redux/slices/userSlice';
-import InnerPageTransition from './ui/InnerPageTransition';
 
 const StyledAppLayout = styled.div`
   flex: 1;
@@ -62,17 +61,12 @@ const NavBar = styled.div`
 
 const MainPageContainer = styled.main`
   position: relative;
-  flex-grow: 1;
+  /* flex-grow: 1; */
   width: 100%;
   min-height: 75vh;
   /* width: 85%; */
   margin: 0 auto;
   display: flex;
-  /* height: 100%; */
-  /* padding-top: clamp(0.5rem, 4vw, 3rem); */
-  /* background-color: rgba(var(--clr-accent-0), 0.9); */
-
-  ${'' /* overflow-y: scroll; */}
 `;
 
 // const PageButton = styled(NavLink)`
@@ -206,7 +200,6 @@ export const ScrollbarContainer = styled.div`
   }
 `;
 
-
 export const ScrollbarXAxisContainer = styled.div`
   height: 100%;
   width: 100vw;
@@ -336,10 +329,12 @@ export default function AppLayout() {
           // setUserProfile={setUserProfile}
         />
       </NavBar>
+
       {/* <LoaderBar /> */}
 
       {/* <span>testing app layout</span> */}
       <MainPageContainer id="MainPageContainer">
+        <SideMenu />
         {/* <PageButton
           toPath="/schedule"
           //  text={'view schedule'}
@@ -393,13 +388,14 @@ export default function AppLayout() {
 
           {/* <InnerPageTransition> */}
           {/* <InnerPageTransition> */}
-            <Outlet />
+          <Outlet />
           {/* </InnerPageTransition> */}
           {/* </InnerPageTransition> */}
           {/* </ScrollbarXAxisContainer> */}
         </ScrollbarContainer>
-        <Footer />
+        {/* <Footer /> */}
       </MainPageContainer>
+
       {/* </StyledAppLayout> */}
     </StyledAppLayout>
   );

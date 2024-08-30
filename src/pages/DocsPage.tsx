@@ -72,30 +72,24 @@ const AboutNavLink = styled(NavLink)`
   }
 `;
 
-export default function AboutPage() {
+export default function DocsPage() {
   return (
     // <InnerPageTransition>
       <AboutPageContainer id="AboutPageContainer">
         <InnerPageContainer id="AboutInnerPageContainer">
           {/* <InnerWrapper id="AboutInnerWrapper"> */}
           <AboutPageContainer id="AboutPageContainer">
-            <AboutNavLink to="/about" className="header">
-              About
-            </AboutNavLink>
+            {/* <AboutNavLink to="/about" className="header">
+              Documentation
+            </AboutNavLink> */}
 
             <AboutHeaderContainer>
-              <AboutNavLink to="seed-flask">
-                The App
-                {/* <CropContainer className="small margin2">
-        <StyledAboutsImage
-          className="small top"
-          src="/images/about/van.jpg"
-          alt="van"
-        />
-      </CropContainer> */}
-              </AboutNavLink>
+              {/* <AboutNavLink to="seed-flask">
+                DOCUMENTATION
+              
+              </AboutNavLink> */}
 
-              <AboutNavLink to="bo">Meet Bo</AboutNavLink>
+              <AboutNavLink to="bo">Seed Flask Documentation</AboutNavLink>
             </AboutHeaderContainer>
 
             <Routes>

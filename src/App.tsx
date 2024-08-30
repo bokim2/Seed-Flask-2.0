@@ -24,6 +24,7 @@ import { updateUserProfile } from './redux/slices/userProfileSlice';
 import { TuserProfile } from './redux/slices/userSlice';
 import AboutPage from './pages/AboutPage';
 import SchedulesPage from './pages/SchedulesPage';
+import DocsPage from './pages/DocsPage';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -104,6 +105,7 @@ function App() {
                 <Route path="sample" element={<SamplePage />} />
                 <Route path="schedule" element={<SchedulesPage />} />
                 <Route path="settings" element={<SettingsPage />} />
+                <Route path="docs" element={<DocsPage />}/>
                 <Route path="about/*" element={<AboutPage />}/>
                   {/* <Route path="about/seed-flask" element={<AboutSeedFlask />} />
                   <Route path="about/bo" element={<AboutCreator />} /> */}
