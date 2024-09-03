@@ -1,18 +1,12 @@
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import MainNav, { StyledUser } from './ui/nav-ui/MainNav';
+import {  Outlet, useLocation, useNavigate } from 'react-router-dom';
+import MainNav from './ui/nav-ui/MainNav';
 import styled from 'styled-components';
-import NavList from './ui/nav-ui/NavList';
-import LoaderBar from './ui/LoaderBar';
-import { THandleNavToggle, TNavOrUser } from './lib/types';
-import Footer from './ui/Footer';
-import { set } from 'date-fns';
 import SideMenu from './ui/nav-ui/SideMenu';
 import {
   FullScreenContainer,
   StyledMainMenuButtons,
 } from './styles/UtilStyles';
-import MainMenuButton, { StyledImage } from './ui/MainMenuButton';
-import { CircularButton } from './pages/HomePage';
+import { StyledImage } from './ui/MainMenuButton';
 import { updateUserProfile } from './redux/slices/userProfileSlice';
 import { baseUrl } from '../configs';
 import { useEffect, useState } from 'react';
@@ -294,7 +288,7 @@ export default function AppLayout() {
   }, []);
   // console.log('userProfile in APP console log after useEffect', userProfile);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
 
   const APP_PAGE_ORDER = [
@@ -334,7 +328,7 @@ export default function AppLayout() {
 
       {/* <span>testing app layout</span> */}
       <MainPageContainer id="MainPageContainer">
-        <SideMenu />
+        {userProfile?.isAuthenticated && <SideMenu />}
         {/* <PageButton
           toPath="/schedule"
           //  text={'view schedule'}
@@ -358,8 +352,8 @@ export default function AppLayout() {
               /> */}
 
         <ScrollbarContainer id="scrollbar-container">
-          {/* <ScrollbarXAxisContainer> */}
-          {userProfile?.isAuthenticated && (
+          {/* nav to the left and right */}
+          {/* {userProfile?.isAuthenticated && (
             <>
               <FullScreenContainer className="leftSide">
                 <StyledMainMenuNavButtons to={navigateCarousel(-1)}>
@@ -384,7 +378,7 @@ export default function AppLayout() {
                 </StyledMainMenuNavButtons>
               </FullScreenContainer>
             </>
-          )}
+          )} */}
 
           {/* <InnerPageTransition> */}
           {/* <InnerPageTransition> */}

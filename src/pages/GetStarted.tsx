@@ -1,7 +1,5 @@
 import React from 'react';
-import MainNav from '../ui/nav-ui/MainNav';
 import { baseUrl } from '../../configs';
-import { NavLink } from 'react-router-dom';
 import { InnerPageContainer, InnerWrapper, PageContainer } from '../styles/UtilStyles';
 
 export default function GetStarted() {

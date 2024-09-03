@@ -8,105 +8,82 @@ import InfoButtonForModal from '../InfoButtonForModal';
 import { ZodUndefined } from 'zod';
 
 const StyledSideMenu = styled.div`
-z-index: 9;
+  --image-size: 2.5rem;
+  --font-size: 1.25rem;
+
+  z-index: 9;
   display: flex;
-  /* height: 20px; */
+
+  padding-inline: 1rem;
   flex-direction: column;
-  width: auto;
+  /* width: auto; */
   min-width: 200px;
   background-color: white;
-  /* position: fixed; */
+
   margin-top: 10vh;
 
-  /* height: 70vh; */
-  /* width: 100vw; */
-  /* 
-  left: 0;
-  top: 0; */
-  /* flex-direction: column; */
-  /* justify-content: center;
-  align-items: center; */
   color: white;
-  font-size: 1rem;
-  /* z-index: 1000000; */
-  /* background-color: red; */
-  /* width: 200px; */
+  font-size: var(--font-size);
 `;
 
-// export const SideMenuContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   padding-inline: 2rem;
-//   background-color: blue;
-//   width: auto; /* Allow width to be determined by content */
-// `;
+
+
+export const StyledSideMenuImage = styled.img`
+  height: var(--image-size);
+  /* width: 20px; */
+  /* aspect-ratio: 1/1; */
+  /* height: clamp(1.5rem, 4vw, 5rem); */
+  object-fit: scale-down;
+  transition: height 0.2 ease-in-out;
+`;
 
 export const StyledSideMenuButtons = styled(NavLink)`
-
-  display: flex;
+  /* padding: 0.5rem 1rem; */
+  display: grid;
   align-items: center;
+
+  grid-template-columns: 1fr 1.5fr;
+  
+  gap: 5%;
   /* justify-content: center; */
-  width: 110%;
+  height: calc(var(--image-size) * 1.5);
+  width: 100%;
   /* padding: 0.5rem; */
-  border: 0.341px solid #000;
+  border-bottom: 0.341px solid #000;
   color: var(--clr-text-2);
-  transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     cursor: pointer;
-    transform: scale(1.02);
     filter: brightness(105%);
+    & > * {
+      transform: scale(1.02);
+    }
   }
 
   &.active {
-    transform: scale(1.1);
     filter: brightness(114%);
     box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1);
     z-index: 11;
+
+   p {
+      transform: scale(1.02);
+      transition: all 0.2s ease-in-out;
+    }
+
+     ${StyledSideMenuImage} {
+      height: calc(var(--image-size) * 1.02);
+      transition: all 0.2s ease-in-out;
+    }
   }
 
   p {
-    margin: 0; 
+    margin: 0;
     padding: 0;
-    flex-grow: 1; 
-    flex-shrink: 1; /* Allow the text to shrink if necessary */
+    /* flex-grow: 1;
+    flex-shrink: 1;  */
     word-wrap: break-word; /* Ensure long text wraps */
   }
-`;
-
-export const StyledATag = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 0.341px solid #000;
-  /* letter-spacing: 0.01794rem; */
-  color: var(--clr-text-2);
-  transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
-
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.02);
-    filter: brightness(105%);
-  }
-
-  &:active {
-    transform: scale(0.98);
-    filter: brightness(114%);
-    box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1);
-  }
-
-  @media (min-width: 800px) {
-    /* width: clamp(15rem, 30vw, 30rem); */
-  }
-`;
-
-export const StyledSideMenuImage = styled.img`
-
-  aspect-ratio: 1/1;
-  /* height: clamp(1.5rem, 4vw, 5rem); */
-  object-fit: scale-down;
 `;
 
 // export const StyledInfoButtonContainer = styled.div`
@@ -130,17 +107,18 @@ const sideMenuInfo = [
     alt: 'sample',
   },
   {
-    name: 'schedule',
-    to: '/schedule',
-    src: '/images/schedule.png',
-    alt: 'schedule',
-  },
-  {
     name: 'charts',
     to: '/charts',
     src: '/images/wave-graph-1.png',
     alt: 'charts',
   },
+  {
+    name: 'schedule',
+    to: '/schedule',
+    src: '/images/schedule.png',
+    alt: 'schedule',
+  },
+
   { name: 'docs', to: '/docs', src: '/images/document-1.png', alt: 'docs' },
 ];
 
@@ -159,10 +137,13 @@ export default function SideMenu() {
             key={i}
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
-            <StyledImage
+            <StyledSideMenuImage
               //   className={className}
               src={singleMenu.src}
               alt={singleMenu.alt}
+              style={{
+                transform: `scale(${singleMenu.alt === 'sample' ? 0.7 : 1})`,
+              }}
               // style={{ backgroundColor: 'rgba(var(--clr-accent-1), .2)' }}
               //   style={imgStyleOverride}
               //   $fetchpriority={$fetchpriority}
