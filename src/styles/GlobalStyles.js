@@ -134,7 +134,7 @@ ${
 --font-sans-serif: 'Inter', sans-serif;
 --font-serif: 'Playfair Display', serif;
 
-//DARKMODE
+// DARKMODE
        /* Colors */
   --clr-primary-0: white;
   --clr-primary-50: #f8fafc;
@@ -152,6 +152,9 @@ ${
 
   --clr-table-100: 38, 34, 49;  // less dark black - table #262231
   --clr-table-200: 18, 17, 24;  // dark black - background of Page #121118
+  --clr-table-300: 242, 246, 252;  // highligted row 
+  --clr-table-400: 242, 246, 252;  // table header
+  --clr-table-500: 213, 219, 226;  // table row line
 
 //DARKMODE
   --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
@@ -180,6 +183,56 @@ ${
 
    ${'' /* possible light-mode test */}
 
+
+// LIGHT MODE
+       /* Colors */
+       --clr-primary-0: white;
+  --clr-primary-50: #f8fafc;
+  --clr-primary-100: #f1f5f9;
+  --clr-primary-200: #e2e8f0;
+  --clr-primary-300: hsl(213, 27%, 84%);
+  --clr-primary-400: #94a3b8;
+  --clr-primary-500: #64748b;
+  --clr-primary-600: #475569;
+  --clr-primary-700: #334155;
+  --clr-primary-800: #f1f5f9; // app background
+  --clr-primary-900: 246, 248, 252; // navbar
+  --clr-primary-950: 246, 248, 252;  //darker black - navbar expanded
+
+
+  --clr-table-100: 255, 255, 255;
+  --clr-table-200:  255, 255, 255;  // 
+; 
+  --clr-table-300: 242, 246, 252;  // highligted row 
+  --clr-table-400: 242, 246, 252;  // table header
+  --clr-table-500: 213, 219, 226;  // table row line
+
+// LIGHT MODE
+  --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
+  --clr-accent-1: 250, 247, 240; /* menu button #FAF7F0 */ 
+  --clr-accent-2: 225, 246, 242; /* #E1F6F2*/
+  --clr-accent-3: 231, 241, 220; /* #E7F1DC */
+  --clr-accent-4: 228, 241, 238;/* #E4F1EE menu button */
+  --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
+  --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
+  --clr-accent-7: #D4F27C; // selected table header
+  --clr-accent-8: #F68086; 
+  --clr-accent-9: #10e7dc;
+  --clr-accent-10: #fde5d4;
+  --clr-accent-11: #7C9DF2;
+  --clr-accent-12: #FBC7CA;
+  --clr-accent-13: #fff5e4;
+  --clr-accent-14: #C8C0B8; 
+
+  --clr-text-1: #2d2d2e; // LIGHT MODE
+  --clr-text-2: #3c4043;
+  --clr-text-3: #47494B;  // table text
+  --clr-text-4: #5f6368;  // 
+
+  --clr-text-4: black;
+  --clr-text-5: 112, 128, 144; //#708090
+  --clr-text-6: black;
+   // LIGHT MODE END
  }
 
    ${'' /* lightmode test end */}

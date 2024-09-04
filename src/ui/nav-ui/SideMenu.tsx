@@ -11,22 +11,28 @@ const StyledSideMenu = styled.div`
   --image-size: 2.5rem;
   --font-size: 1.25rem;
 
-  z-index: 9;
-  display: flex;
-
-  padding-inline: 1rem;
-  flex-direction: column;
-  /* width: auto; */
-  min-width: 200px;
+  z-index: 11;
   background-color: white;
+  bottom: 0;
 
-  margin-top: 10vh;
+  position: fixed;
+  min-width: 100vw;
+  /* height: 200px; */
+  display: flex;
+  flex-direction: row;
 
-  color: white;
-  font-size: var(--font-size);
+  @media (min-width: 850px) {
+    position: static;
+    padding-inline: 1rem;
+    flex-direction: column;
+    /* width: auto; */
+    min-width: 200px;
+    margin-top: 10vh;
+
+    color: white;
+    font-size: var(--font-size);
+  }
 `;
-
-
 
 export const StyledSideMenuImage = styled.img`
   height: var(--image-size);
@@ -40,10 +46,11 @@ export const StyledSideMenuImage = styled.img`
 export const StyledSideMenuButtons = styled(NavLink)`
   /* padding: 0.5rem 1rem; */
   display: grid;
-  align-items: center;
+  place-items: center;
+  opacity: 0.85;
 
-  grid-template-columns: 1fr 1.5fr;
-  
+  grid-template-columns: 1fr;
+
   gap: 5%;
   /* justify-content: center; */
   height: calc(var(--image-size) * 1.5);
@@ -53,7 +60,22 @@ export const StyledSideMenuButtons = styled(NavLink)`
   color: var(--clr-text-2);
   transition: all 0.2s ease-in-out;
 
+  p {
+    display: none;
+    padding: 0;
+    margin: 0;
+
+    @media (min-width: 850px) {
+      display: block;
+    }
+  }
+
+  @media (min-width: 850px) {
+    grid-template-columns: 1fr 1.5fr;
+  }
+
   &:hover {
+    opacity: 1;
     cursor: pointer;
     filter: brightness(105%);
     & > * {
@@ -62,27 +84,20 @@ export const StyledSideMenuButtons = styled(NavLink)`
   }
 
   &.active {
+    opacity: 1;
     filter: brightness(114%);
     box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1);
     z-index: 11;
 
-   p {
+    p {
       transform: scale(1.02);
       transition: all 0.2s ease-in-out;
     }
 
-     ${StyledSideMenuImage} {
+    ${StyledSideMenuImage} {
       height: calc(var(--image-size) * 1.02);
       transition: all 0.2s ease-in-out;
     }
-  }
-
-  p {
-    margin: 0;
-    padding: 0;
-    /* flex-grow: 1;
-    flex-shrink: 1;  */
-    word-wrap: break-word; /* Ensure long text wraps */
   }
 `;
 

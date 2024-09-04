@@ -170,7 +170,7 @@ export const ScrollbarContainer = styled.div`
   }
 
   &::-webkit-scrollbar-track {
-    background: black;
+    background: var(--clr-primary-800);
 
     ${'' /* padding: 10px; */}
     margin-top: 10vh;
@@ -218,11 +218,9 @@ export const ScrollbarXAxisContainer = styled.div`
   }
 
   &::-webkit-scrollbar-track {
-    background: black;
+    /* background: rgba(var(--clr-primary-900), 1); */
 
-    ${'' /* padding: 10px; */}
     margin-top: 10vh;
-    ${'' /* border-radius: 9999vw; */}
   }
 
   &::-webkit-scrollbar-thumb {

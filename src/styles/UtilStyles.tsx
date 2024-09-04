@@ -166,7 +166,7 @@ export const PageContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
   &#HomePageContainer {
     min-height: 80%;
   }
@@ -233,7 +233,6 @@ export const StyledForm = styled.form`
   gap: 0.5rem;
   justify-content: center;
   align-items: center;
-  
 
   @media (min-width: 800px) {
   }
@@ -247,7 +246,6 @@ export const InputContainer = styled.div`
   color: white;
   gap: 0.25rem;
   margin-block: 1rem;
-  
 
   &:focus-within label {
     color: rgba(var(--clr-accent-6), 0.8);
@@ -404,17 +402,8 @@ export const Wrapper = styled.div``;
 
 export const TableContainer = styled.div`
   position: relative;
-  /* overflow-x: scroll; */
-  /* background-color: lightblue; */
   margin-block: 1rem;
   width: 100%;
-  
-
-  /* overflow */
-  /* max-height: 80vh;
-  max-width: 100%;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch; */
 
   @media (min-width: 850px) {
     /* width: auto; */
@@ -422,8 +411,10 @@ export const TableContainer = styled.div`
 `;
 
 export const StyledTable = styled.table`
-  /* padding-inline: 2rem; */
-  /* border-radius: 50px; */
+  --table-border-radius: 15px;
+
+  border-radius: var(--table-border-radius);
+
   background-color: rgba(var(--clr-table-100), 1); // #262231
   border-collapse: collapse;
   width: 100%;
@@ -433,8 +424,6 @@ export const StyledTable = styled.table`
 export const Caption = styled.p`
   position: sticky;
   width: 100%;
-  /* display: flex;
-  align-items: center; */
   text-align: center;
   z-index: 10;
   top: 9.8vh;
@@ -444,14 +433,12 @@ export const Caption = styled.p`
   font-size: 1.4rem;
   margin-bottom: 2rem;
   color: var(--clr-text-1);
-  /* background-color: #121118; */
-  /* background-color: rgba(var(--clr-table-100), 1); */
   background-color: rgba(var(--clr-table-200), 1);
   padding-block: 1vh;
   pointer-events: none;
 
   @media (min-width: 850px) {
-    top: 2vh;
+    top: 0vh;
     font-size: 2rem;
     background-color: transparent;
   }
@@ -467,15 +454,13 @@ export const TableHeaderDiv = styled.div`
   font-size: 2rem;
   margin-bottom: 2rem;
   color: var(--clr-text-1);
-  /* background-color: #121118; */
-  /* background-color: rgba(var(--clr-table-100), 1); */
-  background-color: rgba(var(--clr-table-200), 1);
+
   padding-block: 1vh;
   pointer-events: none;
 
   @media (min-width: 850px) {
     top: 2vh;
-    background-color: transparent;
+
   }
 `;
 
@@ -497,7 +482,8 @@ export const MainFilterValue = styled.select``;
 
 export const TableHeader = styled.thead`
   top: 9.7vh; // reference at NavBar styles
-  background-color: black;
+  background-color: rgba(var(--clr-table-400), 1);
+  /* background-color: red; */
 
   @media (min-width: 850px) {
     position: sticky;
@@ -517,7 +503,8 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
   /* line-height: .5; */
 
   padding: 0.5rem;
-  font-weight: 600;
+  font-weight: 500;
+  line-height: 1;
   font-size: 1.1rem;
   /* padding: 1rem 2rem; */
   color: rgba(var(--clr-accent-6), 0.8);
@@ -570,9 +557,32 @@ export const TableHeaderCellInnerContainer = styled.div`
 `;
 
 export const TableRow = styled.tr`
-  background-color: hsl(0, 0%, 0%, 0.5);
+  /* &:not(:first-of-type) { */
+  border-bottom: 1px solid rgba(var(--clr-table-500), 1);
+  /* } */
+
+  /* &:first-of-type {
+    border-bottom: none;
+  } */
+  /* background-color: hsl(0, 0%, 0%, 0.01); */
   &:nth-of-type(2n) {
-    background-color: hsl(0, 0%, 0%, 0.2);
+    /* background-color: hsl(0, 0%, 0%, 0.03); */
+  }
+
+  &:first-child th:first-child {
+    border-top-left-radius: 15px;
+  }
+
+  &:first-child th:last-child {
+    border-top-right-radius: 15px;
+  }
+
+  &:last-child td:first-child {
+    border-bottom-left-radius: 15px;
+  }
+
+  &:last-child td:last-child {
+    border-bottom-right-radius: 15px;
   }
 
   &:hover {
@@ -583,6 +593,7 @@ export const TableRow = styled.tr`
 `;
 
 export const TableHeaderRow = styled(TableRow)`
+  border-bottom: none;
   display: none;
 
   @media (min-width: 850px) {
@@ -662,7 +673,7 @@ export const TableDataCell = styled.td`
 
   &.clickableId {
     &:active {
-      font-weight:400;
+      font-weight: 400;
     }
   }
 
@@ -969,9 +980,9 @@ export const StyledBookmark = styled.p`
 // background image entire page
 
 export const StyledBackgroundImg = styled.img`
-position: fixed;
-min-width: 100%;
-height: 100%;
-object-fit: cover; 
-z-index: -1;
-`
+  position: fixed;
+  min-width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+`;

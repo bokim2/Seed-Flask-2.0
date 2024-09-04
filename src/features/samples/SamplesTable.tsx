@@ -173,9 +173,7 @@ export default function SamplesTable({ samples }) {
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
-          //           flushSync(()=> {
-          // setEditedForm(prev => ({...prev,completed: prev.completed === 'true' ? false : true}))
-          //           }))
+
           console.log('editedForm in samples onsubmit', editedForm);
           handleEditFormSubmit(
             e,

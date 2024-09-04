@@ -32,7 +32,7 @@ const StyledMainNav = styled.div<StyledMainNav>`
   height: 100%;
   /* height: 10vh; */
 
-  opacity: ${(props) => (props.$isScrolled ? 1 : 0.8)};
+  opacity: ${(props) => (props.$isScrolled ? 1 : 0.99)};
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -73,12 +73,6 @@ const StyledTitle = styled.h1`
     
   }
 
-  /* &:active {
-    color:#b6c7f1;
-  }
-  &:focus {
-    color:#b6c7f1;
-  } */
 
   @media (min-width: 800px) {
     font-size: clamp(2rem, 3vw, 3rem);
@@ -95,11 +89,9 @@ export const StyledUser = styled.img`
   fill: var(--clr-accent-0);
   opacity: 1;
   z-index: 100;
-  /* max-width: 50%; */
   padding: 0;
   margin: 0;
   height: 70%;
-  /* width: clamp(2rem, 4vw, 4rem); */
   border-radius: 50%;
 `;
 

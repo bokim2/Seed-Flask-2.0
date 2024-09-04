@@ -153,7 +153,7 @@ export default function CellbanksTable({
         'date_timestamptz'
       )
 
-  //state for multisearch
+  // state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);

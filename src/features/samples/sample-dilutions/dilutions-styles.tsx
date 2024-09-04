@@ -51,7 +51,7 @@ export const OuterContainer = styled.div`
   gap: 0.25rem;
   font-size: 1.2rem;
   font-weight: 600;
-  color: white;
+  color: var(-clr-text-2);
   /* background-color: rgba(var(--clr-accent-5), 0.2); */
   background-color:rgba(203, 213, 225,.1);
   /* filter: brightness(1.5); */
@@ -178,7 +178,7 @@ export const StyledH2 = styled.h2`
 font-family: var(--font-serif);
 letter-spacing: 0.03rem;
   padding: 0.5rem;
-  color: white;
+  color: var(-clr-text-3);
 `;
 
 export const StyledSingleDilution = styled.div`
