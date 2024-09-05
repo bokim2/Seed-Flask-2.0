@@ -17,6 +17,7 @@ import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValida
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 import { useMultiInputState } from '../hooks/hooks';
+import PageHeader from '../ui/PageHeader';
 
 export default function CellbankPage() {
   const {
@@ -55,6 +56,7 @@ export default function CellbankPage() {
       <LoaderWrapper>
         {(isLoading || isFetching) && <LoaderBar />}
       </LoaderWrapper>
+        {/* <PageHeader>Cell Banks</PageHeader> */}
       <InnerPageContainer id="CellbankInnerPageContainer">
         {error && <ErrorMessage error={error} />}
         <Button

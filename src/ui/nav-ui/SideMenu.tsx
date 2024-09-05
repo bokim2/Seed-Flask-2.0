@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import classes from './styles.module.css';
-import { StyledNavLink, StyledNavList } from '../../styles/UtilStyles';
-import MainMenuButton, { StyledImage } from '../MainMenuButton';
+
 import { NavLink, Outlet } from 'react-router-dom';
-import InfoButtonForModal from '../InfoButtonForModal';
-import { ZodUndefined } from 'zod';
+
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import Bookmarks from '../Bookmarks';
 
 const StyledSideMenu = styled.div`
   --image-size: 2.5rem;
@@ -16,21 +16,32 @@ const StyledSideMenu = styled.div`
   bottom: 0;
 
   position: fixed;
-  min-width: 100vw;
+  width: 100vw;
+  /* width: min(200px, 10vw); */
+
   /* height: 200px; */
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   @media (min-width: 850px) {
     position: static;
     padding-inline: 1rem;
     flex-direction: column;
     /* width: auto; */
-    min-width: 200px;
-    margin-top: 10vh;
+    width: min(250px, 15vw);
+    margin-top: var(--nav-bar-height, 10vh);
 
     color: white;
     font-size: var(--font-size);
+  }
+`;
+
+const InnerMenuContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  @media (min-width: 850px) {
+    flex-direction: column;
   }
 `;
 
@@ -138,6 +149,10 @@ const sideMenuInfo = [
 ];
 
 export default function SideMenu() {
+  const bookmarkedCellbanks = useSelector(
+    (state: RootState) => state.bookmarks.cellbank_bookmark
+  );
+
   return (
     <StyledSideMenu id="side-menu">
       {/* info button */}
@@ -145,28 +160,30 @@ export default function SideMenu() {
       {/* side menu */}
       {/* <SideMenuContainer> */}
       {/* <StyledInfoButtonContainer></StyledInfoButtonContainer> */}
-      {sideMenuInfo.map((singleMenu, i) => {
-        return (
-          <StyledSideMenuButtons
-            to={singleMenu.to}
-            key={i}
-            className={({ isActive }) => (isActive ? 'active' : '')}
-          >
-            <StyledSideMenuImage
-              //   className={className}
-              src={singleMenu.src}
-              alt={singleMenu.alt}
-              style={{
-                transform: `scale(${singleMenu.alt === 'sample' ? 0.7 : 1})`,
-              }}
-              // style={{ backgroundColor: 'rgba(var(--clr-accent-1), .2)' }}
-              //   style={imgStyleOverride}
-              //   $fetchpriority={$fetchpriority}
-            />
-            <p>{singleMenu.name}</p>
-          </StyledSideMenuButtons>
-        );
-      })}
+      <InnerMenuContainer>
+        {sideMenuInfo.map((singleMenu, i) => {
+          return (
+            <StyledSideMenuButtons
+              to={singleMenu.to}
+              key={i}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+              <StyledSideMenuImage
+                //   className={className}
+                src={singleMenu.src}
+                alt={singleMenu.alt}
+                style={{
+                  transform: `scale(${singleMenu.alt === 'sample' ? 0.7 : 1})`,
+                }}
+                // style={{ backgroundColor: 'rgba(var(--clr-accent-1), .2)' }}
+                //   style={imgStyleOverride}
+                //   $fetchpriority={$fetchpriority}
+              />
+              <p>{singleMenu.name}</p>
+            </StyledSideMenuButtons>
+          );
+        })}
+      </InnerMenuContainer>
       {/* <StyledATag
           href="https://www.rediscope.com"
           target="_blank"
@@ -182,6 +199,11 @@ export default function SideMenu() {
           />
         </StyledATag> */}
       {/* </SideMenuContainer> */}
+
+      <Bookmarks
+        bookmarksArray={bookmarkedCellbanks}
+        bookmarksTitle={'Cell Banks'}
+      />
     </StyledSideMenu>
   );
 }

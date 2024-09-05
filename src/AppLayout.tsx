@@ -1,4 +1,4 @@
-import {  Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import MainNav from './ui/nav-ui/MainNav';
 import styled from 'styled-components';
 import SideMenu from './ui/nav-ui/SideMenu';
@@ -47,7 +47,10 @@ const NavBar = styled.div`
   margin: 0;
   width: 100%;
   z-index: 10;
-  height: 10vh; // important for nav and table caption to be positioned correctly
+  height: var(
+    --nav-bar-height,
+    10vh
+  ); // important for nav and table caption to be positioned correctly
   display: flex;
   align-items: center;
   justify-content: center;
@@ -173,7 +176,7 @@ export const ScrollbarContainer = styled.div`
     background: var(--clr-primary-800);
 
     ${'' /* padding: 10px; */}
-    margin-top: 10vh;
+    margin-top: var(--nav-bar-height, 10vh);
     ${'' /* border-radius: 9999vw; */}
   }
 
@@ -220,7 +223,7 @@ export const ScrollbarXAxisContainer = styled.div`
   &::-webkit-scrollbar-track {
     /* background: rgba(var(--clr-primary-900), 1); */
 
-    margin-top: 10vh;
+    margin-top: var(--nav-bar-height, 10vh);
   }
 
   &::-webkit-scrollbar-thumb {
@@ -318,74 +321,17 @@ export default function AppLayout() {
           // handleToggle={handleNavToggle}
           // openUser={openUser}
           userProfile={userProfile}
-          // setUserProfile={setUserProfile}
         />
       </NavBar>
 
       {/* <LoaderBar /> */}
 
-      {/* <span>testing app layout</span> */}
       <MainPageContainer id="MainPageContainer">
         {userProfile?.isAuthenticated && <SideMenu />}
-        {/* <PageButton
-          toPath="/schedule"
-          //  text={'view schedule'}
-          backgroundColor="#EAE0DA"
-          imgUrl="images/schedule.png"
-          imgAlt="calendar"
-          // positionElement={{ left: '30%' }}
-          // imgStyleOverride={{ borderRadius: '0', width: '60%' }}
-        /> */}
-
-        {/* <PageButton src="images/left-arrow.png" alt="prev page" /> */}
-
-        {/* <NavCircularButton
-               toPath="/schedule"
-               //  text={'view schedule'}
-               backgroundColor="#EAE0DA"
-               imgUrl="images/schedule.png"
-               imgAlt="calendar"
-               // positionElement={{ left: '30%' }}
-               imgStyleOverride={{ height: '1rem', justifyContent: 'center', alignItems: 'center' }}
-              /> */}
 
         <ScrollbarContainer id="scrollbar-container">
-          {/* nav to the left and right */}
-          {/* {userProfile?.isAuthenticated && (
-            <>
-              <FullScreenContainer className="leftSide">
-                <StyledMainMenuNavButtons to={navigateCarousel(-1)}>
-                  <StyledPageNavImage
-                    src="/images/left-arrow.png"
-                    alt="left arrow"
-                    $fetchpriority="high"
-                  />
-                </StyledMainMenuNavButtons>
-              </FullScreenContainer>
-
-              <FullScreenContainer className="rightSide">
-                <StyledMainMenuNavButtons
-                  to={navigateCarousel(1)}
-                  className="rightSide"
-                >
-                  <StyledPageNavImage
-                    src="/images/right-arrow.png"
-                    alt="right arrow"
-                    $fetchpriority="high"
-                  />
-                </StyledMainMenuNavButtons>
-              </FullScreenContainer>
-            </>
-          )} */}
-
-          {/* <InnerPageTransition> */}
-          {/* <InnerPageTransition> */}
           <Outlet />
-          {/* </InnerPageTransition> */}
-          {/* </InnerPageTransition> */}
-          {/* </ScrollbarXAxisContainer> */}
         </ScrollbarContainer>
-        {/* <Footer /> */}
       </MainPageContainer>
 
       {/* </StyledAppLayout> */}

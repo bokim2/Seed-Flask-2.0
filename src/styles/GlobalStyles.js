@@ -164,7 +164,7 @@ ${
   --clr-accent-4: 228, 241, 238;/* #E4F1EE menu button */
   --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
   --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
-  --clr-accent-7: #D4F27C; // selected table header
+  --clr-accent-7: #D4F27C; // selected table header text
   --clr-accent-8: #F68086; 
   --clr-accent-9: #10e7dc;
   --clr-accent-10: #fde5d4;
@@ -204,7 +204,7 @@ ${
   --clr-table-200:  255, 255, 255;  // 
 ; 
   --clr-table-300: 242, 246, 252;  // highligted row 
-  --clr-table-400: 242, 246, 252;  // table header
+  --clr-table-400: 246, 248, 250;  // table header
   --clr-table-500: 213, 219, 226;  // table row line
 
 // LIGHT MODE
@@ -215,8 +215,8 @@ ${
   --clr-accent-4: 228, 241, 238;/* #E4F1EE menu button */
   --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
   --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
-  --clr-accent-7: #D4F27C; // selected table header
-  --clr-accent-8: #F68086; 
+  --clr-accent-7: #030DB5; // selected table header
+  --clr-accent-8: #F68086; // bookmark color
   --clr-accent-9: #10e7dc;
   --clr-accent-10: #fde5d4;
   --clr-accent-11: #7C9DF2;
@@ -228,14 +228,24 @@ ${
   --clr-text-2: #3c4043;
   --clr-text-3: #47494B;  // table text
   --clr-text-4: #5f6368;  // 
+  --clr-text-5: #030DB5;  // highlight text color
 
   --clr-text-4: black;
   --clr-text-5: 112, 128, 144; //#708090
   --clr-text-6: black;
    // LIGHT MODE END
+
+   ${'' /* LAYOUT SIZES */}
+   --nav-bar-height: 10vh;
+
+   --border-radius-small: 5px;
  }
 
-   ${'' /* lightmode test end */}
+ 
+
+
+
+
   
    a {
      font-weight: 500;

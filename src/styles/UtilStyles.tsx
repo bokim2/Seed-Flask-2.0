@@ -157,12 +157,13 @@ export const StyledNavLink = styled(NavLink)`
 // Main page styles
 
 export const PageContainer = styled.section`
-  margin-top: max(12vh, 5rem);
+  /* margin-top: max(12vh, 5rem); */
+  position: relative;
+  margin-top: var(--nav-bar-height, 10vh);
 
   justify-content: center;
 
   width: 100%;
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -183,7 +184,7 @@ export const LoaderWrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  margin-top: 10vh;
+  margin-top: var(--nav-bar-height, 10vh);
   width: 100%;
   z-index: 100;
 `;
@@ -447,7 +448,7 @@ export const Caption = styled.p`
 export const TableHeaderDiv = styled.div`
   position: sticky;
   z-index: 10;
-  top: 10vh;
+  top: var(--nav-bar-height, 10vh);
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
@@ -507,7 +508,7 @@ export const TableHeaderCell = styled.th<TTableHeaderCell>`
   line-height: 1;
   font-size: 1.1rem;
   /* padding: 1rem 2rem; */
-  color: rgba(var(--clr-accent-6), 0.8);
+  color: rgba(var(--clr-text-2), 0.8);
 
   width: ${(props) => props.width || 'auto'};
 
@@ -961,7 +962,8 @@ export const FullScreenContainer = styled.div`
 
 export const StyledBookmarkContainer = styled.div`
   padding: 1rem;
-
+  color: var(--clr-text-2);
+/* background-color: red; */
   @media (min-width: 850px) {
     font-size: 1.5rem;
     padding: 2rem 0.5rem;
