@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledBookmark, StyledBookmarkContainer } from '../styles/UtilStyles';
+import { StyledBookmarkContainer } from '../styles/UtilStyles';
 import styled from 'styled-components';
 
 type TBookmarks = {
@@ -10,11 +10,11 @@ type TBookmarks = {
 };
 
 const SideMenuBookmarksContainer = styled(StyledBookmarkContainer)<{
-  bgColor?: string;
+  $bgColor?: string;
 }>`
   /* font-size: 0.9rem !important; */
   display: none;
-  background-color: ${({ bgColor }) => bgColor || 'lightgrey'};
+  background-color: ${({ $bgColor }) => $bgColor || 'lightgrey'};
   border-radius: var(--border-radius-small, 5px);
 
   @media (min-width: 850px) {
@@ -31,9 +31,9 @@ const BookmarksContainer = styled.div`
   gap: 0.25rem;
 `;
 
-const Bookmark = styled.div<{ bgColor?: string }>`
+const Bookmark = styled.div<{ $bgColor?: string }>`
 --border-radius-btn: 7.5px;
-  background-color: ${({ bgColor }) => bgColor || 'var(--clr-accent-8)'};
+  background-color: ${({ $bgColor }) => $bgColor || 'var(--clr-accent-8)'};
   display: grid;
   place-items: center;
   padding: 0rem 0.25rem;
@@ -53,16 +53,18 @@ export default function Bookmarks({
   containerBgColor,
   bookmarkBgColor,
 }: TBookmarks) {
+
+    const lastBookmarked = bookmarksArray[bookmarksArray.length -1]
   return (
-    <SideMenuBookmarksContainer bgColor={containerBgColor}>
+    <SideMenuBookmarksContainer $bgColor={containerBgColor}>
       <BookmarksContainer >
         <BookmarkTitle>{bookmarksTitle}: </BookmarkTitle>
-        {Array.isArray(bookmarksTitle) && bookmarksArray.join(', ')}
+        {/* {Array.isArray(bookmarksTitle) && bookmarksArray.join(', ')} */}
 
-        {bookmarksArray.map((bookmark, i) => {
+        {[...bookmarksArray].sort((a, b) => a - b).map((bookmark, i) => {
           return (
-            <Bookmark bgColor={bookmarkBgColor}>
-              <BookmarkText>{bookmark} </BookmarkText>
+            <Bookmark key={i} $bgColor={bookmark == lastBookmarked ? 'pink' : bookmarkBgColor}>
+              <BookmarkText style={{'fontWeight': bookmark == lastBookmarked ? 700 : 400}}>{bookmark}</BookmarkText>
             </Bookmark>
           );
         })}

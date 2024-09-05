@@ -23,7 +23,7 @@ const bookmarksSlice = createSlice({
     toggleCellbankBookmark(state, action: PayloadAction<number>) {
       if (!state.cellbank_bookmark.includes(action.payload)) {
         state.cellbank_bookmark.push(action.payload);
-        state.cellbank_bookmark.sort((a, b) => a - b);
+        // state.cellbank_bookmark.sort((a, b) => a - b);
       } else {
         state.cellbank_bookmark = state.cellbank_bookmark.filter(
           (id) => id !== action.payload
@@ -37,7 +37,7 @@ const bookmarksSlice = createSlice({
     toggleFlaskBookmark(state, action: PayloadAction<number>) {
       if (!state.flask_bookmark.includes(action.payload)) {
         state.flask_bookmark.push(action.payload)
-        state.flask_bookmark.sort((a, b) => a - b);
+        // state.flask_bookmark.sort((a, b) => a - b);
       } else {
         state.flask_bookmark = state.flask_bookmark.filter(
           (id) => id !== action.payload
@@ -49,7 +49,7 @@ const bookmarksSlice = createSlice({
     },
     setSearchedFlasksList(state, action: PayloadAction<number[]>) {
       state.searched_flasks_list = action.payload;
-      state.searched_flasks_list.sort((a, b) => a - b);
+      // state.searched_flasks_list.sort((a, b) => a - b);
     },
     clearSearchedFlasksList(state) {
       state.searched_flasks_list = [];

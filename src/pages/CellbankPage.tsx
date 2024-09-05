@@ -69,13 +69,13 @@ export default function CellbankPage() {
         </Button>
 
         {/* <h3>{JSON.stringify(cellbankBookmarks)}</h3> */}
-        <StyledBookmarkContainer>
+        {/* <StyledBookmarkContainer>
           <StyledBookmark>
             cellbank bookmarks:{' '}
             {Array.isArray(bookmarkedCellbanks) &&
               bookmarkedCellbanks.join(', ')}
           </StyledBookmark>
-        </StyledBookmarkContainer>
+        </StyledBookmarkContainer> */}
 
         <CellbanksMultiInputForm />
 

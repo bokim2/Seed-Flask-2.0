@@ -153,6 +153,10 @@ export default function SideMenu() {
     (state: RootState) => state.bookmarks.cellbank_bookmark
   );
 
+  const bookmarkedFlasks = useSelector(
+    (state: RootState) => state.bookmarks.flask_bookmark
+  );
+
   return (
     <StyledSideMenu id="side-menu">
       {/* info button */}
@@ -203,6 +207,12 @@ export default function SideMenu() {
       <Bookmarks
         bookmarksArray={bookmarkedCellbanks}
         bookmarksTitle={'Cell Banks'}
+      />
+      <Bookmarks
+        bookmarksArray={bookmarkedFlasks}
+        bookmarksTitle={'Flasks'}
+        // containerBgColor='red'
+        // bookmarkBgColor='lightgrey'
       />
     </StyledSideMenu>
   );

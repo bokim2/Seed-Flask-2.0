@@ -52,7 +52,7 @@ export default function FlaskPage() {
 
         {/* <h3>flask bookmarks: {JSON.stringify(flaskBookmarks)}</h3>
         <h3>cellbank bookmarks: {JSON.stringify(cellbankBookmarks)}</h3> */}
-        <StyledBookmarkContainer>
+        {/* <StyledBookmarkContainer>
           <StyledBookmark>
             flasks bookmarks:{' '}
             {Array.isArray(bookmarkedFlasks) && bookmarkedFlasks.join(', ')}
@@ -62,7 +62,7 @@ export default function FlaskPage() {
             {Array.isArray(bookmarkedCellbanks) &&
               bookmarkedCellbanks.join(', ')}
           </StyledBookmark>
-        </StyledBookmarkContainer>
+        </StyledBookmarkContainer> */}
 
         <FlasksMultiInputForm />
         {flasksAll && flasksAll.length > 0 && !isLoading && (
