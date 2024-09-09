@@ -3,7 +3,6 @@ import {
   InnerPageContainer,
   LoaderWrapper,
   PageContainer,
-  Wrapper,
 } from '../styles/UtilStyles';
 import { baseUrl } from '../../configs';
 import SamplesTable from '../features/samples/SamplesTable';
