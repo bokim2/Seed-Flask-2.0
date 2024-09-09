@@ -92,7 +92,7 @@ export default function CellbanksRow({
             }
           }}
         >
-          <Button $size={'small'}>Edit</Button>
+          <Button $size={'xsmall'}>Edit</Button>
         </TableDataCell>
       </PreviousDataRow>
 

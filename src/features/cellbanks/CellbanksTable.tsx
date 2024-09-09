@@ -186,9 +186,9 @@ export default function CellbanksTable({
       <Button
         type="button"
         onClick={() => setShowSearchRow((prev) => !prev)}
-        $size={'small'}
+        $size={'xsmall'}
       >
-        Open Search
+        Search
       </Button>
 
       {/* Edit row form */}
@@ -224,9 +224,9 @@ export default function CellbanksTable({
                     type="button"
                     $variation="special"
                     onClick={() => setShowSearchRow((prev) => !prev)}
-                    $size={'small'}
+                    $size={'xsmall'}
                   >
-                    {!showSearchRow ? 'Open Search' : 'Close Search'}
+                    {!showSearchRow ? 'Search' : 'Close'}
                   </Button>
                 </TableHeaderCell>
               </TableHeaderRow>

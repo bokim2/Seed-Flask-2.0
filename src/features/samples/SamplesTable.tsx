@@ -162,13 +162,14 @@ export default function SamplesTable({ samples }) {
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
 
-      <Button
+      {/* <Button
         type="button"
+        $variation="special"
         onClick={() => setShowSearchRow((prev) => !prev)}
-        $size={'small'}
+        $size={'xsmall'}
       >
-        Open Search
-      </Button>
+        Search
+      </Button> */}
 
       <StyledForm
         onSubmit={(e) => {
@@ -200,10 +201,11 @@ export default function SamplesTable({ samples }) {
                   {(
                     <Button
                     type="button"
+                    $variation="special"
                     onClick={() => setShowSearchRow((prev) => !prev)}
-                    $size={'small'}
+                    $size={'xsmall'}
                     >
-                      Open Search
+                      Search
                     </Button>
                   )}
                 </TableHeaderCell>

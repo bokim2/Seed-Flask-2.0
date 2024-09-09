@@ -69,7 +69,7 @@ export default function SamplesRow({
             }
           }}
         >
-          <Button $size={'small'}>Edit</Button>
+          <Button $size={'xsmall'}>Edit</Button>
         </TableDataCell>
       </PreviousDataRow>
 

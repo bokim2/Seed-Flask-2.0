@@ -187,7 +187,7 @@ export default function SchedulesTable({
         onClick={() => setShowSearchRow((prev) => !prev)}
         $size={'small'}
       >
-        Open Search
+        Search
       </Button>
 
       {/* Edit row form */}

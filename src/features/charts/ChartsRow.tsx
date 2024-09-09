@@ -78,7 +78,7 @@ export default function ChartsRow({
         </TableDataCell>
         <TableDataCell data-cell="username">{username}</TableDataCell>
         <TableDataCell data-cell="bookmark">
-          <Button $size={'small'}>bookmark</Button>
+          <Button $size={'xsmall'}>bookmark</Button>
         </TableDataCell>
 
         {toggleCellbankData && (

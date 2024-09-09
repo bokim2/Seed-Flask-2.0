@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from './hooks/hooks';
 import { TuserProfile } from './redux/slices/userSlice';
 
 const StyledAppLayout = styled.div`
-  flex: 1;
+  /* flex: 1; */
   position: relative;
   display: flex;
   flex-direction: column;

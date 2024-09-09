@@ -239,6 +239,11 @@ ${
    --nav-bar-height: 10vh;
 
    --border-radius-small: 5px;
+
+
+${'' /* TABLE STYLES */}
+   --table-header-cell-font-size: .9rem;
+   --table-cell-font-size: .9rem;
  }
 
  

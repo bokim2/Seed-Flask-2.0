@@ -281,9 +281,9 @@ TFlasksTable) {
                       type="button"
                       $variation="special"
                       onClick={() => setShowSearchRow((prev) => !prev)}
-                      $size={'small'}
+                      $size={'xsmall'}
                     >
-                      {!showSearchRow ? 'Open Search' : 'Close Search'}
+                      {!showSearchRow ? 'Search' : 'Close'}
                     </Button>
                   )}
                 </TableHeaderCell>

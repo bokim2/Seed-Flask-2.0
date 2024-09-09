@@ -404,7 +404,7 @@ export const Wrapper = styled.div``;
 export const TableContainer = styled.div`
   position: relative;
   margin-block: 1rem;
-  width: 100%;
+  /* width: 100%; */
 
   @media (min-width: 850px) {
     /* width: auto; */
@@ -452,7 +452,7 @@ export const TableHeaderDiv = styled.div`
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
-  font-size: 2rem;
+  /* font-size: 1rem; */
   margin-bottom: 2rem;
   color: var(--clr-text-1);
 
@@ -461,7 +461,6 @@ export const TableHeaderDiv = styled.div`
 
   @media (min-width: 850px) {
     top: 2vh;
-
   }
 `;
 
@@ -482,8 +481,9 @@ export const MainFilterSelectorOption = styled.option``;
 export const MainFilterValue = styled.select``;
 
 export const TableHeader = styled.thead`
+
   top: 9.7vh; // reference at NavBar styles
-  background-color: rgba(var(--clr-table-400), 1);
+
   /* background-color: red; */
 
   @media (min-width: 850px) {
@@ -497,16 +497,17 @@ export const TableHeader = styled.thead`
 // };
 
 export const TableHeaderCell = styled.th<TTableHeaderCell>`
-  /* display: flex; */
+  border: 1px solid rgba(var(--clr-table-500), 1);
+  background-color: rgba(var(--clr-table-400), .5);
 
   /* font-family: var(--font-serif); */
   /* background-color: orange; */
   /* line-height: .5; */
 
-  padding: 0.5rem;
+  padding: 0.15rem;
   font-weight: 500;
   line-height: 1;
-  font-size: 1.1rem;
+  font-size: var(--table-cell-font-size, 0.9rem);
   /* padding: 1rem 2rem; */
   color: rgba(var(--clr-text-2), 0.8);
 
@@ -546,7 +547,7 @@ export const TableHeaderCellInnerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.1rem;
 
   /* svg {
     visibility: hidden;
@@ -559,7 +560,7 @@ export const TableHeaderCellInnerContainer = styled.div`
 
 export const TableRow = styled.tr`
   /* &:not(:first-of-type) { */
-  border-bottom: 1px solid rgba(var(--clr-table-500), 1);
+  /* border-bottom: 1px solid rgba(var(--clr-table-500), 1); */
   /* } */
 
   /* &:first-of-type {
@@ -633,15 +634,17 @@ export const TableSearchInput = styled.input`
 `;
 
 export const TableDataCell = styled.td`
+  font-size: var(--table-cell-font-size, 0.2rem);
   display: table-cell;
 
+  border: 1px solid rgba(var(--clr-table-500), .8);
   text-align: center;
   white-space: normal;
   overflow-wrap: break-word;
   /* max-width: 100%; */
   vertical-align: bottom;
 
-  padding: 0.5rem;
+  padding: 0.125rem;
   text-transform: none;
   /* max-width: 20vw; */
 
@@ -679,6 +682,8 @@ export const TableDataCell = styled.td`
   }
 
   @media (max-width: 850px) {
+    --table-cell-font-size: 0.8rem;
+
     text-align: left;
     /* display: grid; */
     padding: 0rem 1rem;
@@ -686,7 +691,7 @@ export const TableDataCell = styled.td`
     flex-wrap: wrap;
     /* justify-content: flex-end;
     align-items: flex-end; */
-    font-size: 0.7rem;
+    font-size: var(--table-cell-font-size, 0.8rem);
 
     &::before {
       content: attr(data-cell) ':  ';
@@ -963,7 +968,7 @@ export const FullScreenContainer = styled.div`
 export const StyledBookmarkContainer = styled.div`
   padding: 1rem;
   color: var(--clr-text-2);
-/* background-color: red; */
+  /* background-color: red; */
   @media (min-width: 850px) {
     font-size: 1.5rem;
     padding: 2rem 0.5rem;
