@@ -3,7 +3,6 @@ import {
   ButtonsContainer,
   SearchInputPTag,
   SearchSection,
-  TableHeaderCellInnerContainer,
   TextSearchContainer,
   TextSearchInput,
 } from '../../styles/UtilStyles';
@@ -13,6 +12,7 @@ import SortTableColumnsArrows, {
   StyledFaCaretDown,
   StyledFaCaretUp,
 } from './SortTableColumnsArrows';
+import { TableHeaderCellInnerContainer } from '../../styles/table-styles/tableStyles';
 
 export default function SearchTableColumn({
   searchText,
