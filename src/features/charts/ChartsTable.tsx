@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 
 import {
-  Caption,
   StyledForm,
-  StyledTable,
-  TableContainer,
-  TableHeader,
-  TableHeaderCell,
-  TableHeaderRow,
-  TableRow,
+
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import ChartsRow from './ChartsRow';
@@ -16,6 +10,7 @@ import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelect
 import { useAppSelector } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../../redux/slices/pageSlice';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 
 export default function ChartsTable({
   flasks,

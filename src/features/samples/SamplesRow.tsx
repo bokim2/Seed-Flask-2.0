@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-  EditRow,
-  EditTextArea,
-  PreviousDataRow,
-  TableDataCell,
-  TableRow,
-} from '../../styles/UtilStyles';
+
 import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditSampleForm } from './samples-types';
 import { set } from 'date-fns';
 import Button from '../../ui/Button';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 
 export default function SamplesRow({
   rowData,

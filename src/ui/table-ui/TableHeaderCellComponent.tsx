@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import {
-  TableHeaderCell,
-  TableHeaderCellInnerContainer,
-} from '../../styles/UtilStyles';
+
 import SortTableColumnsArrows from './SortTableColumnsArrows';
 import { formatColumnName } from '../../hooks/hooks';
+import { TableHeaderCell, TableHeaderCellInnerContainer } from '../../styles/table-styles/tableStyles';
 
 type TTableHeaderCellComponent = {
   handleSortColumn?: (columnName: string)=> void;

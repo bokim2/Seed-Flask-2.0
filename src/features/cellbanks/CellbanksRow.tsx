@@ -1,12 +1,8 @@
-import {
-  TableDataCell,
-  PreviousDataRow,
-  EditRow,
-  EditTextArea,
-} from '../../styles/UtilStyles';
+
 import Button from '../../ui/Button';
 import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditCellbankForm } from './cellbanks-types';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 
 export default function CellbanksRow({
   rowData,

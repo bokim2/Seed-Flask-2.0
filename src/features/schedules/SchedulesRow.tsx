@@ -1,17 +1,11 @@
-import {
-  TableRow,
-  TableDataCell,
-  FormTextArea,
-  PreviousDataRow,
-  EditRow,
-  EditTextArea,
-} from '../../styles/UtilStyles';
+
 import Button from '../../ui/Button';
 import styled, { css } from 'styled-components';
 import { TTableRow } from '../../lib/types';
 import { addHoursToTimestamp, displayLocalTime } from '../../hooks/hooks';
 import { initialEditFlasksForm } from '../flasks/flasks-types';
 import { initialEditScheduleForm } from './schedules-types';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 // import { initialEditCellbankForm } from './schedules-types';
 
 export default function SchedulesRow({

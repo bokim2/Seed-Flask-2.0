@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-  EditRow,
-  EditTextArea,
-  PreviousDataRow,
-  TableDataCell,
-  TableRow,
-} from '../../styles/UtilStyles';
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
 import { flaskVesselTypes, initialCreateFlasksForm } from './flasks-types';
 import { useDispatch } from 'react-redux';
 import { toggleCellbankBookmark, toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 
 export default function FlasksRow({
   rowData,

@@ -1,14 +1,8 @@
 import CellbanksRow from '../cellbanks/CellbanksRow';
 import {
-  StyledTable,
-  Caption,
-  TableHeader,
-  TableRow,
-  TableHeaderCell,
+
   StyledForm,
-  TableContainer,
   LoaderWrapper,
-  TableHeaderRow,
 } from '../../styles/UtilStyles';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -40,6 +34,7 @@ import {
   setSearchedFlasksList,
 } from '../../redux/slices/bookmarksSlice';
 import { RootState } from '../../redux/store';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 
 export type TError = {
   message: string;

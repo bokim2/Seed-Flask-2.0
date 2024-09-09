@@ -170,7 +170,7 @@ scheduleRouter.route('/:id').put(validateIdParam, async (req, res) => {
   }
 });
 
-// DELETE on cell bank
+// DELETE one schdedule
 scheduleRouter.route('/:id').delete(validateIdParam, async (req, res) => {
   try {
     const result = await db.query(

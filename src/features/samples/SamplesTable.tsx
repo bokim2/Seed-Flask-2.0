@@ -1,14 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Caption,
+
   StyledForm,
-  StyledTable,
-  TableContainer,
-  TableHeader,
-  TableHeaderCell,
-  TableHeaderRow,
-  TableRow,
-  Wrapper,
 } from '../../styles/UtilStyles';
 import SamplesRow from './SamplesRow';
 import {
@@ -28,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../../redux/slices/pageSlice';
 import Button from '../../ui/Button';
 import SearchFormRow from '../../ui/SearchFormRow';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 
 export default function SamplesTable({ samples }) {
   // console.log('samples in samplestable', samples);

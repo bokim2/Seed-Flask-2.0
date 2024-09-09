@@ -4,8 +4,7 @@ import {
   ButtonsContainer,
   LoaderWrapper,
   SearchInputAndButtonContainer,
-  TableHeaderCell,
-  TableSearchInput,
+
 } from '../styles/UtilStyles';
 import styled from 'styled-components';
 import Button from './Button';
@@ -13,6 +12,7 @@ import { useMultiTextInputSearch } from '../hooks/table-hooks/useMultiTextInputS
 import { useInfiniteFetchMultiTextInputSearch } from '../hooks/table-hooks/useInfiniteFetchMultiTextInputSearch';
 import LoaderBar from './LoaderBar';
 import { formatColumnName } from '../hooks/hooks';
+import { TableHeaderCell, TableSearchInput } from '../styles/table-styles/tableStyles';
 
 export const SearchTableRow = styled.tr`
   /* display: none; */

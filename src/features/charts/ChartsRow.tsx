@@ -1,16 +1,11 @@
 import React from 'react';
-import {
-  EditRow,
-  EditTextArea,
-  PreviousDataRow,
-  TableDataCell,
-  TableRow,
-} from '../../styles/UtilStyles';
+
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
 import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
 import { useDispatch } from 'react-redux';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 
 export default function ChartsRow({
   rowData,

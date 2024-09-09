@@ -6,17 +6,7 @@ import {
   initialEditFlasksForm,
   updateFlaskSchema,
 } from '../flasks/flasks-types';
-import {
-  Caption,
-  StyledForm,
-  StyledTable,
-  TableContainer,
-  TableHeader,
-  TableHeaderCell,
-  TableHeaderRow,
-  TableRow,
-  Wrapper,
-} from '../../styles/UtilStyles';
+import { StyledForm } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
 import {
@@ -48,22 +38,22 @@ import SearchFormRow from '../../ui/SearchFormRow';
 import ErrorMessage from '../../ui/ErrorMessage';
 import SearchForm from '../../ui/SearchForm';
 import { updateScheduleSchema } from '../../../server/zodSchemas';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 // import Scheduler from './add-to-schedule/Scheduler';
 
 type TScheduleTable = {
-  schedules: TSchedules,
-  selectedScheduleId?: number | null,
-  selectIdHandler?: (id)=> void,
+  schedules: TSchedules;
+  selectedScheduleId?: number | null;
+  selectIdHandler?: (id) => void;
 };
-
 
 export default function SchedulesTable({
   schedules,
   selectIdHandler,
-  // chartTitle,
-  // bookmarkedFlasks,
-  // setBookmarkedFlasks,
-}: TScheduleTable) {
+}: // chartTitle,
+// bookmarkedFlasks,
+// setBookmarkedFlasks,
+TScheduleTable) {
   // console.log('schedules in schedules table', schedules);
   // const [editingId, setEditingId] = useState<number | null>(null);
   // const [editedForm, setEditedForm] = useState(initialEditScheduleForm);
@@ -138,8 +128,7 @@ export default function SchedulesTable({
   //   setFilteredAndSortedData,
   // });
 
-
-  const filteredAndSortedData = useMemo(()=> {
+  const filteredAndSortedData = useMemo(() => {
     console.log('Calculating filtered and sorted data');
     if (searchedData && searchedData.length > 0) {
       console.log('Using searched data', searchedData);
@@ -148,8 +137,7 @@ export default function SchedulesTable({
       console.log('Using default cellbanks data', schedules);
       return schedules;
     }
-  
-  }, [searchedData, schedules])
+  }, [searchedData, schedules]);
 
   const data = useFilteredTableData(
     schedules,
@@ -238,7 +226,7 @@ export default function SchedulesTable({
       >
         {/* Table Section */}
         <TableContainer id="SchedulesTableContainer">
-        <Caption>Schedules Table</Caption>
+          <Caption>Schedules Table</Caption>
           <StyledTable>
             <TableHeader>
               {/* select column to search */}

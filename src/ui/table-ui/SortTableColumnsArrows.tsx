@@ -11,7 +11,7 @@ export const StyledArrowsContainer = styled.div`
     }
 
     &.hidden {
-        visibility: hidden;
+        /* visibility: hidden; */
     }
 `
 

@@ -1,13 +1,9 @@
 import CellbanksRow from './CellbanksRow';
 import {
-  TableContainer,
-  StyledTable,
-  Caption,
-  TableHeader,
-  TableHeaderCell,
+
+
   StyledForm,
   LoaderWrapper,
-  TableHeaderRow,
 } from '../../styles/UtilStyles';
 import {  useMemo, useState } from 'react';
 import {
@@ -34,6 +30,7 @@ import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm
 import SearchFormRow from '../../ui/SearchFormRow';
 import Button from '../../ui/Button';
 import LoaderBar from '../../ui/LoaderBar';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 
 export type TError = {
   message: string;
