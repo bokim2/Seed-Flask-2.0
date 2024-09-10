@@ -102,18 +102,18 @@ export default function TabSelectorContainer({ children, chartsTabNamesAndValues
     <StyledTabSelectorContainer>
       <StyledTabUl>
         {Object.entries(chartsTabNamesAndValues).map(([key, value]) => (
+            <StyledNavLink to={key}>
           <StyledTabLi key={key}>
             <TabButton
               className={selectedTabName === key ? 'activeTab' : ''}
               value={key}
               onClick={() => setSelectedTabName(key)}
             >
-              <StyledNavLink to={key}>
 
               {value}
-              </StyledNavLink>
             </TabButton>
           </StyledTabLi>
+              </StyledNavLink>
         ))}
       </StyledTabUl>
 
@@ -123,7 +123,8 @@ export default function TabSelectorContainer({ children, chartsTabNamesAndValues
         onChange={(e) => setSelectedTabName(e.target.value)}
       >
         {Object.entries(chartsTabNamesAndValues).map(([key, value]) => (
-          <option key={key} value={key}>
+          <option key={key} value={key}
+          onSelect={() => setSelectedTabName(key)}>
             {value}
           </option>
         ))}
