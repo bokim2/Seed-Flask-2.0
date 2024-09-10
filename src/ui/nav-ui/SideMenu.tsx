@@ -10,8 +10,9 @@ import Bookmarks from '../Bookmarks';
 const StyledSideMenu = styled.div`
   --image-size: 2.5rem;
   --font-size: 1.25rem;
+  max-height: 100vh;
 
-  z-index: 11;
+  z-index: 9;
   background-color: white;
   bottom: 0;
 
@@ -46,6 +47,7 @@ const InnerMenuContainer = styled.div`
 `;
 
 export const StyledSideMenuImage = styled.img`
+justify-self: center;
   height: var(--image-size);
   /* width: 20px; */
   /* aspect-ratio: 1/1; */
@@ -57,8 +59,11 @@ export const StyledSideMenuImage = styled.img`
 export const StyledSideMenuButtons = styled(NavLink)`
   /* padding: 0.5rem 1rem; */
   display: grid;
-  place-items: center;
+  /* place-items: center; */
+  align-items: center;
+  justify-content: flex-start;
   opacity: 0.85;
+  padding-inline: 1rem;
 
   grid-template-columns: 1fr;
 

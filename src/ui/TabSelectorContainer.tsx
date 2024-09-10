@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 
@@ -91,6 +92,12 @@ type TTabSelectorContainer = {
 export default function TabSelectorContainer({ children, chartsTabNamesAndValues, selectedTabName, setSelectedTabName }: TTabSelectorContainer) {
 
 
+  const StyledNavLink = styled(NavLink)`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+`;
   return (
     <StyledTabSelectorContainer>
       <StyledTabUl>
@@ -101,7 +108,10 @@ export default function TabSelectorContainer({ children, chartsTabNamesAndValues
               value={key}
               onClick={() => setSelectedTabName(key)}
             >
+              <StyledNavLink to={key}>
+
               {value}
+              </StyledNavLink>
             </TabButton>
           </StyledTabLi>
         ))}

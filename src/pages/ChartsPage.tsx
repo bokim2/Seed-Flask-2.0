@@ -26,6 +26,7 @@ import BookmarkedCellbanksTab from '../features/charts/chart-tabs/BookmarkedCell
 import SearchFlasksTab from '../features/charts/chart-tabs/SearchFlasksTab';
 import ScheduleTab from '../features/charts/chart-tabs/ScheduleTab';
 import { z } from 'zod';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 export default function ChartsPage() {
   const {
@@ -54,8 +55,8 @@ export default function ChartsPage() {
   const chartsTabNamesAndValues = {
     // all: 'All Flasks',
     search: 'Search Flasks',
-    bookmarkedFlasks: 'Bookmarked Flasks',
-    bookmarkedCellbanks: 'Bookmarked Cellbanks',
+    bookmarkedflasks: 'Bookmarked Flasks',
+    bookmarkedcellbanks: 'Bookmarked Cellbanks',
     // cellbank: 'Single Cellbank',
     // user: 'User',
     // project: 'Project',
@@ -195,7 +196,7 @@ export default function ChartsPage() {
             </Button>
           </ButtonsContainer>
 
-          {selectedTabName === 'search' && (
+          {/* {selectedTabName === 'search' && (
             <>
               <SearchFlasksTab
                 flasks={flasksAll}
@@ -212,7 +213,7 @@ export default function ChartsPage() {
                 {!hasNextPage ? 'No More Data' : 'Load More'}
               </Button>
             </>
-          )}
+          )} */}
           {/* 
           {selectedTabName === 'all' && (
             <>
@@ -233,7 +234,7 @@ export default function ChartsPage() {
             </>
           )} */}
 
-          {selectedTabName === 'bookmarkedFlasks' && (
+          {/* {selectedTabName === 'bookmarkedFlasks' && (
             <BookmarkedFlasksTab
               // allCellbankGraphData={allCellbankGraphData}
               // bookmarkedFlasksGraphData={bookmarkedFlasksGraphData}
@@ -242,16 +243,67 @@ export default function ChartsPage() {
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
             />
-          )}
+          )} */}
 
-          {selectedTabName === 'bookmarkedCellbanks' && (
+          {/* {selectedTabName === 'bookmarkedCellbanks' && (
             <BookmarkedCellbanksTab
               bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
               bookmarkedFlasks={bookmarkedFlasks}
             />
-          )}
+          )} */}
 
-          {selectedTabName === 'schedule' && <ScheduleTab flasks={flasksAll} />}
+          {/* {selectedTabName === 'schedule' && <ScheduleTab flasks={flasksAll} />} */}
+
+          <Routes>
+            <Route path="/" element={<Navigate to="search" replace />} />
+            <Route
+              path="search"
+              element={
+                <>
+                <SearchFlasksTab
+                  flasks={flasksAll}
+                  allCellbankGraphData={allCellbankGraphData}
+                />
+  
+                <Button
+                  type="button"
+                  onClick={() => {
+                    fetchNextPage();
+                    fetchNextPageAllCellbanks();
+                  }}
+                >
+                  {!hasNextPage ? 'No More Data' : 'Load More'}
+                </Button>
+              </>
+              }
+            />
+            <Route
+              path="bookmarkedflasks"
+              element={
+                <BookmarkedFlasksTab
+                  // allCellbankGraphData={allCellbankGraphData}
+                  // bookmarkedFlasksGraphData={bookmarkedFlasksGraphData}
+                  bookmarkedFlasks={bookmarkedFlasks}
+                  fetchNextPage={fetchNextPage}
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                />
+              }
+            />
+            <Route
+              path="bookmarkedcellbanks"
+              element={
+                <BookmarkedCellbanksTab
+                  bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
+                  bookmarkedFlasks={bookmarkedFlasks}
+                />
+              }
+            />
+            <Route
+              path="schedule"
+              element={<ScheduleTab flasks={flasksAll} />}
+            />
+          </Routes>
         </TabSelectorContainer>
       </InnerPageContainer>
     </PageContainer>

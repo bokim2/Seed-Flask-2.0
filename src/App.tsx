@@ -110,7 +110,7 @@ function App() {
                   {/* <Route path="about/seed-flask" element={<AboutSeedFlask />} />
                   <Route path="about/bo" element={<AboutCreator />} /> */}
                 {/* </Route> */}
-                <Route path="charts" element={<ChartsPage />} />
+                <Route path="charts/*" element={<ChartsPage />} />
                 {/* <Route path="signin" element={<SignInPage />} /> */}
               </Route>{' '}
             </>
