@@ -24,22 +24,24 @@ import { useDispatch } from 'react-redux';
 import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
 import { StyledGraphContainer } from '../../../styles/UtilStyles';
 import Button from '../../../ui/Button';
-
 const crosshairPlugin = {
   id: 'crosshairPlugin',
   afterDraw: (chart) => {
     const ctx = chart.ctx;
     const clickedXY = chart.options.pixelClickedXY;
+
     if (!clickedXY || clickedXY.length !== 2) return;
 
     const [x, y] = clickedXY;
     const { left, right, top, bottom } = chart.chartArea;
 
+    console.log('Drawing crosshair at:', { x, y });
+    console.log('Chart area:', { left, right, top, bottom });
+
     ctx.save();
     ctx.strokeStyle = 'rgba(255, 99, 132, 0.8)';
     ctx.lineWidth = 1;
 
-    // Ensure lines are drawn within the chart area
     if (x >= left && x <= right && y >= top && y <= bottom) {
       // Draw vertical line
       ctx.beginPath();
@@ -52,6 +54,8 @@ const crosshairPlugin = {
       ctx.moveTo(left, y);
       ctx.lineTo(right, y);
       ctx.stroke();
+    } else {
+      console.log('Click coordinates are out of bounds');
     }
 
     ctx.restore();
@@ -88,6 +92,7 @@ export type TBookmarkedFlasksGraph = {
 const BookmarkedFlasksGraph = memo(
   ({ graphData, bookmarkedFlasks }: TBookmarkedFlasksGraph) => {
     console.log(graphData, 'graphData  in SELECTEDFLASKSGRAPH');
+    const dispatch = useDispatch();
     const chartRef = useRef<any>(null);
     const [clickedXY, setClickedXY] = useState<number[] | null>(null);
     const [pixelClickedXY, setPixelClickedXY] = useState<number[] | null>(null);
@@ -95,7 +100,29 @@ const BookmarkedFlasksGraph = memo(
     const [toggleGraphDataLabel, setToggleGraphDataLabel] =
       useState<boolean>(false);
 
-    const dispatch = useDispatch();
+
+    const DESKTOP_CHART_STYLES = { legendPosition: 'right', aspectRatio: 1.5 };
+    const [chartStyles, setChartStyles] = useState<any>(DESKTOP_CHART_STYLES); // default desktop styles
+
+    const updateChartStylesBasedOnScreenSize = () => {
+      if (window.innerWidth < 850) {
+        setChartStyles({ legendPosition: 'bottom', aspectRatio: 1 });
+      } else {
+        setChartStyles(DESKTOP_CHART_STYLES);
+      }
+    };
+
+    useEffect(() => {
+      updateChartStylesBasedOnScreenSize();
+      window.addEventListener('resize', updateChartStylesBasedOnScreenSize);
+
+      return () => {
+        window.removeEventListener(
+          'resize',
+          updateChartStylesBasedOnScreenSize
+        );
+      };
+    }, []);
 
     function clickHandler(e) {
       // console.log(e);
@@ -128,8 +155,8 @@ const BookmarkedFlasksGraph = memo(
     const options: any = {
       responsive: true,
       animation: false,
-      maintainAspectRatio: false,
-      // aspectRatio: 2,
+      maintainAspectRatio: true,
+      aspectRatio: chartStyles.aspectRatio,
       scales: {
         x: {
           type: 'linear',
@@ -269,9 +296,9 @@ const BookmarkedFlasksGraph = memo(
         legend: {
           // position: 'top' as const,
           display: false,
-          position: 'top' as const,
+          position: chartStyles.legendPosition,
           labels: {
-            color: '#dadada',
+            color: 'var(--clr-text-3)',
             font: {
               size: 18,
             },
@@ -373,6 +400,7 @@ const BookmarkedFlasksGraph = memo(
             onClick={clickHandler}
           />
         </StyledGraphContainer>
+        <CustomLegend datasets={datasets} />
         {/* </StyledBookmarkedCellbankGraph> */}
         {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
         <Scheduler clickedXY={clickedXY} />
@@ -388,3 +416,33 @@ const BookmarkedFlasksGraph = memo(
 );
 
 export default BookmarkedFlasksGraph;
+
+function CustomLegend({ datasets }) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: '10px',
+      }}
+    >
+      {datasets.map((dataset, index) => (
+        <div
+          key={index}
+          style={{ marginRight: '10px', display: 'flex', alignItems: 'center' }}
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              width: '12px',
+              height: '12px',
+              backgroundColor: dataset.borderColor,
+              marginRight: '5px',
+            }}
+          />
+          <span>{dataset.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}

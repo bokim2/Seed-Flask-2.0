@@ -43,16 +43,11 @@ export default function ChartsPage() {
   });
 
   const location = useLocation();
-
   const dispatch = useDispatch();
-  // const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
-  // console.log(flasksAll, 'flasksAll');
+
 
   const [selectedTabName, setSelectedTabName] = useState('search');
 
-  // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
-  //   []
-  // );
 
   const chartsTabNamesAndValues = {
     // all: 'All Flasks',
@@ -77,27 +72,8 @@ export default function ChartsPage() {
     (state: RootState) => state.bookmarks.searched_flasks_list
   );
 
-  // const [allCellbankGraphData, setAllCellbankGraphData] = useState<any[]>([]);
   const [bookmarkedCellbankGraphData, setBookmarkedCellbankGraphData] =
     useState<any[][]>([]);
-
-  // const getGraphData = async () => {
-  //   // console.log('data in graphs page, before fetch');
-  //   const res = await fetch(`${baseUrl}/api/graphs`);
-  //   const { data } = await res.json();
-  //   setChartData(data);
-  //   // console.log('data in graphs page', data);
-  //   return data;
-  // };
-
-  // const getSingleCellbankGraphData = async (id) => {
-  //   // console.log('data in graphs page, before fetch');
-  //   const res = await fetch(`${baseUrl}/api/chart/cellbank/${id}`);
-  //   const { data } = await res.json();
-  //   setSingleCellbankGraphData(data);
-  //   // console.log('data in setDataSingleCellbank page', data);
-  //   return data;
-  // };
 
   const getBookmarkedCellbankGraphData = async (bookmarkedCellbanks) => {
     // console.log('data in graphs page, before fetch');
@@ -115,14 +91,6 @@ export default function ChartsPage() {
     return results;
   };
 
-  // const getAllCellbankGraphData = async () => {
-  //   // console.log('data in graphs page, before fetch');
-  //   const res = await fetch(`${baseUrl}/api/chart/cellbanks`);
-  //   const { data } = await res.json();
-  //   // console.log(data, 'in getallcellbankgraphdata');
-  //   setAllCellbankGraphData(data);
-  //   return data;
-  // };
 
   const {
     data: allCellbankGraphData,
@@ -138,12 +106,7 @@ export default function ChartsPage() {
   });
 
   useEffect(() => {
-    // getGraphData();
-    // getSingleCellbankGraphData(1);
-
-    // getAllCellbankGraphData();
     getBookmarkedCellbankGraphData(bookmarkedCellbanks);
-    // getBookmarkedFlasksGraphData(bookmarkedFlasks);
   }, [bookmarkedCellbanks, bookmarkedFlasks]);
 
   // or... 'Filters'
@@ -233,8 +196,6 @@ export default function ChartsPage() {
               path="bookmarkedflasks"
               element={
                 <BookmarkedFlasksTab
-                  // allCellbankGraphData={allCellbankGraphData}
-                  // bookmarkedFlasksGraphData={bookmarkedFlasksGraphData}
                   bookmarkedFlasks={bookmarkedFlasks}
                   fetchNextPage={fetchNextPage}
                   hasNextPage={hasNextPage}
@@ -262,7 +223,49 @@ export default function ChartsPage() {
   );
 }
 
+  // const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
+  // console.log(flasksAll, 'flasksAll');
 
+    // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
+  //   []
+  // );
+
+  // useEffect(() => {
+  //   // getGraphData();
+  //   // getSingleCellbankGraphData(1);
+
+  //   // getAllCellbankGraphData();
+  //   getBookmarkedCellbankGraphData(bookmarkedCellbanks);
+  //   // getBookmarkedFlasksGraphData(bookmarkedFlasks);
+  // }, [bookmarkedCellbanks, bookmarkedFlasks]);
+
+
+  // const getGraphData = async () => {
+  //   // console.log('data in graphs page, before fetch');
+  //   const res = await fetch(`${baseUrl}/api/graphs`);
+  //   const { data } = await res.json();
+  //   setChartData(data);
+  //   // console.log('data in graphs page', data);
+  //   return data;
+  // };
+
+  // const getSingleCellbankGraphData = async (id) => {
+  //   // console.log('data in graphs page, before fetch');
+  //   const res = await fetch(`${baseUrl}/api/chart/cellbank/${id}`);
+  //   const { data } = await res.json();
+  //   setSingleCellbankGraphData(data);
+  //   // console.log('data in setDataSingleCellbank page', data);
+  //   return data;
+  // };
+
+    // const getAllCellbankGraphData = async () => {
+  //   // console.log('data in graphs page, before fetch');
+  //   const res = await fetch(`${baseUrl}/api/chart/cellbanks`);
+  //   const { data } = await res.json();
+  //   // console.log(data, 'in getallcellbankgraphdata');
+  //   setAllCellbankGraphData(data);
+  //   return data;
+  // };
 
           {/* {selectedTabName === 'search' && (
             <>

@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FlasksTable from '../../flasks/FlasksTable';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
-import { useFetchBookmarkedFlasksGraphData } from '../chart-hooks';
 import FlasksListGraph from '../graphs/FlasksListGraph';
-import AllFlasksTab from './AllFlasksTab';
 import AllCellbanksGraph from '../graphs/AllCellbanksGraph';
 
 export default function SearchFlasksTab({ flasks, allCellbankGraphData }) {
@@ -25,6 +23,25 @@ export default function SearchFlasksTab({ flasks, allCellbankGraphData }) {
 
   return (
     <>
+
+
+      
+      { searchedFlasksList && searchedFlasksList?.length == 0 && allCellbankGraphData && allCellbankGraphData?.length > 0 && (
+        <AllCellbanksGraph
+          allCellbankGraphData={allCellbankGraphData}
+        />
+      )}
+      
+      {searchedFlasksList?.length > 0 && <FlasksListGraph flasks={flasks} />}
+      {flasks && flasks?.length > 0 && (
+        <FlasksTable
+          flasks={flasks}
+        />
+      )}
+    </>
+  );
+}
+
       {/* {Array.isArray(bookmarkedFlasksGraphData) && bookmarkedFlasksGraphData?.length && (<>
         <SelectedFlasksGraph
         graphData={bookmarkedFlasksGraphData}
@@ -34,23 +51,3 @@ export default function SearchFlasksTab({ flasks, allCellbankGraphData }) {
 
         </>
       )} */}
-
-      
-      { searchedFlasksList && searchedFlasksList?.length == 0 && allCellbankGraphData && allCellbankGraphData?.length > 0 && (
-        <AllCellbanksGraph
-          allCellbankGraphData={allCellbankGraphData}
-          // bookmarkedFlasks={bookmarkedFlasks}
-          // setBookmarkedFlasks={setBookmarkedFlasks}
-        />
-      )}
-      
-      {searchedFlasksList?.length > 0 && <FlasksListGraph flasks={flasks} />}
-      {flasks && flasks?.length > 0 && (
-        <FlasksTable
-          flasks={flasks}
-          // setSearchedFlasksList={setSearchedFlasksList}
-        />
-      )}
-    </>
-  );
-}
