@@ -18,12 +18,13 @@ import {
 import autocolors from 'chartjs-plugin-autocolors';
 import { useDispatch } from 'react-redux';
 import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
-import {
-  ButtonsContainer,
-  StyledGraphContainer,
-} from '../../../styles/UtilStyles';
+import { ButtonsContainer } from '../../../styles/UtilStyles';
 import Button from '../../../ui/Button';
-import { GRAPH_AXIS_TEXT_COLOR, GRAPH_LEGEND_TEXT_COLOR } from '../../../lib/constants';
+import {
+  GRAPH_AXIS_TEXT_COLOR,
+  GRAPH_LEGEND_TEXT_COLOR,
+} from '../../../lib/constants';
+import { GraphAndLegendContainer, GraphContainer } from '../../../styles/graph-styles/graph-styles';
 
 ChartJS.register(
   CategoryScale,
@@ -125,7 +126,7 @@ export default function AllCellbanksGraph({
             size: 20,
           },
         },
-        
+
         ticks: {
           color: GRAPH_AXIS_TEXT_COLOR,
           font: {
@@ -170,7 +171,7 @@ export default function AllCellbanksGraph({
       legend: {
         // position: 'top' as const,
         labels: {
-          color: GRAPH_LEGEND_TEXT_COLOR
+          color: GRAPH_LEGEND_TEXT_COLOR,
         },
         display: false,
       },
@@ -217,9 +218,8 @@ export default function AllCellbanksGraph({
   }
   return (
     <>
-    
       <ButtonsContainer>
-      {/* <h1>testing hello </h1> */}
+        {/* <h1>testing hello </h1> */}
         <Button
           type="button"
           onClick={() => setToggleGraphDataLabel((prev) => !prev)}
@@ -235,15 +235,16 @@ export default function AllCellbanksGraph({
           {toggleZeroStartData ? 'Remove zero start' : 'Zero start'}
         </Button>
       </ButtonsContainer>
-      
-      <StyledGraphContainer>
-        <Line
-          options={options}
-          data={data}
-          onClick={clickHandler}
-          ref={lineChartRef}
-        />
-      </StyledGraphContainer>
+      <GraphAndLegendContainer>
+        <GraphContainer>
+          <Line
+            options={options}
+            data={data}
+            onClick={clickHandler}
+            ref={lineChartRef}
+          />
+        </GraphContainer>
+      </GraphAndLegendContainer>
     </>
   );
 }

@@ -22,8 +22,9 @@ import Scheduler from '../add-to-schedule/Scheduler';
 import DateTimePicker from '../add-to-schedule/DateTimePicker';
 import { useDispatch } from 'react-redux';
 import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
-import { StyledGraphContainer } from '../../../styles/UtilStyles';
 import Button from '../../../ui/Button';
+import { GraphAndLegendContainer, GraphContainer } from '../../../styles/graph-styles/graph-styles';
+
 const crosshairPlugin = {
   id: 'crosshairPlugin',
   afterDraw: (chart) => {
@@ -60,6 +61,83 @@ const crosshairPlugin = {
 
     ctx.restore();
   },
+};
+
+const getOrCreateLegendList = (chart, id) => {
+  const legendContainer = document.getElementById(id);
+  let listContainer = legendContainer?.querySelector('ul');
+
+  if (!listContainer) {
+    listContainer = document.createElement('ul');
+    listContainer.style.display = 'flex';
+    listContainer.style.flexDirection = 'row';
+    listContainer.style.margin = '0';
+    listContainer.style.padding = '0';
+
+    legendContainer?.appendChild(listContainer);
+  }
+
+  return listContainer;
+};
+
+const htmlLegendPlugin = {
+  id: 'htmlLegend',
+  afterUpdate(chart, args, options) {
+    const ul = getOrCreateLegendList(chart, options.containerID);
+
+    // Remove old legend items
+    while (ul.firstChild) {
+      ul.firstChild.remove();
+    }
+
+    // Reuse the built-in legendItems generator
+    const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+    items.forEach(item => {
+      const li = document.createElement('li');
+      li.style.alignItems = 'center';
+      li.style.cursor = 'pointer';
+      li.style.display = 'flex';
+      li.style.flexDirection = 'row';
+      li.style.marginLeft = '10px';
+
+      li.onclick = () => {
+        const {type} = chart.config;
+        if (type === 'pie' || type === 'doughnut') {
+          // Pie and doughnut charts only have a single dataset and visibility is per item
+          chart.toggleDataVisibility(item.index);
+        } else {
+          chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+        }
+        chart.update();
+      };
+
+      // Color box
+      const boxSpan = document.createElement('span');
+      boxSpan.style.background = item.fillStyle;
+      boxSpan.style.borderColor = item.strokeStyle;
+      boxSpan.style.borderWidth = item.lineWidth + 'px';
+      boxSpan.style.display = 'inline-block';
+      boxSpan.style.flexShrink = '0';
+      boxSpan.style.height = '20px';
+      boxSpan.style.marginRight = '10px';
+      boxSpan.style.width = '20px';
+
+      // Text
+      const textContainer = document.createElement('p');
+      textContainer.style.color = item.fontColor;
+      textContainer.style.margin = '0';
+      textContainer.style.padding = '0';
+      textContainer.style.textDecoration = item.hidden ? 'line-through' : '';
+
+      const text = document.createTextNode(item.text);
+      textContainer.appendChild(text);
+
+      li.appendChild(boxSpan);
+      li.appendChild(textContainer);
+      ul.appendChild(li);
+    });
+  }
 };
 
 ChartJS.register(
@@ -99,7 +177,6 @@ const BookmarkedFlasksGraph = memo(
     const [selectedFlask, setSelectedFlask] = useState<number | null>(null);
     const [toggleGraphDataLabel, setToggleGraphDataLabel] =
       useState<boolean>(false);
-
 
     const DESKTOP_CHART_STYLES = { legendPosition: 'right', aspectRatio: 1.5 };
     const [chartStyles, setChartStyles] = useState<any>(DESKTOP_CHART_STYLES); // default desktop styles
@@ -235,6 +312,10 @@ const BookmarkedFlasksGraph = memo(
         setPixelClickedXY([offsetX, offsetY]);
       },
       plugins: {
+        htmlLegend: {
+          // ID of the container to put the legend in
+          containerID: 'flasks-legend-container',
+        },
         datalabels: {
           display: function (context) {
             console.log(
@@ -392,15 +473,19 @@ const BookmarkedFlasksGraph = memo(
           {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
         </Button>
         {/* <StyledBookmarkedCellbankGraph> */}
-        <StyledGraphContainer>
-          <Line
-            ref={chartRef}
-            options={options}
-            data={data}
-            onClick={clickHandler}
-          />
-        </StyledGraphContainer>
-        <CustomLegend datasets={datasets} />
+        <GraphAndLegendContainer>
+          <GraphContainer>
+            <Line
+              ref={chartRef}
+              options={options}
+              data={data}
+              plugins={[htmlLegendPlugin]} 
+              onClick={clickHandler}
+            />
+          </GraphContainer>
+          <div id="flasks-legend-container"></div>
+        {/* <CustomLegend datasets={datasets} /> */}
+        </GraphAndLegendContainer>
         {/* </StyledBookmarkedCellbankGraph> */}
         {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
         <Scheduler clickedXY={clickedXY} />
@@ -416,33 +501,3 @@ const BookmarkedFlasksGraph = memo(
 );
 
 export default BookmarkedFlasksGraph;
-
-function CustomLegend({ datasets }) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        marginBottom: '10px',
-      }}
-    >
-      {datasets.map((dataset, index) => (
-        <div
-          key={index}
-          style={{ marginRight: '10px', display: 'flex', alignItems: 'center' }}
-        >
-          <span
-            style={{
-              display: 'inline-block',
-              width: '12px',
-              height: '12px',
-              backgroundColor: dataset.borderColor,
-              marginRight: '5px',
-            }}
-          />
-          <span>{dataset.label}</span>
-        </div>
-      ))}
-    </div>
-  );
-}

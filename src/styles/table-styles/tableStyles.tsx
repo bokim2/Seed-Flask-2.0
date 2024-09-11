@@ -5,8 +5,11 @@ import { FormTextArea } from '../UtilStyles';
 
 // TABLE STYLES
 
-
 export const TableContainer = styled.div`
+  /* --row-color: #FFFFFF;
+--row-hover-color: #F4F4F4;
+--row-selected-color: #F2F6FC; */
+
   position: relative;
   margin-block: 1rem;
   /* width: 100%; */
@@ -87,12 +90,9 @@ export const TableHeaderDiv = styled.div`
   }
 `;
 
-
 export const TableHeader = styled.thead`
-
-
-/* position: sticky; */
-/* z-index: 10; */
+  /* position: sticky; */
+  /* z-index: 10; */
   top: 9.7vh; // reference at NavBar styles
 
   /* background-color: red; */
@@ -200,7 +200,8 @@ export const TableRow = styled.tr`
   } */
 
   &:hover {
-    background-color: hsl(0, 0%, 0%, 0);
+    /* background-color: hsl(0, 0%, 0%, 0); */
+    background-color: var(--clr-table-700);
     /* font-size: 120%; */
     /* transform: scale(1.01); */
   }
@@ -378,23 +379,25 @@ export const EditTextArea = styled(FormTextArea)`
   }
 `;
 
+
+// for bookmarked rows
 export const PreviousDataRow = styled(TableRow)<TTableRow>`
-  background-color: ${(props) => props.$editing && 'red'};
+  /* background-color: ${(props) => props.$editing && 'red'};
   &:nth-of-type(2n) {
     background-color: ${(props) => props.$editing && 'red'};
   }
   &:hover {
     background-color: ${(props) => props.$editing && 'red'};
-  }
+  } */
 
   /* bookmarked */
-  background-color: ${(props) => props.$bookmarked && 'blue'};
-  &:nth-of-type(2n) {
-    background-color: ${(props) => props.$bookmarked && 'blue'};
+  background-color: ${(props) => props.$bookmarked && 'var(--clr-table-700)'};
+  /* &:nth-of-type(2n) {
+    background-color: ${(props) => props.$bookmarked && 'lightyellow'};
   }
   &:hover {
-    background-color: ${(props) => props.$bookmarked && 'blue'};
-  }
+    background-color: ${(props) => props.$bookmarked && '#F2D17C'};
+  } */
 `;
 
 export const EditRow = styled.tr`

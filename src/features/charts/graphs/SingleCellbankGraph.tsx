@@ -10,7 +10,10 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { StyledGraphContainer } from '../../../styles/UtilStyles';
+import {
+  GraphAndLegendContainer,
+  GraphContainer,
+} from '../../../styles/graph-styles/graph-styles';
 
 ChartJS.register(
   CategoryScale,
@@ -67,8 +70,10 @@ export default function SingleCellbankGraph({ singleCellbankGraphData }) {
   const data = { datasets };
 
   return (
-    <StyledGraphContainer>
-      <Line options={options} data={data} />
-    </StyledGraphContainer>
+    <GraphAndLegendContainer>
+      <GraphContainer>
+        <Line options={options} data={data} />
+      </GraphContainer>
+    </GraphAndLegendContainer>
   );
 }

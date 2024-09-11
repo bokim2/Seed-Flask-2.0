@@ -10,7 +10,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { GRAPH_AXIS_TEXT_COLOR, GRAPH_LEGEND_TEXT_COLOR, LineGraphColors } from '../../../lib/constants';
+import {
+  GRAPH_AXIS_TEXT_COLOR,
+  GRAPH_LEGEND_TEXT_COLOR,
+  LineGraphColors,
+} from '../../../lib/constants';
 import styled from 'styled-components';
 import Scheduler from '../add-to-schedule/Scheduler';
 import DateTimePicker from '../add-to-schedule/DateTimePicker';
@@ -18,8 +22,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
 import { useFetchBookmarkedFlasksGraphData } from '../chart-hooks';
 import { RootState } from '../../../redux/store';
-import { StyledGraphContainer } from '../../../styles/UtilStyles';
 import Button from '../../../ui/Button';
+import { GraphAndLegendContainer, GraphContainer } from '../../../styles/graph-styles/graph-styles';
 
 ChartJS.register(
   CategoryScale,
@@ -117,7 +121,7 @@ const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
             size: 20,
           },
         },
-        
+
         ticks: {
           color: GRAPH_AXIS_TEXT_COLOR,
           font: {
@@ -289,14 +293,16 @@ const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
       {/* <ChartsTable flasks={datasets}/> */}
       {/* {JSON.stringify(datasets)} */}
       <StyledBookmarkedCellbankGraph>
-        <StyledGraphContainer>
-          <Line
-            ref={chartRef}
-            options={options}
-            data={data}
-            onClick={clickHandler}
-          />
-        </StyledGraphContainer>
+        <GraphAndLegendContainer>
+          <GraphContainer>
+            <Line
+              ref={chartRef}
+              options={options}
+              data={data}
+              onClick={clickHandler}
+            />
+          </GraphContainer>
+        </GraphAndLegendContainer>
       </StyledBookmarkedCellbankGraph>
       {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
       <Scheduler clickedXY={clickedXY} />

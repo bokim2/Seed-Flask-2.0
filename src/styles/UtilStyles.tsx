@@ -485,8 +485,6 @@ export const FormButton = styled.button``;
 
 // EDIT FORM STYLES
 
-
-
 // search section
 
 export const SearchSection = styled.section`
@@ -607,26 +605,6 @@ export const ButtonsContainer = styled.div`
   display: flex;
   margin: 1rem;
   gap: 1rem;
-`;
-
-// chart / graph
-
-export const StyledGraphContainer = styled.div`
-  /* max-height: 60vh; */
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  /* height: 50vh; */
-  /* max-width: 100%; */
-  
-  &:hover {
-    cursor: crosshair;
-  }
-  @media (min-width: 850px) {
-    aspect-ratio: 1 / 1.5;
-    height: 60vh;
-    padding: 1rem;
-    /* height: 80vh; */
-  }
 `;
 
 // full screen container - for page < or  > buttons

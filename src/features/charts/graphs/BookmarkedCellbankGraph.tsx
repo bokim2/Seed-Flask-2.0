@@ -11,12 +11,19 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { GRAPH_AXIS_TEXT_COLOR, GRAPH_LEGEND_TEXT_COLOR, LineGraphColors } from '../../../lib/constants';
+import {
+  GRAPH_AXIS_TEXT_COLOR,
+  GRAPH_LEGEND_TEXT_COLOR,
+  LineGraphColors,
+} from '../../../lib/constants';
 import styled from 'styled-components';
 import Scheduler from '../add-to-schedule/Scheduler';
 import DateTimePicker from '../add-to-schedule/DateTimePicker';
-import { StyledGraphContainer } from '../../../styles/UtilStyles';
 import Button from '../../../ui/Button';
+import {
+  GraphContainer,
+  GraphAndLegendContainer,
+} from '../../../styles/graph-styles/graph-styles';
 
 ChartJS.register(
   CategoryScale,
@@ -72,7 +79,7 @@ const BookmarkedCellbankGraph = memo(
               size: 20,
             },
           },
-          
+
           ticks: {
             color: GRAPH_AXIS_TEXT_COLOR,
             font: {
@@ -152,7 +159,6 @@ const BookmarkedCellbankGraph = memo(
           },
         },
         legend: {
-          
           // position: 'top' as const,
           display: false,
           position: 'top' as const,
@@ -226,31 +232,33 @@ const BookmarkedCellbankGraph = memo(
           onClick={() => setToggleGraphDataLabel((prev) => !prev)}
           $size={'small'}
         >
-         {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
+          {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
         </Button>
-          {/* <h3>
+        {/* <h3>
           {clickedXY &&
             `Bookmarked Cellbank Graph
             clicked x: time ${clickedXY[0]?.toFixed(
               2
               )}  y: od600 ${clickedXY[1]?.toFixed(2)}`}
             </h3> */}
-          {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
-          {/* <ChartsTable flasks={datasets}/> */}
-          {/* {JSON.stringify(datasets)} */}
-          {/* <StyledBookmarkedCellbankGraph> */}
-            <StyledGraphContainer>
+        {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
+        {/* <ChartsTable flasks={datasets}/> */}
+        {/* {JSON.stringify(datasets)} */}
+        {/* <StyledBookmarkedCellbankGraph> */}
+        <GraphAndLegendContainer>
+          <GraphContainer>
             <Line ref={chartRef} options={options} data={data} />
-          </StyledGraphContainer>
-          {/* </StyledBookmarkedCellbankGraph> */}
-          {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
-          <Scheduler clickedXY={clickedXY} />
-          <DateTimePicker
-            clickedXY={clickedXY}
-            setClickedXY={setClickedXY}
-            bookmarkedFlasks={bookmarkedFlasks}
-            // setBookmarkedFlasks={setBookmarkedFlasks}
-          />
+          </GraphContainer>
+        </GraphAndLegendContainer>
+        {/* </StyledBookmarkedCellbankGraph> */}
+        {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
+        <Scheduler clickedXY={clickedXY} />
+        <DateTimePicker
+          clickedXY={clickedXY}
+          setClickedXY={setClickedXY}
+          bookmarkedFlasks={bookmarkedFlasks}
+          // setBookmarkedFlasks={setBookmarkedFlasks}
+        />
       </>
     );
   }

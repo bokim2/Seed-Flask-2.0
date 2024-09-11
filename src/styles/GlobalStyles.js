@@ -200,12 +200,16 @@ ${
   --clr-primary-950: 246, 248, 252;  //darker black - navbar expanded
 
 
+// TABLE COLORS
+
   --clr-table-100: 255, 255, 255;
   --clr-table-200:  255, 255, 255;  // 
 ; 
   --clr-table-300: 242, 246, 252;  // highligted row 
   --clr-table-400: 246, 248, 250;  // table header
   --clr-table-500: 213, 219, 226;  // table row line
+  --clr-table-600: #F4F4F4; // hover row color
+  --clr-table-700: #F2F6FC; // selected row color
 
 // LIGHT MODE
   --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
