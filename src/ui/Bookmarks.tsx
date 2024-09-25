@@ -18,7 +18,10 @@ const SideMenuBookmarksContainer = styled(StyledBookmarkContainer)<{
   border-radius: var(--border-radius-small, 5px);
 
   @media (min-width: 850px) {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    /* width: 100%; */
+    flex-grow: 0;
   }
 `;
 const BookmarkTitle = styled.p`
@@ -27,6 +30,7 @@ const BookmarkTitle = styled.p`
 
 const BookmarksContainer = styled.div`
   display: flex;
+  /* width: 100%; */
   flex-wrap: wrap;
   gap: 0.25rem;
 `;

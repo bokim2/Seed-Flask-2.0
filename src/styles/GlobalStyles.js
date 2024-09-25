@@ -176,9 +176,9 @@ ${
   --clr-text-1: #D3D3D3; //DARKMODE
   --clr-text-2: black;
   --clr-text-3: #CCCCCC;
-  --clr-text-4: black;
+  --clr-text-4: #5B5E5D; // dark grey text
   --clr-text-5: 112, 128, 144; //#708090
-  --clr-text-6: black;
+  --clr-text-6: #0B57D0;  // highlighted text color
    //DARKMODE END
 
    ${'' /* possible light-mode test */}
@@ -234,13 +234,13 @@ ${
   --clr-text-4: #5f6368;  // 
   --clr-text-5: #030DB5;  // highlight text color
 
-  --clr-text-4: black;
-  --clr-text-5: 112, 128, 144; //#708090
-  --clr-text-6: black;
+  ${'' /* --clr-text-4: #5B5E5D; // dark grey text */}
+  ${'' /* --clr-text-5: 112, 128, 144; //#708090 */}
+  --clr-text-7: #202125; // bold active sidemenu text
    // LIGHT MODE END
 
    ${'' /* LAYOUT SIZES */}
-   --nav-bar-height: 10vh;
+   --nav-bar-height: clamp(3.5rem, 10vh, 4.5rem);
 
    --border-radius-small: 5px;
 

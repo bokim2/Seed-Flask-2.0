@@ -8,8 +8,9 @@ import { RootState } from '../../redux/store';
 import Bookmarks from '../Bookmarks';
 
 const StyledSideMenu = styled.div`
-  --image-size: 1.5rem;
-  --font-size: 1.25rem;
+  --image-size: 1.75rem;
+  --font-size: 0.825rem;
+  --active-border-radius: 22px;
   max-height: 100vh;
 
   z-index: 9;
@@ -17,7 +18,7 @@ const StyledSideMenu = styled.div`
   bottom: 0;
 
   position: fixed;
-  width: 100vw;
+  width: 100%;
   /* width: min(200px, 10vw); */
 
   /* height: 200px; */
@@ -25,12 +26,16 @@ const StyledSideMenu = styled.div`
   flex-direction: column;
 
   @media (min-width: 850px) {
+    /* width: 100%; */
     position: static;
     padding-inline: 1rem;
     flex-direction: column;
-    /* width: auto; */
-    width: min(200px, 20vw);
+    min-height: 100vh;
+    overflow-y: scroll;
+    width: auto;
+    /* width: min(200px, 20vw); */
     margin-top: var(--nav-bar-height, 10vh);
+    padding-top: calc(var(--nav-bar-height, 10vh) * 0.5);
 
     /* color: white; */
     font-size: var(--font-size);
@@ -42,19 +47,21 @@ const InnerMenuContainer = styled.div`
   flex-direction: row;
 
   @media (min-width: 850px) {
+    padding-left: 0.25rem;
     flex-direction: column;
+    gap: 0.75rem;
   }
 `;
 
 export const StyledSideMenuImage = styled.img`
-justify-self: center;
-/* flex-shrink: 0; */
+  justify-self: flex-start;
+  /* flex-shrink: 0; */
   height: var(--image-size);
   /* width: 20px; */
   /* aspect-ratio: 1/1; */
   /* height: clamp(1.5rem, 4vw, 5rem); */
   object-fit: scale-down;
-  transition: height 0.2 ease-in-out;
+  transition: height 0.1 ease-in-out;
 `;
 export const StyledSideMenuButtons = styled(NavLink)`
   display: grid;
@@ -62,26 +69,29 @@ export const StyledSideMenuButtons = styled(NavLink)`
   justify-content: center;
   opacity: 0.85;
   padding-inline: 0rem;
-  
-  /* grid-template-columns: var(--image-size) minmax(150px, 2fr); */
+  border-radius: var(--active-border-radius);
   grid-template-columns: var(--image-size);
 
-  gap: 1rem;
+  gap: 0.5rem;
   height: calc(var(--image-size) * 1.5);
   width: 100%;
   /* border-bottom: 0.341px solid #000; */
-  color: var(--clr-text-2);
-  transition: all 0.2s ease-in-out;
+  color: var(--clr-text-7);
+  font-weight: 400;
+  /* transition: all 0.2s ease-in-out; */
 
   p {
+    /* text-transform: capitalize; */
+
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Gracefully handle long text */
+    text-overflow: ellipsis;
     padding: 0;
     margin: 0;
     display: none;
 
     @media (min-width: 850px) {
+      margin-top: 0.125rem;
       display: block; /* Show text on larger screens */
     }
   }
@@ -90,11 +100,13 @@ export const StyledSideMenuButtons = styled(NavLink)`
     align-items: center;
     justify-content: flex-start;
     padding-inline: 1rem;
-    grid-template-columns: var(--image-size) minmax(100px, 1.5fr); /* Consistent column width for all buttons with minmax */
+    grid-template-columns: calc(var(--image-size) * 1.2) min-content; /* Consistent column width for all buttons with minmax */
+    width: 100%;
   }
 
   &:hover {
     opacity: 1;
+    color: inherit;
     cursor: pointer;
     background-color: var(--clr-accent-11);
     /* filter: brightness(105%); */
@@ -105,6 +117,8 @@ export const StyledSideMenuButtons = styled(NavLink)`
 
   &.active {
     opacity: 1;
+    color: var(--clr-text-1);
+    font-weight: 500;
     background-color: var(--clr-accent-10);
     /* filter: brightness(114%); */
     /* box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1); */
@@ -122,11 +136,15 @@ export const StyledSideMenuButtons = styled(NavLink)`
   }
 `;
 
+const BookmarksContainer = styled.div`
+  display: none;
 
-// export const StyledInfoButtonContainer = styled.div`
-//   bottom: 0;
-//   left: 0;
-// `;
+  @media (min-width: 850px) {
+    gap: 0.5rem;
+    margin-top: 2rem;
+    display: grid;
+  }
+`;
 
 const sideMenuInfo = [
   {
@@ -134,29 +152,45 @@ const sideMenuInfo = [
     to: '/cellbank',
     src: '/images/yeast-21.png',
     alt: 'microbe',
-    style: { backgroundColor: 'rgba(var(--clr-accent-1), .8)' },
+    // style: { backgroundColor: 'rgba(var(--clr-accent-1), .8)' },
+    style: { scale: '.9125', transform: 'translateX(.175rem)' },
   },
-  { name: 'flask', to: '/flask', src: '/images/leaf-flask.png', alt: 'flask' },
+  {
+    name: 'flask',
+    to: '/flask',
+    src: '/images/leaf-flask.png',
+    alt: 'flask',
+    style: { scale: '.935', transform: 'translateX(.0rem)' },
+  },
   {
     name: 'sample',
     to: '/sample',
     src: '/images/clock-testtube.png',
     alt: 'sample',
+    style: { scale: '1.05', transform: 'translateX(-.3rem)' },
   },
   {
     name: 'charts',
     to: '/charts',
     src: '/images/wave-graph-1.png',
     alt: 'charts',
+    style: { scale: '1.025' },
   },
   {
     name: 'schedule',
     to: '/schedule',
     src: '/images/schedule.png',
     alt: 'schedule',
+    style: { scale: '.915' },
   },
 
-  { name: 'docs', to: '/docs', src: '/images/document-1.png', alt: 'docs' },
+  {
+    name: 'docs',
+    to: '/docs',
+    src: '/images/document-1.png',
+    alt: 'docs',
+    style: { scale: '.825', transform: 'translateX(-.175rem)' },
+  },
 ];
 
 export default function SideMenu() {
@@ -187,11 +221,11 @@ export default function SideMenu() {
                 //   className={className}
                 src={singleMenu.src}
                 alt={singleMenu.alt}
-                style={{
-                  transform: `scale(${singleMenu.alt === 'sample' ? 1.4 : 1})`,
-                }}
+                // style={{
+                //   transform: `scale(${singleMenu.alt === 'sample' ? 1.1 : 1})`,
+                // }}
                 // style={{ backgroundColor: 'rgba(var(--clr-accent-1), .2)' }}
-                //   style={imgStyleOverride}
+                style={singleMenu.style}
                 //   $fetchpriority={$fetchpriority}
               />
               <p>{singleMenu.name}</p>
@@ -214,17 +248,18 @@ export default function SideMenu() {
           />
         </StyledATag> */}
       {/* </SideMenuContainer> */}
-
-      <Bookmarks
-        bookmarksArray={bookmarkedCellbanks}
-        bookmarksTitle={'Cell Banks'}
-      />
-      <Bookmarks
-        bookmarksArray={bookmarkedFlasks}
-        bookmarksTitle={'Flasks'}
-        // containerBgColor='red'
-        // bookmarkBgColor='lightgrey'
-      />
+      <BookmarksContainer>
+        <Bookmarks
+          bookmarksArray={bookmarkedCellbanks}
+          bookmarksTitle={'Cell Banks'}
+        />
+        <Bookmarks
+          bookmarksArray={bookmarkedFlasks}
+          bookmarksTitle={'Flasks'}
+          // containerBgColor='red'
+          // bookmarkBgColor='lightgrey'
+        />
+      </BookmarksContainer>
     </StyledSideMenu>
   );
 }

@@ -58,12 +58,15 @@ const NavBar = styled.div`
 
 const MainPageContainer = styled.main`
   position: relative;
-  /* flex-grow: 1; */
   width: 100%;
   min-height: 75vh;
-  /* width: 85%; */
   margin: 0 auto;
-  display: flex;
+
+  @media (min-width: 850px) {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    gap: 1rem;
+  }
 `;
 
 // const PageButton = styled(NavLink)`
