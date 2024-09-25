@@ -221,9 +221,9 @@ ${
   --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
   --clr-accent-7: #030DB5; // selected table header
   --clr-accent-8: #F68086; // bookmark color
-  --clr-accent-9: #10e7dc;
-  --clr-accent-10: #fde5d4;
-  --clr-accent-11: #7C9DF2;
+  --clr-accent-9: #EAF1FB; // side navbar background
+  --clr-accent-10: #D3E3FD; // highlight side navbar
+  --clr-accent-11:#DADCE0; // side menu hover
   --clr-accent-12: #FBC7CA;
   --clr-accent-13: #fff5e4;
   --clr-accent-14: #C8C0B8; 

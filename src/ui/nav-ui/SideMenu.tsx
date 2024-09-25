@@ -8,12 +8,12 @@ import { RootState } from '../../redux/store';
 import Bookmarks from '../Bookmarks';
 
 const StyledSideMenu = styled.div`
-  --image-size: 2.5rem;
+  --image-size: 1.5rem;
   --font-size: 1.25rem;
   max-height: 100vh;
 
   z-index: 9;
-  background-color: white;
+  background-color: var(--clr-accent-9);
   bottom: 0;
 
   position: fixed;
@@ -29,10 +29,10 @@ const StyledSideMenu = styled.div`
     padding-inline: 1rem;
     flex-direction: column;
     /* width: auto; */
-    width: min(250px, 15vw);
+    width: min(200px, 20vw);
     margin-top: var(--nav-bar-height, 10vh);
 
-    color: white;
+    /* color: white; */
     font-size: var(--font-size);
   }
 `;
@@ -48,6 +48,7 @@ const InnerMenuContainer = styled.div`
 
 export const StyledSideMenuImage = styled.img`
 justify-self: center;
+/* flex-shrink: 0; */
   height: var(--image-size);
   /* width: 20px; */
   /* aspect-ratio: 1/1; */
@@ -55,67 +56,72 @@ justify-self: center;
   object-fit: scale-down;
   transition: height 0.2 ease-in-out;
 `;
-
 export const StyledSideMenuButtons = styled(NavLink)`
-  /* padding: 0.5rem 1rem; */
   display: grid;
-  /* place-items: center; */
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   opacity: 0.85;
-  padding-inline: 1rem;
+  padding-inline: 0rem;
+  
+  /* grid-template-columns: var(--image-size) minmax(150px, 2fr); */
+  grid-template-columns: var(--image-size);
 
-  grid-template-columns: 1fr;
-
-  gap: 5%;
-  /* justify-content: center; */
+  gap: 1rem;
   height: calc(var(--image-size) * 1.5);
   width: 100%;
-  /* padding: 0.5rem; */
-  border-bottom: 0.341px solid #000;
+  /* border-bottom: 0.341px solid #000; */
   color: var(--clr-text-2);
   transition: all 0.2s ease-in-out;
 
   p {
-    display: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Gracefully handle long text */
     padding: 0;
     margin: 0;
+    display: none;
 
     @media (min-width: 850px) {
-      display: block;
+      display: block; /* Show text on larger screens */
     }
   }
 
   @media (min-width: 850px) {
-    grid-template-columns: 1fr 1.5fr;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline: 1rem;
+    grid-template-columns: var(--image-size) minmax(100px, 1.5fr); /* Consistent column width for all buttons with minmax */
   }
 
   &:hover {
     opacity: 1;
     cursor: pointer;
-    filter: brightness(105%);
-    & > * {
+    background-color: var(--clr-accent-11);
+    /* filter: brightness(105%); */
+    /* & > * {
       transform: scale(1.02);
-    }
+    } */
   }
 
   &.active {
     opacity: 1;
-    filter: brightness(114%);
-    box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1);
+    background-color: var(--clr-accent-10);
+    /* filter: brightness(114%); */
+    /* box-shadow: 0 0px 12px rgba(var(--clr-accent-0), 1); */
     z-index: 11;
 
     p {
-      transform: scale(1.02);
-      transition: all 0.2s ease-in-out;
+      /* transform: scale(1.02); */
+      /* transition: all 0.2s ease-in-out; */
     }
 
-    ${StyledSideMenuImage} {
+    /* ${StyledSideMenuImage} {
       height: calc(var(--image-size) * 1.02);
       transition: all 0.2s ease-in-out;
-    }
+    } */
   }
 `;
+
 
 // export const StyledInfoButtonContainer = styled.div`
 //   bottom: 0;
@@ -182,7 +188,7 @@ export default function SideMenu() {
                 src={singleMenu.src}
                 alt={singleMenu.alt}
                 style={{
-                  transform: `scale(${singleMenu.alt === 'sample' ? 0.7 : 1})`,
+                  transform: `scale(${singleMenu.alt === 'sample' ? 1.4 : 1})`,
                 }}
                 // style={{ backgroundColor: 'rgba(var(--clr-accent-1), .2)' }}
                 //   style={imgStyleOverride}

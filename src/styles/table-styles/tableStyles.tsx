@@ -52,7 +52,7 @@ export const Caption = styled.p`
   position: sticky;
   width: 100%;
   text-align: center;
-  z-index: 10;
+  z-index: 8;
   top: 9.8vh;
   font-family: var(--font-serif);
   font-weight: 900;

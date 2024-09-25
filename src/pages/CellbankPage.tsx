@@ -18,6 +18,7 @@ import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 import { useMultiInputState } from '../hooks/hooks';
 import PageHeader from '../ui/PageHeader';
+import PageDashboard from '../ui/page-dashboard/PageDashboard';
 
 export default function CellbankPage() {
   const {
@@ -77,7 +78,8 @@ export default function CellbankPage() {
           </StyledBookmark>
         </StyledBookmarkContainer> */}
 
-        <CellbanksMultiInputForm />
+        {/* <CellbanksMultiInputForm /> */}
+        <PageDashboard />
 
         {/* {error?.message && <ErrorMessage error={error} />} */}
         {cellbanksAll && cellbanksAll?.length > 0 && !isLoading && (
