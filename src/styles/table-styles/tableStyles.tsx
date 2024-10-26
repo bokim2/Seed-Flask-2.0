@@ -10,9 +10,10 @@ export const TableContainer = styled.div`
 --row-hover-color: #F4F4F4;
 --row-selected-color: #F2F6FC; */
 
-  position: relative;
-  margin-block: 1rem;
-  /* width: 100%; */
+  /* position: relative; */
+  /* padding-inline: 10rem; */
+  outline: solid 4px red;
+  width: 100%;
 
   @media (min-width: 850px) {
     /* width: auto; */
@@ -52,54 +53,74 @@ export const Caption = styled.p`
   position: sticky;
   width: 100%;
   text-align: center;
-  z-index: 8;
-  top: 9.8vh;
+  display: table-caption;
+
+  z-index: 11;
+  top: 0vh;
+  height: auto;
+  /* top: calc(var(--nav-bar-height, 5vh)); */
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
   font-size: 1.4rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0rem;
   color: var(--clr-text-1);
   background-color: rgba(var(--clr-table-200), 1);
   padding-block: 1vh;
   pointer-events: none;
 
+  /* div {
+    position: absolute;
+    top: 0;
+    z-index: 4;
+    height: calc(var(--nav-bar-height, 10vh));
+    width: 100vw;
+    background-color: red;
+  } */
+  
   @media (min-width: 850px) {
-    top: 0vh;
+    height: calc(var(--nav-bar-height, 10vh));
+    top: 0;
+    /* top: calc(var(--nav-bar-height, 10vh)); */
+    
+    background-color: rgba(var(--clr-table-200), 1);
+
+    /* top: 0vh; */
     font-size: 2rem;
-    background-color: transparent;
+    /* background-color: transparent; */
   }
 `;
 
 export const TableHeaderDiv = styled.div`
   position: sticky;
+  /* top: 0; */
   z-index: 10;
-  top: var(--nav-bar-height, 10vh);
   font-family: var(--font-serif);
   font-weight: 900;
   letter-spacing: 0.2rem;
   /* font-size: 1rem; */
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
   color: var(--clr-text-1);
-
-  padding-block: 1vh;
+  
+  /* padding-block: 1vh; */
   pointer-events: none;
-
+  
   @media (min-width: 850px) {
-    top: 2vh;
+    /* top: 2vh; */
   }
-`;
+  `;
 
 export const TableHeader = styled.thead`
+/* top: calc(var(--nav-bar-height, 10vh)* 2); */
   /* position: sticky; */
   /* z-index: 10; */
-  top: 9.7vh; // reference at NavBar styles
+  /* top: 9.7vh; // reference at NavBar styles */
 
   /* background-color: red; */
 
   @media (min-width: 850px) {
     position: sticky;
-    /* top: 0; */
+    top: calc(var(--nav-bar-height, 10vh));
   }
 `;
 

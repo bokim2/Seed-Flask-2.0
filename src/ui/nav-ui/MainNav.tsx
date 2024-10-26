@@ -36,6 +36,7 @@ const StyledMainNav = styled.div<StyledMainNav>`
 `;
 
 const StyledNavLink = styled(NavLink)`
+  text-decoration: none; 
   height: 100%;
   display: flex;
   align-items: center;
@@ -52,6 +53,7 @@ const StyledNav = styled.nav`
 `;
 
 const StyledTitle = styled.h1`
+  /* text-decoration: none; */
   font-family: var(--font-serif);
   font-weight: 800;
   padding-left: 0.2rem;

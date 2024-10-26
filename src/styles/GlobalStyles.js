@@ -196,6 +196,7 @@ ${
   --clr-primary-600: #475569;
   --clr-primary-700: #334155;
   --clr-primary-800: #f1f5f9; // app background
+  --clr-primary-850: #FFFFFF; // scrollbar track
   --clr-primary-900: 246, 248, 252; // navbar
   --clr-primary-950: 246, 248, 252;  //darker black - navbar expanded
 
@@ -250,7 +251,9 @@ ${'' /* TABLE STYLES */}
    --table-cell-font-size: .9rem;
  }
 
- 
+ ${'' /* scrollbar width */}
+
+ --scrollbar-width: 10px;
 
 
 
@@ -259,8 +262,13 @@ ${'' /* TABLE STYLES */}
    a {
      font-weight: 500;
      color: #646cff;
-     text-decoration: inherit;
+     text-decoration: none; 
    }
+
+   a:-webkit-any-link {
+    text-decoration: none;
+   }
+   
    a:hover {
      color: #535bf2;
    }

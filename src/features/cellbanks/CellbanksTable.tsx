@@ -183,7 +183,7 @@ export default function CellbanksTable({
       <Button
         type="button"
         onClick={() => setShowSearchRow((prev) => !prev)}
-        $size={'xsmall'}
+        $size={'xs'}
       >
         Search
       </Button>
@@ -202,8 +202,8 @@ export default function CellbanksTable({
       >
         {/* Table Section */}
         <TableContainer id="CellbanksTableContainer">
-          <Caption>Cell Banks Table</Caption>
           <StyledTable>
+          <Caption>Cell Banks Table</Caption>
             <TableHeader>
               {/* select column to search */}
               <TableHeaderRow>
@@ -221,7 +221,7 @@ export default function CellbanksTable({
                     type="button"
                     $variation="special"
                     onClick={() => setShowSearchRow((prev) => !prev)}
-                    $size={'xsmall'}
+                    $size={'xs'}
                   >
                     {!showSearchRow ? 'Search' : 'Close'}
                   </Button>

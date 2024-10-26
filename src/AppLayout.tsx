@@ -43,10 +43,10 @@ const StyledBackgroundImg = styled.div`
 `;
 
 const NavBar = styled.div`
-  position: fixed;
+  /* position: fixed; */
   margin: 0;
   width: 100%;
-  z-index: 10;
+  z-index: 100;
   height: var(
     --nav-bar-height,
     10vh
@@ -57,7 +57,7 @@ const NavBar = styled.div`
 `;
 
 const MainPageContainer = styled.main`
-  position: relative;
+  /* position: relative; */
   width: 100%;
   min-height: 75vh;
   margin: 0 auto;
@@ -152,14 +152,17 @@ const StyledMainMenuNavButtons = styled(StyledMainMenuButtons)`
 const StyledPageNavImage = styled(StyledImage)``;
 
 export const ScrollbarContainer = styled.div`
+/* justify-self: start; */
   /* margin-top: 10vh; */
-  height: 100vh;
+  height: calc(100vh - var(--nav-bar-height, 10vh));
   width: 100%;
-  overflow-y: scroll;
+  /* max-width: 100%; */
+  overflow-y: auto;
+  /* overflow-x: scroll; */
   overflow-x: auto;
 
   &::-webkit-scrollbar {
-    width: 10px;
+    width: var(--scrollbar-width, 10px);
 
     @media (max-width: 600px) {
       /* width: 20px; */
@@ -176,10 +179,11 @@ export const ScrollbarContainer = styled.div`
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--clr-primary-800);
+    background: var(--clr-primary-850);
+    /* background: black; */
 
     ${'' /* padding: 10px; */}
-    margin-top: var(--nav-bar-height, 10vh);
+    /* margin-top: var(--nav-bar-height, 10vh); */
     ${'' /* border-radius: 9999vw; */}
   }
 

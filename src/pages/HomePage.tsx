@@ -7,6 +7,9 @@ import {
 } from '../styles/UtilStyles';
 
 const HomeInnerPageContainer = styled.section`
+/* justify-items: center; */
+/* align-items: center; */
+margin: 0 auto;
   width: 80%;
   max-width: 1700px;
   /* max-width: min(1700px, 800px); */

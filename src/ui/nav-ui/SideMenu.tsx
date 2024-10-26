@@ -13,7 +13,7 @@ const StyledSideMenu = styled.div`
   --active-border-radius: 22px;
   max-height: 100vh;
 
-  z-index: 9;
+  z-index: 20;
   background-color: var(--clr-accent-9);
   bottom: 0;
 
@@ -34,7 +34,7 @@ const StyledSideMenu = styled.div`
     overflow-y: scroll;
     width: auto;
     /* width: min(200px, 20vw); */
-    margin-top: var(--nav-bar-height, 10vh);
+    /* margin-top: var(--nav-bar-height, 10vh); */
     padding-top: calc(var(--nav-bar-height, 10vh) * 0.5);
 
     /* color: white; */

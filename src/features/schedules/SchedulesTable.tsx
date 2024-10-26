@@ -226,8 +226,8 @@ TScheduleTable) {
       >
         {/* Table Section */}
         <TableContainer id="SchedulesTableContainer">
-          <Caption>Schedules Table</Caption>
           <StyledTable>
+          <Caption>Schedules Table</Caption>
             <TableHeader>
               {/* select column to search */}
               <TableHeaderRow>

@@ -234,8 +234,9 @@ TFlasksTable) {
       >
         {/* Table Section */}
         <TableContainer id="SearchFlasksTableContainer">
-          <Caption>Flasks Table</Caption>
+
           <StyledTable>
+          <Caption>Flasks Table</Caption>
             <TableHeader>
               {/* select column to search */}
               <TableHeaderRow>
@@ -276,7 +277,7 @@ TFlasksTable) {
                       type="button"
                       $variation="special"
                       onClick={() => setShowSearchRow((prev) => !prev)}
-                      $size={'xsmall'}
+                      $size={'xs'}
                     >
                       {!showSearchRow ? 'Search' : 'Close'}
                     </Button>

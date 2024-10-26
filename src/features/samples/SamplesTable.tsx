@@ -179,8 +179,8 @@ export default function SamplesTable({ samples }) {
         }}
       >
         <TableContainer id="SamplesTableContainer">
-            <Caption>Samples</Caption>
           <StyledTable>
+            <Caption>Samples</Caption>
             <TableHeader>
               <TableHeaderRow>
                 {samplesTableHeaderCellsArray.map((headerCell) => (
@@ -197,7 +197,7 @@ export default function SamplesTable({ samples }) {
                     type="button"
                     $variation="special"
                     onClick={() => setShowSearchRow((prev) => !prev)}
-                    $size={'xsmall'}
+                    $size={'xs'}
                     >
                       Search
                     </Button>

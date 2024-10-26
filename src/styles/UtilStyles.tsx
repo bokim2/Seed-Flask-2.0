@@ -143,6 +143,7 @@ export const StyledNavList = styled.ul`
 `;
 
 export const StyledNavLink = styled(NavLink)`
+  /* text-decoration: none; */
   display: flex;
   align-items: center;
   justify-content: end;
@@ -159,15 +160,14 @@ export const StyledNavLink = styled(NavLink)`
 
 export const PageContainer = styled.section`
   /* margin-top: max(12vh, 5rem); */
-  position: relative;
+  /* position: relative; */
   margin-top: var(--nav-bar-height, 10vh);
 
-  justify-content: center;
-
-  width: 100%;
-  display: flex;
+  min-width: 100%;
+  /* display: flex; */
+  /* justify-content: center;
   flex-direction: column;
-  align-items: center;
+  align-items: center; */
 
   &#HomePageContainer {
     min-height: 80%;
@@ -175,9 +175,14 @@ export const PageContainer = styled.section`
 `;
 
 export const InnerPageContainer = styled.section`
-  width: 90%;
+  /* width: 90%; */
+  margin: 0 auto;
   padding-bottom: 3rem;
-  max-width: 1700px;
+  max-width: 85%;
+
+  @media (min-width: 850px) {
+    max-width: 1200px;
+  }
 `;
 
 // loader styles
