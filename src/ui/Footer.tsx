@@ -15,7 +15,7 @@ const StyledFooter = styled.footer`
 export default function Footer() {
   return (
     <StyledFooter>
-      {/* <StyledImg src="images/info/info.png" alt="info button" /> */}
+      {/* <StyledImg src="/images/info/info.png" alt="info button" /> */}
 
       <SideMenu />
     </StyledFooter>

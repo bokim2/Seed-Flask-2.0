@@ -1,12 +1,8 @@
-import {
-  TableDataCell,
-  PreviousDataRow,
-  EditRow,
-  EditTextArea,
-} from '../../styles/UtilStyles';
+
 import Button from '../../ui/Button';
 import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditCellbankForm } from './cellbanks-types';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 
 export default function CellbanksRow({
   rowData,
@@ -38,6 +34,7 @@ export default function CellbanksRow({
       <PreviousDataRow $editing={editing}>
         <TableDataCell
           data-cell="cell bank id"
+          className="clickableId"
           onClick={() => handleAddBookmark(cell_bank_id)}
         >
           {cell_bank_id}
@@ -65,12 +62,13 @@ export default function CellbanksRow({
           {notes}
         </TableDataCell>
 
-        <TableDataCell data-cell="date">{human_readable_date}</TableDataCell>
+        <TableDataCell data-cell="date" style={{whiteSpace: 'nowrap'}}>{human_readable_date || displayLocalTime(date_timestamptz)}</TableDataCell>
 
         <TableDataCell data-cell="user">{username}</TableDataCell>
 
         <TableDataCell
-          data-cell="edit"
+          // data-cell="edit"
+          data-cell="none"
           // onClick={(e) => initializeCellbankEdit(e, cellbank.cell_bank_id)}
           // onClick={(e)=> initializeRowEdit(e, cellbank.cell_bank_id, "cell_bank_id")}
 
@@ -90,7 +88,7 @@ export default function CellbanksRow({
             }
           }}
         >
-          <Button $size={'small'}>Edit</Button>
+          <Button $size={'xsmall'}>Edit</Button>
         </TableDataCell>
       </PreviousDataRow>
 
@@ -149,7 +147,7 @@ function CellbanksEditForm({
 
         <TableDataCell data-cell="target_molecule">
           <EditTextArea
-            data-cell="target_molecule"
+            data-cell="target molecule"
             id="target_molecule"
             name="target_molecule"
             onChange={handleChange}
@@ -175,7 +173,7 @@ function CellbanksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="description">
           <EditTextArea
             id="description"
             name="description"
@@ -186,7 +184,7 @@ function CellbanksEditForm({
           />
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="notes">
           <EditTextArea
             id="notes"
             name="notes"
@@ -197,7 +195,7 @@ function CellbanksEditForm({
           />
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="date">
           <EditTextArea
             id="human_readable_date"
             name="human_readable_date"
@@ -208,13 +206,13 @@ function CellbanksEditForm({
           />
         </TableDataCell>
 
-        <TableDataCell>
+        <TableDataCell data-cell="none">
           <Button $size={'small'} type="submit" disabled={isPendingUpdate}>
             Update
           </Button>
         </TableDataCell>
 
-        <TableDataCell data-cell="delete">
+        <TableDataCell data-cell="none">
           <Button
             $size={'small'}
             type="button"

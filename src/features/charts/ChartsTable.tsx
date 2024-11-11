@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 
 import {
-  Caption,
   StyledForm,
-  StyledTable,
-  TableContainer,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
+
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import ChartsRow from './ChartsRow';
@@ -15,6 +10,7 @@ import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelect
 import { useAppSelector } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
 import { changePageLimit } from '../../redux/slices/pageSlice';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 
 export default function ChartsTable({
   flasks,
@@ -60,6 +56,11 @@ export default function ChartsTable({
     dispatch(changePageLimit(limit));
   };
 
+  // const dispatch = useDispatch();
+  // const handleAddBookmark = (id: number) => {
+  //   dispatch(toggleFlaskBookmark(id));
+  // }
+
   // console.log(
   //   'chartTitle, bookmarkedFlasks, flasks',
   //   chartTitle,
@@ -98,10 +99,10 @@ export default function ChartsTable({
             pageLimitSetting={pageLimitSetting}
             tableName={'cellbanks'}
           />
-          <StyledTable>
             <Caption>{chartTitle}</Caption>
+          <StyledTable>
             <TableHeader>
-              <TableRow>
+              <TableHeaderRow>
                 <TableHeaderCell>Flask ID</TableHeaderCell>
                 <TableHeaderCell>Cell Bank ID</TableHeaderCell>
                 <TableHeaderCell>Project</TableHeaderCell>
@@ -121,7 +122,7 @@ export default function ChartsTable({
                     <TableHeaderCell>project</TableHeaderCell>
                   </>
                 )}
-              </TableRow>
+              </TableHeaderRow>
             </TableHeader>
             <tbody>
               {Array.isArray(flasks) &&

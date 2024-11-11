@@ -4,17 +4,19 @@ import {
   ButtonsContainer,
   LoaderWrapper,
   SearchInputAndButtonContainer,
-  TableHeaderCell,
-  TableSearchInput,
+
 } from '../styles/UtilStyles';
 import styled from 'styled-components';
 import Button from './Button';
 import { useMultiTextInputSearch } from '../hooks/table-hooks/useMultiTextInputSearch';
 import { useInfiniteFetchMultiTextInputSearch } from '../hooks/table-hooks/useInfiniteFetchMultiTextInputSearch';
 import LoaderBar from './LoaderBar';
+import { formatColumnName } from '../hooks/hooks';
+import { TableHeaderCell, TableSearchInput } from '../styles/table-styles/tableStyles';
 
 export const SearchTableRow = styled.tr`
-  display: none;
+  /* display: none; */
+
   background-color: hsl(0, 0%, 0%, 0.5);
   &:nth-of-type(2n) {
     background-color: hsl(0, 0%, 0%, 0.2);
@@ -98,23 +100,33 @@ export default function SearchFormRow({
         {/* <form onSubmit={handleSubmit}> */}
         {tableColumnsHeaderCellsArray.map((criterion, index) => (
           <TableHeaderCell>
-            <SearchInputAndButtonContainer>
+            <SearchInputAndButtonContainer
+              data-cell={formatColumnName(criterion)}
+            >
               <TableSearchInput
                 data-column={criterion}
+                // data-cell="none"
                 value={searchCriteria[index].text}
                 onChange={(e) => handleSearchTextChange(e, index)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    console.log('enter key pressed');
+                    handleSearchSubmit(e);
+                  }
+                }}
                 placeholder="search..."
               />
               <Button
                 $size="xxs"
                 $variation="round"
-                type="button"
+                type="submit"
                 onClick={handleSearchSubmit}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    (e) => handleSearchSubmit(e);
-                  }
-                }}
+                // onKeyPress={(e) => {
+                //   if (e.key === 'Enter') {
+                //     console.log('enter key pressed')
+                //     handleSearchSubmit(e);
+                //   }
+                // }}
               >
                 s
               </Button>
@@ -147,18 +159,21 @@ export default function SearchFormRow({
             >
               Clear
             </Button>
-            {data  && data?.length > 0 && <Button
-              $size="xs"
-              type="button"
-              onClick={() => fetchNextPage()}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  () => fetchNextPage();
-                }
-              }}
-            >
-              load more data
-            </Button>}
+
+            {data && data?.length > 0 && (
+              <Button
+                $size="xs"
+                type="button"
+                onClick={() => fetchNextPage()}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    () => fetchNextPage();
+                  }
+                }}
+              >
+                load more data
+              </Button>
+            )}
           </ButtonsContainer>
         </TableHeaderCell>
       </SearchTableRow>

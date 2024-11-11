@@ -1,12 +1,10 @@
 import React from 'react';
-import AllCellbanksGraph from '../graphs/AllCellbanksGraph';
 import ChartsTable from '../ChartsTable';
 import Button from '../../../ui/Button';
 import { useFetchBookmarkedFlasksGraphData } from '../chart-hooks';
-import BookmarkedCellbankGraph from '../graphs/BookmarkedCellbankGraph';
-import SelectedFlasksGraph from '../graphs/SelectedFlasksGraph';
 import { LoaderWrapper } from '../../../styles/UtilStyles';
 import LoaderBar from '../../../ui/LoaderBar';
+import BookmarkedFlasksGraph from '../graphs/BookmarkedFlasksGraph';
 
 export default function BookmarkedFlasksTab({
   // allCellbankGraphData,
@@ -38,16 +36,12 @@ export default function BookmarkedFlasksTab({
       {Array.isArray(bookmarkedFlasksGraphData) &&
         bookmarkedFlasksGraphData?.length && (
           <>
-            <SelectedFlasksGraph
+            <BookmarkedFlasksGraph
               graphData={bookmarkedFlasksGraphData}
               bookmarkedFlasks={bookmarkedFlasks}
               // setBookmarkedFlasks={setBookmarkedFlasks}
             />
-            {/* <AllCellbanksGraph
-          allCellbankGraphData={bookmarkedFlasksGraphData}
-          bookmarkedFlasks={bookmarkedFlasks}
-          // setBookmarkedFlasks={setBookmarkedFlasks}
-        /> */}
+
           </>
         )}
       <ChartsTable

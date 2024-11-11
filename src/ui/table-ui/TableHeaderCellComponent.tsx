@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import {
-  TableHeaderCell,
-  TableHeaderCellInnerContainer,
-} from '../../styles/UtilStyles';
+
 import SortTableColumnsArrows from './SortTableColumnsArrows';
 import { formatColumnName } from '../../hooks/hooks';
+import { TableHeaderCell, TableHeaderCellInnerContainer } from '../../styles/table-styles/tableStyles';
+
+type TTableHeaderCellComponent = {
+  handleSortColumn?: (columnName: string)=> void;
+  sortColumn?: string;
+  columnName?: string;
+}
 
 export default function TableHeaderCellComponent({
   // searchField,
@@ -15,7 +19,7 @@ export default function TableHeaderCellComponent({
   return (
     <>
       <TableHeaderCell
-        data-column-name={columnName}
+        data-cell={columnName}
         // className={`${searchField == columnName ? 'dbsearch' : ''}
         //           ${
         //             searchField == columnName &&

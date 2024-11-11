@@ -1,16 +1,11 @@
 import React from 'react';
-import {
-  EditRow,
-  EditTextArea,
-  PreviousDataRow,
-  TableDataCell,
-  TableRow,
-} from '../../styles/UtilStyles';
+
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
 import { toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
 import { useDispatch } from 'react-redux';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 
 export default function ChartsRow({
   rowData,
@@ -41,6 +36,7 @@ export default function ChartsRow({
   } = rowData;
   // const editing = editingId === flask_id;
   // console.log('rowData', rowData);
+
   const dispatch = useDispatch();
 
   return (
@@ -77,7 +73,7 @@ export default function ChartsRow({
         </TableDataCell>
         <TableDataCell data-cell="username">{username}</TableDataCell>
         <TableDataCell data-cell="bookmark">
-          <Button $size={'small'}>bookmark</Button>
+          <Button $size={'xsmall'}>bookmark</Button>
         </TableDataCell>
 
         {toggleCellbankData && (
@@ -86,9 +82,7 @@ export default function ChartsRow({
             <TableDataCell data-cell="target molecule">
               {target_molecule}
             </TableDataCell>
-            <TableDataCell data-cell="project">
-              {project}
-            </TableDataCell>
+            <TableDataCell data-cell="project">{project}</TableDataCell>
           </>
         )}
         {/* </TableRow> */}

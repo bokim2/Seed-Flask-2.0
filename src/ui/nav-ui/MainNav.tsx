@@ -13,10 +13,7 @@ import {
 import {
   LinkButton,
   LoginButton,
-  MainFilterContainer,
-  MainFilterSelector,
-  MainFilterSelectorOption,
-  MainFilterValue,
+
   NavMenuButton,
   NavSection,
   UserButton,
@@ -29,16 +26,17 @@ import { updateUserProfile } from '../../redux/slices/userProfileSlice';
 const StyledMainNav = styled.div<StyledMainNav>`
   position: relative;
   z-index: 10;
-  background-color: rgba(var(--clr-primary-950), 0.9);
+  background-color: rgba(var(--clr-primary-950), 0.99);
   padding-block: 0.5rem;
   flex-grow: 1;
   height: 100%;
   /* height: 10vh; */
 
-  opacity: ${(props) => (props.$isScrolled ? 1 : 0.8)};
+  opacity: ${(props) => (props.$isScrolled ? 1 : 0.99)};
 `;
 
 const StyledNavLink = styled(NavLink)`
+  text-decoration: none; 
   height: 100%;
   display: flex;
   align-items: center;
@@ -55,6 +53,7 @@ const StyledNav = styled.nav`
 `;
 
 const StyledTitle = styled.h1`
+  /* text-decoration: none; */
   font-family: var(--font-serif);
   font-weight: 800;
   padding-left: 0.2rem;
@@ -71,16 +70,11 @@ const StyledTitle = styled.h1`
   }
 
   &:active {
-    transform: scale(0.99);
+    transform: scale(0.98);
     filter: brightness(90%);
+    
   }
 
-  /* &:active {
-    color:#b6c7f1;
-  }
-  &:focus {
-    color:#b6c7f1;
-  } */
 
   @media (min-width: 800px) {
     font-size: clamp(2rem, 3vw, 3rem);
@@ -97,11 +91,9 @@ export const StyledUser = styled.img`
   fill: var(--clr-accent-0);
   opacity: 1;
   z-index: 100;
-  /* max-width: 50%; */
   padding: 0;
   margin: 0;
   height: 70%;
-  /* width: clamp(2rem, 4vw, 4rem); */
   border-radius: 50%;
 `;
 

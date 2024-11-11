@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import {
   TCreateFlask,
@@ -6,16 +6,7 @@ import {
   initialEditFlasksForm,
   updateFlaskSchema,
 } from '../flasks/flasks-types';
-import {
-  Caption,
-  StyledForm,
-  StyledTable,
-  TableContainer,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
-  Wrapper,
-} from '../../styles/UtilStyles';
+import { StyledForm } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 import { initialCreateFlasksForm } from '../flasks/flasks-types';
 import {
@@ -25,10 +16,9 @@ import {
 import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
 import PageLimitDropDownSelector from '../../ui/table-ui/PageLimitDropDownSelector';
 import {
-  filteredTableData,
   transformListStringToArray,
   useAppSelector,
-  useFilterSortTableData,
+  useFilteredTableData,
   useSetSortColumn,
 } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
@@ -48,22 +38,22 @@ import SearchFormRow from '../../ui/SearchFormRow';
 import ErrorMessage from '../../ui/ErrorMessage';
 import SearchForm from '../../ui/SearchForm';
 import { updateScheduleSchema } from '../../../server/zodSchemas';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 // import Scheduler from './add-to-schedule/Scheduler';
 
 type TScheduleTable = {
-  schedules: TSchedules,
-  selectedScheduleId?: number | null,
-  selectIdHandler?: (id)=> void,
+  schedules: TSchedules;
+  selectedScheduleId?: number | null;
+  selectIdHandler?: (id) => void;
 };
-
 
 export default function SchedulesTable({
   schedules,
   selectIdHandler,
-  // chartTitle,
-  // bookmarkedFlasks,
-  // setBookmarkedFlasks,
-}: TScheduleTable) {
+}: // chartTitle,
+// bookmarkedFlasks,
+// setBookmarkedFlasks,
+TScheduleTable) {
   // console.log('schedules in schedules table', schedules);
   // const [editingId, setEditingId] = useState<number | null>(null);
   // const [editedForm, setEditedForm] = useState(initialEditScheduleForm);
@@ -115,8 +105,8 @@ export default function SchedulesTable({
   // const [searchedData, setSearchedData] = useState<TSchedules>([]);
 
   // filtered and sorted data that will be passed to child components
-  const [filteredAndSortedData, setFilteredAndSortedData] =
-    useState<TSchedules>([]);
+  // const [filteredAndSortedData, setFilteredAndSortedData] =
+  //   useState<TSchedules>([]);
 
   // sort selected column
   const { sortColumn, handleSortColumn } =
@@ -138,7 +128,18 @@ export default function SchedulesTable({
   //   setFilteredAndSortedData,
   // });
 
-  const data = filteredTableData(
+  const filteredAndSortedData = useMemo(() => {
+    console.log('Calculating filtered and sorted data');
+    if (searchedData && searchedData.length > 0) {
+      console.log('Using searched data', searchedData);
+      return searchedData;
+    } else {
+      console.log('Using default cellbanks data', schedules);
+      return schedules;
+    }
+  }, [searchedData, schedules]);
+
+  const data = useFilteredTableData(
     schedules,
     filteredAndSortedData,
     sortColumn,
@@ -146,8 +147,8 @@ export default function SchedulesTable({
   );
 
   //state for multisearch
-
-  // const [searchMultiError, setSearchMultiError] = useState(null);
+  const [showSearchRow, setShowSearchRow] = useState(true);
+  const [searchMultiError, setSearchMultiError] = useState(null);
   // console.log(searchMultiError, 'searchMultiError');
 
   return (
@@ -168,6 +169,14 @@ export default function SchedulesTable({
       {updateError?.message && <ErrorMessage error={updateError} />}
       {deleteError?.message && <ErrorMessage error={deleteError} />}
       {/* {searchMultiError && <ErrorMessage error={searchMultiError} />} */}
+
+      <Button
+        type="button"
+        onClick={() => setShowSearchRow((prev) => !prev)}
+        $size={'small'}
+      >
+        Search
+      </Button>
 
       {/* Edit row form */}
       <StyledForm
@@ -215,13 +224,13 @@ export default function SchedulesTable({
           );
         }}
       >
-        <Caption>Schedules Table</Caption>
         {/* Table Section */}
         <TableContainer id="SchedulesTableContainer">
           <StyledTable>
+          <Caption>Schedules Table</Caption>
             <TableHeader>
               {/* select column to search */}
-              <TableRow>
+              <TableHeaderRow>
                 {schedulesTableHeaderCellsArray.map((headerCell, i) => (
                   <TableHeaderCellComponent
                     key={headerCell}
@@ -232,12 +241,17 @@ export default function SchedulesTable({
                 ))}
 
                 <TableHeaderCell>edit</TableHeaderCell>
-              </TableRow>
+              </TableHeaderRow>
 
-              {/* <SearchFormRow setSearchedData={setSearchedData} tableName={'schedules'} 
-            tableColumnsHeaderCellsArray={schedulesTableHeaderCellsArray}
-            setSearchMultiError={setSearchMultiError}
-            /> */}
+              {/* {showSearchRow && (
+                <SearchFormRow
+                  setSearchedData={setSearchedData}
+                  tablePathName={'cellbanks'}
+                  tableColumnsHeaderCellsArray={cellbanksTableHeaderCellsArray}
+                  setSearchMultiError={setSearchMultiError}
+                  setSearchLoading={setSearchLoading}
+                />
+              )} */}
             </TableHeader>
             <tbody>
               {data &&

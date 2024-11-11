@@ -2,13 +2,13 @@ import express from 'express';
 import { db } from '../db/db.js';
 import { LIMIT } from '../../src/lib/constants.js';
 import {
-  createCellbankSchema,
-  flasksSearchSchema,
-  flasksSearchSchemaArray,
-  updateBackendCellbankSchema,
+
 } from '../zodSchemas.js';
-import { allowRolesAdminUser } from '../middleware/allowRolesAdminUser.js';
+import { allowRolesAdminUser } from '../middleware/roles/allowRolesAdminUserMiddleware.js';
+
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
+import { allowIfUserIdMatchesMiddleware } from '../middleware/roles/allowIfUserIdMatchesMiddleware.js';
+import { validateIdParam } from '../middleware/validateIdParam.js';
 import { getUtcTimestampFromLocalTime } from '../helperFunctions.js';
 import { z } from 'zod';
 
@@ -22,10 +22,12 @@ flaskRouter.route('/').get(async (req, res) => {
       parseInt(req.query.offset, 10) - parseInt(req.query.limit, 10) || 0; // Default to 0 if not specified
     const results = await db.query(
       `SELECT
-        *
-        FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
-        ORDER BY flask_id DESC
-        LIMIT $1 OFFSET $2;`,
+      f.*, 
+      c.strain, c.target_molecule, c.project  
+      FROM flasks as f
+      LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
+      ORDER BY f.flask_id DESC
+      LIMIT $1 OFFSET $2;`,
       [limit, offset]
     );
     // console.log('trying to get timezone to work', results);
@@ -35,7 +37,8 @@ flaskRouter.route('/').get(async (req, res) => {
       data: results.rows,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -69,10 +72,18 @@ flaskRouter.route('/list').get(async (req, res) => {
       return res.status(400).json({ message: 'No bookmarked flask ids' });
     }
     const results = await db.query(
+      // `SELECT
+      //   *
+      //   FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
+      //   ORDER BY flask_id DESC;`,
       `SELECT
-        *
-        FROM flasks as f LEFT JOIN cell_banks as c ON f.cell_bank_id = c.cell_bank_id
-        ORDER BY flask_id DESC;`,
+      f.*,
+      c.strain, c.target_molecule, c.project
+      FROM flasks as f 
+      LEFT JOIN cell_banks as c ON f.cell_bank_id
+      ORDER BY f.flask_id DESC
+      LIMIT $1 OFFSET $2;
+      `,
       [flaskIds]
     );
     // console.log('trying to get timezone to work', results);
@@ -82,12 +93,13 @@ flaskRouter.route('/list').get(async (req, res) => {
       data: results.rows,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
-console.log('right above flask search backend');
 flaskRouter.route('/search').get(async (req, res) => {
+  console.log('in flask search backend');
   try {
     console.log(
       'req.query',
@@ -181,7 +193,9 @@ flaskRouter.route('/search').get(async (req, res) => {
     console.log('queries', queries);
 
     if (queries.length === 0) {
-      return;
+      return res
+        .status(400)
+        .json({ message: 'No valid search fields provided' });
     }
 
     const numericFields = [
@@ -209,7 +223,7 @@ flaskRouter.route('/search').get(async (req, res) => {
 
     const queryObjectSchema = z.object({
       field: z.string(),
-      text: z.string(),
+      text: z.union([z.string(), z.number()]),
     });
 
     const transformedQueryObjectSchema =
@@ -220,31 +234,32 @@ flaskRouter.route('/search').get(async (req, res) => {
     // console.log('queries before zodvalidation flaskroutes search', queries);
     // const validatedQueries = queries.map((query)=> (flasksSearchSchema.safeParse(query).data));
     // console.log('validatedQueries FLASK SEARCH', validatedQueries);
-    const zodValidatedData = queryArraySchema.parse(queries);
-    console.log('zodValidatedData', zodValidatedData);
-    // if (!zodValidatedData.success) {
-    //   return res.status(400).json({
-    //     message: zodValidatedData?.error?.issues,
-    //     serverError: 'Zod validation error on the server for search cell banks',
-    //   });
-    // }
+    const { data, success, error } = queryArraySchema.safeParse(queries);
+    // console.log('zodValidatedData in flasks search', zodValidatedData);
+    // console.log('zodValidatedData', zodValidatedData);
+    if (!success) {
+      return res.status(400).json({
+        message: error?.issues,
+        serverError: 'Zod validation error on the server for search flasks',
+      });
+    }
 
-    // if (queries.length === 0) {
-    //   console.log('queries.length === 0' , queries.length === 0)
-    //   return res.status(400).json({
-    //     message: zodValidatedData?.error?.issues,
-    //     serverError: 'Invalid or missing search fields',
-    //   });
-    // }
+    if (data?.length === 0) {
+      return res.status(400).json({
+        message: error?.issues,
+        serverError: 'No Match.  Check search fields',
+      });
+    }
 
     // Construct WHERE clause dynamically
-    const whereClauses = zodValidatedData.map((q, index) => {
+    const whereClauses = data.map((q, index) => {
       const fieldForQuery = q.field;
       // q.field === 'flask_id' ? `${q.field}::text` : q.field;
       if (typeof q.text === 'number') {
+        console.log(`{q.field} = $${index + 1}`, q.field, index + 1);
         return `${q.field} = $${index + 1}`;
       }
-      if (q.field === 'human_readable_date') {
+      if (q.field === 'flasks.human_readable_date') {
         q.field = 'start_date';
         q.text = getUtcTimestampFromLocalTime(q.text);
       }
@@ -257,9 +272,38 @@ flaskRouter.route('/search').get(async (req, res) => {
       }
     });
 
+    // flask_id: 'flasks.flask_id',
+    // cell_bank_id: 'flasks.cell_bank_id',
+    // inoculum_ul: 'flasks.inoculum_ul',
+    // media: 'flasks.media',
+    // media_ml: 'flasks.media_ml',
+    // rpm: 'flasks.rpm',
+    // start_date: 'flasks.start_date',
+    // temp_c: 'flasks.temp_c',
+    // vessel_type: 'flasks.vessel_type',
+    // username: 'flasks.username',
+    // user_id: 'flasks.user_id',
+    // human_readable_date: 'flasks.human_readable_date',
+    // strain: 'cell_banks.strain',
+    // target_molecule: 'cell_banks.target_molecule',
+    // project: 'cell_banks.project',
     // let queryText = `SELECT * FROM flasks`;
-    let queryText = `SELECT flasks.*, cell_banks.* FROM flasks
-    LEFT JOIN cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id`;
+    let queryText = `SELECT 
+      flasks.flask_id, 
+      flasks.cell_bank_id,
+      flasks.media,
+      flasks.media_ml,
+      flasks.rpm,
+      flasks.start_date,
+      flasks.temp_c,
+      flasks.vessel_type,
+      flasks.username,
+      flasks.user_id,
+      cell_banks.strain,
+      cell_banks.target_molecule,
+      cell_banks.project
+      FROM flasks
+      LEFT JOIN cell_banks ON flasks.cell_bank_id = cell_banks.cell_bank_id`;
     if (whereClauses.length > 0) {
       queryText += ` WHERE ${whereClauses.join(' AND ')}`;
     }
@@ -269,7 +313,7 @@ flaskRouter.route('/search').get(async (req, res) => {
 
     const query = {
       text: queryText,
-      values: [...zodValidatedData.map((q) => q.text), limit, offset],
+      values: [...data.map((q) => q.text), limit, offset],
     };
 
     console.log('QUERY!!!', query);
@@ -288,12 +332,10 @@ flaskRouter.route('/search').get(async (req, res) => {
     console.error(err);
     console.error('Database query error:', err.message);
     console.error('Detailed error:', err);
-    res
-      .status(500)
-      .json({
-        message: err?.detail || 'Internal server error',
-        error: err.message,
-      });
+    res.status(500).json({
+      message: err?.detail || 'Internal server error',
+      error: err.message,
+    });
 
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
@@ -366,63 +408,67 @@ flaskRouter
 
 // update a flask
 
-flaskRouter.route('/:id').put(async (req, res) => {
-  console.log('req.body in server', req.body, 'req.params.id', req.params.id);
-  const {
-    inoculum_ul,
-    media,
-    media_ml,
-    rpm,
-    start_date,
-    temp_c,
-    vessel_type,
-    cell_bank_id,
-  } = req.body;
+flaskRouter
+  .route('/:id')
+  .put(validateIdParam, allowIfUserIdMatchesMiddleware, async (req, res) => {
+    console.log('req.body in server', req.body, 'req.params.id', req.params.id);
+    const {
+      inoculum_ul,
+      media,
+      media_ml,
+      rpm,
+      start_date,
+      temp_c,
+      vessel_type,
+      cell_bank_id,
+    } = req.body;
 
-  //   const validatedData = editFlaskSchema.validate({
-  //   inoculum_ul,
-  //   media,
-  //   media_ml,
-  //   rpm,
-  //   start_date,
-  //   temp_c,
-  //   vessel_type,
-  //   cell_bank_id,
-  // });
+    //   const validatedData = editFlaskSchema.validate({
+    //   inoculum_ul,
+    //   media,
+    //   media_ml,
+    //   rpm,
+    //   start_date,
+    //   temp_c,
+    //   vessel_type,
+    //   cell_bank_id,
+    // });
 
-  // console.log('validatedData.success', validatedData.success);
+    // console.log('validatedData.success', validatedData.success);
 
-  const flaskId = req.params.id;
+    const flaskId = req.params.id;
 
-  const query = `
+    const query = `
     UPDATE flasks
     SET inoculum_ul = $1, media = $2, media_ml = $3, rpm = $4, start_date = $5, temp_c = $6, vessel_type = $7,  cell_bank_id = $8
     WHERE flask_id = $9 `;
 
-  const values = [
-    inoculum_ul,
-    media,
-    media_ml,
-    rpm,
-    start_date,
-    temp_c,
-    vessel_type,
-    cell_bank_id,
-    flaskId,
-  ];
-  try {
-    const results = await db.query(query, values);
-    if (results.rowCount === 0) {
-      return res.status(404).json({ message: 'Flask not found' });
+    const values = [
+      inoculum_ul,
+      media,
+      media_ml,
+      rpm,
+      start_date,
+      temp_c,
+      vessel_type,
+      cell_bank_id,
+      flaskId,
+    ];
+    try {
+      const results = await db.query(query, values);
+      if (results.rowCount === 0) {
+        return res.status(404).json({ message: 'Flask not found' });
+      }
+      res
+        .status(200)
+        .json({ message: 'Update successful', data: results.rows });
+    } catch (err) {
+      console.error('Error in server PUT request:', err);
+      return res
+        .status(500)
+        .json({ message: 'Internal server error', error: err.message });
     }
-    res.status(200).json({ message: 'Update successful', data: results.rows });
-  } catch (err) {
-    console.error('Error in server PUT request:', err);
-    return res
-      .status(500)
-      .json({ message: 'Internal server error', error: err.message });
-  }
-});
+  });
 
 flaskRouter.route('/:id').delete(async (req, res) => {
   const query = 'DELETE FROM flasks WHERE flask_id = $1';

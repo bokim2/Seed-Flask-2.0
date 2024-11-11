@@ -6,10 +6,12 @@ import {
   createCellbankSchema,
   updateBackendCellbankSchema,
 } from '../zodSchemas.js';
-import { allowRolesAdminUser } from '../middleware/allowRolesAdminUser.js';
+import { allowRolesAdminUser } from '../middleware/roles/allowRolesAdminUserMiddleware.js';
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
+import { allowIfUserIdMatchesMiddleware } from '../middleware/roles/allowIfUserIdMatchesMiddleware.js';
 import { LIMIT } from '../../src/lib/constants.js';
 import { getUtcTimestampFromLocalTime } from '../helperFunctions.js';
+import { z } from 'zod';
 
 const cellbankRouter = express.Router();
 
@@ -39,9 +41,11 @@ cellbankRouter.route('/').get(async (req, res) => {
       status: 'success',
       data: results.rows,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Failed to fetch cell banks' });
+  } catch (err) {
+    // console.log(error);
+    // res.status(500).json({ error: 'Failed to fetch cell banks' });
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -51,6 +55,7 @@ cellbankRouter
   .post(allowRolesAdminUser, badWordsMiddleware, async (req, res) => {
     try {
       const userObj = req.oidc.user;
+      console.log('userObj in cellbank post', userObj);
       const username = userObj.name;
       const user_id = userObj.sub;
       console.log(req.body, 'in post cell bank server');
@@ -95,11 +100,10 @@ cellbankRouter
         data: results.rows,
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   });
-
 
 cellbankRouter.route('/search').get(async (req, res) => {
   try {
@@ -142,37 +146,68 @@ cellbankRouter.route('/search').get(async (req, res) => {
       'human_readable_date',
     ];
 
+    const numericFields = ['cell_bank_id'];
+
     // Filter out invalid fields
     const queries = searchField
       .map((field, index) => ({
         field,
-        text: searchText?.[index] || '',
+        text:
+          (numericFields.includes(field)
+            ? Number(searchText?.[index])
+            : searchText?.[index]) || '',
       }))
       .filter((q) => validFields.includes(q.field) && q.text !== '');
     console.log('is console working after queries');
     console.log('queries', queries);
 
     if (queries.length === 0) {
-      return;
+      // return;
+      return res
+        .status(400)
+        .json({ message: 'No valid search fields provided' });
     }
 
-    const zodValidatedData = cellbanksSearchSchemaArray.safeParse(queries);
-    if (!zodValidatedData.success) {
+    const queryObjectSchema = z.object({
+      field: z.string(),
+      text: z.union([z.string(), z.number()]),
+    });
+
+    const transformQueryObject = (queryObject) => {
+      if (numericFields.includes(queryObject.field)) {
+        return { ...queryObject, text: Number(queryObject.text) };
+      }
+      return queryObject;
+    };
+
+    const transformedQueryObjectSchema =
+      queryObjectSchema.transform(transformQueryObject);
+
+    const queryArraySchema = z.array(transformedQueryObjectSchema);
+
+    // const zodValidatedData = queryArraySchema.parse(queries);
+
+    const { data, success, error } = queryArraySchema.safeParse(queries);
+    if (!success) {
       return res.status(400).json({
-        message: zodValidatedData.error.issues,
+        message: error?.issues?.map((issue) => ({
+          path: issue.path.join('.'),
+          message: issue.message,
+        })),
         serverError: 'Zod validation error on the server for search cell banks',
       });
     }
 
-    if (queries.length === 0) {
+    if (data?.length === 0) {
       return res.status(400).json({
-        message: zodValidatedData.error.issues,
-        serverError: 'Invalid or missing search fields',
+        message: error?.issues,
+        serverError: 'No Match.  Check search fields',
       });
     }
-
+    console.log('data', data);
+    // console.log('zodValidatedData', zodValidatedData);
     // Construct WHERE clause dynamically
-    const whereClauses = queries.map((q, index) => {
+    const whereClauses = data.map((q, index) => {
       const fieldForQuery =
         q.field === 'cell_bank_id' ? `${q.field}::text` : q.field;
       if (q.field === 'human_readable_date') {
@@ -198,7 +233,7 @@ cellbankRouter.route('/search').get(async (req, res) => {
 
     const query = {
       text: queryText,
-      values: [...queries.map((q) => q.text), limit, offset],
+      values: [...data.map((q) => q.text), limit, offset],
     };
 
     console.log('QUERY!!!', query);
@@ -215,71 +250,85 @@ cellbankRouter.route('/search').get(async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    console.error('Database query error:', err.message);
+    console.error('Detailed error:', err);
+    res.status(500).json({
+      message: err?.detail || 'Internal server error',
+      error: err.message,
+    });
+
     res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
 // UPDATE one cell bank
 
-cellbankRouter.route('/:id').put(validateIdParam, async (req, res) => {
-  try {
-    // const {
-    //   strain,
-    //   target_molecule,
-    //   description,
-    //   notes,
-    //   date_timestamptz,
-    //   project,
-    // } = req.body;
-    const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
-    if (!validatedReqBody.success) {
-      return res.status(400).json({
-        message:
-          validatedReqBody.error.issues ||
-          'Zod validation error on the server for update cell bank',
-        serverError: 'Zod validation error on the server for update cell bank',
-      });
-    }
-    const {
-      strain,
-      target_molecule,
-      description,
-      notes,
-      date_timestamptz,
-      project,
-    } = validatedReqBody.data;
+cellbankRouter
+  .route('/:id')
+  .put(validateIdParam, allowIfUserIdMatchesMiddleware, async (req, res) => {
+    try {
+      // const {
+      //   strain,
+      //   target_molecule,
+      //   description,
+      //   notes,
+      //   date_timestamptz,
+      //   project,
+      // } = req.body;
+      const validatedReqBody = updateBackendCellbankSchema.safeParse(req.body);
+      if (!validatedReqBody.success) {
+        return res.status(400).json({
+          message:
+            validatedReqBody.error.issues ||
+            'Zod validation error on the server for update cell bank',
+          serverError:
+            'Zod validation error on the server for update cell bank',
+        });
+      }
+      const {
+        strain,
+        target_molecule,
+        description,
+        notes,
+        date_timestamptz,
+        project,
+      } = validatedReqBody.data;
 
-    const cellBankId = req.params.id;
-    console.log('req.body', req.body, 'cellBankId', cellBankId);
-    const query = `
+      const cellBankId = req.params.id;
+      // req.tableName = 'cell_banks';
+      // req.primaryKey = 'cell_bank_id';
+      console.log('req.body', req.body, 'cellBankId', cellBankId);
+      const query = `
         UPDATE cell_banks 
         SET strain = $1, notes = $2, target_molecule = $3, description = $4, date_timestamptz = $5 , project = $6
         WHERE cell_bank_id = $7 
         RETURNING *;
       `;
-    const updateValues = [
-      strain,
-      notes,
-      target_molecule,
-      description,
-      date_timestamptz,
-      project,
-      cellBankId,
-    ];
-    const results = await db.query(query, updateValues);
+      const updateValues = [
+        strain,
+        notes,
+        target_molecule,
+        description,
+        date_timestamptz,
+        project,
+        cellBankId,
+      ];
+      const results = await db.query(query, updateValues);
 
-    // Check if any rows were updated
-    if (results.rowCount === 0) {
-      return res.status(404).json({ message: 'Cell bank not found' });
+      // Check if any rows were updated
+      if (results.rowCount === 0) {
+        return res.status(404).json({ message: 'Cell bank not found' });
+      }
+
+      // Sending back the updated data
+      res.json({ message: 'Update successful', data: results.rows });
+    } catch (err) {
+      // console.error('Error in server PUT request:', err);
+      // res.status(500).json({ message: 'Internal server error' });
+      console.error(err);
+      res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
-
-    // Sending back the updated data
-    res.json({ message: 'Update successful', data: results.rows });
-  } catch (err) {
-    console.error('Error in server PUT request:', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
+  });
 
 // DELETE on cell bank
 cellbankRouter.route('/:id').delete(validateIdParam, async (req, res) => {
@@ -300,13 +349,14 @@ cellbankRouter.route('/:id').delete(validateIdParam, async (req, res) => {
     });
   } catch (err) {
     console.error(`Error deleting cellbank ${req.params.id}`, err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
+    // res.status(500).json({
+    //   status: 'error',
+    //   message: 'Internal server error',
+    // });
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
-
 
 // cellbankRouter.route('/search').get(async (req, res) => {
 //   try {

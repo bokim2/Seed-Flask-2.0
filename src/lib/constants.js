@@ -25,3 +25,9 @@ export const LineGraphColors = [
   '#3383FF', // Sky Blue
   '#FF338F', // Deep Pink
 ];
+
+export const GRAPH_LEGEND_TEXT_COLOR = '#3c4043';
+
+
+export const GRAPH_AXIS_TEXT_COLOR = '#3c4043'; //'#150F1D'; // numbers on the axis
+

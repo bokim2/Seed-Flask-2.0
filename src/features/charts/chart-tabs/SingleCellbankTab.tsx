@@ -4,9 +4,9 @@ import SingleCellbankGraph from '../graphs/SingleCellbankGraph';
 import Button from '../../../ui/Button';
 import ChartsTable from '../ChartsTable';
 import { useFetchSingleCellbankGraphData } from '../chart-hooks';
-import SelectedFlasksGraph from '../graphs/SelectedFlasksGraph';
+import SelectedFlasksGraph from '../graphs/BookmarkedFlasksGraph';
 
-export default function SingleCellbankTab({bookmarkedFlasks}) {
+export default function SingleCellbankTab({ bookmarkedFlasks }) {
   const [selectedCellbankId, setSelectedCellbankId] = useState<number | null>(
     null
   );

@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-  EditRow,
-  EditTextArea,
-  PreviousDataRow,
-  TableDataCell,
-  TableRow,
-} from '../../styles/UtilStyles';
+
 import { displayLocalTime } from '../../hooks/hooks';
 import { initialEditSampleForm } from './samples-types';
 import { set } from 'date-fns';
 import Button from '../../ui/Button';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 
 export default function SamplesRow({
   rowData,
@@ -44,7 +39,7 @@ export default function SamplesRow({
         <TableDataCell data-cell="time since inoc hr">
           {time_since_inoc_hr?.toFixed(2)}
         </TableDataCell>
-        <TableDataCell data-cell="end date/time">
+        <TableDataCell data-cell="end date/time" style={{whiteSpace: 'nowrap'}}>
           {displayLocalTime(end_date)}
         </TableDataCell>
         <TableDataCell data-cell="completed">
@@ -52,7 +47,8 @@ export default function SamplesRow({
         </TableDataCell>
         <TableDataCell data-cell="user">{username}</TableDataCell>
         <TableDataCell
-          data-cell="edit"
+          // data-cell="edit"
+          data-cell="none"
           onClick={(e) => {
             e.preventDefault();
             if (editingId === sample_id) {
@@ -68,7 +64,7 @@ export default function SamplesRow({
             }
           }}
         >
-          <Button $size={'small'}>Edit</Button>
+          <Button $size={'xsmall'}>Edit</Button>
         </TableDataCell>
       </PreviousDataRow>
 

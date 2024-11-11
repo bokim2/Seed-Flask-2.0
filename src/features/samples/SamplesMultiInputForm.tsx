@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import {
   FormLabel,
   StyledForm,
-  StyledTable,
-  TableRow,
+
   FormInputCell,
   BulkInputTextArea,
   MultiInputFormBody,
@@ -25,8 +23,6 @@ import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreate
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import ErrorMessage from '../../ui/ErrorMessage';
 import SamplesDilutions from './sample-dilutions/SamplesDilutions';
-import { flushSync } from 'react-dom';
-import { set } from 'date-fns';
 
 export default function SamplesMultiInputForm() {
   // create a row

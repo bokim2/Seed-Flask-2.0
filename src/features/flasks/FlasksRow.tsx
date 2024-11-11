@@ -1,14 +1,10 @@
 import React from 'react';
-import {
-  EditRow,
-  EditTextArea,
-  PreviousDataRow,
-  TableDataCell,
-  TableRow,
-} from '../../styles/UtilStyles';
 import { displayLocalTime } from '../../hooks/hooks';
 import Button from '../../ui/Button';
-import { initialCreateFlasksForm } from './flasks-types';
+import { flaskVesselTypes, initialCreateFlasksForm } from './flasks-types';
+import { useDispatch } from 'react-redux';
+import { toggleCellbankBookmark, toggleFlaskBookmark } from '../../redux/slices/bookmarksSlice';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 
 export default function FlasksRow({
   rowData,
@@ -20,6 +16,7 @@ export default function FlasksRow({
   deleteFlask,
   isPendingDelete,
   isPendingUpdate,
+  // handleAddBookmark,
 }) {
   const {
     flask_id,
@@ -39,12 +36,38 @@ export default function FlasksRow({
   } = rowData;
   const editing = editingId === flask_id;
 
+  const dispatch = useDispatch();
+  const handleAddFlaskBookmark = (id: number) => {
+    dispatch(toggleFlaskBookmark(id));
+  };
+
+  const handleAddCellbankBookmark = (id: number) => {
+    dispatch(toggleCellbankBookmark(id));
+  };
+
   return (
     <>
       <PreviousDataRow $editing={editing}>
         {/* <TableRow> */}
-        <TableDataCell data-cell="Flask ID">{flask_id}</TableDataCell>
-        <TableDataCell data-cell="cell bank id">{cell_bank_id}</TableDataCell>
+        <TableDataCell
+          data-cell="flask id"
+          className="clickableId"
+          onClick={() => {
+            console.log('+flask_id', +flask_id);
+            handleAddFlaskBookmark(+flask_id);
+          }}
+        >
+          {flask_id}
+        </TableDataCell>
+        <TableDataCell
+          data-cell="cell bank id"
+          className="clickableId"
+          onClick={() => {
+            handleAddCellbankBookmark(+cell_bank_id);
+          }}
+        >
+          {cell_bank_id}
+        </TableDataCell>
         <TableDataCell data-cell="vessel type">{vessel_type}</TableDataCell>
         <TableDataCell data-cell="media">{media}</TableDataCell>
         <TableDataCell data-cell="media mL">{media_ml}</TableDataCell>
@@ -52,23 +75,26 @@ export default function FlasksRow({
 
         <TableDataCell data-cell="temp c">{temp_c}</TableDataCell>
         <TableDataCell data-cell="rpm">{rpm}</TableDataCell>
-        <TableDataCell data-cell="start date (user's timezone)">
+        <TableDataCell data-cell="start date" 
+        // style={{ whiteSpace: 'nowrap' }}
+        >
           {displayLocalTime(start_date)}
         </TableDataCell>
         <TableDataCell data-cell="user">{username}</TableDataCell>
 
         {/* {toggleCellbankData && (
           <> */}
-            <TableDataCell data-cell="strain">{strain}</TableDataCell>
-            <TableDataCell data-cell="target molecule">
-              {target_molecule}
-            </TableDataCell>
-            <TableDataCell data-cell="project">{project}</TableDataCell>
-          {/* </>
+        <TableDataCell data-cell="strain">{strain}</TableDataCell>
+        <TableDataCell data-cell="target molecule">
+          {target_molecule}
+        </TableDataCell>
+        <TableDataCell data-cell="project">{project}</TableDataCell>
+        {/* </>
         )} */}
 
         <TableDataCell
-          data-cell="edit"
+          // data-cell="edit"
+          data-cell="none"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -85,7 +111,7 @@ export default function FlasksRow({
             }
           }}
         >
-          <Button $size={'small'}>Edit</Button>
+          <Button $size={'xsmall'}>Edit</Button>
         </TableDataCell>
 
         {/* </TableRow> */}
@@ -126,7 +152,7 @@ function FlasksEditForm({
           {editedForm.flask_id}
         </TableDataCell>
 
-        <TableDataCell data-cell="cell_bank_id">
+        <TableDataCell data-cell="cell bank id">
           <EditTextArea
             name="cell_bank_id"
             onChange={handleChange}
@@ -136,6 +162,21 @@ function FlasksEditForm({
           >
             {editedForm.cell_bank_id}
           </EditTextArea>
+        </TableDataCell>
+
+        <TableDataCell data-cell="vessel_type">
+          <select
+            id="vessel_type"
+            name="vessel_type"
+            value={editedForm.vessel_type}
+            onChange={handleChange}
+          >
+            {flaskVesselTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
         </TableDataCell>
 
         <TableDataCell data-cell="media">
@@ -150,18 +191,6 @@ function FlasksEditForm({
           </EditTextArea>
         </TableDataCell>
 
-        <TableDataCell data-cell="inoculum_ul">
-          <EditTextArea
-            name="inoculum_ul"
-            onChange={handleChange}
-            placeholder="inoculum_ul"
-            required
-            value={editedForm.inoculum_ul}
-          >
-            {editedForm.inoculum_ul}
-          </EditTextArea>
-        </TableDataCell>
-
         <TableDataCell data-cell="media_ml">
           <EditTextArea
             name="media_ml"
@@ -171,6 +200,18 @@ function FlasksEditForm({
             value={editedForm.media_ml}
           >
             {editedForm.media_ml}
+          </EditTextArea>
+        </TableDataCell>
+
+        <TableDataCell data-cell="inoculum_ul">
+          <EditTextArea
+            name="inoculum_ul"
+            onChange={handleChange}
+            placeholder="inoculum_ul"
+            required
+            value={editedForm.inoculum_ul}
+          >
+            {editedForm.inoculum_ul}
           </EditTextArea>
         </TableDataCell>
 

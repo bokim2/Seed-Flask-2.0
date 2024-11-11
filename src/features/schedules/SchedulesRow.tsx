@@ -1,17 +1,11 @@
-import {
-  TableRow,
-  TableDataCell,
-  FormTextArea,
-  PreviousDataRow,
-  EditRow,
-  EditTextArea,
-} from '../../styles/UtilStyles';
+
 import Button from '../../ui/Button';
 import styled, { css } from 'styled-components';
 import { TTableRow } from '../../lib/types';
 import { addHoursToTimestamp, displayLocalTime } from '../../hooks/hooks';
 import { initialEditFlasksForm } from '../flasks/flasks-types';
 import { initialEditScheduleForm } from './schedules-types';
+import { EditRow, EditTextArea, PreviousDataRow, TableDataCell } from '../../styles/table-styles/tableStyles';
 // import { initialEditCellbankForm } from './schedules-types';
 
 export default function SchedulesRow({
@@ -222,7 +216,7 @@ function ScheduleEditForm({
             onChange={handleChange}
             placeholder="flask_bookmark"
             value={editedForm.flask_bookmark}
-            required
+            // required
           />
         </TableDataCell>
 
@@ -233,7 +227,7 @@ function ScheduleEditForm({
             onChange={handleChange}
             placeholder="current_flasks"
             value={editedForm.current_flasks}
-            required
+            // required
           />
         </TableDataCell>
 
@@ -243,7 +237,7 @@ function ScheduleEditForm({
             name="flask_id"
             // placeholder="YYYY-MM-DD HH:MM AM/PM"
             onChange={handleChange}
-            required
+            // required
             value={editedForm.flask_id}
           />
         </TableDataCell>

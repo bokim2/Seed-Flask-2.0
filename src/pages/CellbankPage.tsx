@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { baseUrl } from '../../configs';
+import React, { useState } from 'react';
 import CellbanksTable from '../features/cellbanks/CellbanksTable';
 import {
   InnerPageContainer,
   LoaderWrapper,
   PageContainer,
+  StyledBookmark,
+  StyledBookmarkContainer,
 } from '../styles/UtilStyles';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
@@ -15,6 +16,9 @@ import Button from '../ui/Button';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
 import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
+import { useMultiInputState } from '../hooks/hooks';
+import PageHeader from '../ui/PageHeader';
+import PageDashboard from '../ui/page-dashboard/PageDashboard';
 
 export default function CellbankPage() {
   const {
@@ -39,7 +43,7 @@ export default function CellbankPage() {
     dispatch(toggleCellbankBookmark(parseInt(id)));
   };
 
-  const cellbankBookmarks = useSelector(
+  const bookmarkedCellbanks = useSelector(
     (state: RootState) => state.bookmarks.cellbank_bookmark
   );
 
@@ -50,7 +54,10 @@ export default function CellbankPage() {
 
   return (
     <PageContainer id="CellbankPageContainer">
-      <LoaderWrapper>{(isLoading || isFetching) && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>
+        {(isLoading || isFetching) && <LoaderBar />}
+      </LoaderWrapper>
+        {/* <PageHeader>Cell Banks</PageHeader> */}
       <InnerPageContainer id="CellbankInnerPageContainer">
         {error && <ErrorMessage error={error} />}
         <Button
@@ -62,9 +69,17 @@ export default function CellbankPage() {
             : 'Hide Table Cell Overflow'}
         </Button>
 
-        <h3>{JSON.stringify(cellbankBookmarks)}</h3>
+        {/* <h3>{JSON.stringify(cellbankBookmarks)}</h3> */}
+        {/* <StyledBookmarkContainer>
+          <StyledBookmark>
+            cellbank bookmarks:{' '}
+            {Array.isArray(bookmarkedCellbanks) &&
+              bookmarkedCellbanks.join(', ')}
+          </StyledBookmark>
+        </StyledBookmarkContainer> */}
 
-        <CellbanksMultiInputForm />
+        {/* <CellbanksMultiInputForm /> */}
+        <PageDashboard />
 
         {/* {error?.message && <ErrorMessage error={error} />} */}
         {cellbanksAll && cellbanksAll?.length > 0 && !isLoading && (

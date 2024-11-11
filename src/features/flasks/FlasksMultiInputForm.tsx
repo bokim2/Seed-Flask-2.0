@@ -1,12 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { baseUrl } from '../../../configs';
-import styled from 'styled-components';
 import {
   FormLabel,
-  MultiFormInput,
   StyledForm,
-  StyledTable,
-  TableRow,
   FormInputCell,
   MultiInputFormBody,
   BulkInputTextArea,
@@ -172,7 +166,7 @@ export default function FlasksMultiInputForm() {
                       required
                       value={bulkForm[i].temp_c || ''}
                     />
-                    {i == 0 && <FormLabel htmlFor="temp_c">temp c</FormLabel>}
+                    {i == 0 && <FormLabel htmlFor="temp_c">temperature C</FormLabel>}
                   </FormInputCell>
 
                   <FormInputCell>

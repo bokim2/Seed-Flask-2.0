@@ -5,12 +5,11 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LinkButton,
-  MainFilterContainer,
-  MainFilterSelector,
-  MainFilterSelectorOption,
+
 } from '../styles/UtilStyles';
 import { useAppDispatch, useMainFilter } from '../hooks/hooks';
 import { set } from 'date-fns';
+import { MainFilterContainer, MainFilterSelector } from '../styles/table-styles/tableStyles';
 
 // main filter
 

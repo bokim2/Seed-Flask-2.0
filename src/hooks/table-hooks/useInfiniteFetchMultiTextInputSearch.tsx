@@ -23,6 +23,7 @@ export function useInfiniteFetchMultiTextInputSearch({
   const [searchCriteria, setSearchCriteria] = useState<any>(
     initialSearchCriteria
   );
+  console.log('initialSearchCriteria', initialSearchCriteria, 'searchCriteria', searchCriteria)
 
   const [searchTrigger, setSearchTrigger] = useState(false);
 
@@ -53,8 +54,15 @@ export function useInfiniteFetchMultiTextInputSearch({
   } = useInfiniteQuery(queryOptions);
 
   const transformedData = useMemo(() => {
-    if (!data) return [];
-    const allData = data?.pages.map((data) => data.data).flat() || [];
+    console.log(data, 'data in transformedData')
+    if (!data) return null;
+
+
+    if(!Array.isArray(data.pages)) return []
+
+    const allData = data?.pages
+    .filter(page => page !== null && page !== undefined)
+    .map((data) => data.data).flat() || [];
     return allData;
   }, [data]);
 
@@ -65,6 +73,11 @@ export function useInfiniteFetchMultiTextInputSearch({
   //   const [error, setError] = useState<string | null>(null);
 
   async function performInputTextSearch({ pageParam = 0 }: FetchTableDataArgs) {
+
+    if (searchCriteria.length === 0) {
+      return [];
+    }
+
     const params = new URLSearchParams();
 
     searchCriteria.forEach((criterion) => {

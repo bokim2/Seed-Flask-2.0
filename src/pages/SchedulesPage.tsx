@@ -3,6 +3,7 @@ import {
   InnerPageContainer,
   LoaderWrapper,
   PageContainer,
+  StyledBackgroundImg,
 } from '../styles/UtilStyles';
 import LoaderCircular from '../ui/LoaderCircular';
 import SchedulesTable from '../features/schedules/SchedulesTable';
@@ -29,15 +30,22 @@ export default function SchedulesPage() {
   // const schedulesAll = schedules?.pages.map((data) => data.data).flat() || [];
 
   return (
-    <PageContainer>
-      <LoaderWrapper>
-        {(isLoading || isFetching) && <LoaderBar />}
-      </LoaderWrapper>
-      <InnerPageContainer>
-        {/* <LoaderCircular/> three flasks bobbing */}
-        {error && <ErrorMessage error={error} />}
-        <SchedulesTable schedules={schedulesAll} />
-      </InnerPageContainer>
-    </PageContainer>
+    <>
+      {/* <StyledBackgroundImg
+          className="fit-logo"
+          src="public/images/progressive/dylann-hendricks-vxd9c9WNauo-unsplash__1_.jpg"
+          alt="calysta"
+          /> */}
+      <PageContainer>
+        <LoaderWrapper>
+          {(isLoading || isFetching) && <LoaderBar />}
+        </LoaderWrapper>
+        <InnerPageContainer>
+          {/* <LoaderCircular/> three flasks bobbing */}
+          {error && <ErrorMessage error={error} />}
+          <SchedulesTable schedules={schedulesAll} />
+        </InnerPageContainer>
+      </PageContainer>
+    </>
   );
 }

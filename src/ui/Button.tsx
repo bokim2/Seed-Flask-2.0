@@ -17,10 +17,17 @@ const sizes = {
     min-width: 4rem;
   `,
   small: css`
-    font-size: 1rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
     font-weight: 600;
-    min-width: 8rem;
+    min-width: 2rem;
+
+    @media (min-width: 850px) {
+      font-size: 1rem;
+      padding: 0.4rem 0.8rem;
+      font-weight: 600;
+      min-width: 8rem;
+    }
   `,
   medium: css`
     font-size: 1.4rem;
@@ -56,6 +63,14 @@ const variations = {
   round: css`
     border-radius: 50%;
   `,
+  special: css`
+    background-color: rgba(var(--clr-accent-6), 0.9);
+
+    &:hover
+  /* &:focus  */ {
+    background-color: rgba(var(--clr-accent-5), 0.8);
+  }
+  `,
 };
 
 type ButtonProps = {
@@ -69,9 +84,14 @@ const Button = styled.button<ButtonProps>`
   border-radius: 0.5em;
   /* color: var(--clr-text-1); */
   cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Non-prefixed version, currently supported by Chrome, Opera and Safari */
+  
   transition: background-color 0.2s ease-in-out;
-  &:hover,
-  &:focus {
+  &:hover
+  /* &:focus  */ {
     background-color: rgba(var(--clr-accent-5), 0.8);
   }
 

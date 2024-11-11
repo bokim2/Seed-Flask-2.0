@@ -4,6 +4,8 @@ import {
   InnerPageContainer,
   LoaderWrapper,
   PageContainer,
+  StyledBookmark,
+  StyledBookmarkContainer,
 } from '../styles/UtilStyles';
 import LoaderBar from '../ui/LoaderBar';
 import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
@@ -16,15 +18,15 @@ import { RootState } from '../redux/store';
 import {
   clearCellbankBookmark,
   clearFlaskBookmark,
+  clearSearchedFlasksList,
 } from '../redux/slices/bookmarksSlice';
 
 import BookmarkedFlasksTab from '../features/charts/chart-tabs/BookmarkedFlasksTab';
 import BookmarkedCellbanksTab from '../features/charts/chart-tabs/BookmarkedCellbanksTab';
-import SingleCellbankTab from '../features/charts/chart-tabs/SingleCellbankTab';
 import SearchFlasksTab from '../features/charts/chart-tabs/SearchFlasksTab';
 import ScheduleTab from '../features/charts/chart-tabs/ScheduleTab';
 import { z } from 'zod';
-import AllFlasksTab from '../features/charts/chart-tabs/AllFlasksTab';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 export default function ChartsPage() {
   const {
@@ -40,24 +42,21 @@ export default function ChartsPage() {
     zodSchema: flasksInfoArraySchema,
   });
 
+  const location = useLocation();
   const dispatch = useDispatch();
-  // const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
-  // console.log(flasksAll, 'flasksAll');
 
-  const [selectedTabName, setSelectedTabName] = useState('all');
 
-  // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
-  //   []
-  // );
+  const [selectedTabName, setSelectedTabName] = useState('search');
+
 
   const chartsTabNamesAndValues = {
-    all: 'All Flasks',
-    bookmarkedFlasks: 'Bookmarked Flasks',
-    bookmarkedCellbanks: 'Bookmarked Cellbanks',
-    cellbank: 'Single Cellbank',
+    // all: 'All Flasks',
+    search: 'Search Flasks',
+    bookmarkedflasks: 'Bookmarked Flasks',
+    bookmarkedcellbanks: 'Bookmarked Cellbanks',
+    // cellbank: 'Single Cellbank',
     // user: 'User',
     // project: 'Project',
-    search: 'Search Flasks',
     schedule: 'Schedule List',
   };
 
@@ -73,9 +72,173 @@ export default function ChartsPage() {
     (state: RootState) => state.bookmarks.searched_flasks_list
   );
 
-  // const [allCellbankGraphData, setAllCellbankGraphData] = useState<any[]>([]);
   const [bookmarkedCellbankGraphData, setBookmarkedCellbankGraphData] =
     useState<any[][]>([]);
+
+  const getBookmarkedCellbankGraphData = async (bookmarkedCellbanks) => {
+    // console.log('data in graphs page, before fetch');
+    const results = await Promise.all(
+      bookmarkedCellbanks.map(async (cellbank) => {
+        const res = await fetch(`${baseUrl}/api/chart/cellbank/${cellbank}`,  { credentials: 'include' });
+        const { data } = await res.json();
+        // setBookmarkedCellbankGraphData(prev=> ({...prev, data}));
+        console.log('data in getBookmarkedCellbankGraphData page', data);
+        return data;
+      })
+    );
+    setBookmarkedCellbankGraphData(results);
+    // console.log('results in getBookmarkedCellbankGraphData', results);
+    return results;
+  };
+
+
+  const {
+    data: allCellbankGraphData,
+    // isLoading,
+    // error,
+    fetchNextPage: fetchNextPageAllCellbanks,
+    // hasNextPage,
+    // isFetchingNextPage ,
+    // isFetching,
+  } = useFetchValidatedTableQuery({
+    tableName: 'chart/cellbanks',
+    zodSchema: z.any(),
+  });
+
+  useEffect(() => {
+    getBookmarkedCellbankGraphData(bookmarkedCellbanks);
+  }, [bookmarkedCellbanks, bookmarkedFlasks]);
+
+  // or... 'Filters'
+
+  useEffect(() => {
+    console.log('location.pathname', location.pathname)
+    const path = location.pathname.split('/').pop();
+    if (path && path in chartsTabNamesAndValues) {
+      setSelectedTabName(path);
+    }
+  }, [location.pathname]);
+
+  console.log('searchedFlasksList', searchedFlasksList);
+
+  return (
+    <PageContainer id="ChartsPage">
+      <LoaderWrapper>
+        {(isLoading || isFetching) && <LoaderBar />}
+      </LoaderWrapper>
+
+      <InnerPageContainer id="ChartsPage">
+        <TabSelectorContainer
+          chartsTabNamesAndValues={chartsTabNamesAndValues}
+          selectedTabName={selectedTabName}
+          setSelectedTabName={setSelectedTabName}
+        >
+          <StyledBookmarkContainer>
+            <StyledBookmark>
+              cellbank bookmarks:{' '}
+              {Array.isArray(bookmarkedCellbanks) &&
+                bookmarkedCellbanks.join(', ')}
+            </StyledBookmark>
+            <StyledBookmark>
+              flasks bookmarks:{' '}
+              {Array.isArray(bookmarkedFlasks) && bookmarkedFlasks.join(', ')}
+            </StyledBookmark>
+            <StyledBookmark>
+              searched flasks list:{' '}
+              {Array.isArray(searchedFlasksList) &&
+                searchedFlasksList.join(', ')}
+            </StyledBookmark>
+          </StyledBookmarkContainer>
+
+          <ButtonsContainer>
+            <Button
+              $size="xs"
+              onClick={() => dispatch(clearCellbankBookmark())}
+            >
+              Clear Cell bank bookmarks
+            </Button>
+            <Button $size="xs" onClick={() => dispatch(clearFlaskBookmark())}>
+              Clear Flask bookmarks
+            </Button>
+
+            <Button
+              $size="xs"
+              onClick={() => dispatch(clearSearchedFlasksList())}
+            >
+              Clear searched flasks list
+            </Button>
+          </ButtonsContainer>
+
+          <Routes>
+            <Route path="/" element={<Navigate to="search" replace />} />
+            <Route
+              path="search"
+              element={
+                <>
+                  <SearchFlasksTab
+                    flasks={flasksAll}
+                    allCellbankGraphData={allCellbankGraphData}
+                  />
+
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      fetchNextPage();
+                      fetchNextPageAllCellbanks();
+                    }}
+                  >
+                    {!hasNextPage ? 'No More Data' : 'Load More'}
+                  </Button>
+                </>
+              }
+            />
+            <Route
+              path="bookmarkedflasks"
+              element={
+                <BookmarkedFlasksTab
+                  bookmarkedFlasks={bookmarkedFlasks}
+                  fetchNextPage={fetchNextPage}
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                />
+              }
+            />
+            <Route
+              path="bookmarkedcellbanks"
+              element={
+                <BookmarkedCellbanksTab
+                  bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
+                  bookmarkedFlasks={bookmarkedFlasks}
+                />
+              }
+            />
+            <Route
+              path="schedule"
+              element={<ScheduleTab flasks={flasksAll} />}
+            />
+          </Routes>
+        </TabSelectorContainer>
+      </InnerPageContainer>
+    </PageContainer>
+  );
+}
+
+  // const flasksAll = flasks?.pages.map((page) => page.data).flat() || [];
+  // console.log(flasksAll, 'flasksAll');
+
+    // const [singleCellbankGraphData, setSingleCellbankGraphData] = useState<any[]>(
+  //   []
+  // );
+
+  // useEffect(() => {
+  //   // getGraphData();
+  //   // getSingleCellbankGraphData(1);
+
+  //   // getAllCellbankGraphData();
+  //   getBookmarkedCellbankGraphData(bookmarkedCellbanks);
+  //   // getBookmarkedFlasksGraphData(bookmarkedFlasks);
+  // }, [bookmarkedCellbanks, bookmarkedFlasks]);
+
 
   // const getGraphData = async () => {
   //   // console.log('data in graphs page, before fetch');
@@ -95,23 +258,7 @@ export default function ChartsPage() {
   //   return data;
   // };
 
-  const getBookmarkedCellbankGraphData = async (bookmarkedCellbanks) => {
-    // console.log('data in graphs page, before fetch');
-    const results = await Promise.all(
-      bookmarkedCellbanks.map(async (cellbank) => {
-        const res = await fetch(`${baseUrl}/api/chart/cellbank/${cellbank}`);
-        const { data } = await res.json();
-        // setBookmarkedCellbankGraphData(prev=> ({...prev, data}));
-        console.log('data in getBookmarkedCellbankGraphData page', data);
-        return data;
-      })
-    );
-    setBookmarkedCellbankGraphData(results);
-    // console.log('results in getBookmarkedCellbankGraphData', results);
-    return results;
-  };
-
-  // const getAllCellbankGraphData = async () => {
+    // const getAllCellbankGraphData = async () => {
   //   // console.log('data in graphs page, before fetch');
   //   const res = await fetch(`${baseUrl}/api/chart/cellbanks`);
   //   const { data } = await res.json();
@@ -120,99 +267,25 @@ export default function ChartsPage() {
   //   return data;
   // };
 
-  const {
-    data: allCellbankGraphData,
-    // isLoading,
-    // error,
-    fetchNextPage: fetchNextPageAllCellbanks,
-    // hasNextPage,
-    // isFetchingNextPage ,
-    // isFetching,
-  } = useFetchValidatedTableQuery({
-    tableName: 'chart/cellbanks',
-    zodSchema: z.any(),
-  });
+          {/* {selectedTabName === 'search' && (
+            <>
+              <SearchFlasksTab
+                flasks={flasksAll}
+                allCellbankGraphData={allCellbankGraphData}
+              />
 
-  useEffect(() => {
-    // getGraphData();
-    // getSingleCellbankGraphData(1);
-
-    // getAllCellbankGraphData();
-    getBookmarkedCellbankGraphData(bookmarkedCellbanks);
-    // getBookmarkedFlasksGraphData(bookmarkedFlasks);
-  }, [bookmarkedCellbanks, bookmarkedFlasks]);
-
-  // or... 'Filters'
-
-  console.log('searchedFlasksList', searchedFlasksList);
-
-  return (
-    <PageContainer id="ChartsPage">
-      <LoaderWrapper>
-        {(isLoading || isFetching) && <LoaderBar />}
-      </LoaderWrapper>
-      {/* "TO TEST SINGLE FLASK: "{ JSON.stringify(flask)} */}
-
-      {/* {JSON.stringify(setChartData)} */}
-      <InnerPageContainer id="ChartsPage">
-        <TabSelectorContainer
-          chartsTabNamesAndValues={chartsTabNamesAndValues}
-          selectedTabName={selectedTabName}
-          setSelectedTabName={setSelectedTabName}
-        >
-          {/* <LoaderBar /> */}
-          {/* {allCellbankGraphData?.length > 0 && (
-          <BookmarkedCellbankGraph
-            bookmarkedCellbankGraphData={allCellbankGraphData}
-          />
-        )} */}
-          {/* display cellbank bookmarks and flask bookmarks */}
-          {/* <p>selected tab: {chartsTabNamesAndValues?.[selectedTabName]}</p>
-          <p>cellbank bookmarks: {JSON.stringify(bookmarkedCellbanks)}</p>
-          <p>flasks bookmarks: {JSON.stringify(bookmarkedFlasks)}</p>
-          <p>searched flasks list: {JSON.stringify(searchedFlasksList)}</p> */}
-
-          <p>
-            cellbank bookmarks:{' '}
-            {Array.isArray(bookmarkedCellbanks) &&
-              bookmarkedCellbanks.join(', ')}
-          </p>
-          <p>
-            flasks bookmarks:{' '}
-            {Array.isArray(bookmarkedFlasks) && bookmarkedFlasks.join(', ')}
-          </p>
-          <p>
-            searched flasks list:{' '}
-            {Array.isArray(searchedFlasksList) && searchedFlasksList.join(', ')}
-          </p>
-          <ButtonsContainer>
-            <Button
-              $size="xs"
-              onClick={() => dispatch(clearCellbankBookmark())}
-            >
-              Clear Cell bank bookmarks
-            </Button>
-            <Button $size="xs" onClick={() => dispatch(clearFlaskBookmark())}>
-              Clear Flask bookmarks
-            </Button>
-          </ButtonsContainer>
-
-          {/* bookmarks data
-          <p>
-            bookmarkedFlasksGraphData:{' '}
-            {JSON.stringify(bookmarkedFlasksGraphData)}
-          </p>
-          <p>
-            bookmarkedCellbankGraphData:{' '}
-            {JSON.stringify(bookmarkedCellbankGraphData)}
-          </p> */}
-
-          {/* main filter - only show if user is logged in */}
-          {/* <MainFilter /> */}
-
-          {/* <MainNav /> */}
-
-          {/* ALL flasks */}
+              <Button
+                type="button"
+                onClick={() => {
+                  fetchNextPage();
+                  fetchNextPageAllCellbanks();
+                }}
+              >
+                {!hasNextPage ? 'No More Data' : 'Load More'}
+              </Button>
+            </>
+          )} */}
+          {/* 
           {selectedTabName === 'all' && (
             <>
               <AllFlasksTab
@@ -226,28 +299,13 @@ export default function ChartsPage() {
                   fetchNextPage();
                   fetchNextPageAllCellbanks();
                 }}
-                // disabled={!hasNextPage || isFetchingNextPage}
               >
-                {/* {hasNextPage && !isFetchingNextPage && 'Load More'} */}
                 {!hasNextPage ? 'No More Data' : 'Load More'}
               </Button>
             </>
-          )}
-          {/* {allCellbankGraphData?.length && (
-            <AllCellbanksGraph
-              allCellbankGraphData={allCellbankGraphData}
-              bookmarkedFlasks={bookmarkedFlasks}
-              // setBookmarkedFlasks={setBookmarkedFlasks}
-            />
-          )}
-          <ChartsTable
-            chartTitle="All Flasks"
-            flasks={flasksAll}
-            bookmarkedFlasks={bookmarkedFlasks}
-            // setBookmarkedFlasks={setBookmarkedFlasks}
-          /> */}
-          {/* BOOKMARKED flasks */}
-          {selectedTabName === 'bookmarkedFlasks' && (
+          )} */}
+
+          {/* {selectedTabName === 'bookmarkedFlasks' && (
             <BookmarkedFlasksTab
               // allCellbankGraphData={allCellbankGraphData}
               // bookmarkedFlasksGraphData={bookmarkedFlasksGraphData}
@@ -256,72 +314,13 @@ export default function ChartsPage() {
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
             />
-          )}
+          )} */}
 
-          {/* {allCellbankGraphData?.length && (
-            <AllCellbanksGraph
-              allCellbankGraphData={bookmarkedFlasksGraphData}
-              bookmarkedFlasks={bookmarkedFlasks}
-              // setBookmarkedFlasks={setBookmarkedFlasks}
-            />
-          )}
-          <ChartsTable
-            chartTitle="Bookmarked Flasks"
-            flasks={bookmarkedFlasksGraphData}
-            bookmarkedFlasks={bookmarkedFlasks}
-            // setBookmarkedFlasks={setBookmarkedFlasks}
-          />
-          <Button
-            onClick={() => fetchNextPage()}
-            disabled={!hasNextPage || isFetchingNextPage}
-          >
-            {hasNextPage && !isFetchingNextPage && 'Load More'}
-            {!hasNextPage && 'No More Data'}
-          </Button> */}
-
-          {/* BOOKMARKED Cellbanks */}
-          {selectedTabName === 'bookmarkedCellbanks' && (
+          {/* {selectedTabName === 'bookmarkedCellbanks' && (
             <BookmarkedCellbanksTab
               bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
               bookmarkedFlasks={bookmarkedFlasks}
             />
-          )}
-          {/* {bookmarkedCellbankGraphData?.length > 0 && (
-            <BookmarkedCellbankGraph
-              bookmarkedCellbankGraphData={bookmarkedCellbankGraphData}
-              bookmarkedFlasks={bookmarkedFlasks}
-              // setBookmarkedFlasks={setBookmarkedFlasks}
-            />
-          )}
-          <ChartsTable
-            chartTitle="Bookmarked Charts"
-            flasks={bookmarkedCellbankGraphData.flat()}
-            bookmarkedFlasks={bookmarkedFlasks}
-            // setBookmarkedFlasks={setBookmarkedFlasks}
-          /> */}
-
-          {/* single cell bank */}
-          {selectedTabName === 'cellbank' && (
-            <SingleCellbankTab bookmarkedFlasks={bookmarkedFlasks} />
-          )}
-          {/* <p>{JSON.stringify(singleCellbankGraphData)}</p>
-          {singleCellbankGraphData?.length && (
-            <SingleCellbankGraph
-              singleCellbankGraphData={singleCellbankGraphData}
-            />
           )} */}
 
-          {selectedTabName === 'search' && (
-            // <SearchFlasksTab flasks={flasksAll} isLoading={isLoading} />
-            <SearchFlasksTab flasks={flasksAll} />
-          )}
-          {/* <LineGraph chartData={chartData} /> */}
-          {/* <TimeLineGraph /> */}
-          {/* <FlasksTable flasks={flasks} />*/}
-
-          {selectedTabName === 'schedule' && <ScheduleTab flasks={flasksAll} />}
-        </TabSelectorContainer>
-      </InnerPageContainer>
-    </PageContainer>
-  );
-}
+          {/* {selectedTabName === 'schedule' && <ScheduleTab flasks={flasksAll} />} */}

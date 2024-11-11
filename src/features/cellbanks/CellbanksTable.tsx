@@ -1,19 +1,14 @@
 import CellbanksRow from './CellbanksRow';
 import {
-  TableContainer,
-  StyledTable,
-  Caption,
-  TableHeader,
-  TableRow,
-  TableHeaderCell,
+
+
   StyledForm,
   LoaderWrapper,
 } from '../../styles/UtilStyles';
-import { useEffect, useMemo, useState } from 'react';
+import {  useMemo, useState } from 'react';
 import {
-  filteredTableData,
   useAppSelector,
-  useFilterSortTableData,
+  useFilteredTableData,
   useSetSortColumn,
 } from '../../hooks/hooks';
 import {
@@ -35,6 +30,7 @@ import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm
 import SearchFormRow from '../../ui/SearchFormRow';
 import Button from '../../ui/Button';
 import LoaderBar from '../../ui/LoaderBar';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 
 export type TError = {
   message: string;
@@ -79,8 +75,8 @@ export default function CellbanksTable({
   const [searchedData, setSearchedData] = useState<TCellbanks | null>(null);
   console.log('searchedData in cellbankstable', searchedData);
   // filtered and sorted data that will be passed to child components
-  const [filteredAndSortedData, setFilteredAndSortedData] =
-    useState<TCellbanks>([]);
+  // const [filteredAndSortedData, setFilteredAndSortedData] =
+  //   useState<TCellbanks>([]);
 
   // sort selected column
   const { sortColumn, handleSortColumn } =
@@ -96,36 +92,48 @@ export default function CellbanksTable({
 
   // useEffect call to filter and sort data and keep it in sync
 
-  useEffect(() => {
-    console.log(
-      'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
-      searchedData,
-      // searchedData?.pages,
-      // searchedData?.pages?.[0]?.data?.length > 0
-    );
-    // if (searchedData?.pages && searchedData?.pages?.[0]) {
-    //   const searchedDataAll =
-    //     searchedData?.pages.map((data) => data.data).flat() || [];
+  // useEffect(() => {
+  //   console.log(
+  //     'USEEFFECT IN CELLBANKSTABLE searchedData in cellbanks table',
+  //     searchedData
+  //     // searchedData?.pages,
+  //     // searchedData?.pages?.[0]?.data?.length > 0
+  //   );
+  //   // if (searchedData?.pages && searchedData?.pages?.[0]) {
+  //   //   const searchedDataAll =
+  //   //     searchedData?.pages.map((data) => data.data).flat() || [];
 
-    //   console.log(
-    //     'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
-    //     searchedDataAll
-    //   );
-    //   setFilteredAndSortedData(searchedDataAll);
-    if (searchedData && searchedData?.length > 0) {
-      // const searchedDataAll =
-      //   searchedData?.pages.map((data) => data.data).flat() || [];
+  //   //   console.log(
+  //   //     'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
+  //   //     searchedDataAll
+  //   //   );
+  //   //   setFilteredAndSortedData(searchedDataAll);
+  //   if (searchedData && searchedData?.length > 0) {
+  //     // const searchedDataAll =
+  //     //   searchedData?.pages.map((data) => data.data).flat() || [];
 
-      console.log(
-        'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
-        searchedData
-      );
-      setFilteredAndSortedData(searchedData);
+  //     console.log(
+  //       'USEEFFECT IN CELLBANKSTABLE searchDataAll in cellbanks table',
+  //       searchedData
+  //     );
+  //     setFilteredAndSortedData(searchedData);
+  //   } else {
+  //     setFilteredAndSortedData(cellbanks);
+  //     // console.log('useEffect in dataName table', dataName);
+  //   }
+  // }, [cellbanks, searchedData]);
+
+  const filteredAndSortedData = useMemo(()=> {
+    console.log('Calculating filtered and sorted data');
+    if (searchedData && searchedData.length > 0) {
+      console.log('Using searched data', searchedData);
+      return searchedData;
     } else {
-      setFilteredAndSortedData(cellbanks);
-      // console.log('useEffect in dataName table', dataName);
+      console.log('Using default cellbanks data', cellbanks);
+      return cellbanks;
     }
-  }, [cellbanks, searchedData]);
+  
+  }, [searchedData, cellbanks])
 
   // const data = useFilterSortTableData({
   //   dataName: cellbanks,
@@ -134,14 +142,15 @@ export default function CellbanksTable({
   //   setFilteredAndSortedData,
   // });
 
-  const data = useMemo(()=>filteredTableData(
-    cellbanks,
-    filteredAndSortedData,
-    sortColumn,
-    'date_timestamptz'
-  ), [cellbanks, filteredAndSortedData, sortColumn]);
+  const data = 
+      useFilteredTableData(
+        cellbanks,
+        filteredAndSortedData,
+        sortColumn,
+        'date_timestamptz'
+      )
 
-  //state for multisearch
+  // state for multisearch
   const [showSearchRow, setShowSearchRow] = useState(false);
   const [searchMultiError, setSearchMultiError] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -151,7 +160,9 @@ export default function CellbanksTable({
     <>
       {searchMultiError && <p>{searchMultiError}</p>}
       <LoaderWrapper>{searchLoading && <LoaderBar />}</LoaderWrapper>
-      <LoaderWrapper>{searchLoading && <p>SEARCH IS LOADING!!!!!</p>}</LoaderWrapper>
+      <LoaderWrapper>
+        {searchLoading && <p>SEARCH IS LOADING!!!!!</p>}
+      </LoaderWrapper>
       {/* Search Section */}
       {/* <SearchForm setSearchedData={setSearchedData} tableName={'cellbanks'} /> */}
 
@@ -169,6 +180,14 @@ export default function CellbanksTable({
       {deleteError?.message && <ErrorMessage error={deleteError} />}
       {searchMultiError && <ErrorMessage error={searchMultiError} />}
 
+      <Button
+        type="button"
+        onClick={() => setShowSearchRow((prev) => !prev)}
+        $size={'xs'}
+      >
+        Search
+      </Button>
+
       {/* Edit row form */}
       <StyledForm
         onSubmit={(e) => {
@@ -181,13 +200,13 @@ export default function CellbanksTable({
           );
         }}
       >
-        <Caption>Cell Banks Table</Caption>
         {/* Table Section */}
         <TableContainer id="CellbanksTableContainer">
           <StyledTable>
+          <Caption>Cell Banks Table</Caption>
             <TableHeader>
               {/* select column to search */}
-              <TableRow>
+              <TableHeaderRow>
                 {cellbanksTableHeaderCellsArray.map((headerCell, i) => (
                   <TableHeaderCellComponent
                     key={headerCell}
@@ -200,13 +219,14 @@ export default function CellbanksTable({
                 <TableHeaderCell>
                   <Button
                     type="button"
+                    $variation="special"
                     onClick={() => setShowSearchRow((prev) => !prev)}
-                    $size={'small'}
+                    $size={'xs'}
                   >
-                    Open Search
+                    {!showSearchRow ? 'Search' : 'Close'}
                   </Button>
                 </TableHeaderCell>
-              </TableRow>
+              </TableHeaderRow>
 
               {showSearchRow && (
                 <SearchFormRow

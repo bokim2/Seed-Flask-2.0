@@ -22,6 +22,9 @@ import LoaderBar from './ui/LoaderBar';
 import { useAppDispatch, useAppSelector } from './hooks/hooks';
 import { updateUserProfile } from './redux/slices/userProfileSlice';
 import { TuserProfile } from './redux/slices/userSlice';
+import AboutPage from './pages/AboutPage';
+import SchedulesPage from './pages/SchedulesPage';
+import DocsPage from './pages/DocsPage';
 
 // const StyledDiv = styled.div`
 //   /* background-color: #e4d0d0; */
@@ -91,7 +94,7 @@ function App() {
               <Route
                 element={
                   <AppLayout
-                    userProfile={userProfile}
+                    // userProfile={userProfile}
                     // setUserProfile={setUserProfile}
                   />
                 }
@@ -100,9 +103,14 @@ function App() {
                 <Route path="cellbank" element={<CellbankPage />} />
                 <Route path="flask" element={<FlaskPage />} />
                 <Route path="sample" element={<SamplePage />} />
-                <Route path="schedule" element={<BioreactorPage />} />
+                <Route path="schedule" element={<SchedulesPage />} />
                 <Route path="settings" element={<SettingsPage />} />
-                <Route path="charts" element={<ChartsPage />} />
+                <Route path="docs" element={<DocsPage />}/>
+                <Route path="about/*" element={<AboutPage />}/>
+                  {/* <Route path="about/seed-flask" element={<AboutSeedFlask />} />
+                  <Route path="about/bo" element={<AboutCreator />} /> */}
+                {/* </Route> */}
+                <Route path="charts/*" element={<ChartsPage />} />
                 {/* <Route path="signin" element={<SignInPage />} /> */}
               </Route>{' '}
             </>
@@ -111,7 +119,7 @@ function App() {
               <Route
                 element={
                   <AppLayout
-                    userProfile={userProfile}
+                    // userProfile={userProfile}
                     // setUserProfile={setUserProfile}
                   />
                 }

@@ -10,7 +10,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { LineGraphColors } from '../../../lib/constants';
+import {
+  GRAPH_AXIS_TEXT_COLOR,
+  GRAPH_LEGEND_TEXT_COLOR,
+  LineGraphColors,
+} from '../../../lib/constants';
 import styled from 'styled-components';
 import Scheduler from '../add-to-schedule/Scheduler';
 import DateTimePicker from '../add-to-schedule/DateTimePicker';
@@ -18,7 +22,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggleFlaskBookmark } from '../../../redux/slices/bookmarksSlice';
 import { useFetchBookmarkedFlasksGraphData } from '../chart-hooks';
 import { RootState } from '../../../redux/store';
-import { StyledGraphContainer } from '../../../styles/UtilStyles';
+import Button from '../../../ui/Button';
+import { GraphAndLegendContainer, GraphContainer } from '../../../styles/graph-styles/graph-styles';
 
 ChartJS.register(
   CategoryScale,
@@ -46,10 +51,11 @@ const StyledBookmarkedCellbankGraph = styled.div`
 `;
 
 type TFlasksListGraph = {
+  flasks?: any;
   flasksList?: number[];
 };
 
-const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
+const FlasksListGraph = memo(({ flasks, flasksList }: TFlasksListGraph) => {
   const searchedFlasksList = useSelector(
     (state: RootState) => state.bookmarks.searched_flasks_list
   );
@@ -75,7 +81,9 @@ const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
   console.log(graphData, 'graphData  in SELECTEDFLASKSGRAPH');
   const chartRef = useRef<any>(null);
   const [clickedXY, setClickedXY] = useState<number[] | null>(null);
-  const [selectedFlask, setSelectedFlask] = useState<number | null>(1);
+  const [selectedFlask, setSelectedFlask] = useState<number | null>(null);
+  const [toggleGraphDataLabel, setToggleGraphDataLabel] =
+    useState<boolean>(false);
   const dispatch = useDispatch();
 
   function clickHandler(e) {
@@ -100,24 +108,42 @@ const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
   const options: any = {
     responsive: true,
     animation: false,
-    aspectRatio: 1.5,
+    // aspectRatio: 1.5,
+    maintainAspectRatio: false,
     scales: {
       x: {
         type: 'linear',
+        title: {
+          display: true,
+          text: 'Time (hours)',
+          color: GRAPH_LEGEND_TEXT_COLOR,
+          font: {
+            size: 20,
+          },
+        },
+
         ticks: {
+          color: GRAPH_AXIS_TEXT_COLOR,
           font: {
             size: 18,
           },
-          color: '#dadada',
         },
       },
       y: {
         type: 'linear',
-        ticks: {
+        title: {
+          display: true,
+          text: 'OD600',
+          color: GRAPH_LEGEND_TEXT_COLOR,
           font: {
             size: 20,
           },
-          color: '#dadada',
+        },
+        ticks: {
+          color: GRAPH_AXIS_TEXT_COLOR,
+          font: {
+            size: 20,
+          },
         },
       },
     },
@@ -146,6 +172,12 @@ const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
       setClickedXY([xValue, yValue]);
     },
     plugins: {
+      datalabels: {
+        display: function (context) {
+          if (!toggleGraphDataLabel) return false;
+          return context.dataIndex === context.dataset.data.length - 1;
+        },
+      },
       tooltip: {
         mode: 'nearest',
         intersect: false,
@@ -206,18 +238,18 @@ const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
       // ];
 
       const info = [
-        '',
-        `cell bank id: ${flaskData.cell_bank_id} `,
-        `project: ${flaskData.project} `,
-        `target molecule: ${flaskData.target_molecule} `,
+        `flask id: ${flaskData.flask_id}`,
+        ` cell bank id: ${flaskData.cell_bank_id}`,
+        ` project: ${flaskData.project} `,
+        ` ${flaskData.target_molecule} `,
       ];
 
       return {
         label: `Flask ${flaskData.flask_id}`,
         data: flaskData.time_since_inoc_hr_values.map((time, index) => ({
-          x: time,
-          y: flaskData.od600_values[index],
           z: info,
+          x: parseFloat(Number(time).toFixed(2)),
+          y: flaskData.od600_values[index],
         })),
         borderColor:
           selectedFlask == flaskData.flask_id
@@ -242,24 +274,35 @@ const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
   console.log(datasets, 'datasets in SELECTEDFLASKSGRAPH');
 
   return (
-    <StyledGraphContainer>
-      <h3>
+    <>
+      {/* <h3>
         {clickedXY &&
           `Bookmarked Cellbank Graph
-        clicked x: time ${clickedXY[0]?.toFixed(
-          2
-        )}  y: od600 ${clickedXY[1]?.toFixed(2)}`}
-      </h3>
+          clicked x: time ${clickedXY[0]?.toFixed(
+            2
+          )}  y: od600 ${clickedXY[1]?.toFixed(2)}`}
+      </h3> */}
+      <Button
+        type="button"
+        onClick={() => setToggleGraphDataLabel((prev) => !prev)}
+        $size={'small'}
+      >
+        {toggleGraphDataLabel ? 'Hide labels' : 'Show Data Labels'}
+      </Button>
       {/* {JSON.stringify(bookmarkedCellbankGraphData)} */}
       {/* <ChartsTable flasks={datasets}/> */}
       {/* {JSON.stringify(datasets)} */}
       <StyledBookmarkedCellbankGraph>
-        <Line
-          ref={chartRef}
-          options={options}
-          data={data}
-          onClick={clickHandler}
-        />
+        <GraphAndLegendContainer>
+          <GraphContainer>
+            <Line
+              ref={chartRef}
+              options={options}
+              data={data}
+              onClick={clickHandler}
+            />
+          </GraphContainer>
+        </GraphAndLegendContainer>
       </StyledBookmarkedCellbankGraph>
       {/* <ChartsTable flasks={bookmarkedCellbankGraphData.flat()} /> */}
       <Scheduler clickedXY={clickedXY} />
@@ -269,7 +312,7 @@ const FlasksListGraph = memo(({ flasksList }: TFlasksListGraph) => {
         bookmarkedFlasks={searchedFlasksList}
         // setBookmarkedFlasks={setBookmarkedFlasks}
       />
-    </StyledGraphContainer>
+    </>
   );
 });
 

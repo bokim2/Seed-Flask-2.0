@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import {
   FormLabel,
   StyledForm,
@@ -22,6 +20,7 @@ import ErrorMessage from '../../ui/ErrorMessage';
 import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
 import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
 import { createCellbankSchema } from '../../../server/zodSchemas';
+import { useMultiInputState } from '../../hooks/hooks';
 
 export default function CellbanksMultiInputForm() {
   // create a row
@@ -47,14 +46,18 @@ export default function CellbanksMultiInputForm() {
     initialCreateRowForm: initialCreateCellbankForm,
   });
 
+  const { isOpenMultiInput, handleToggleMultiInputState} = useMultiInputState()
+
   return (
     <>
+    {isOpenMultiInput &&
       <BulkInputTextArea
         name="bulkTextAreaInputForMultiSubmit"
         placeholder="copy/paste from excel"
         value={bulkTextAreaInput}
         onChange={(e) => setBulkTextAreaInput(e.target.value)}
       ></BulkInputTextArea>
+    }
 
       {createError && <ErrorMessage error={createError} />}
       {isPending && <h1>Submitting cellbank(s) in progress...</h1>}
@@ -150,6 +153,9 @@ export default function CellbanksMultiInputForm() {
           <Button $size={'small'} type="reset" onClick={handleClearForm}>
             Clear
           </Button>
+          <Button $size={'small'} type="button" onClick={handleToggleMultiInputState}>
+          Open Multi-Input Form
+        </Button>
         </ButtonsContainer>
       </StyledForm>
     </>

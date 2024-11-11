@@ -52,7 +52,7 @@ export default function DateTimePicker({
   bookmarkedFlasks,
   // setBookmarkedFlasks,
 }) {
-  console.log(clickedXY, 'clickedXY');
+  console.log(clickedXY, 'clickedXY in date time picker');
   const now = new Date();
   const currentDate = now.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
   const currentTime = now.toTimeString().split(' ')[0].substring(0, 5); // Format time as HH:MM

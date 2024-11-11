@@ -1,7 +1,7 @@
 import express from 'express';
 import { db } from '../db/db.js';
 import { LIMIT } from '../../src/lib/constants.js';
-import { allowRolesAdminUser } from '../middleware/allowRolesAdminUser.js';
+import { allowRolesAdminUser } from '../middleware/roles/allowRolesAdminUserMiddleware.js';
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
 import { validateIdParam } from '../middleware/validateIdParam.js';
 // import { db } from '../db/db.js';
@@ -33,9 +33,11 @@ scheduleRouter.route('/').get(async (req, res) => {
       status: 'success',
       data: results.rows,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Failed to fetch schedules' });
+  } catch (err) {
+    // console.log(error);
+    // res.status(500).json({ error: 'Failed to fetch schedules' });
+    console.error(err);
+    res.status(500).json({ message: err?.detail || 'Internal server error' });
   }
 });
 
@@ -98,7 +100,9 @@ scheduleRouter
         data: results.rows,
       });
     } catch (err) {
-      console.error(err, { message: err?.detail || 'Internal server error' });
+      // console.error(err, { message: err?.detail || 'Internal server error' });
+      // res.status(500).json({ message: err?.detail || 'Internal server error' });
+      console.error(err);
       res.status(500).json({ message: err?.detail || 'Internal server error' });
     }
   });
@@ -166,7 +170,7 @@ scheduleRouter.route('/:id').put(validateIdParam, async (req, res) => {
   }
 });
 
-// DELETE on cell bank
+// DELETE one schdedule
 scheduleRouter.route('/:id').delete(validateIdParam, async (req, res) => {
   try {
     const result = await db.query(
