@@ -43,7 +43,7 @@ const StyledBackgroundImg = styled.div`
 `;
 
 const NavBar = styled.div`
-  /* position: fixed; */
+  position: fixed;
   margin: 0;
   width: 100%;
   z-index: 100;
@@ -57,6 +57,7 @@ const NavBar = styled.div`
 `;
 
 const MainPageContainer = styled.main`
+
   /* position: relative; */
   width: 100%;
   min-height: 75vh;
@@ -152,7 +153,7 @@ const StyledMainMenuNavButtons = styled(StyledMainMenuButtons)`
 const StyledPageNavImage = styled(StyledImage)``;
 
 export const ScrollbarContainer = styled.div`
-/* justify-self: start; */
+  /* justify-self: start; */
   /* margin-top: 10vh; */
   height: calc(100vh - var(--nav-bar-height, 10vh));
   width: 100%;
