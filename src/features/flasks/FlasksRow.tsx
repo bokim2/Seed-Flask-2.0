@@ -111,7 +111,7 @@ export default function FlasksRow({
             }
           }}
         >
-          <Button $size={'xsmall'}>Edit</Button>
+          <Button $size={'xs'}>Edit</Button>
         </TableDataCell>
 
         {/* </TableRow> */}
