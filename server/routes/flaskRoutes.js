@@ -1,9 +1,7 @@
 import express from 'express';
 import { db } from '../db/db.js';
 import { LIMIT } from '../../src/lib/constants.js';
-import {
-
-} from '../zodSchemas.js';
+import {} from '../zodSchemas.js';
 import { allowRolesAdminUser } from '../middleware/roles/allowRolesAdminUserMiddleware.js';
 
 import { badWordsMiddleware } from '../middleware/badWordsMiddleware.js';
@@ -231,7 +229,7 @@ flaskRouter.route('/search').get(async (req, res) => {
 
     const queryArraySchema = z.array(transformedQueryObjectSchema);
 
-    // console.log('queries before zodvalidation flaskroutes search', queries);
+    console.log('queries before zodvalidation flaskroutes search', queries);
     // const validatedQueries = queries.map((query)=> (flasksSearchSchema.safeParse(query).data));
     // console.log('validatedQueries FLASK SEARCH', validatedQueries);
     const { data, success, error } = queryArraySchema.safeParse(queries);
@@ -293,6 +291,7 @@ flaskRouter.route('/search').get(async (req, res) => {
       flasks.cell_bank_id,
       flasks.media,
       flasks.media_ml,
+      flasks.inoculum_ul,
       flasks.rpm,
       flasks.start_date,
       flasks.temp_c,

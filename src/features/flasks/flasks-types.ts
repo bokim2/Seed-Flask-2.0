@@ -5,7 +5,7 @@ import { z } from 'zod';
 export const flasksInfoSchema = z.object({
   flask_id: z.coerce.number().nullable(),
   cell_bank_id: z.coerce.number().nullable(),
-  inoculum_ul: z.number().nullable(),
+  inoculum_ul: z.coerce.number().nullable(),
   media: z.string().nullable(),
   media_ml: z.coerce.number().nullable(),
   rpm: z.coerce.number().nullable(),
@@ -126,25 +126,21 @@ export const flaskVesselTypes = [
   '24 well plate',
 ];
 
-
-
-
-export type TFlasksColumns = 
-  'flask_id' |
-  'cell_bank_id' |
-  'vessel_type' |
-  'media' |
-  'media_ml' |
-  'inoculum_ul' |
-  'temp_c' |
-  'rpm' |
-  'start_date' |
-  'human_readable_date' |
-  'username';
-
+export type TFlasksColumns =
+  | 'flask_id'
+  | 'cell_bank_id'
+  | 'vessel_type'
+  | 'media'
+  | 'media_ml'
+  | 'inoculum_ul'
+  | 'temp_c'
+  | 'rpm'
+  | 'start_date'
+  | 'human_readable_date'
+  | 'username';
 
 export const flasksTableHeaderCellsArray = [
-  'flask_id' ,
+  'flask_id',
   'cell_bank_id',
   'vessel_type',
   'media',
@@ -159,10 +155,10 @@ export const flasksTableHeaderCellsArray = [
   'strain',
   'target_molecule',
   'project',
-]
+];
 
 export const flasksOnlyTableHeaderCellsArray = [
-  'flask_id' ,
+  'flask_id',
   'cell_bank_id',
   'vessel_type',
   'media',
@@ -173,5 +169,4 @@ export const flasksOnlyTableHeaderCellsArray = [
   // 'start_date',
   'human_readable_date',
   'username',
-
-]
+];

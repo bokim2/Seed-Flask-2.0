@@ -68,6 +68,9 @@ export const Caption = styled.p`
   background-color: rgba(var(--clr-table-200), 1);
   padding-block: 1vh;
   pointer-events: none;
+  padding-top: var(--nav-bar-height, 10vh);
+  height: auto;
+  top: 0;
 
   /* div {
     position: absolute;
@@ -79,7 +82,8 @@ export const Caption = styled.p`
   } */
   
   @media (min-width: 850px) {
-    height: calc(var(--nav-bar-height, 10vh));
+    padding-top: var(--nav-bar-height, 10vh);
+    height: calc(var(--nav-bar-height, 10vh) * 1.8);
     top: 0;
     /* top: calc(var(--nav-bar-height, 10vh)); */
     
@@ -120,7 +124,7 @@ export const TableHeader = styled.thead`
 
   @media (min-width: 850px) {
     position: sticky;
-    top: calc(var(--nav-bar-height, 10vh));
+    top: calc(var(--nav-bar-height, 10vh)* 1.8);
   }
 `;
 
