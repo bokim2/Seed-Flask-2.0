@@ -24,8 +24,7 @@ const StyledLoaderBar = styled.div`
     45deg,
     rgba(var(--clr-primary-950), 0),
     rgba(var(--clr-primary-950), 0),
-    red,
-    yellow,
+    #ebb936,
     blue,
     red,
     #ffff,
@@ -45,6 +44,40 @@ const StyledLoaderBar = styled.div`
   background-position: left;
   animation: ${moveGradient} 12s linear infinite;
 `;
+
+// original - slower animation
+// const StyledLoaderBar = styled.div`
+//   position: sticky;
+//   top: 0;
+//   left: 0;
+//   height: 7px;
+//   width: 100%;
+//   /* z-index: 1000; */
+//   background-image: linear-gradient(
+//     45deg,
+//     rgba(var(--clr-primary-950), 0),
+//     rgba(var(--clr-primary-950), 0),
+//     red,
+//     yellow,
+//     blue,
+//     red,
+//     #ffff,
+//     yellow,
+//     blue,
+//     #ffff,
+//     red,
+//     yellow,
+//     blue,
+//     red,
+//     #ffff,
+//     yellow,
+//     blue,
+//     red
+//   );
+//   background-size: 2000%;
+//   background-position: left;
+//   animation: ${moveGradient} 12s linear infinite;
+// `;
 
 // export default function LoaderBar() {
 //   return createPortal(<StyledLoaderBar></StyledLoaderBar>, document.body);

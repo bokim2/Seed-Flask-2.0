@@ -1,81 +1,106 @@
-import React, { useEffect, useState } from 'react';
-import { baseUrl } from '../../configs';
+import React, { useState } from 'react';
 import CellbanksTable from '../features/cellbanks/CellbanksTable';
 import {
   InnerPageContainer,
   LoaderWrapper,
   PageContainer,
+  StyledBookmark,
+  StyledBookmarkContainer,
 } from '../styles/UtilStyles';
-import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCellbankBookmark } from '../features/settings/bookmarksSlice';
-import { RootState } from '../lib/store';
+import { toggleCellbankBookmark } from '../redux/slices/bookmarksSlice';
+import { RootState } from '../redux/store';
 import Button from '../ui/Button';
-import { useFetchValidatedTableQuery } from '../lib/hooks';
+import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import { cellbanksArraySchema } from '../features/cellbanks/cellbanks-types';
+import CellbanksMultiInputForm from '../features/cellbanks/CellbanksMultiInputForm';
+import { useMultiInputState } from '../hooks/hooks';
+import PageHeader from '../ui/PageHeader';
+import PageDashboard from '../ui/page-dashboard/PageDashboard';
 
 export default function CellbankPage() {
-  // const [cellbanks, isLoading, error] = useFetchCellbanksQuery();
-  const [cellbanks, isLoading, error] = useFetchValidatedTableQuery({
+  const {
+    data: cellbanksAll,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+  } = useFetchValidatedTableQuery({
     tableName: 'cellbanks',
     zodSchema: cellbanksArraySchema,
   });
-
   // console.log('cellbanks in cellbanks page', cellbanks);
-  const [toggleTextTruncation, settToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
+
+  const [toggleTextTruncation, setToggleTextTruncation] = useState(true); // cut off details on long cellbank cells
 
   // bookmarked cellbanks
   const dispatch = useDispatch();
   const handleAddBookmark = (id) => {
-    dispatch(addCellbankBookmark(id));
+    dispatch(toggleCellbankBookmark(parseInt(id)));
   };
 
-  const cellbankBookmarks = useSelector(
+  const bookmarkedCellbanks = useSelector(
     (state: RootState) => state.bookmarks.cellbank_bookmark
   );
-  // console.log('cellbankBookmarks', cellbankBookmarks);
 
-  // const fetchCellbanks = async () => {
-  //   const res = await fetch(`${baseUrl}/api/cellbanks`);
-  //   const { data } = await res.json();
-  //   // console.log(data, 'in fetchcellbanks')
-  //   setCellbanks(data);
-  //   return data;
-  // };
-
-  // useEffect(() => {
-  //   fetchCellbanks();
-  //   // setCellbanks(data)
-  // }, []);
-  // const handleEditForm = (e) => {}
+  // data from cellbanks table
+  // console.log('cellbankspage, cellbanks', cellbanks);
+  // const cellbanksAll = cellbanks?.pages.map((data) => data.data).flat() || [];
+  // // console.log(cellbanksAll, 'cellbanksAll');
 
   return (
     <PageContainer id="CellbankPageContainer">
-      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>
+        {(isLoading || isFetching) && <LoaderBar />}
+      </LoaderWrapper>
+        {/* <PageHeader>Cell Banks</PageHeader> */}
       <InnerPageContainer id="CellbankInnerPageContainer">
+        {error && <ErrorMessage error={error} />}
         <Button
           $size={'small'}
-          onClick={() => settToggleTextTruncation((prev) => !prev)}
+          onClick={() => setToggleTextTruncation((prev) => !prev)}
         >
           {!toggleTextTruncation
             ? 'Show Table Cell Details'
             : 'Hide Table Cell Overflow'}
         </Button>
 
-        <h3>{JSON.stringify(cellbankBookmarks)}</h3>
+        {/* <h3>{JSON.stringify(cellbankBookmarks)}</h3> */}
+        {/* <StyledBookmarkContainer>
+          <StyledBookmark>
+            cellbank bookmarks:{' '}
+            {Array.isArray(bookmarkedCellbanks) &&
+              bookmarkedCellbanks.join(', ')}
+          </StyledBookmark>
+        </StyledBookmarkContainer> */}
 
-        <CellbanksMultiInputForm />
-        
-        {error && <ErrorMessage error={error} />}
-        {!isLoading && (
+        {/* <CellbanksMultiInputForm /> */}
+        <PageDashboard />
+
+        {/* {error?.message && <ErrorMessage error={error} />} */}
+        {cellbanksAll && cellbanksAll?.length > 0 && !isLoading && (
           <CellbanksTable
-            cellbanks={cellbanks}
+            cellbanks={cellbanksAll}
             handleAddBookmark={handleAddBookmark}
             toggleTextTruncation={toggleTextTruncation}
+            // tableName={tableName}
           />
         )}
+        <Button
+          type="button"
+          onClick={() => {
+            console.log('fetchNextPage fired', fetchNextPage, hasNextPage);
+            fetchNextPage();
+          }}
+          // disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {/* {hasNextPage && !isFetchingNextPage && 'Load More'} */}
+          {!hasNextPage ? 'No More Data' : 'Load More'}
+        </Button>
         {/* {JSON.stringify(cellbanks)} */}
         {/* <CellbanksSingleInputForm /> */}
       </InnerPageContainer>

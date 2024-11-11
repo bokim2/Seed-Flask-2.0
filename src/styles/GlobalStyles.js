@@ -23,7 +23,15 @@ html {
 html,
 body {
   ${'' /* height: 100%; */}
+  ${'' /* overflow-y: scroll; */}
+  ${'' /* background-color: rgb(2, 6, 23); */}
+
+    /* Style the scrollbar */
+
 }
+
+
+    ${'' /* background: #888;  */}
 
 /* Remove default margin in favour of better control in authored CSS */
 body, h1, h2, h3, h4, p,
@@ -126,6 +134,7 @@ ${
 --font-sans-serif: 'Inter', sans-serif;
 --font-serif: 'Playfair Display', serif;
 
+// DARKMODE
        /* Colors */
   --clr-primary-0: white;
   --clr-primary-50: #f8fafc;
@@ -137,9 +146,17 @@ ${
   --clr-primary-600: #475569;
   --clr-primary-700: #334155;
   --clr-primary-800: #150F1D; // app background
-  --clr-primary-900: 21,15,29; //dark black - navbar
-  --clr-primary-950: 2,6,23;  //darker black - navbar expanded
+  --clr-primary-900: 21, 15, 29; //dark black - navbar
+  --clr-primary-950: 2, 6, 23;  //darker black - navbar expanded
 
+
+  --clr-table-100: 38, 34, 49;  // less dark black - table #262231
+  --clr-table-200: 18, 17, 24;  // dark black - background of Page #121118
+  --clr-table-300: 242, 246, 252;  // highligted row 
+  --clr-table-400: 242, 246, 252;  // table header
+  --clr-table-500: 213, 219, 226;  // table row line
+
+//DARKMODE
   --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
   --clr-accent-1: 250, 247, 240; /* menu button #FAF7F0 */ 
   --clr-accent-2: 225, 246, 242; /* #E1F6F2*/
@@ -147,24 +164,111 @@ ${
   --clr-accent-4: 228, 241, 238;/* #E4F1EE menu button */
   --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
   --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
-  --clr-accent-7: #FBC7CA;
+  --clr-accent-7: #D4F27C; // selected table header text
   --clr-accent-8: #F68086; 
   --clr-accent-9: #10e7dc;
   --clr-accent-10: #fde5d4;
+  --clr-accent-11: #7C9DF2;
+  --clr-accent-12: #FBC7CA;
+  --clr-accent-13: #fff5e4;
+  --clr-accent-14: #C8C0B8; 
 
-  --clr-text-1: #D3D3D3;
+  --clr-text-1: #D3D3D3; //DARKMODE
   --clr-text-2: black;
   --clr-text-3: #CCCCCC;
-  --clr-text-4: black;
-  --clr-text-5: #708090;
-  --clr-text-6: black;
-   }
+  --clr-text-4: #5B5E5D; // dark grey text
+  --clr-text-5: 112, 128, 144; //#708090
+  --clr-text-6: #0B57D0;  // highlighted text color
+   //DARKMODE END
+
+   ${'' /* possible light-mode test */}
+
+
+// LIGHT MODE
+       /* Colors */
+       --clr-primary-0: white;
+  --clr-primary-50: #f8fafc;
+  --clr-primary-100: #f1f5f9;
+  --clr-primary-200: #e2e8f0;
+  --clr-primary-300: hsl(213, 27%, 84%);
+  --clr-primary-400: #94a3b8;
+  --clr-primary-500: #64748b;
+  --clr-primary-600: #475569;
+  --clr-primary-700: #334155;
+  --clr-primary-800: #f1f5f9; // app background
+  --clr-primary-850: #FFFFFF; // scrollbar track
+  --clr-primary-900: 246, 248, 252; // navbar
+  --clr-primary-950: 246, 248, 252;  //darker black - navbar expanded
+
+
+// TABLE COLORS
+
+  --clr-table-100: 255, 255, 255;
+  --clr-table-200:  255, 255, 255;  // 
+; 
+  --clr-table-300: 242, 246, 252;  // highligted row 
+  --clr-table-400: 246, 248, 250;  // table header
+  --clr-table-500: 213, 219, 226;  // table row line
+  --clr-table-600: #F4F4F4; // hover row color
+  --clr-table-700: #F2F6FC; // selected row color
+
+// LIGHT MODE
+  --clr-accent-0: 242, 209, 124; /* main accent #F2D17C yellow-orange*/
+  --clr-accent-1: 250, 247, 240; /* menu button #FAF7F0 */ 
+  --clr-accent-2: 225, 246, 242; /* #E1F6F2*/
+  --clr-accent-3: 231, 241, 220; /* #E7F1DC */
+  --clr-accent-4: 228, 241, 238;/* #E4F1EE menu button */
+  --clr-accent-5: 235,185,54; /*dark yellow-orange #ebb936*/
+  --clr-accent-6: 16, 231, 220; /* bright light blue turquoise #10e7dc */
+  --clr-accent-7: #030DB5; // selected table header
+  --clr-accent-8: #F68086; // bookmark color
+  --clr-accent-9: #EAF1FB; // side navbar background
+  --clr-accent-10: #D3E3FD; // highlight side navbar
+  --clr-accent-11:#DADCE0; // side menu hover
+  --clr-accent-12: #FBC7CA;
+  --clr-accent-13: #fff5e4;
+  --clr-accent-14: #C8C0B8; 
+
+  --clr-text-1: #2d2d2e; // LIGHT MODE
+  --clr-text-2: #3c4043;
+  --clr-text-3: #47494B;  // table text
+  --clr-text-4: #5f6368;  // 
+  --clr-text-5: #030DB5;  // highlight text color
+
+  ${'' /* --clr-text-4: #5B5E5D; // dark grey text */}
+  ${'' /* --clr-text-5: 112, 128, 144; //#708090 */}
+  --clr-text-7: #202125; // bold active sidemenu text
+   // LIGHT MODE END
+
+   ${'' /* LAYOUT SIZES */}
+   --nav-bar-height: clamp(3.5rem, 10vh, 4.5rem);
+
+   --border-radius-small: 5px;
+
+
+${'' /* TABLE STYLES */}
+   --table-header-cell-font-size: .9rem;
+   --table-cell-font-size: .9rem;
+ }
+
+ ${'' /* scrollbar width */}
+
+ --scrollbar-width: 10px;
+
+
+
+
   
    a {
      font-weight: 500;
      color: #646cff;
-     text-decoration: inherit;
+     text-decoration: none; 
    }
+
+   a:-webkit-any-link {
+    text-decoration: none;
+   }
+   
    a:hover {
      color: #535bf2;
    }
@@ -191,7 +295,7 @@ ${
      font-size: 1em;
      font-weight: 500;
      font-family: inherit;
-     background-color: #1a1a1a;
+     background-color: #ffffff; //#1a1a1a;
      cursor: pointer;
      transition: border-color 0.25s;
    }
@@ -200,10 +304,10 @@ ${
    }
    button:focus,
    button:focus-visible {
-     outline: 4px auto -webkit-focus-ring-color;
+     ${'' /* outline: 4px auto -webkit-focus-ring-color; */}
    }
   
-   @media (prefers-color-scheme: light) {
+   ${'' /* @media (prefers-color-scheme: light) {
      :root {
        color: #213547;
        background-color: #ffffff;
@@ -214,7 +318,7 @@ ${
      button {
        background-color: #f9f9f9;
      }
-   }
+   } */}
   
 
   

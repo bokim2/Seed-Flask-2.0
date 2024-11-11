@@ -1,103 +1,242 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Caption,
+
   StyledForm,
-  StyledTable,
-  TableContainer,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
-  Wrapper,
 } from '../../styles/UtilStyles';
 import SamplesRow from './SamplesRow';
 import {
+  TSamplesColumns,
+  TSamplesInfo,
   TUpdateSampleForm,
-  TinitialEditSampleForm,
   initialEditSampleForm,
+  samplesTableHeaderCellsArray,
   updateSampleSchema,
 } from './samples-types';
-import { useDeleteRowMutation, useUpdateRowMutation } from '../../lib/hooks';
+import { useDeleteRowMutation } from '../../hooks/table-hooks/useDeleteRowMutation';
+import { useEditTableRowForm } from '../../hooks/table-hooks/useEditTableRowForm';
+import ErrorMessage from '../../ui/ErrorMessage';
+import TableHeaderCellComponent from '../../ui/table-ui/TableHeaderCellComponent';
+import {  useAppSelector, useFilteredTableData, useSetSortColumn } from '../../hooks/hooks';
+import { useDispatch } from 'react-redux';
+import { changePageLimit } from '../../redux/slices/pageSlice';
+import Button from '../../ui/Button';
+import SearchFormRow from '../../ui/SearchFormRow';
+import { Caption, StyledTable, TableContainer, TableHeader, TableHeaderCell, TableHeaderRow } from '../../styles/table-styles/tableStyles';
 
 export default function SamplesTable({ samples }) {
-  console.log('samples in samplestable', samples);
-  const [editedForm, setEditedForm] = useState<TUpdateSampleForm | TinitialEditSampleForm>(
-    initialEditSampleForm
-  );
-  const [editingId, setEditingId] = useState<number | null>(null); // id of edited sample
+  // console.log('samples in samplestable', samples);
 
   // update row
-  const { mutate: submitEditedSampleForm, isPending: isPendingUpdate } =
-    useUpdateRowMutation({
-      tableName: 'samples',
-      zodSchema: updateSampleSchema,
-      initialEditForm: initialEditSampleForm,
-      setEditedForm,
-      idColumnName: 'sample_id',
-      dateColumnName: 'end_date',
-    });
+  const {
+    editedForm,
+    setEditedForm,
+    editingId,
+    setEditingId,
+    submitEditedRowForm,
+    isPendingUpdate,
+    updateError,
+    handleEditFormSubmit,
+  } = useEditTableRowForm<TUpdateSampleForm>({
+    tableName: 'samples',
+    zodSchema: updateSampleSchema,
+    initialEditForm: initialEditSampleForm,
+    idColumnName: 'sample_id',
+    dateColumnName: 'end_date',
+  });
 
   // delete a row
   const {
     mutate: deleteSample,
     isPending: isPendingDelete,
-    error,
+    error: deleteError,
   } = useDeleteRowMutation({ tableName: 'samples' });
 
-  const handleEditFormSubmit = (e, editedForm) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const typedEditedForm = {
-      ...editedForm,
-      od600: Number(editedForm.od600),
-      completed: editedForm.completed === 'true'
-    }
-    submitEditedSampleForm(typedEditedForm);
-    setEditingId(null);
+
+
+  const [toggleCellbankData, setToggleCellbankData] = useState(false);
+
+  type TPages = { status: string; data: TSamplesInfo };
+  type TSearchData = {
+    pages: TPages[];
+    pageParams: number[];
+  };
+  // searched data - searching table through text input - the SearchForm component will use setSearchedData to update this state
+  const [searchedData, setSearchedData] = useState<TSamplesInfo | null>(null);
+
+  // filtered and sorted data that will be passed to child components
+  const [filteredAndSortedData, setFilteredAndSortedData] =
+    useState<TSamplesInfo>([]);
+
+  // sort selected column
+  const { sortColumn, handleSortColumn } = useSetSortColumn<TSamplesColumns>();
+
+  // page limit - how many rows to display per fetch  ex: 10, 20, 50
+  const pageLimitSetting = useAppSelector((state) => state.page.LIMIT);
+
+  const dispatch = useDispatch();
+  const handleChoosePageLimit = (limit: number) => {
+    dispatch(changePageLimit(limit));
   };
 
-  return (
-    <StyledForm
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleEditFormSubmit(e, editedForm);
-      }}
-    >
-      <TableContainer id="SamplesTableContainer">
-        <StyledTable>
-          <Caption>Samples</Caption>
-          <TableHeader>
-            <TableRow>
-              <TableHeaderCell>Sample ID</TableHeaderCell>
-              {/* <TableHeaderCell>Cell Bank ID</TableHeaderCell>  */}
-              <TableHeaderCell>Flask ID</TableHeaderCell>
-              <TableHeaderCell>od600</TableHeaderCell>
-              <TableHeaderCell>time since inoc hr</TableHeaderCell>
-              <TableHeaderCell>end date/time</TableHeaderCell>
-              <TableHeaderCell>completed</TableHeaderCell>
-              <TableHeaderCell>user</TableHeaderCell>
-              <TableHeaderCell>edit</TableHeaderCell>
-            </TableRow>
-          </TableHeader>
+  // useEffect call to filter and sort data and keep it in sync
 
-          <tbody>
-            {samples &&
-              samples?.map((rowData) => {
-                return <SamplesRow 
-                key={rowData.sample_id} 
-                rowData={rowData}
-                editedForm={editedForm}
-                setEditedForm={setEditedForm}
-                setEditingId={setEditingId}
-                editingId={editingId}
-                deleteSample={deleteSample}
-                isPendingUpdate={isPendingUpdate}
-                isPendingDelete={isPendingDelete}
-                
-                />;
-              })}
-          </tbody>
-        </StyledTable>
-      </TableContainer>
-    </StyledForm>
+  useEffect(() => {
+    console.log(
+      'USEEFFECT IN samplestable searchedData in sample table'
+      // searchedData, searchedData?.pages, searchedData?.pages?.length > 0
+    );
+
+
+
+    if (searchedData && searchedData?.length > 0) {
+      // const searchedDataAll =
+      //   searchedData?.pages.map((data) => data?.data).flat() || [];
+
+      console.log(
+        'USEEFFECT IN sampletable searchDataAll ',
+        searchedData,
+        searchedData?.map((e) => {
+          if (e && e?.flask_id) {
+            return Number(e?.flask_id);
+          }
+        })
+      );
+      setFilteredAndSortedData(searchedData);
+
+      // dispatch(
+      //   setSearchedFlasksList(
+      //     searchedData
+      //       ?.map((e) => {
+      //         if (e && e?.flask_id) {
+      //           return Number(e?.flask_id);
+      //         }
+      //         return undefined;
+      //       })
+      //       .filter((id): id is number => id !== undefined)
+      //   )
+      // );
+    } else {
+      setFilteredAndSortedData(samples);
+      // dispatch(clearSearchedFlasksList);
+      // console.log('useEffect in dataName table', dataName);
+    }
+  }, [samples, searchedData]);
+
+  // useEffect(() => {
+  //   const filteredData = filteredTableData(
+  //     flasks,
+  //     filteredAndSortedData,
+  //     sortColumn,
+  //     'start_date'
+  //   );
+  //   setData(filteredData);
+  //   console.log('data in flasks table', data);
+  // }, [flasks, filteredAndSortedData, sortColumn]);
+
+  const data = 
+      useFilteredTableData(
+        samples,
+        filteredAndSortedData,
+        sortColumn,
+        'end_date'
+      )
+
+  //state for multisearch
+  const [showSearchRow, setShowSearchRow] = useState(false);
+  const [searchMultiError, setSearchMultiError] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  console.log(searchMultiError, 'searchMultiError');
+
+
+  return (
+    <>
+      {/* loading and error messages */}
+      {isPendingUpdate && <h1>edit is pending Update...</h1>}
+      {isPendingDelete && <h1>edit is pending Delete...</h1>}
+      {updateError?.message && <ErrorMessage error={updateError} />}
+      {deleteError?.message && <ErrorMessage error={deleteError} />}
+
+      {/* <Button
+        type="button"
+        $variation="special"
+        onClick={() => setShowSearchRow((prev) => !prev)}
+        $size={'xsmall'}
+      >
+        Search
+      </Button> */}
+
+      <StyledForm
+        onSubmit={(e) => {
+          e.preventDefault();
+
+          console.log('editedForm in samples onsubmit', editedForm);
+          handleEditFormSubmit(
+            e,
+            editedForm,
+            submitEditedRowForm,
+            setEditingId
+          );
+        }}
+      >
+        <TableContainer id="SamplesTableContainer">
+          <StyledTable>
+            <Caption>Samples</Caption>
+            <TableHeader>
+              <TableHeaderRow>
+                {samplesTableHeaderCellsArray.map((headerCell) => (
+                  <TableHeaderCellComponent
+                    key={headerCell}
+                    columnName={headerCell}
+                    handleSortColumn={handleSortColumn}
+                    sortColumn={sortColumn}
+                  />
+                ))}
+              <TableHeaderCell>
+                  {(
+                    <Button
+                    type="button"
+                    $variation="special"
+                    onClick={() => setShowSearchRow((prev) => !prev)}
+                    $size={'xs'}
+                    >
+                      Search
+                    </Button>
+                  )}
+                </TableHeaderCell>
+                  </TableHeaderRow>
+
+                  { showSearchRow && (
+                <SearchFormRow
+                  setSearchedData={setSearchedData}
+                  tablePathName={'samples'}
+                  tableColumnsHeaderCellsArray={samplesTableHeaderCellsArray}
+                  setSearchMultiError={setSearchMultiError}
+                  setSearchLoading={setSearchLoading}
+                />
+              )}
+            </TableHeader>
+
+            <tbody>
+              {data &&
+                data?.map((rowData) => {
+                  return (
+                    <SamplesRow
+                      key={rowData.sample_id}
+                      rowData={rowData}
+                      editedForm={editedForm}
+                      setEditedForm={setEditedForm}
+                      setEditingId={setEditingId}
+                      editingId={editingId}
+                      deleteSample={deleteSample}
+                      isPendingUpdate={isPendingUpdate}
+                      isPendingDelete={isPendingDelete}
+                    />
+                  );
+                })}
+            </tbody>
+          </StyledTable>
+        </TableContainer>
+      </StyledForm>
+    </>
   );
 }

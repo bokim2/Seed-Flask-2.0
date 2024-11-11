@@ -3,17 +3,14 @@ import {
   InnerPageContainer,
   LoaderWrapper,
   PageContainer,
-  Wrapper,
 } from '../styles/UtilStyles';
 import { baseUrl } from '../../configs';
 import SamplesTable from '../features/samples/SamplesTable';
-import { useFetchValidatedTableQuery, useSamples } from '../lib/hooks';
+import { useFetchValidatedTableQuery } from '../hooks/table-hooks/useFetchValidatedTableQuery';
 import ErrorMessage from '../ui/ErrorMessage';
 import LoaderBar from '../ui/LoaderBar';
-import {
-  samplesInfoArraySchema,
-} from '../lib/types';
 import SamplesMultiInputForm from '../features/samples/SamplesMultiInputForm';
+import { samplesInfoArraySchema } from '../features/samples/samples-types';
 
 export default function SamplePage() {
   // const [samples, setSamples] = useState<any>([]);
@@ -34,20 +31,33 @@ export default function SamplePage() {
   // const [samples, isLoading, error] = useSamples();
   // console.log('samples', samples);
 
-  const [samples, isLoading, error] = useFetchValidatedTableQuery({
+  const {
+    data: samplesAll,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+    isFetching,
+  } = useFetchValidatedTableQuery({
     tableName: 'samples',
     zodSchema: samplesInfoArraySchema,
   });
 
+  // const samplesAll = samples?.pages.map((page) => page.data).flat() || [];
+
   return (
     <PageContainer id="SamplePageContainer">
-      <LoaderWrapper>{isLoading && <LoaderBar />}</LoaderWrapper>
+      <LoaderWrapper>{(isLoading || isFetching) && <LoaderBar />}</LoaderWrapper>
 
       <InnerPageContainer id="SampleInnerPageContainer">
-        <SamplesMultiInputForm />
+
+        {/* input form and dilution calculator */}
+        <SamplesMultiInputForm /> 
         {error && <ErrorMessage error={error} />}
 
-        {!isLoading && <SamplesTable samples={samples} />}
+        {!isLoading && samplesAll && <SamplesTable samples={samplesAll} />}
       </InnerPageContainer>
     </PageContainer>
   );

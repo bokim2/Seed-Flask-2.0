@@ -1,109 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { baseUrl } from '../../../configs';
-import styled from 'styled-components';
 import {
-  FormButton,
   FormLabel,
-  FormTextArea,
-  InputContainer,
-  MultiFormInput,
   StyledForm,
-  StyledTable,
-  TableDataCell,
-  TableRow,
-  FormTableCell,
+
+  FormInputCell,
+  BulkInputTextArea,
+  MultiInputFormBody,
+  MultiInput,
+  ButtonsContainer,
+  CreateEntryTable,
+  CreateEntryTableRow,
+  FormSelect,
 } from '../../styles/UtilStyles';
 import Button from '../../ui/Button';
 
-
-import { useCreateValidatedRowMutation } from '../../lib/hooks';
-import { TCreateSample, TinitialEditSampleForm, createSampleSchema, initialEditSampleForm } from './samples-types';
-
-const BulkInputTextArea = styled.textarea`
-  background-color: transparent;
-  padding: 0.5rem;
-  text-align: center;
-  border-radius: 5px;
-  margin: 1rem;
-`;
-
-const CellbankFormBody = styled.tbody``;
-
-const CellbankFormCell = styled(FormTableCell)``;
-
-export const CellbankMultiInput = styled(MultiFormInput)``;
-
-export const ButtonsContainer = styled.div`
-  display: flex;
-  margin: 1rem;
-  gap: 1rem;
-`;
+import {
+  TCreateSample,
+  createSampleColumnsArray,
+  createSampleSchema,
+  initialCreateSampleForm,
+} from './samples-types';
+import { useCreateValidatedRowMutation } from '../../hooks/table-hooks/useCreateValidatedRowMutation';
+import { useBulkInputForm } from '../../hooks/table-hooks/useBulkInputForm';
+import ErrorMessage from '../../ui/ErrorMessage';
+import SamplesDilutions from './sample-dilutions/SamplesDilutions';
 
 export default function SamplesMultiInputForm() {
-  const [bulkTextAreaInput, setBulkTextAreaInput] = useState(''); // input for pasting cellbank(s) from excel
-  const [bulkForm, setBulkForm] = useState<TCreateSample[] | TinitialEditSampleForm[]>([
-    initialEditSampleForm,
-  ]); // data for submitting cellbank(s)
-
-  // const [createCellbankMutation, isPending] = useCreateCellbankMutation(); // create cellbank(s)
-
+  // create a row
   const {
     mutate: createSampleMutation,
     isPending,
-    error,
+    error: createError,
   } = useCreateValidatedRowMutation({
     tableName: 'samples',
     zodSchema: createSampleSchema,
-    // apiEndpoint: 'cellbank',
   });
 
-  // update bulkForm when bulkTextAreaInput changes
-  useEffect(() => {
-    if (bulkTextAreaInput === '') return;
-    const pastedInputsArray = bulkTextAreaInput.split('\n').map((row) => {
-      const singleRow = row.split('\t');
-      const rowData = {
-        flask_id: Number(singleRow[0]),
-        od600: Number(singleRow[1]),
-        completed: Boolean(singleRow[2]),
-        // notes: singleRow[3],
-      };
-      return rowData;
-    });
-    setBulkForm(pastedInputsArray);
-  }, [bulkTextAreaInput]);
-
-  const handleSubmit = async (e, bulkForm) => {
-    e.preventDefault();
-     
-    const mutationPromises = bulkForm.map((row) => createSampleMutation({ flask_id: Number(row.flask_id), od600: Number(row.od600), completed: Boolean(row.completed)}));
-    try {
-      await Promise.all(mutationPromises);
-      setBulkForm([initialEditSampleForm]);
-      setBulkTextAreaInput('');
-    } catch (err) {
-      console.log(err, 'error in bulkForm mutation submit');
-    }
-  };
-
-  const handleChange = (e, rowNumber: number) => {
-    setBulkForm((prev) => {
-      return prev.map((row, i) => {
-        if (i === rowNumber) {
-          return { ...row, [e.target.name]: e.target.value };
-        }
-        return row;
-      });
-    });
-  };
-
-  const handleClearForm = () => {
-    setBulkForm([initialEditSampleForm]);
-    setBulkTextAreaInput('');
-  };
+  const {
+    bulkTextAreaInput,
+    setBulkTextAreaInput,
+    bulkForm,
+    handleSubmit,
+    handleChange,
+    handleClearForm,
+    setBulkForm,
+  } = useBulkInputForm<TCreateSample>({
+    createTableColumnsArray: createSampleColumnsArray,
+    createTableRowMutation: createSampleMutation,
+    initialCreateRowForm: initialCreateSampleForm,
+    zodSchema: createSampleSchema,
+  });
 
   return (
     <>
+      <SamplesDilutions />
+
       <BulkInputTextArea
         name="bulkTextAreaInputForMultiSubmit"
         placeholder="copy/paste from excel"
@@ -111,6 +61,7 @@ export default function SamplesMultiInputForm() {
         onChange={(e) => setBulkTextAreaInput(e.target.value)}
       ></BulkInputTextArea>
 
+      {createError && <ErrorMessage error={createError} />}
       {isPending && <h1>Submitting cellbank(s) in progress...</h1>}
       <StyledForm
         onSubmit={(e) => {
@@ -119,61 +70,79 @@ export default function SamplesMultiInputForm() {
           console.log('bulkForm in submit', bulkForm);
         }}
       >
-        <StyledTable>
-          <CellbankFormBody>
+        <CreateEntryTable>
+          <MultiInputFormBody>
             {bulkForm.length !== 0 &&
               bulkForm?.map((row, i) => (
-                <TableRow key={i}>
-                  <CellbankFormCell>
-                    {i == 0 && <FormLabel htmlFor="flask_id">flask_id</FormLabel>}
-                    <CellbankMultiInput
-                      type="text"
+                <CreateEntryTableRow key={i}>
+
+                  <FormInputCell>
+                    <MultiInput
                       id="flask_id"
                       name="flask_id"
                       placeholder="flask_id (e.g. 2)"
                       onChange={(e) => handleChange(e, i)}
                       required
                       autoFocus
-                      value={bulkForm[i].flask_id}
+                      value={bulkForm[i].flask_id || ''}
                     />
-                  </CellbankFormCell>
-
-                  <CellbankFormCell>
                     {i == 0 && (
-                      <FormLabel htmlFor="od600">
-                        od600
-                      </FormLabel>
+                      <FormLabel htmlFor="flask_id">flask_id</FormLabel>
                     )}
-                    <CellbankMultiInput
-                      type="text"
+                  </FormInputCell>
+
+                  <FormInputCell>
+                    <MultiInput
                       id="od600"
                       name="od600"
                       onChange={(e) => handleChange(e, i)}
                       placeholder="od600 (e.g. 3.4)"
                       required
-                      value={bulkForm[i].od600}
+                      value={bulkForm[i].od600 || ''}
                     />
-                  </CellbankFormCell>
+                    {i == 0 && <FormLabel htmlFor="od600">od600</FormLabel>}
+                  </FormInputCell>
 
-                  <CellbankFormCell>
-                    {i == 0 && (
-                      <FormLabel htmlFor="completed">completed</FormLabel>
-                    )}
-                    <CellbankMultiInput
+                  <FormInputCell>
+                    {/* <MultiInput
                       id="completed"
                       name="completed"
                       onChange={(e) => handleChange(e, i)}
                       placeholder="completed"
                       required
-                      value={bulkForm[i].completed ? 'true' : 'false'}
-                    />
-                  </CellbankFormCell>
+                      value={bulkForm[i].completed ? 'in-progress' : 'completed'}
+                    /> */}
+                    <FormSelect
+                      name="completed"
+                      id="completed"
+                      onChange={(e) => {
+                     
+                        const updatedValue = e.target.value === 'completed'; 
+                        setBulkForm((prev) => 
+                          prev.map((row, index) => {
+                            if (index === i) {
+                              return { ...row, completed: updatedValue }; // Apply the boolean value directly
+                            }
+                            return row;
+                          })
+                        );
+                        // handleChange(e, i)
 
-                  
-                </TableRow>
+                      }}
+                      
+                      value={bulkForm[i]?.completed ? 'completed' : 'in-progress'}
+                    >
+                      <option value={'in-progress'}>in-progress</option>
+                      <option value={'completed'}>completed</option>
+                    </FormSelect>
+                    {i == 0 && (
+                      <FormLabel htmlFor="completed">completed</FormLabel>
+                    )}
+                  </FormInputCell>
+                </CreateEntryTableRow>
               ))}
-          </CellbankFormBody>
-        </StyledTable>
+          </MultiInputFormBody>
+        </CreateEntryTable>
         <ButtonsContainer>
           <Button $size={'small'} type="submit" disabled={isPending}>
             Submit
@@ -186,21 +155,3 @@ export default function SamplesMultiInputForm() {
     </>
   );
 }
-
-// const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-//   try {
-//     e.preventDefault();
-//     console.log('submitting', 'form', form, 'bulkform', bulkForm);
-//     await fetch(`${baseUrl}/api/cellbanks`, {
-//       method: 'POST',
-//       headers: {
-//         'content-type': 'application/json',
-//       },
-
-//       body: JSON.stringify(form),
-//     });
-//     setForm((prev) => initialUpdateCellbankForm);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
