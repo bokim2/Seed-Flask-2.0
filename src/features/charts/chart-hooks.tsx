@@ -15,7 +15,7 @@ export function useFetchBookmarkedFlasksGraphData({
         // `${baseUrl}/api/chart/flasks?flaskIds=${bookmarkedFlasks.join(',')}`
         `${baseUrl}/api/${flasksListRoute}?flaskIds=${bookmarkedFlasks.join(
           ','
-        )}`
+        )}`,  { credentials: 'include' }
       );
       if (!response.ok) throw new Error('Network response was not ok');
       const { data } = await response.json();

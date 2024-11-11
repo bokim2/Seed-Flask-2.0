@@ -48,6 +48,7 @@ app.use(
       'https://seedflask.com',
       'https://dev-1gk5wccsooddgtgs.us.auth0.com',
       'https://localhost:3000',
+      'http://localhost:3000',
     ],
     credentials: true, // Allow cookies to be sent
     allowedHeaders: 'Content-Type,Authorization', // Ensure Auth0 headers are allowed
@@ -89,7 +90,7 @@ const sslServer = https.createServer(
 );
 
 const config = {
-  authRequired: false,
+  authRequired: true,
   auth0Logout: true,
   secret: process.env.SECRET,
   baseURL: process.env.BASE_URL,
@@ -103,13 +104,11 @@ const config = {
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
-
 app.use((req, res, next) => {
   console.log('Is Authenticated:', req.oidc.isAuthenticated());
   console.log('User:', req.oidc.user);
   next();
 });
-
 
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');

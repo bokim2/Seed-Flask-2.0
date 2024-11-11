@@ -79,7 +79,7 @@ export default function ChartsPage() {
     // console.log('data in graphs page, before fetch');
     const results = await Promise.all(
       bookmarkedCellbanks.map(async (cellbank) => {
-        const res = await fetch(`${baseUrl}/api/chart/cellbank/${cellbank}`);
+        const res = await fetch(`${baseUrl}/api/chart/cellbank/${cellbank}`,  { credentials: 'include' });
         const { data } = await res.json();
         // setBookmarkedCellbankGraphData(prev=> ({...prev, data}));
         console.log('data in getBookmarkedCellbankGraphData page', data);
