@@ -14,7 +14,12 @@ export function useMainFilter({ selector }) {
     queryFn: async () => {
       try {
         // console.log('running useMainFilter', selector);
-        const response = await fetch(`${baseUrl}/api/uniques/${selector}`);
+        const response = await fetch(`${baseUrl}/api/uniques/${selector}`, {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         // const response = await fetch(`${baseUrl}/api/uniques/project`)
         const { data } = await response.json();
         // console.log(data, 'data in useMainFilter');
@@ -151,15 +156,14 @@ const numericColumns = new Set([
   'temp_c',
   'od600',
   'time_since_inoc_hr',
-  'completed'
+  'completed',
 ]);
 
 const timeDisplayVSColumnName = {
   'start date/time': 'start_date',
-  'start_date': 'start_date',
+  start_date: 'start_date',
   'end date/time': 'end_date',
-
-}
+};
 
 export function useFilteredTableData(
   tableRowsData,
@@ -187,21 +191,28 @@ export function useFilteredTableData(
     const sortColumnKey = Object.keys(sortColumn)[0]; // column name to sort by
 
     return [...dataToSort].sort((a, b) => {
-      console.log('sortColumnKey , timestamp_column', sortColumnKey , timestamp_column, 'timeDisplayVSColumnName?.[sortColumnKey]', timeDisplayVSColumnName?.[sortColumnKey])
+      console.log(
+        'sortColumnKey , timestamp_column',
+        sortColumnKey,
+        timestamp_column,
+        'timeDisplayVSColumnName?.[sortColumnKey]',
+        timeDisplayVSColumnName?.[sortColumnKey]
+      );
       const isNumeric = numericColumns.has(sortColumnKey);
       if (isNumeric) {
         return sortDirection === 'asc'
           ? a[sortColumnKey] - b[sortColumnKey]
           : b[sortColumnKey] - a[sortColumnKey];
-      } else if (timeDisplayVSColumnName?.[sortColumnKey] === timestamp_column) {
+      } else if (
+        timeDisplayVSColumnName?.[sortColumnKey] === timestamp_column
+      ) {
         console.log('sorting by timestamp');
         const dateA = new Date(a?.[timestamp_column]).getTime();
         const dateB = new Date(b?.[timestamp_column]).getTime();
         console.log('dateA, dateB', dateA, dateB);
-        return sortDirection === 'asc'
-          ? dateA - dateB : dateB - dateA;
+        return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
       } else {
-        console.log('sorting by string, else statement')
+        console.log('sorting by string, else statement');
         return sortDirection === 'asc'
           ? a[sortColumnKey].localeCompare(b[sortColumnKey])
           : b[sortColumnKey].localeCompare(a[sortColumnKey]);
@@ -214,7 +225,13 @@ export function useFilteredTableData(
 
 // format column name - to remove _ and replace with ' '
 export function formatColumnName(columnName) {
-    if (columnName === 'human_readable_date'|| columnName === 'start_date' || columnName === 'end_date' || columnName === 'date_timestamptz' || columnName === 'date') {
+  if (
+    columnName === 'human_readable_date' ||
+    columnName === 'start_date' ||
+    columnName === 'end_date' ||
+    columnName === 'date_timestamptz' ||
+    columnName === 'date'
+  ) {
     return 'date';
   } else {
     return columnName.replace(/_/g, ' ');

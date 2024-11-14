@@ -3,8 +3,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const StyledTabSelectorContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  /* display: flex; */
+  /* flex-direction: column; */
   /* border: 10px solid red; */
   /* background-color: lightpink; */
   /* max-height: 70vh; */
@@ -27,6 +27,8 @@ export const StyledTabUl = styled.ul`
 
   @media (min-width: 800px) {
     /* display: block; */
+    position: sticky;
+    top: var(--nav-bar-height, 10vh);
     display: flex;
     /* flex-wrap: wrap; */
     align-items: stretch;
